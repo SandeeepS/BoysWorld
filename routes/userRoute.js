@@ -5,5 +5,9 @@ const userController = require('../controllers/userController');
 
 //user routes
 route.get('/',userController.home);
+route.get('/login',userController.loginPage);
+route.get('/signup',userController.signupPage);
+route.get('/shop',userController.shopPage);
+route.get('/contact',userController.contactPage);
 
 module.exports = route
