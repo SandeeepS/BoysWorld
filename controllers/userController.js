@@ -1,4 +1,4 @@
-const { log } = require('console');
+
 const UserModel = require('../models/userModel');
 
 
@@ -27,16 +27,18 @@ exports.contactPage = async(req,res)=>{
 
 
 exports.userEntry = async(req,res)=>{
-    const {userName,userEmail} = req.body;
-    console.log(userName);
-    console.log(userEmail);
+    const {Userid,Password} = req.body;
+    console.log(Userid);
+    console.log(Password);
 
     try{
-        const user = await UserModel.findOne({name:userName,email:userEmail}).exec();
+        const user = await UserModel.findOne({userid:Userid,pass:Password}).exec();
         if(user){
+            req.session.user = user.userid;
+            console.log( req.session.user);
             res.redirect('/shop');
         }else{
-            red.redirect('/');
+            res.redirect('/');
         }
     }catch(error){
         
@@ -73,3 +75,13 @@ exports.signup = async(req,res)=>{
         res.redirect("/");
     }
 };
+
+exports.logout = (req,res)=>{
+    req.session.destroy((err)=>{
+        if(err){
+            console.error("Error distroying session",err);
+        }else{
+            res.redirect('/');
+        }
+    });
+}

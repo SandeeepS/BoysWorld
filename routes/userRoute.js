@@ -1,17 +1,19 @@
 const express = require('express');
 const route = express();
 const userController = require('../controllers/userController');
+const auth = require('../middleware/middlewares');
 
 
 //user routes
 route.get('/',userController.home);
-route.get('/login',userController.loginPage);
+route.get('/login',auth.isUser,userController.loginPage);
 route.get('/signup',userController.signupPage);
-route.get('/shop',userController.shopPage);
-route.get('/contact',userController.contactPage);
+route.get('/shop',auth.user,userController.shopPage);
+route.get('/contact',auth.user,userController.contactPage);
 
 
 route.post('/loginUser',userController.userEntry);
+route.post('/logout',userController.logout);
 
 
 route.post('/signup',userController.signup)
