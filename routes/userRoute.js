@@ -13,4 +13,7 @@ route.get('/contact',userController.contactPage);
 
 route.post('/loginUser',userController.userEntry);
 
+
+route.post('/signup',userController.signup)
+
 module.exports = route

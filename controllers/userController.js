@@ -1,3 +1,4 @@
+const { log } = require('console');
 const UserModel = require('../models/userModel');
 
 
@@ -44,4 +45,31 @@ exports.userEntry = async(req,res)=>{
         res.redirect('/');
     }
      
+};
+
+
+exports.signup = async(req,res)=>{
+    try{
+        const data = new UserModel({
+            "name":req.body.username,
+            "userid":req.body.userid,
+            "email":req.body.email,
+            "number":req.body.phonenumber,
+            "pass":req.body.password
+        });
+        const {name} = data;
+        console.log(name);
+        const savedData = await data.save();
+         
+        if(savedData){
+            console.log("Record inserted successfully");
+            res.redirect("/shop");
+        }else{
+            console.log("failed to insert record");
+            res.redirect("/");
+        }
+    }catch(error){
+        console.error("Error during signup:",error);
+        res.redirect("/");
+    }
 };
