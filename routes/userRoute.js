@@ -10,4 +10,7 @@ route.get('/signup',userController.signupPage);
 route.get('/shop',userController.shopPage);
 route.get('/contact',userController.contactPage);
 
+
+route.post('/loginUser',userController.userEntry);
+
 module.exports = route
