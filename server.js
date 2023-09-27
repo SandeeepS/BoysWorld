@@ -30,8 +30,6 @@ app.use(session({
  mongoose.connect(process.env.DB_CONNECT,{
     useNewUrlParser:true,
     useUnifiedTopology:true,
-   
-
 }).then(()=>console.log("connected to mongodb"))
 .catch((err)=>console.log("MongoDB connection failed",err));
 

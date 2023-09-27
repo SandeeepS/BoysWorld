@@ -5,7 +5,8 @@ const sch = {
     userid:String,
     email:String,
     number:Number,
-    pass:String
+    pass:String,
+    otp:String
 
 }
 const monmodel = mongoose.model("users",sch);
