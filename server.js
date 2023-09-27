@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 const session = require('express-session');
 const routes = require('./routes/userRoute');
+const adminRoute = require('./routes/adminRoute');
 const {connectMongoDb} = require('./connection');
 
 
@@ -34,6 +35,7 @@ app.use(session({
 .catch((err)=>console.log("MongoDB connection failed",err));
 
 app.use('/',routes);
+app.use('/admin',adminRoute);
 
 const port  = process.env.PORT || 5001
 app.listen(port,()=>{
