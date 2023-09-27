@@ -40,6 +40,11 @@ exports.contactPage = async(req,res)=>{
 }
 
 
+//sportsWear
+exports.sportsWear = async(req,res)=>{
+    res.render('sportswear');
+}
+
 exports.getOtpPage = async(req,res)=>{
     res.render('otp');
 }

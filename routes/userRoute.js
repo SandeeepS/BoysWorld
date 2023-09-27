@@ -19,6 +19,10 @@ route.post('/logout',userController.logout);
 
 route.post('/signup',userController.signup)
 
+//cartegoty
+// route.get('/category',userController);
+
+route.get('/sportswear',userController.sportsWear);
 
 
 module.exports = route
