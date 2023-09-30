@@ -13,6 +13,10 @@ adminRoute.get('/products',adminController.getProduct);
 adminRoute.get('/categories',adminController.getCategories);
 adminRoute.get('/orders',adminController.getOrders);
 adminRoute.get('/banner',adminController.getBanner);
+adminRoute.get('/addProductPage',adminController.addProduct);
+
+//controlproduct
+adminRoute.post('/addingProduct',adminController.addingProduct);
 
 adminRoute.post('/logout',adminController.logout);
 module.exports = adminRoute;

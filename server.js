@@ -6,6 +6,7 @@ const app = express();
 const session = require('express-session');
 const routes = require('./routes/userRoute');
 const adminRoute = require('./routes/adminRoute');
+const pro_route = require('./routes/productRoute');
 const nocache = require('nocache');
 const {connectMongoDb} = require('./connection');
 
