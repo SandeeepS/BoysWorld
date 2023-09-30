@@ -27,6 +27,7 @@ function admin(req,res,next){
     }
 }
 
+
 module.exports = {
     isUser,user,admin
 }

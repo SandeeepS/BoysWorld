@@ -6,6 +6,7 @@ const app = express();
 const session = require('express-session');
 const routes = require('./routes/userRoute');
 const adminRoute = require('./routes/adminRoute');
+const nocache = require('nocache');
 const {connectMongoDb} = require('./connection');
 
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine','ejs');
 app.use(express.static("views"));
 app.use(express.static(__dirname));
+app.use(nocache())
 
 
 //session

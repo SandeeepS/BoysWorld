@@ -160,3 +160,24 @@ exports.logout = (req,res)=>{
         }
     });
 }
+
+
+/****** get from navbar***********/
+
+
+exports.getAccount = async(req,res)=>{
+    res.render('accound');
+}
+
+exports.getWishlist = async(req,res)=>{
+    res.render('wishlist');
+}
+
+exports.getCheckout = async(req,res)=>{
+    res.render('checkout');
+}
+
+exports.getCart = async(req,res)=>{
+    res.render('cart');
+}
+
