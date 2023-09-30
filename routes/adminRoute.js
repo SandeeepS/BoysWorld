@@ -1,15 +1,18 @@
 const express = require('express');
 const adminRoute = express();
 const adminController = require('../controllers/adminController');
+const auth = require('../middleware/middlewares');
 
 
 //adminroute
-adminRoute.get('/',adminController.adminPage);
-adminRoute.post('/dashboard',adminController.getDashboard);
-adminRoute.get('/dashboard',adminController.getDashboard);
+adminRoute.get('/',auth.admin,adminController.adminlogin);
+adminRoute.get('/dashboard',adminController.getHomePage);
+adminRoute.post('/login',adminController.getDashboard);
 adminRoute.get('/customers',adminController.getCustomer);
 adminRoute.get('/products',adminController.getProduct);
 adminRoute.get('/categories',adminController.getCategories);
 adminRoute.get('/orders',adminController.getOrders);
 adminRoute.get('/banner',adminController.getBanner);
+
+adminRoute.post('/logout',adminController.logout);
 module.exports = adminRoute;

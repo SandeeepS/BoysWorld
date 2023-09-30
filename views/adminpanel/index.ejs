@@ -49,11 +49,13 @@
            
           </li>
         </ul>
-        
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
-          <span class="mdi mdi-menu"></span>
-        </button>
+        <div class="navbar-menu-wrapper d-flex align-items-top"> 
+          <form action="/admin/logout" method="post">
+            <input type="submit" name="logout" value="Logout">
+          </form>
+          </div>
       </div>
+     
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
@@ -287,7 +289,16 @@
             </a>
            
           </li>
-        
+          <form action="/admin/logout"  method="post">
+          <li class="nav-item">
+            <a class="nav-link"  href="discount.html" >
+              <i class="menu-icon mdi mdi-account-circle-outline"></i>
+              <span class="menu-title">Logout</span>
+             
+            </a>
+          </form>
+        </li> 
+       
           
         </ul>
       </nav>

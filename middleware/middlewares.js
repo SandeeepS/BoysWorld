@@ -18,6 +18,15 @@ function user(req,res,next){
     }
 }
 
+function admin(req,res,next){
+    if(req.session.admin){
+        res.redirect('/dashboard');
+    }
+    else{
+        return next();
+    }
+}
+
 module.exports = {
-    isUser,user
+    isUser,user,admin
 }
