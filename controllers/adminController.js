@@ -35,7 +35,13 @@ exports.getDashboard = async(req,res)=>{
 }
 
 exports.getCustomer = async(req,res)=>{
-    res.render('adminpanel/customers');
+    try{
+        const usersData = await userModel.find().exec();
+        res.render('adminpanel/customers',{users:usersData});
+    }catch(error){
+        console.error("error while fetching users",error);
+    }
+   
 }
 
 exports.getProduct = async(req,res)=>{
