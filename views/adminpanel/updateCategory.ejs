@@ -202,38 +202,15 @@
                                 <div class=" justify-content-between align-items-start">
                                   <div class="table-responsive cart_info">
                                     <div >
-                                       <h2>Update category</h2>
-                                       <form action="/admin/addingCategory" method="post">
+                                       <h2>Update Category</h2>
+                                       <form action="/admin/UpdatedCategory/<%= cataToUpdate._id%>" method="post">
                                            <p>
-                                            <label for="categoryName">Product Name</label>      
-                                            <input type="text" class="form-control" name="categoryName">
+                                            <label for="categoryName">Category Name</label>      
+                                            <input type="text" class="form-control" name="categoryName" value="<%=cataToUpdate.categoryName %>" >
                                            </p>
                                           
-                                           
-<!-- 
-                                           <p>
-                                             <label for="price">Price</label>
-                                             <input type="number" class="form-control" name="price">
-                                           </p>
-                                           
-                                                  
-                                             
-                                            <p>
-                                            <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock">
-                                            </p>  
-                                              
 
-                                            <p>
-                                                <label for="image">Image Url</label>
-                                                <input type="text" class="form-control" name="image">
-                                            </p>
-
-                                            <label for="discription">discription</label>
-                                            <input type="text" class="form-control" name="discription">
-                                           </p> -->
-
-                                           <input type="submit" name="" id="" value="Add">
+                                           <input type="submit" name="" id="" value="Update">
                                        </form>
                                     </div>
 

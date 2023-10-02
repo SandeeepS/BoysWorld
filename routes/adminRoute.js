@@ -14,7 +14,7 @@ adminRoute.get('/categories',adminController.getCategories);
 adminRoute.get('/orders',adminController.getOrders);
 adminRoute.get('/banner',adminController.getBanner);
 adminRoute.get('/addProductPage',adminController.addProduct);
-adminRoute.get('/addCategoryPage',adminController.addcategoryPage)
+
 
 //controlproduct
 adminRoute.post('/addingProduct',adminController.addingProduct);
@@ -22,6 +22,13 @@ adminRoute.get('/updateProduct/:id',adminController.getUpdateProductPage);
 adminRoute.post('/productUpdated/:id',adminController.productUpdated);
 adminRoute.get('/deleteProduct/:id',adminController.deleteProduct);
 
+
+//controll category
+adminRoute.get('/addCategoryPage',adminController.addcategoryPage)
+adminRoute.post('/addingCategory',adminController.addingCategory);
+adminRoute.get('/deleteCategory/:id',adminController.deleteCategory);
+adminRoute.get('/updateCategory/:id',adminController.getUpdateCategoryPage);
+adminRoute.post('/UpdatedCategory/:id',adminController.updateCategory);
 
 
 adminRoute.post('/logout',adminController.logout);

@@ -214,21 +214,18 @@
                                       </tr>
                                       <%
                                       if (category.length > 0) {
-                                          for (let i = 0; i < category.length; i++) {
+                                          for (const cat of category) {
                                       %>
                                       <tr>
                                           
-                                          <td><%= category[i].categoryName %></td>
-                                          <!-- <td><%= category[i].price %></td>
-                                          <td><%= category[i].stock %></td>
-                                          <td><%= category[i].discription %></td>
-                                                 -->
+                                          <td><%= cat.categoryName %></td>
+                                         
                                           <td>
-                                            <a href="/admin/updateUserData/<%= category._id %>"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a href="/admin/updateCategory/<%= cat._id %>"><i class="fa-solid fa-pen-to-square"></i></a>
                                           </td>
                                           
                                           <td>
-                                              <a href="/admin/deleteUserData/<%= category._id %>"><i class="fa-solid fa-trash"></i></a>
+                                              <a href="/admin/deleteCategory/<%= cat._id %>"><i class="fa-solid fa-trash"></i></a>
                                           </td>
                                       </tr>
                                       <%
