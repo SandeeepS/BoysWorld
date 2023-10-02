@@ -22,8 +22,6 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   
 </head>
 <body>
@@ -172,8 +170,8 @@
               <i class="menu-arrow"></i>
             </a>
             
-          </li>
-           -->
+          </li> -->
+          
           <!-- <li class="nav-item">
             <a class="nav-link"  href="discount.html" >
               <i class="menu-icon mdi mdi-account-circle-outline"></i>
@@ -196,58 +194,54 @@
                 <div class="tab-content tab-content-basic">
                   <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
                     
-                    
+                     
                     <div class="row">
-                      <div class="col-lg-12 d-flex flex-column">
-                        <div class="row flex-grow">
-                          <div class="col-12 grid-margin stretch-card">
+                   
                             <div class="card card-rounded">
                               <div class="card-body">
-                                <div class="d-sm-flex justify-content-between align-items-start">
-                                    <table class="table table-condensed">
-                                      <tr class="cart_menu">
-                                          <th>Category</th>
-                                          <!-- <th></th>
-                                          <th>Price</th>
-                                          <th>Stock</th> -->
-                                      
-                                      </tr>
-                                      <%
-                                      if (category.length > 0) {
-                                          for (let i = 0; i < category.length; i++) {
-                                      %>
-                                      <tr>
+                                <div class=" justify-content-between align-items-start">
+                                  <div class="table-responsive cart_info">
+                                    <div >
+                                       <h2>Update products</h2>
+                                       <form action="/admin/addingProduct" method="post">
+                                           <p>
+                                            <label for="productName">Product Name</label>      
+                                            <input type="text" class="form-control" name="productName" value="">
+                                           </p>
                                           
-                                          <td><%= category[i].categoryName %></td>
-                                          <!-- <td><%= category[i].price %></td>
-                                          <td><%= category[i].stock %></td>
-                                          <td><%= category[i].discription %></td>
-                                                 -->
-                                          <td>
-                                            <a href="/admin/updateUserData/<%= category._id %>"><i class="fa-solid fa-pen-to-square"></i></a>
-                                          </td>
-                                          
-                                          <td>
-                                              <a href="/admin/deleteUserData/<%= category._id %>"><i class="fa-solid fa-trash"></i></a>
-                                          </td>
-                                      </tr>
-                                      <%
-                                          }
-                                      }
-                                      else {
-                                      %>
-                                      <tr>
-                                          <td colspan="4">category Not Found</td>
-                                      </tr>
-                                      <%
-                                      }
-                                      %>
-                                  </table>
-                                    
+                                           
+
+                                           <p>
+                                             <label for="price">Price</label>
+                                             <input type="number" class="form-control" name="price" value="<%=productToUpdate.productName %>">
+                                           </p>
+                                           
+                                                  
+                                             
+                                            <p>
+                                            <label for="stock">stock</label>
+                                            <input type="text" class="form-control" name="stock">
+                                            </p>  
+                                              
+
+                                            <p>
+                                                <label for="image">Image Url</label>
+                                                <input type="text" class="form-control" name="image">
+                                            </p>
+
+                                            <label for="discription">discription</label>
+                                            <input type="text" class="form-control" name="discription">
+                                           </p>
+
+                                           <input type="submit" name="" id="" value="Add">
+                                       </form>
+                                    </div>
+
+
+                                   
+                                   
                                   </div>
-                                  <a href="/admin/addCategoryPage">Add category</a>
                               </div>
-                             
                             </div>
                           </div>
                         </div>

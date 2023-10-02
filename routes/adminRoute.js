@@ -14,9 +14,13 @@ adminRoute.get('/categories',adminController.getCategories);
 adminRoute.get('/orders',adminController.getOrders);
 adminRoute.get('/banner',adminController.getBanner);
 adminRoute.get('/addProductPage',adminController.addProduct);
+adminRoute.get('/addCategoryPage',adminController.addcategoryPage)
 
 //controlproduct
 adminRoute.post('/addingProduct',adminController.addingProduct);
+adminRoute.get('/updateProduct/:productId',adminController.getUpdateProductPage);
+
+
 
 adminRoute.post('/logout',adminController.logout);
 module.exports = adminRoute;

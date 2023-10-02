@@ -214,21 +214,21 @@
                                       </tr>
                                       <%
                                       if (product.length > 0) {
-                                          for (let i = 0; i < product.length; i++) {
+                                          for (const pro of product) {
                                       %>
                                       <tr>
-                                          <td><img src="<%= product[i].image %>" alt="" class="img-fluid"></td>
-                                          <td><%= product[i].productName %></td>
-                                          <td><%= product[i].price %></td>
-                                          <td><%= product[i].stock %></td>
-                                          <td><%= product[i].discription %></td>
+                                          <td><img src="<%= pro.image %>" alt="" class="img-fluid"></td>
+                                          <td><%= pro.productName %></td>
+                                          <td><%= pro.price %></td>
+                                          <td><%= pro.stock %></td>
+                                          <td><%= pro.discription %></td>
                                                 
                                           <td>
-                                            <a href="/admin/updateUserData/<%= product._id %>"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a href="/admin/updateProduct/<%= pro._id %>"><i class="fa-solid fa-pen-to-square"></i></a>
                                           </td>
                                           
                                           <td>
-                                              <a href="/admin/deleteUserData/<%= product._id %>"><i class="fa-solid fa-trash"></i></a>
+                                              <a href="/admin/deleteProduct/<%= product._id %>"><i class="fa-solid fa-trash"></i></a>
                                           </td>
                                       </tr>
                                       <%

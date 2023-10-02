@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const caSch = {
+const Sch = {
     categoryName:String,
+   
 }
-const categoryModel = mongoose.model("category",caSch);
+const categoryModel = mongoose.model("categories",Sch);
 module.exports = categoryModel;

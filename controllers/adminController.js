@@ -47,28 +47,32 @@ exports.getCustomer = async(req,res)=>{
     }catch(error){
         console.error("error while fetching users",error);
     }
-   
 }
+
 
 exports.getProduct = async(req,res)=>{
     try{
         const productData = await productModel.find().exec();
+      
         res.render('adminpanel/product',{product:productData});
     }catch(error){
         console.error("error while fetching products",error);
     }
-   
+} 
+
+exports.getCategories = async (req, res) => {
+    try {
+        const categoryData = await categoryModel.find().exec();
+        if (!categoryData) {
+              console.log("No categories found in the database.");
+        } else {
+            res.render('adminpanel/categories', { category: categoryData });
+        }
+    } catch (error) {
+        console.error("Error while fetching categories", error);
+    }
 }
 
-exports.getCategories = async(req,res)=>{
-    try{
-        const categoryData = await categoryModel.find().exec();
-        res.render('adminpanel/categories',{category:categoryData});
-    }catch(error){
-        console.error("error while fetching products",error);
-    }
-   
-}
 exports.getOrders = async(req,res)=>{
     res.render('adminpanel/orders');
 }
@@ -80,8 +84,27 @@ exports.getBanner = async(req,res)=>{
 
 
 
+
 exports.addProduct = async(req,res)=>{
     res.render('adminpanel/addProduct');
+}
+
+
+//updateproduct page
+
+exports.getUpdateProductPage = async(req,res)=>{
+    try{
+         const productId = req.params.id;
+         const  productToUpdate = await productModel.findById(productId).exec();  
+          res.render('adminpanel/updateProduct',{productToUpdate});
+    }catch(err){
+        console.error("error in updation",err);
+        res.redirect('/admin/products');
+    }
+}
+
+exports.addcategoryPage = async(req,res)=>{
+    res.render('adminpanel/addCategory');
 }
 
 //adding product
@@ -123,6 +146,8 @@ exports.updateStatus = async (req, res) => {
         res.redirect('/admin/customers');
     }
 }
+
+
 
 
 
