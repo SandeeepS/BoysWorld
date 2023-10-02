@@ -1,16 +1,16 @@
 const userModel = require('../models/userModel');
 const adModel = require('../models/adminModel');
 const productModel = require('../models/productModel');
+const categoryModel = require('../models/categoryModel');
 
 
 
 exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
-        res.redirect('admin/dashboard');
+        res.redirect('/admin/dashboard');
     }else{
         res.render('adminpanel/login');
     }
-   
 }
 
 exports.getHomePage = async(req,res)=>{
@@ -61,7 +61,13 @@ exports.getProduct = async(req,res)=>{
 }
 
 exports.getCategories = async(req,res)=>{
-    res.render('adminpanel/categories');
+    try{
+        const categoryData = await categoryModel.find().exec();
+        res.render('adminpanel/categories',{category:categoryData});
+    }catch(error){
+        console.error("error while fetching products",error);
+    }
+   
 }
 exports.getOrders = async(req,res)=>{
     res.render('adminpanel/orders');
@@ -73,15 +79,6 @@ exports.getBanner = async(req,res)=>{
 
 
 
-exports.logout = async(req,res)=>{
-    req.session.destroy((err)=>{
-        if(err){
-            console.error("Error destroying session",err);
-        }else{
-            res.redirect('/admin');
-        }
-    });
-}
 
 exports.addProduct = async(req,res)=>{
     res.render('adminpanel/addProduct');
@@ -102,4 +99,42 @@ exports.addingProduct = async(req,res)=>{
     }
 }
 
+//updateStatus
 
+exports.updateStatus = async (req, res) => {
+    try {
+        const { userId, isBlocked } = req.body;
+
+        
+        const user = await userModel.findById(userId).exec();
+       console.log(user.name);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        console.log(user.name);
+        
+        user.status = isBlocked;
+        await user.save(); 
+
+        res.json({ success: true, message: `User status updated to ${isBlocked ? "Blocked" : "Active"}` });
+
+    } catch (err) {
+        console.error("Error updating status:", err);
+        res.redirect('/admin/customers');
+    }
+}
+
+
+
+
+
+//logout
+exports.logout = async(req,res)=>{
+    req.session.destroy((err)=>{
+        if(err){
+            console.error("Error destroying session",err);
+        }else{
+            res.redirect('/admin');
+        }
+    });
+}

@@ -154,7 +154,7 @@
             </a>
            
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="/admin/orders" >
               <i class="menu-icon mdi mdi-table"></i>
               <span class="menu-title">Orders</span>
@@ -169,8 +169,8 @@
               <i class="menu-arrow"></i>
             </a>
             
-          </li>
-          
+          </li> -->
+<!--           
           <li class="nav-item">
             <a class="nav-link" href="discount.html" >
               <i class="menu-icon mdi mdi-account-circle-outline"></i>
@@ -178,7 +178,7 @@
               <i class="menu-arrow"></i>
             </a>
            
-          </li>
+          </li> -->
         
           
         </ul>
@@ -219,6 +219,16 @@
                                         <td><%= users[i].userid %></td>
                                         <td><%= users[i].email %></td>
                                         <td><%= users[i].number %></td>
+                                        <td>
+                                          <span class="user-status">
+                                              <span class="status-text"><%= users[i].status ? 'Active' : 'Blocked' %></span>
+                                              <button class="btn btn-sm btn-<%= users[i].status ? 'danger' : 'success' %> toggle-status-btn" data-user-id="<%= users[i]._id %>">
+                                                  <%= users[i].status ? 'Block' : 'Unblock' %>
+                                              </button>
+                                          
+                                          </span>
+                                      </td>
+                                      
                                     </tr>
                                     <%
                                         }
@@ -283,6 +293,47 @@
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
+  <!-- status button -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toggleStatusButtons = document.querySelectorAll(".toggle-status-btn");
+  
+      toggleStatusButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+              const userId = this.getAttribute("data-user-id");
+              const statusText = this.parentElement.querySelector(".status-text");
+              const isBlocked = statusText.textContent === "Blocked";
+  
+              // Send an AJAX request to update the user's status
+              fetch("/admin/checkStatus", {
+                  method: "POST", // or "PUT" if you prefer
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ userId: userId, isBlocked: !isBlocked }),
+              })
+                  .then((response) => response.json())
+                  .then((data) => {
+                      // Update the status text and button text based on the server response
+                      if (data.success) {
+                          statusText.textContent = isBlocked ? "Active" : "Blocked";
+                          button.textContent = isBlocked ? "Block" : "Unblock";
+                          button.classList.toggle("btn-success");
+                          button.classList.toggle("btn-danger");
+                      } else {
+                          // Handle any error from the server, if needed
+                          console.error("Failed to update user status.");
+                      }
+                  })
+                  .catch((error) => {
+                      console.error("Error:", error);
+                  });
+          });
+      });
+  });
+  
+</script>
+
 </body>
 
 </html>

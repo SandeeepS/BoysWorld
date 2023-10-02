@@ -57,7 +57,7 @@ exports.userEntry = async(req,res)=>{
 
     try{
         const user = await UserModel.findOne({userid:Userid,pass:Password}).exec();
-        if(user){
+        if(user && user.status === true){
             req.session.user = user.userid;
             console.log( req.session.user);
             res.redirect('/shop');

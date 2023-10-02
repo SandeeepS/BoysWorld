@@ -20,14 +20,20 @@ function user(req,res,next){
 
 function admin(req,res,next){
     if(req.session.admin){
-        res.redirect('/dashboard');
+        res.redirect('/admin/dashboard');
     }
     else{
         return next();
     }
 }
-
+function isAdmin(req,res,next){
+    if(!req.session.admin){
+         res.redirect('/admin');
+    }else{
+        return next();
+    }
+}
 
 module.exports = {
-    isUser,user,admin
+    isUser,user,admin,isAdmin
 }

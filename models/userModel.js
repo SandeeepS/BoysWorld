@@ -6,7 +6,8 @@ const sch = {
     email:String,
     number:Number,
     pass:String,
-    otp:String
+    otp:String,
+    status:Boolean
 
 }
 const monmodel = mongoose.model("users",sch);

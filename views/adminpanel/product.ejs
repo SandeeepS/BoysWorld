@@ -22,6 +22,9 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 </head>
 <body>
   <div class="container-scroller"> 
@@ -154,7 +157,7 @@
             </a>
            
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link"  href="/admin/orders" >
               <i class="menu-icon mdi mdi-table"></i>
               <span class="menu-title">Orders</span>
@@ -170,15 +173,15 @@
             </a>
             
           </li>
-          
-          <li class="nav-item">
+           -->
+          <!-- <li class="nav-item">
             <a class="nav-link"  href="discount.html" >
               <i class="menu-icon mdi mdi-account-circle-outline"></i>
               <span class="menu-title">Discounts</span>
               <i class="menu-arrow"></i>
             </a>
            
-          </li>
+          </li> -->
         
           
         </ul>
@@ -214,11 +217,19 @@
                                           for (let i = 0; i < product.length; i++) {
                                       %>
                                       <tr>
-                                          <td><%= product[i].image %></td>
+                                          <td><img src="<%= product[i].image %>" alt="" class="img-fluid"></td>
                                           <td><%= product[i].productName %></td>
                                           <td><%= product[i].price %></td>
                                           <td><%= product[i].stock %></td>
                                           <td><%= product[i].discription %></td>
+                                                
+                                          <td>
+                                            <a href="/admin/updateUserData/<%= product._id %>"><i class="fa-solid fa-pen-to-square"></i></a>
+                                          </td>
+                                          
+                                          <td>
+                                              <a href="/admin/deleteUserData/<%= product._id %>"><i class="fa-solid fa-trash"></i></a>
+                                          </td>
                                       </tr>
                                       <%
                                           }

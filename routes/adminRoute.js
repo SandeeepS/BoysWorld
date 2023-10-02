@@ -6,7 +6,7 @@ const auth = require('../middleware/middlewares');
 
 //adminroute
 adminRoute.get('/',auth.admin,adminController.adminlogin);
-adminRoute.get('/dashboard',adminController.getHomePage);
+adminRoute.get('/dashboard',auth.isAdmin,adminController.getHomePage);
 adminRoute.post('/login',adminController.getDashboard);
 adminRoute.get('/customers',adminController.getCustomer);
 adminRoute.get('/products',adminController.getProduct);
@@ -20,3 +20,7 @@ adminRoute.post('/addingProduct',adminController.addingProduct);
 
 adminRoute.post('/logout',adminController.logout);
 module.exports = adminRoute;
+
+//user(block/unblock)
+adminRoute.post('/checkStatus',adminController.updateStatus)
+
