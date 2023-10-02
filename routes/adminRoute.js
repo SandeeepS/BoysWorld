@@ -18,7 +18,9 @@ adminRoute.get('/addCategoryPage',adminController.addcategoryPage)
 
 //controlproduct
 adminRoute.post('/addingProduct',adminController.addingProduct);
-adminRoute.get('/updateProduct/:productId',adminController.getUpdateProductPage);
+adminRoute.get('/updateProduct/:id',adminController.getUpdateProductPage);
+adminRoute.post('/productUpdated/:id',adminController.productUpdated);
+adminRoute.get('/deleteProduct/:id',adminController.deleteProduct);
 
 
 

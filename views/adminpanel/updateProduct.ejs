@@ -203,24 +203,24 @@
                                   <div class="table-responsive cart_info">
                                     <div >
                                        <h2>Update products</h2>
-                                       <form action="/admin/addingProduct" method="post">
+                                       <form action="/admin/productUpdated/<%= productToUpdate._id%>" method="post">
                                            <p>
                                             <label for="productName">Product Name</label>      
-                                            <input type="text" class="form-control" name="productName" value="">
+                                            <input type="text" class="form-control" name="productName" value="<%=productToUpdate.productName %>" >
                                            </p>
                                           
                                            
 
                                            <p>
                                              <label for="price">Price</label>
-                                             <input type="number" class="form-control" name="price" value="<%=productToUpdate.productName %>">
+                                             <input type="number" class="form-control" name="price" value="<%=productToUpdate.price %>">
                                            </p>
                                            
                                                   
                                              
                                             <p>
                                             <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock">
+                                            <input type="text" class="form-control" name="stock" value="<%=productToUpdate.stock %>">
                                             </p>  
                                               
 
@@ -230,10 +230,10 @@
                                             </p>
 
                                             <label for="discription">discription</label>
-                                            <input type="text" class="form-control" name="discription">
+                                            <input type="text" class="form-control" name="discription" value="<%=productToUpdate.discription %>">
                                            </p>
 
-                                           <input type="submit" name="" id="" value="Add">
+                                           <input type="submit" name="" id="" value="Update">
                                        </form>
                                     </div>
 

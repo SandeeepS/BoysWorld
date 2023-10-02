@@ -95,10 +95,36 @@ exports.addProduct = async(req,res)=>{
 exports.getUpdateProductPage = async(req,res)=>{
     try{
          const productId = req.params.id;
+         console.log(productId);
          const  productToUpdate = await productModel.findById(productId).exec();  
           res.render('adminpanel/updateProduct',{productToUpdate});
     }catch(err){
         console.error("error in updation",err);
+        res.redirect('/admin/products');
+    }
+}
+
+//updatedproduct
+exports.productUpdated = async(req,res)=>{
+    try{
+        const productId = req.params.id;
+        const {productName,price,stock,discription} = req.body;
+        await productModel.findByIdAndUpdate(productId,{productName,price,stock,discription}).exec();
+        res.redirect('/admin/products');
+    }catch(err){
+        console.error("error updating product",err);
+    }
+}
+
+//deleteproduct
+exports.deleteProduct = async(req,res)=>{
+    try{
+        const productId = req.params.id;
+        
+        await productModel.findByIdAndDelete(productId).exec();
+        res.redirect('/admin/products');
+    }catch(err){
+        console.error("error deletting product",err);
         res.redirect('/admin/products');
     }
 }
