@@ -5,7 +5,11 @@ const sch = {
     price:Number,
     stock:Number,
     image:[String],
-    discription:String
+    discription:String,
+    isDeleted:{
+        type:Boolean,
+        default:false,
+    }
 }
 
 const productModel = mongoose.model("products",sch);

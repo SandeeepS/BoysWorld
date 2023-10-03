@@ -3,7 +3,7 @@ const adModel = require('../models/adminModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const fs = require('fs');
-const { log } = require('console');
+
 
 
 
@@ -54,7 +54,7 @@ exports.getCustomer = async(req,res)=>{
 
 exports.getProduct = async(req,res)=>{
     try{
-        const productData = await productModel.find().exec();
+        const productData = await productModel.find({isDeleted:false}).exec();
         // productData.forEach((pro)=>{
         //     console.log(pro.image);
         // })
@@ -128,7 +128,7 @@ exports.deleteProduct = async(req,res)=>{
     try{
         const productId = req.params.id;
         
-        await productModel.findByIdAndDelete(productId).exec();
+        await productModel.findByIdAndUpdate(productId,{isDeleted:true}).exec();
         res.redirect('/admin/products');
     }catch(err){
         console.error("error deletting product",err);
