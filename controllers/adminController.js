@@ -2,6 +2,8 @@ const userModel = require('../models/userModel');
 const adModel = require('../models/adminModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
+const fs = require('fs');
+const { log } = require('console');
 
 
 
@@ -53,8 +55,13 @@ exports.getCustomer = async(req,res)=>{
 exports.getProduct = async(req,res)=>{
     try{
         const productData = await productModel.find().exec();
-      
+        // productData.forEach((pro)=>{
+        //     console.log(pro.image);
+        // })
+        
         res.render('adminpanel/product',{product:productData});
+
+     
     }catch(error){
         console.error("error while fetching products",error);
     }
@@ -189,14 +196,17 @@ exports.updateCategory = async(req,res)=>{
 exports.addingProduct = async(req,res)=>{
     try{
         const{productName,price,stock,image,discription} = req.body;
-        const newData = new productModel({productName,price,stock,image,discription});
+        const productImages = req.files.map((file)=>file.path);
+           
+        console.log(productImages);
+        const newData = new productModel({productName,price,stock,image:productImages,discription});
         await newData.save();
         console.log(`${productName} is inserted Successfully`);
-        res.redirect('/admin/dashboard');
+        res.redirect('/admin/products');
 
     }catch(err){
         console.error("error adding products :",err);
-        res.render('/admin');
+        res.redirect('/admin/addingProduct');
     }
 }
 

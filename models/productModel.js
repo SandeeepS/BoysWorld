@@ -4,7 +4,7 @@ const sch = {
     productName:String,
     price:Number,
     stock:Number,
-    image:String,
+    image:[String],
     discription:String
 }
 

@@ -217,7 +217,15 @@
                                           for (const pro of product) {
                                       %>
                                       <tr>
-                                          <td><img src="<%= pro.image %>" alt="" class="img-fluid"></td>
+                                          
+                                        <td>
+                                       
+                                            <% for (const image of pro.image) { %>
+                                              <img src="<%= image.imageUrl %>" alt="" >
+                                            <% } %>
+                                      
+                                        </td>
+                                        
                                           <td><%= pro.productName %></td>
                                           <td><%= pro.price %></td>
                                           <td><%= pro.stock %></td>

@@ -2,6 +2,7 @@ const express = require('express');
 const adminRoute = express();
 const adminController = require('../controllers/adminController');
 const auth = require('../middleware/middlewares');
+const upload = require('../multerConfig');
 
 
 //adminroute
@@ -17,7 +18,7 @@ adminRoute.get('/addProductPage',adminController.addProduct);
 
 
 //controlproduct
-adminRoute.post('/addingProduct',adminController.addingProduct);
+adminRoute.post('/addingProduct',upload.array('productImages',5),adminController.addingProduct);
 adminRoute.get('/updateProduct/:id',adminController.getUpdateProductPage);
 adminRoute.post('/productUpdated/:id',adminController.productUpdated);
 adminRoute.get('/deleteProduct/:id',adminController.deleteProduct);

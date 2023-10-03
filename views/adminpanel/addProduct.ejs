@@ -203,7 +203,7 @@
                                   <div class="table-responsive cart_info">
                                     <div >
                                        <h2>Add products</h2>
-                                       <form action="/admin/addingProduct" method="post">
+                                       <form action="/admin/addingProduct" method="post" enctype="multipart/form-data">
                                            <p>
                                             <label for="productName">Product Name</label>      
                                             <input type="text" class="form-control" name="productName">
@@ -224,14 +224,16 @@
                                             </p>  
                                               
 
-                                            <p>
-                                                <label for="image">Image Url</label>
-                                                <input type="text" class="form-control" name="image">
-                                            </p>
-
+                                            
                                             <label for="discription">discription</label>
                                             <input type="text" class="form-control" name="discription">
                                            </p>
+
+                                           <p>
+                                            <label for="image">Image</label>
+                                            <input type="file" class="form-control" name="productImages" multiple>
+                                        </p>
+
 
                                            <input type="submit" name="" id="" value="Add">
                                        </form>
