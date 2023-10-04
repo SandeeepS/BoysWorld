@@ -196,8 +196,8 @@ exports.updateCategory = async(req,res)=>{
 exports.addingProduct = async(req,res)=>{
     try{
         const{productName,price,stock,image,discription} = req.body;
-        const productImages = req.files.map((file)=>file.path);
-           
+        const productImages = req.files.map((file)=>file.filename);
+        
         console.log(productImages);
         const newData = new productModel({productName,price,stock,image:productImages,discription});
         await newData.save();

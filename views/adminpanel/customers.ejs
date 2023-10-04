@@ -300,17 +300,18 @@
   
       toggleStatusButtons.forEach(function (button) {
           button.addEventListener("click", function () {
+            button.disabled = true;
               const userId = this.getAttribute("data-user-id");
               const statusText = this.parentElement.querySelector(".status-text");
               const isBlocked = statusText.textContent === "Blocked";
   
               // Send an AJAX request to update the user's status
               fetch("/admin/checkStatus", {
-                  method: "POST", // or "PUT" if you prefer
+                  method: "POST", 
                   headers: {
                       "Content-Type": "application/json",
                   },
-                  body: JSON.stringify({ userId: userId, isBlocked: !isBlocked }),
+                  body: JSON.stringify({ userId: userId, isBlocked: isBlocked }),
               })
                   .then((response) => response.json())
                   .then((data) => {
@@ -324,6 +325,7 @@
                           // Handle any error from the server, if needed
                           console.error("Failed to update user status.");
                       }
+                      button.disabled = false;
                   })
                   .catch((error) => {
                       console.error("Error:", error);

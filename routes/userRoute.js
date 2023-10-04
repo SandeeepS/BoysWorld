@@ -12,6 +12,9 @@ route.get('/shop',auth.user,userController.shopPage);
 route.get('/contact',auth.user,userController.contactPage);
 route.get('/otp',userController.getOtpPage);
 
+//varifying otp
+route.post('/verifyOtp',userController.verifyOtp);
+
 
 route.post('/loginUser',userController.userEntry);
 route.post('/logout',userController.logout);

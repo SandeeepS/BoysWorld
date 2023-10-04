@@ -7,8 +7,10 @@ const sch = {
     number:Number,
     pass:String,
     otp:String,
-    status:Boolean
-
+    status:{
+        type:Boolean,
+        default:false
+    }
 }
 const monmodel = mongoose.model("users",sch);
 module.exports = monmodel;
