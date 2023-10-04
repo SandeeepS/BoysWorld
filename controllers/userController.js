@@ -47,6 +47,27 @@ exports.shopPage = async(req,res)=>{
    
 }
 
+//selected product
+
+exports.selectedProduct = async(req,res)=>{
+    try{
+        const prodId = req.params.id;
+        const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
+        // productData.forEach((pro)=>{
+        //     console.log(pro.image);
+        // })
+        
+        res.render('selectedProduct',{productData});
+
+     
+    }catch(error){
+        console.error("error while fetching products",error);
+        res.redirect('/shop');
+    }
+   
+}
+
+
 exports.contactPage = async(req,res)=>{
     res.render('contact');
 }
