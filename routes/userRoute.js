@@ -10,7 +10,7 @@ route.get('/login',auth.isUser,userController.loginPage);
 route.get('/signup',userController.signupPage);
 route.get('/shop',auth.user,userController.shopPage);
 route.get('/contact',auth.user,userController.contactPage);
-route.get('/selectedProduct/:id',userController.selectedProduct)
+route.get('/selectedProduct/:id',auth.user,userController.selectedProduct)
 route.get('/otp',userController.getOtpPage);
 
 //varifying otp
