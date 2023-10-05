@@ -56,11 +56,12 @@ exports.getCustomer = async(req,res)=>{
 exports.getProduct = async(req,res)=>{
     try{
         const productData = await productModel.find({isDeleted:false}).exec();
-        // productData.forEach((pro)=>{
-        //     console.log(pro.image);
-        // })
-        
-        res.render('adminpanel/product',{product:productData});
+        const categoryData = await categoryModel.find({isDelete:false}).exec();
+        const categoriesDict = {};
+        categoryData.forEach((category) => {
+              categoriesDict[category._id.toString()] = category.categoryName;
+        });
+        res.render('adminpanel/product',{product:productData,categories:categoriesDict});
 
      
     }catch(error){
@@ -96,7 +97,7 @@ exports.getBanner = async(req,res)=>{
 
 exports.addProduct = async(req,res)=>{
     try{
-        const categoryData = await categoryModel.find().exec();
+        const categoryData = await categoryModel.find({isDelete:false}).exec();
         res.render('adminpanel/addProduct',{category:categoryData});
     }catch(err){
         console.error("error loading catogories",err);
@@ -111,8 +112,10 @@ exports.getUpdateProductPage = async(req,res)=>{
     try{
          const productId = req.params.id;
          console.log(productId);
+         const categoryData = await categoryModel.find({isDelete:false}).exec();
+      
          const  productToUpdate = await productModel.findById(productId).exec();  
-          res.render('adminpanel/updateProduct',{productToUpdate});
+          res.render('adminpanel/updateProduct',{productToUpdate,category:categoryData});
     }catch(err){
         console.error("error in updation",err);
         res.redirect('/admin/products');
@@ -123,8 +126,8 @@ exports.getUpdateProductPage = async(req,res)=>{
 exports.productUpdated = async(req,res)=>{
     try{
         const productId = req.params.id;
-        const {productName,price,stock,discription} = req.body;
-        await productModel.findByIdAndUpdate(productId,{productName,price,stock,discription}).exec();
+        const {productName,price,stock,discription,category} = req.body;
+        await productModel.findByIdAndUpdate(productId,{productName,price,stock,discription,category}).exec();
         res.redirect('/admin/products');
     }catch(err){
         console.error("error updating product",err);
@@ -165,7 +168,7 @@ exports.addingCategory = async(req,res)=>{
 exports.deleteCategory = async(req,res)=>{
     try{
         const catId = req.params.id;
-        await categoryModel.findByIdAndDelete(catId).exec();
+        await categoryModel.findByIdAndUpdate(catId,{isDelete:true}).exec();
         res.redirect('/admin/categories');
     }catch(err){
         console.error("error while deleting the category",err);
@@ -203,11 +206,11 @@ exports.updateCategory = async(req,res)=>{
 //adding product
 exports.addingProduct = async(req,res)=>{
     try{
-        const{productName,price,stock,image,discription,id} = req.body;
+        const{productName,price,stock,image,discription,category} = req.body;
         const productImages = req.files.map((file)=>file.filename);
         
         console.log(productImages);
-        const newData = new productModel({productName,price,stock,image:productImages,discription,id});
+        const newData = new productModel({productName,price,stock,image:productImages,discription,category});
         await newData.save();
         console.log(`${productName} is inserted Successfully`);
         res.redirect('/admin/products');

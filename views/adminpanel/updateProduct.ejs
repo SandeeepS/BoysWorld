@@ -7,21 +7,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Star Admin2 </title>
   <!-- plugins:css -->
-  <link rel="stylesheet" href="../adminpanel/vendors/feather/feather.css">
-  <link rel="stylesheet" href="../adminpanel/vendors/mdi/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="../adminpanel/vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="../adminpanel/vendors/typicons/typicons.css">
-  <link rel="stylesheet" href="../adminpanel/vendors/simple-line-icons/css/simple-line-icons.css">
-  <link rel="stylesheet" href="../adminpanel/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="/views/adminpanel/vendors/feather/feather.css">
+  <link rel="stylesheet" href="/views/adminpanel/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="/views/adminpanel/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="/views/adminpanel/vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="/views/adminpanel/vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="/views/adminpanel/vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
   <!-- Plugin css for this page -->
-  <link rel="stylesheet" href="../adminpanel/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
-  <link rel="stylesheet" href="../adminpanel/js/select.dataTables.min.css">
+  <link rel="stylesheet" href="/views/adminpanel/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="/views/adminpanel/js/select.dataTables.min.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="/views/adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
+  <link rel="shortcut icon" href="/views/adminpanel/images/favicon.png" />
   
 </head>
 <body>
@@ -36,10 +36,10 @@
         </div>
         <div>
           <a class="navbar-brand brand-logo" href="index.html">
-            <img src="../adminpanel/images/logo.png" alt="logo" />
+            <img src="/views/adminpanel/images/logo.png" alt="logo" />
           </a>
           <a class="navbar-brand brand-logo-mini" href="index.html">
-            <img src="../adminpanel/images/logo-mini.svg" alt="logo" />
+            <img src="/views/adminpanel/images/logo-mini.svg" alt="logo" />
           </a>
         </div>
       </div>
@@ -204,6 +204,20 @@
                                     <div >
                                        <h2>Update products</h2>
                                        <form action="/admin/productUpdated/<%= productToUpdate._id%>" method="post">
+
+                                        <p>
+                                          <label for="add-category">Category:</label>
+                                          <select class="form-control" id="category" name="category">
+                                              <% for (cat of category) { %>
+                                              <option value="<%= cat._id %>"><%= cat.categoryName %></option>
+                                              <% } %>
+                                          </select>
+                                          <!-- Hidden input to store the selected category ID -->
+                                          <input type="hidden" id="selectedCategoryId" name="selectedCategoryId">
+                                      </p>
+                                      
+
+
                                            <p>
                                             <label for="productName">Product Name</label>      
                                             <input type="text" class="form-control" name="productName" value="<%=productToUpdate.productName %>" >
@@ -224,10 +238,7 @@
                                             </p>  
                                               
 
-                                            <p>
-                                                <label for="image">Image Url</label>
-                                                <input type="text" class="form-control" name="image">
-                                            </p>
+                                          
 
                                             <label for="discription">discription</label>
                                             <input type="text" class="form-control" name="discription" value="<%=productToUpdate.discription %>">
@@ -258,7 +269,7 @@
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Fashion King<a href="/admin/dashboard" target="_blank">BoysWorld</a></span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
           </div>
         </footer>
@@ -289,6 +300,20 @@
   <!-- Custom js for this page-->
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
+  <script>
+    // Get references to the select element and hidden input
+    const categorySelect = document.getElementById('category');
+    const selectedCategoryIdInput = document.getElementById('selectedCategoryId');
+
+    // Add an event listener to the select element
+    categorySelect.addEventListener('change', function() {
+        // Get the selected option
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        
+        // Update the value of the hidden input with the selected category's ID
+        selectedCategoryIdInput.value = selectedOption.value;
+    });
+</script>
   <!-- End custom js for this page-->
 </body>
 

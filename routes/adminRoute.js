@@ -19,16 +19,16 @@ adminRoute.get('/addProductPage',auth.isAdmin,adminController.addProduct);
 
 //controlproduct
 adminRoute.post('/addingProduct',upload.array('productImages',5),adminController.addingProduct);
-adminRoute.get('/updateProduct/:id',adminController.getUpdateProductPage);
+adminRoute.get('/updateProduct/:id',auth.isAdmin,adminController.getUpdateProductPage);
 adminRoute.post('/productUpdated/:id',adminController.productUpdated);
 adminRoute.get('/deleteProduct/:id',adminController.deleteProduct);
 
 
 //controll category
-adminRoute.get('/addCategoryPage',adminController.addcategoryPage)
+adminRoute.get('/addCategoryPage',auth.isAdmin,adminController.addcategoryPage)
 adminRoute.post('/addingCategory',adminController.addingCategory);
 adminRoute.get('/deleteCategory/:id',adminController.deleteCategory);
-adminRoute.get('/updateCategory/:id',adminController.getUpdateCategoryPage);
+adminRoute.get('/updateCategory/:id',auth.isAdmin,adminController.getUpdateCategoryPage);
 adminRoute.post('/UpdatedCategory/:id',adminController.updateCategory);
 
 

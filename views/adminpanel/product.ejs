@@ -208,6 +208,7 @@
                                       <tr class="cart_menu">
                                           <th>image</th>
                                           <th>Product Name</th>
+                                          <th>Category</th>
                                           <th>Price</th>
                                           <th>Stock</th>
                                           <th>Discription</th>
@@ -230,6 +231,7 @@
                                         </td>
                                         
                                           <td><%= pro.productName %></td>
+                                          <td><%= categories[pro.category] %></td>
                                           <td><%= pro.price %></td>
                                           <td><%= pro.stock %></td>
                                           <td><%= pro.discription %></td>
@@ -275,7 +277,7 @@
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Fashion King<a href="/admin/dashboard" target="_blank">BoysWorld</a></span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
           </div>
         </footer>

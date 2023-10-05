@@ -205,16 +205,17 @@
                                        <h2>Add products</h2>
                                        <form action="/admin/addingProduct" method="post" enctype="multipart/form-data">
                                           
-                                              <p>
-                                                <label for="add-category"> Category:</label>
-                                                
-                                                <select class="form-control" id="category" name="category">
-                                                  <% for(cat of category){%>
-                                                    <option value="<%=cat._id%>"><%=cat.categoryName%></option>
-                                                  <%}%>
-                                                   </select>
-                                                 
-                                              </p> 
+                                        <p>
+                                          <label for="add-category">Category:</label>
+                                          <select class="form-control" id="category" name="category">
+                                              <% for (cat of category) { %>
+                                              <option value="<%= cat._id %>"><%= cat.categoryName %></option>
+                                              <% } %>
+                                          </select>
+                                          <!-- Hidden input to store the selected category ID -->
+                                          <input type="hidden" id="selectedCategoryId" name="selectedCategoryId">
+                                      </p>
+                                      
                                           
 
                                            <p>
@@ -273,7 +274,7 @@
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Fashion King<a href="/admin/dashboard" target="_blank">BoysWorld</a></span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
           </div>
         </footer>
@@ -304,6 +305,22 @@
   <!-- Custom js for this page-->
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
+
+  <script>
+    // Get references to the select element and hidden input
+    const categorySelect = document.getElementById('category');
+    const selectedCategoryIdInput = document.getElementById('selectedCategoryId');
+
+    // Add an event listener to the select element
+    categorySelect.addEventListener('change', function() {
+        // Get the selected option
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        
+        // Update the value of the hidden input with the selected category's ID
+        selectedCategoryIdInput.value = selectedOption.value;
+    });
+</script>
+
   <!-- End custom js for this page-->
 </body>
 
