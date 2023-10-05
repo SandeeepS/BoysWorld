@@ -22,6 +22,12 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+	<style>
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
 </head><!--/head-->
 
 <body>
@@ -75,7 +81,10 @@
 					<div class="login-form">
 						
 						<h2>Login to your account</h2>
-						<form action="/loginUser" method="post">
+						<div class="error-message" id="error-messsage"></div>
+						<br>
+						<br>
+						<form action="/loginUser" method="post" onsubmit="return validateform()">
 							<input type="text" id="userid" name="Userid" placeholder="UserId" />
 							<input type="password" id="password" name="Password" placeholder="Password" />
 							<button type="submit" class="btn btn-default">Login</button>
@@ -130,5 +139,27 @@
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+	<script>
+		function validateform(){
+			const userid = document.getElementById('userid').value;
+			const password = document.getElementById('password').value;
+			const errorMessage = document.getElementById('error-messsage');
+
+			if(userid === ""||userid ===null||password ===""||password===null){
+				errorMessage.innerText = "Please fill in all the fields.";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			
+		    }else{
+				return true;
+			}
+	    }
+
+	</script>
 </body>
 </html>

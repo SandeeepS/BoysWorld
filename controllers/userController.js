@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport({
 
 const {user} = require('../models/userModel');
 const {otp}  = require('../models/otp');
+const categoryModel = require('../models/categoryModel');
 
 exports.home = async(req,res)=>{
     res.render("index");
@@ -33,11 +34,9 @@ exports.signupPage = async(req,res)=>{
 exports.shopPage = async(req,res)=>{
     try{
         const productData = await productModel.find({isDeleted:false}).exec();
-        // productData.forEach((pro)=>{
-        //     console.log(pro.image);
-        // })
-        
-        res.render('shop',{product:productData});
+        const categoryData = await categoryModel.find({isDelete:false}).exec();
+      
+        res.render('shop',{product:productData,category:categoryData});
 
      
     }catch(error){
@@ -95,7 +94,7 @@ exports.userEntry = async(req,res)=>{
             console.log( req.session.user);
             res.redirect('/shop');
         }else{
-            res.redirect('/');
+            res.redirect('/login');
         }
     }catch(error){
         
