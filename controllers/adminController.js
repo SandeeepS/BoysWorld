@@ -2,8 +2,7 @@ const userModel = require('../models/userModel');
 const adModel = require('../models/adminModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
-const fs = require('fs');
-const { log } = require('console');
+
 
 
 
@@ -77,30 +76,21 @@ exports.deleteProductImage = async (req, res) => {
         const productId = req.query.productId;
         console.log(productId);
         const imageId = req.query.imageId;
-
-        // Find the product by its productId
         const product = await productModel.findById(productId);
-
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-
-        // Find the index of the image with the given imageId in the product's image array
         const imageIndex = product.image.find(image => image === imageId);
 
         if (imageIndex === -1) {
             return res.status(404).json({ message: 'Image not found for this product' });
         }
 
-        // Remove the image at the specified index
+        
         product.image.splice(imageIndex, 1);
+         await product.save();
+         res.status(200).json({ message: 'Image deleted successfully' });
 
-        // Save the updated product to the database
-        await product.save();
-
-        // Now, you can also delete the actual image file from your storage if needed
-
-        res.status(200).json({ message: 'Image deleted successfully' });
     } catch (err) {
         console.error('Error while deleting the image', err);
         res.status(500).json({ message: 'Internal server error' });
