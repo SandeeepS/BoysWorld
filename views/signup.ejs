@@ -74,13 +74,13 @@
 				<div class="col-sm-6 ">
 					<div class="signup-form"><!--sign up form-->
 						<h2>New User Signup!</h2>
-						<form action="signup" method="post">
-							<input type="text" name="username" placeholder="Name"/>
-							<input type="text" name="userid" placeholder="UserId"/>
-							<input type="email" name="email" placeholder="Email Address"/>
-							<input type="number" name="phonenumber" placeholder="Phone Number"/>
-							<input type="password"  name="password" placeholder="Password"/>
-							<input type="password" placeholder="Conform Password"/>
+						<form action="/signup" method="post" onsubmit="return validateForm()">
+							<input type="text" name="username" id="username" placeholder="Name"/>
+							<input type="text" name="userid" placeholder="UserId" id="userid"/>
+							<input type="email" name="email" placeholder="Email Address" id="email"/>
+							<input type="number" name="phonenumber" placeholder="Phone Number" id="number"/>
+							<input type="password"  name="password" placeholder="Password" id="pass"/>
+							<input type="password" placeholder="Conform Password" id="cpass"/>
 							<button type="submit" class="btn btn-default">Signup</button>
 						</form>
 					</div><!--/sign up form-->
@@ -178,5 +178,28 @@
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+	<script>
+		function validateForm(){
+			const username = document.getElementById('username');
+			
+			const userid = document.getElementById('userid').value;
+			const email = document.getElementById('email').value;
+			const number = document.getElementById('number').value;
+			const pass = document.getElementById('pass').value;
+			const cpass = document.getElementById('cpass').value;
+
+			if(username ===""||username ===null|| userid === ""|| userid === null||email === ""||email === null|| number ===""|| number === null ||pass === ""  ||pass === null||cpass === "" ||cpass === null){
+				alert("please fill the form");
+				return false;
+			}else if(pass !== cpass){
+                alert("given passwords are not match");
+				return false;
+			}
+			else{
+				return true;
+			}
+
+		}
+	</script>
 </body>
 </html>

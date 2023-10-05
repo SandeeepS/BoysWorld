@@ -9,7 +9,9 @@ const sch = {
     isDeleted:{
         type:Boolean,
         default:false,
-    }
+    },
+    category:String,
+
 }
 
 const productModel = mongoose.model("products",sch);

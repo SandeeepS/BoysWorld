@@ -121,7 +121,7 @@ exports.signup = async(req,res)=>{
     "phonenumber":req.body.phonenumber,
     "password":req.body.password,
    }
- 
+  
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -147,7 +147,7 @@ exports.signup = async(req,res)=>{
       } else {
         console.log('Email sent:', info.response);
         
-        res.render('otp');
+        res.redirect('/getOtpPage');
       }
     });
     
@@ -181,12 +181,15 @@ exports.verifyOtp = async (req, res) => {
         "pass":userData.password,
         
     });
+
     const {name} = data;
     console.log(name);
     const savedData = await data.save();
-     
+     req.session.user = req.session.userData.userid;
+    console.log(req.session.user);
     if(savedData){
         console.log("Record inserted successfully");
+      
         res.redirect('/shop'); // Redirect to the OTP verification page
             
 

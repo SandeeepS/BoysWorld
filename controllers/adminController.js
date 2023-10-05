@@ -70,7 +70,7 @@ exports.getProduct = async(req,res)=>{
 
 exports.getCategories = async (req, res) => {
     try {
-        const categoryData = await categoryModel.find({isDeleted:false}).exec();
+        const categoryData = await categoryModel.find({isDelete:false}).exec();
         console.log(categoryData);
         if (!categoryData) {
               console.log("No categories found in the database.");
@@ -95,7 +95,13 @@ exports.getBanner = async(req,res)=>{
 
 
 exports.addProduct = async(req,res)=>{
-    res.render('adminpanel/addProduct');
+    try{
+        const categoryData = await categoryModel.find().exec();
+        res.render('adminpanel/addProduct',{category:categoryData});
+    }catch(err){
+        console.error("error loading catogories",err);
+    }
+    
 }
 
 
@@ -197,11 +203,11 @@ exports.updateCategory = async(req,res)=>{
 //adding product
 exports.addingProduct = async(req,res)=>{
     try{
-        const{productName,price,stock,image,discription} = req.body;
+        const{productName,price,stock,image,discription,id} = req.body;
         const productImages = req.files.map((file)=>file.filename);
         
         console.log(productImages);
-        const newData = new productModel({productName,price,stock,image:productImages,discription});
+        const newData = new productModel({productName,price,stock,image:productImages,discription,id});
         await newData.save();
         console.log(`${productName} is inserted Successfully`);
         res.redirect('/admin/products');

@@ -7,14 +7,15 @@ const auth = require('../middleware/middlewares');
 //user routes
 route.get('/',userController.home);
 route.get('/login',auth.isUser,userController.loginPage);
-route.get('/signup',userController.signupPage);
+route.get('/signup',auth.isUser,userController.signupPage);
 route.get('/shop',auth.user,userController.shopPage);
 route.get('/contact',auth.user,userController.contactPage);
 route.get('/selectedProduct/:id',auth.user,userController.selectedProduct)
-route.get('/otp',userController.getOtpPage);
+route.get('/getOtpPage',auth.isUser,userController.getOtpPage);
+
 
 //varifying otp
-route.post('/verifyOtp',userController.verifyOtp);
+route.post('/verifyOtp',auth.isUser,userController.verifyOtp);
 
 
 route.post('/loginUser',userController.userEntry);

@@ -9,7 +9,7 @@ const sch = {
     otp:String,
     status:{
         type:Boolean,
-        default:false
+        default:true
     }
 }
 const monmodel = mongoose.model("users",sch);
