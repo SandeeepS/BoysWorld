@@ -156,7 +156,12 @@ exports.productUpdated = async(req,res)=>{
     try{
         const productId = req.params.id;
         const {productName,price,stock,discription,category} = req.body;
-        await productModel.findByIdAndUpdate(productId,{productName,price,stock,discription,category}).exec();
+        const existingProduct = await productModel.findById(productId).exec();
+        const productImages = req.files ? req.files.map((file) => file.file.name) : [];
+        const updatedImages = existingProduct.image.concat(productImages);
+        console.log(productImages);
+        console.log(updatedImages);
+        await productModel.findByIdAndUpdate(productId,{productName,price,stock,image:updatedImages,discription,category}).exec();
         res.redirect('/admin/products');
     }catch(err){
         console.error("error updating product",err);
