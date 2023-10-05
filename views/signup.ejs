@@ -22,6 +22,12 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+	<style>
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
 </head><!--/head-->
 
 <body>
@@ -74,15 +80,17 @@
 				<div class="col-sm-6 ">
 					<div class="signup-form"><!--sign up form-->
 						<h2>New User Signup!</h2>
-						<form action="/signup" method="post" onsubmit="return validateForm()">
-							<input type="text" name="username" id="username" placeholder="Name"/>
-							<input type="text" name="userid" placeholder="UserId" id="userid"/>
-							<input type="email" name="email" placeholder="Email Address" id="email"/>
-							<input type="number" name="phonenumber" placeholder="Phone Number" id="number"/>
-							<input type="password"  name="password" placeholder="Password" id="pass"/>
-							<input type="password" placeholder="Conform Password" id="cpass"/>
-							<button type="submit" class="btn btn-default">Signup</button>
-						</form>
+                        <div class="error-message" id="error-message"></div>
+                        <form action="/signup" method="post" onsubmit="return validateForm()">
+                            <input type="text" name="username" id="username" placeholder="Name" />
+                            <input type="text" name="userid" placeholder="UserId" id="userid" />
+                            <input type="email" name="email" placeholder="Email Address" id="email" />
+                            <input type="number" name="phonenumber" placeholder="Phone Number" id="number" />
+                            <input type="password" name="password" placeholder="Password" id="pass" />
+                            <input type="password" placeholder="Confirm Password" id="cpass" />
+                            <button type="submit" class="btn btn-default">Signup</button>
+                        </form>
+
 					</div><!--/sign up form-->
 				</div>
 			</div>
@@ -187,12 +195,26 @@
 			const number = document.getElementById('number').value;
 			const pass = document.getElementById('pass').value;
 			const cpass = document.getElementById('cpass').value;
+			const errorMessage = document.getElementById('error-message');
 
 			if(username ===""||username ===null|| userid === ""|| userid === null||email === ""||email === null|| number ===""|| number === null ||pass === ""  ||pass === null||cpass === "" ||cpass === null){
-				alert("please fill the form");
+				errorMessage.innerText = "Please fill in all the fields.";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
 				return false;
 			}else if(pass !== cpass){
-                alert("given passwords are not match");
+                errorMessage.innerText = "Passwords do not match.";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
 				return false;
 			}
 			else{
