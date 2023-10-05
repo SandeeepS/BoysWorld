@@ -22,6 +22,20 @@
   <link rel="stylesheet" href="/views/adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="/views/adminpanel/images/favicon.png" />
+  <style>
+    .image-container {
+      width: 200px; 
+      height: 200px; 
+      overflow: hidden; 
+    }
+    
+    .image-container img {
+      width: 100%; 
+      height: auto;
+      display: block;
+    }
+  </style>
+  
   
 </head>
 <body>
@@ -243,6 +257,27 @@
                                             <label for="discription">discription</label>
                                             <input type="text" class="form-control" name="discription" value="<%=productToUpdate.discription %>">
                                            </p>
+
+                                           <p>
+                                            <label for="images">Product Images </label>
+                                            <input type="file" class="form-control" name="images" multiple accept="image/*">
+                                          </p>
+                                          
+                                         <p>
+                                         
+                                          <div class="existing-images">
+                                            <% for (let i=0 ; i < productToUpdate.image.length ; i++) { %>
+                                              <div class="existing-image image-container">
+                                                <img src="/views/productImages/<%= productToUpdate.image[i] %>" >
+                                               
+                                              </div>
+                                           
+                                              <a href="/admin/deleteProductImage?productId=<%= productToUpdate._id %>&imageName=<%= productToUpdate.image[i] %>">Delete</a>
+                                              <a href="#" class="delete-image" >Change</a>
+                                            <% } %>
+                                          </div>
+                                         
+                                        </p>
 
                                            <input type="submit" name="" id="" value="Update">
                                        </form>

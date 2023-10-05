@@ -69,6 +69,45 @@ exports.getProduct = async(req,res)=>{
     }
 } 
 
+//deleting product images
+
+
+exports.deleteProductImage = async (req, res) => {
+    try {
+        const productId = req.query.productId;
+        console.log(productId);
+        const imageId = req.query.imageId;
+
+        // Find the product by its productId
+        const product = await productModel.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Find the index of the image with the given imageId in the product's image array
+        const imageIndex = product.image.find(image => image === imageId);
+
+        if (imageIndex === -1) {
+            return res.status(404).json({ message: 'Image not found for this product' });
+        }
+
+        // Remove the image at the specified index
+        product.image.splice(imageIndex, 1);
+
+        // Save the updated product to the database
+        await product.save();
+
+        // Now, you can also delete the actual image file from your storage if needed
+
+        res.status(200).json({ message: 'Image deleted successfully' });
+    } catch (err) {
+        console.error('Error while deleting the image', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
 exports.getCategories = async (req, res) => {
     try {
         const categoryData = await categoryModel.find({isDelete:false}).exec();
