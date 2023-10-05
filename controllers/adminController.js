@@ -3,6 +3,7 @@ const adModel = require('../models/adminModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const fs = require('fs');
+const { log } = require('console');
 
 
 
@@ -69,7 +70,8 @@ exports.getProduct = async(req,res)=>{
 
 exports.getCategories = async (req, res) => {
     try {
-        const categoryData = await categoryModel.find().exec();
+        const categoryData = await categoryModel.find({isDeleted:false}).exec();
+        console.log(categoryData);
         if (!categoryData) {
               console.log("No categories found in the database.");
         } else {

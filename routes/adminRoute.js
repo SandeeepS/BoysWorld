@@ -9,12 +9,12 @@ const upload = require('../multerConfig');
 adminRoute.get('/',auth.admin,adminController.adminlogin);
 adminRoute.get('/dashboard',auth.isAdmin,adminController.getHomePage);
 adminRoute.post('/login',adminController.getDashboard);
-adminRoute.get('/customers',adminController.getCustomer);
-adminRoute.get('/products',adminController.getProduct);
-adminRoute.get('/categories',adminController.getCategories);
-adminRoute.get('/orders',adminController.getOrders);
-adminRoute.get('/banner',adminController.getBanner);
-adminRoute.get('/addProductPage',adminController.addProduct);
+adminRoute.get('/customers',auth.isAdmin,adminController.getCustomer);
+adminRoute.get('/products',auth.isAdmin,adminController.getProduct);
+adminRoute.get('/categories',auth.isAdmin,adminController.getCategories);
+adminRoute.get('/orders',auth.isAdmin,adminController.getOrders);
+adminRoute.get('/banner',auth.isAdmin,adminController.getBanner);
+adminRoute.get('/addProductPage',auth.isAdmin,adminController.addProduct);
 
 
 //controlproduct
