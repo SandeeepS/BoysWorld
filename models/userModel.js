@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const sch = {
     name:String,
-    userid:String,
     email:String,
     number:Number,
     pass:String,

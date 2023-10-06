@@ -20,6 +20,12 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
+  <style>
+    .error-message {
+        color: red;
+        display: none;
+    }
+</style>
 </head>
 
 <body>
@@ -34,9 +40,19 @@
               </div>
               <h4>Hello! let's get started</h4>
               <h6 class="fw-light">Sign in to continue.</h6>
-              <form class="pt-3" action="/admin/login"  method="post">
+
+              <div class="error-message" id="error-messsage">
+                
+              </div>
+						   <br>
+               <% if(message){ %>
+                <p style="color: black;"><%= message %></p>
+               <%}%>
+						   <br>
+
+              <form class="pt-3" action="/admin/login"  method="post" onsubmit="return validateform()">
                 <div class="form-group">
-                  <input type="name" class="form-control form-control-lg"  name="adname" id="adname" placeholder="Username">
+                  <input type="name" class="form-control form-control-lg"  name="email" id="Email" placeholder="Email Id">
                 </div>
                 <div class="form-group">
                   <input type="password" class="form-control form-control-lg" name="adPassword" id="adPassword" placeholder="Password">
@@ -69,6 +85,28 @@
   <script src="../../js/template.js"></script>
   <script src="../../js/settings.js"></script>
   <script src="../../js/todolist.js"></script>
+  <script>
+		function validateform(){
+			const email = document.getElementById('Email').value;
+			const password = document.getElementById('adPassword').value;
+			const errorMessage = document.getElementById('error-messsage');
+
+			if(email === ""||email ===null||password ===""||password===null){
+				errorMessage.innerText = "Please fill in all the fields.";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+        return false;
+			
+		    }else{
+				return true;
+			}
+	    }
+
+	</script>
   <!-- endinject -->
 </body>
 

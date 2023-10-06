@@ -8,7 +8,7 @@ const upload = require('../multerConfig');
 //adminroute
 adminRoute.get('/',auth.admin,adminController.adminlogin);
 adminRoute.get('/dashboard',auth.isAdmin,adminController.getHomePage);
-adminRoute.post('/login',adminController.getDashboard);
+adminRoute.post('/login',auth.admin,adminController.getDashboard);
 adminRoute.get('/customers',auth.isAdmin,adminController.getCustomer);
 adminRoute.get('/products',auth.isAdmin,adminController.getProduct);
 adminRoute.get('/categories',auth.isAdmin,adminController.getCategories);

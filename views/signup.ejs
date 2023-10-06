@@ -83,7 +83,6 @@
                         <div class="error-message" id="error-message"></div>
                         <form action="/signup" method="post" onsubmit="return validateForm()">
                             <input type="text" name="username" id="username" placeholder="Name" />
-                            <input type="text" name="userid" placeholder="UserId" id="userid" />
                             <input type="email" name="email" placeholder="Email Address" id="email" />
                             <input type="number" name="phonenumber" placeholder="Phone Number" id="number" />
                             <input type="password" name="password" placeholder="Password" id="pass" />
@@ -197,7 +196,7 @@
 			const cpass = document.getElementById('cpass').value;
 			const errorMessage = document.getElementById('error-message');
 
-			if(username ===""||username ===null|| userid === ""|| userid === null||email === ""||email === null|| number ===""|| number === null ||pass === ""  ||pass === null||cpass === "" ||cpass === null){
+			if(username ===""||username ===null||email === ""||email === null|| number ===""|| number === null ||pass === ""  ||pass === null||cpass === "" ||cpass === null){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
 

@@ -11,7 +11,8 @@ exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
         res.redirect('/admin/dashboard');
     }else{
-        res.render('adminpanel/login');
+        const message = "Admin Login";
+        res.render('adminpanel/login',{message});
     }
 }
 
@@ -20,12 +21,12 @@ exports.getHomePage = async(req,res)=>{
 }
 
 exports.getDashboard = async(req,res)=>{
-    const {adname,adPassword} = req.body;
-    console.log(adname);
+    const {email,adPassword} = req.body;
+    console.log(email);
     console.log(adPassword);
 
     try{
-        const admin = await adModel.findOne({name:adname,pass:adPassword}).exec();
+        const admin = await adModel.findOne({email:email,pass:adPassword}).exec();
         console.log("admin found in the database :",admin);
 
         if(admin){
@@ -33,7 +34,8 @@ exports.getDashboard = async(req,res)=>{
             console.log(req.session.admin);
             res.redirect('/admin/dashboard');
         }else{
-            res.redirect('/admin');
+            const message = "incorrect password or username";
+            res.render('adminpanel/login',{message});
         }
     }catch(error){
         console.error("error during login:",error);

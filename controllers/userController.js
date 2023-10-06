@@ -3,7 +3,7 @@ const UserModel = require('../models/userModel');
 const productModel = require('../models/productModel');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
-
+const bcrypt  = require('bcrypt');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -83,16 +83,22 @@ exports.getOtpPage = async(req,res)=>{
 
 
 exports.userEntry = async(req,res)=>{
-    const {Userid,Password} = req.body;
-    console.log(Userid);
+    const {Email,Password} = req.body;
+    console.log(Email);
     console.log(Password);
 
     try{
-        const user = await UserModel.findOne({userid:Userid,pass:Password}).exec();
+        const user = await UserModel.findOne({email:Email}).exec();
         if(user && user.status === true){
-            req.session.user = user.userid;
-            console.log( req.session.user);
-            res.redirect('/shop');
+            const passwordMatch = await bcrypt.compare(Password,user.pass);
+            if(passwordMatch){
+                req.session.user = user.email;
+                console.log( req.session.user);
+                res.redirect('/shop');
+            }else{
+                res.redirect('/login');
+            }
+          
         }else{
             res.redirect('/login');
         }
@@ -112,14 +118,16 @@ exports.signup = async(req,res)=>{
           
     // Generate a random OTP
     const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
+    const saltRouds = 10;
+    const hashedpassword = await bcrypt.hash(req.body.password,saltRouds);
    req.session.otpStorage = otp;
    req.session.userData ={
     "username":req.body.username,
-    "userid":req.body.userid,
     "email":req.body.email,
     "phonenumber":req.body.phonenumber,
-    "password":req.body.password,
+    "password":hashedpassword,
    }
+
   
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
