@@ -181,13 +181,6 @@
 						<%}%>
 					</div>	
 				</div>		
-					
-				
-						
-				
-					
-				
-				
 				<div class="col-sm-9 padding-right">
 					<div class="features_items"><!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
@@ -196,16 +189,16 @@
                              <div class="col-sm-4">
                                 <div class="product-image-wrapper">
 								<div class="single-products">
-									<% for(let i = 0 ;i<pro.image;i++){%>
-                                         
-									<%}%>
-										<div class="productinfo text-center">
-											<img src="/views/productImages/<%= pro.image%>" alt="" />
-											
-											<p><%=pro.discription%></p>
-											<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-										</div>
+									<% for(let i = 0 ;i<pro.image.length;i++){%>
 										
+									<%}%>
+										
+									<div class="productinfo text-center">
+										<img src="/views/productImages/<%= pro.image[1]%>" alt="" height="400px" width="100px" />
+										
+										<p><%=pro.discription%></p>
+										<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+									</div>
 								</div>
 								<div class="choose">
 									<ul class="nav nav-pills nav-justified">

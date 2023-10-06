@@ -20,7 +20,7 @@ adminRoute.get('/addProductPage',auth.isAdmin,adminController.addProduct);
 //controlproduct
 adminRoute.post('/addingProduct',upload.array('productImages',5),adminController.addingProduct);
 adminRoute.get('/updateProduct/:id',auth.isAdmin,adminController.getUpdateProductPage);
-adminRoute.post('/productUpdated/:id',adminController.productUpdated);
+adminRoute.post('/productUpdated/:id',upload.array('image',3),adminController.productUpdated);
 adminRoute.get('/deleteProduct/:id',adminController.deleteProduct);
 adminRoute.get('/deleteProductImage',adminController.deleteProductImage);
 
