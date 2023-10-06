@@ -80,7 +80,9 @@
 				<div class="col-sm-6 ">
 					<div class="signup-form"><!--sign up form-->
 						<h2>New User Signup!</h2>
-                        <div class="error-message" id="error-message"></div>
+                        <div class="error-message" id="error-message">
+							
+						</div>
                         <form action="/signup" method="post" onsubmit="return validateForm()">
                             <input type="text" name="username" id="username" placeholder="Name" />
                             <input type="email" name="email" placeholder="Email Address" id="email" />
@@ -188,8 +190,6 @@
 	<script>
 		function validateForm(){
 			const username = document.getElementById('username');
-			
-			const userid = document.getElementById('userid').value;
 			const email = document.getElementById('email').value;
 			const number = document.getElementById('number').value;
 			const pass = document.getElementById('pass').value;

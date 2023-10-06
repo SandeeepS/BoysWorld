@@ -18,7 +18,7 @@ route.get('/getOtpPage',auth.isUser,userController.getOtpPage);
 route.post('/verifyOtp',auth.isUser,userController.verifyOtp);
 
 
-route.post('/loginUser',userController.userEntry);
+route.post('/loginUser',auth.isUser,userController.userEntry);
 route.post('/logout',userController.logout);
 
 

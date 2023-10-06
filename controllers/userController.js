@@ -24,7 +24,8 @@ exports.home = async(req,res)=>{
 }
 
 exports.loginPage = async(req,res)=>{
-    res.render("login");
+    const message = "Lets Go";
+    res.render("login",{message});
 }
 
 exports.signupPage = async(req,res)=>{
@@ -96,7 +97,8 @@ exports.userEntry = async(req,res)=>{
                 console.log( req.session.user);
                 res.redirect('/shop');
             }else{
-                res.redirect('/login');
+                const message = "incorrect email or password";
+                res.render('login',{message});
             }
           
         }else{
@@ -192,7 +194,7 @@ exports.verifyOtp = async (req, res) => {
     const {name} = data;
     console.log(name);
     const savedData = await data.save();
-     req.session.user = req.session.userData.userid;
+     req.session.user = req.session.userData.email;
     console.log(req.session.user);
     if(savedData){
         console.log("Record inserted successfully");
