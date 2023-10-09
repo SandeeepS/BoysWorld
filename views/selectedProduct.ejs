@@ -22,35 +22,24 @@
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-        <style>
-            .xzoom-thumbs img{
-                display: inline-block;
-                height: 80px;
-                width: 80px;
-                border: 1px solid #ccc;
-				.zoomed-image-container {
-					display: none; /* Initially hide the container */
-					position: absolute;
-					top: 0;
-					left: 100%; /* Position to the right of the main image */
-					margin-left: 10px; /* Add some spacing */
-					width: 80px; /* Adjust the width as needed */
-				}
-				
-				.zoomed-image-container .xzoom-thumbs {
-					display: block;
-				}
-				
-				.xzoom-thumbs img {
-					display: inline-block;
-					height: 80px;
-					width: 80px;
-					border: 1px solid #ccc;
-				}
-				
-            }
-        </style>
-    
+		<style>
+			.xzoom-thumbs img {
+				display: inline-block;
+				height: 80px;
+				width: 80px;
+				border: 1px solid #ccc;
+			}
+		
+			.zoomed-image-container {
+				display: none; /* Initially hide the container */
+				position: absolute;
+				top: 0;
+				left: 100%; /* Position to the right of the main image */
+				margin-left: 10px; /* Add some spacing */
+				width: 80px; /* Adjust the width as needed */
+			}
+		</style>
+		
 
 
     </head><!--/head-->
@@ -127,50 +116,51 @@
 				<div class="col-sm-9 padding-right">
 					<div class="features_items"><!--features_items-->
 						<h2 class="title text-center"><%= productData.productName%></h2>
-
-						
-
-						
-						<div class="col-sm-4">
-                            
-							<div class="product-image-wrapper">
-								<div class="single-products">
-                                        <div class="productinfo text-center">
-										
-                                            <div  id="xzoom-default">
-                                                <img src="/views/productImages/<%= productData.image[0]%>" alt="" id="zoom-image">
-                                            </div>
-										    <div class="xzoom-thumbs">
-												<% for(let i = 0 ; i < productData.image.length ; i++){ %>
-													<a href="" data-index="<%= i %>">
-														<img class="xzoom-gallery" src="/views/productImages/<%= productData.image[i]%>" alt="">
-													</a>
-	
-												<%}%>
-                                               
-                                               
-											</div>
-                                        </div>
-                                                   
-                                            </div>
-										</div>
-                                        <p><%=productData.discription%></p>
-                                        <a href="" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-										
-								</div>
-								
-							</div>
-							
-							
-                        </div>
-						<div class="col-sm-4">
-							<div class="xzoom" id="zoomed-image-container">
-								
-							</div>
-						</div>		
-								</div><!--features_items-->
-
+                    </div>
 				</div>
+			</div>					
+				
+
+   
+		    
+			<div class="row">
+				<div class="col-sm-1">
+
+					<div class="xzoom-thumbs">
+						<% for(let i = 0 ; i < productData.image.length ; i++){ %>
+							<a href="" data-index="<%= i %>">
+								<img class="xzoom-gallery" src="/views/productImages/<%= productData.image[i]%>" alt="">
+							</a>
+
+						<%}%>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="col-sm-12">
+						<div class="product-image-wrapper">
+							<div class="single-products">
+									<div class="productinfo text-center">
+									
+										<div  id="xzoom-default">
+											<img src="/views/productImages/<%= productData.image[0]%>" alt="" id="zoom-image">
+										</div>
+										
+										
+									</div>
+									
+												
+							</div>
+						</div>
+											
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<p><%=productData.discription%></p>
+						<h4>₹<%=productData.price%></h4>
+						<a href="/addToCart/<%=productData._id%>" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
+					</div>
+				</div>
+				
 			</div>
 		</div>
 	</section>
@@ -214,54 +204,7 @@
 	<script src="../js/price-range.js"></script>
     <script src="../js/jquery.prettyPhoto.js"></script>
     <script src="../js/main.js"></script>
-  
-   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
-	<script>
-		$(document).ready(function () {
-			// Initialize the main image zoom
-			$('#zoom-image').elevateZoom({
-				zoomType: "inner",
-				cursor: "crosshair"
-			});
 	
-			// Get references to the main image and the container
-			const mainImage = $('#zoom-image');
-			const zoomContainer = $('.xzoom');
-			const thumbsContainer = $('.xzoom-thumbs');
-	
-			// Add a click event listener to the images inside xzoom-thumbs
-			$('.xzoom-thumbs img').on('click', function () {
-				// Get the source of the clicked image
-				const dataIndex = $(this).data('index');
-				const clickedImageSrc = `/views/productImages/${productData.image[dataIndex]}`;
-				
-				
-	
-				// Update the main image source with the clicked image source
-				mainImage.attr('src', clickedImageSrc);
-	
-				// Reinitialize the main image zoom (if needed)
-				mainImage.data('elevateZoom').swaptheimage(clickedImageSrc);
-	
-				// Move the clicked image to the xzoom-default container
-				$(this).appendTo(zoomContainer);
 
-				// Move the previous main image back to xzoom-thumbs
-				thumbsContainer.append(zoomContainer.find('img:not(#zoom-image)'));
-			});
-	
-			// Show the zoomed-image-container when hovering over the main image
-			zoomContainer.hover(
-				function () {
-					$('.zoomed-image-container').css('display', 'block');
-				},
-				function () {
-					$('.zoomed-image-container').css('display', 'none');
-				}
-			);
-		});
-	</script>
-	
 </body>
 </html>

@@ -83,13 +83,14 @@
                         <div class="error-message" id="error-message">
 							
 						</div>
-                        <form action="/signup" method="post" onsubmit="return validateForm()">
+                        <form action="/signupUser" method="post" onsubmit="return validateForm()">
                             <input type="text" name="username" id="username" placeholder="Name" />
                             <input type="email" name="email" placeholder="Email Address" id="email" />
                             <input type="number" name="phonenumber" placeholder="Phone Number" id="number" />
                             <input type="password" name="password" placeholder="Password" id="pass" />
                             <input type="password" placeholder="Confirm Password" id="cpass" />
                             <button type="submit" class="btn btn-default">Signup</button>
+						
                         </form>
 
 					</div><!--/sign up form-->
@@ -195,7 +196,7 @@
 			const pass = document.getElementById('pass').value;
 			const cpass = document.getElementById('cpass').value;
 			const errorMessage = document.getElementById('error-message');
-
+			const phonePattern = /^(?=.*[1-9])\d{10}$/;
 			if(username ===""||username ===null||email === ""||email === null|| number ===""|| number === null ||pass === ""  ||pass === null||cpass === "" ||cpass === null){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
@@ -214,6 +215,15 @@
                 setTimeout(function () {
                     errorMessage.style.display = "none";
                 }, 3000);
+				return false;
+			}  else if (!phonePattern.test(number)) {
+				errorMessage.innerText = "Please enter a valid phone number (10 digits).";
+				errorMessage.style.display = "block";
+	
+				// Hide the error message after 3 seconds
+				setTimeout(function () {
+					errorMessage.style.display = "none";
+				}, 3000);
 				return false;
 			}
 			else{

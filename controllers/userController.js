@@ -4,6 +4,7 @@ const productModel = require('../models/productModel');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
+const moment =  require('moment');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -53,10 +54,6 @@ exports.selectedProduct = async(req,res)=>{
     try{
         const prodId = req.params.id;
         const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
-        // productData.forEach((pro)=>{
-        //     console.log(pro.image);
-        // })
-        
         res.render('selectedProduct',{productData});
 
      
@@ -79,7 +76,8 @@ exports.sportsWear = async(req,res)=>{
 }
 
 exports.getOtpPage = async(req,res)=>{
-    res.render('otp');
+    const message = "Enter OTP ";
+    res.render('otp',{message});
 }
 
 
@@ -93,7 +91,7 @@ exports.userEntry = async(req,res)=>{
         if(user && user.status === true){
             const passwordMatch = await bcrypt.compare(Password,user.pass);
             if(passwordMatch){
-                req.session.user = user.email;
+                req.session.user = user._id;
                 console.log( req.session.user);
                 res.redirect('/shop');
             }else{
@@ -120,16 +118,20 @@ exports.signup = async(req,res)=>{
           
     // Generate a random OTP
     const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
+    const extime = moment().add(30,'seconds').toISOString();
     const saltRouds = 10;
     const hashedpassword = await bcrypt.hash(req.body.password,saltRouds);
-   req.session.otpStorage = otp;
+    req.session.otpStorage = {
+        otp,
+        expirationTime: extime,
+      };
    req.session.userData ={
     "username":req.body.username,
     "email":req.body.email,
     "phonenumber":req.body.phonenumber,
     "password":hashedpassword,
    }
-
+   console.log(req.session.otpStorage);
   
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
@@ -168,6 +170,46 @@ exports.signup = async(req,res)=>{
 };
 
 
+//resendOTP
+exports.resendOTP = async(req,res)=>{
+    try{
+        const otp = otpGenerator(4,{upperCase:false,specialChars:false});
+        req.session.otpStorage = otp;
+           // Create a Nodemailer transporter
+        const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'iamsandeep6969400@gmail.com',
+          pass: 'ijpzysobzeshejlv',
+           },
+         });
+  
+      // Email configuration
+      const mailOptions = {
+        from: 'sandeeps@gmail.com',
+        to: '2002m9002@gmail.com', // Replace with the recipient's email
+        subject: 'Resend OTP Verification',
+        text: `Your new OTP is: ${otp}`,
+      };
+  
+      // Send the email with the new OTP
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error sending email:', error);
+          res.status(500).json({ message: 'Failed to resend OTP' });
+        } else {
+          console.log('Email sent:', info.response);
+          res.status(200).json({ message: 'OTP resent successfully' });
+        }
+      });
+    } catch (error) {
+      console.error("Error resending OTP:", error);
+      res.status(500).json({ message: 'Failed to resend OTP' });
+    }
+    
+}
+
+
 //varify otp
 
 exports.verifyOtp = async (req, res) => {
@@ -175,7 +217,7 @@ exports.verifyOtp = async (req, res) => {
   
     try {
     const {userotp} = req.body;
-    const otpStorage = req.session.otpStorage;
+    const otpStorage = req.session.otpStorage.otp;
     const userData = req.session.userData;
 
    
@@ -199,7 +241,7 @@ exports.verifyOtp = async (req, res) => {
     if(savedData){
         console.log("Record inserted successfully");
       
-        res.redirect('/shop'); // Redirect to the OTP verification page
+        res.redirect('/shop');
             
 
 
@@ -209,17 +251,51 @@ exports.verifyOtp = async (req, res) => {
     }
     }else{
     console.log("incorrect otp");
-    res.redirect('/signup');
+    const message = "Invalid OTP";
+    res.render('otp',{message});
     }
     }catch (error) {
       console.error('Error during OTP verification:', error);
-      res.redirect('/Otp'); // Redirect back to OTP page on error
+      res.redirect('/Otp'); 
     }
   }
 
-  
+  //geting cart
+  exports.addToCart = async(req,res)=>{
+    try{
+      const productId = req.params.id;
+      const userId = req.session.user
+      console.log(productId);
+      console.log(userId);
+      const productData = await productModel.findById(productId,{isDeleted:false}).exec();
+      UserModel.findByIdAndUpdate(userId,{$push:{"cart":productId}},{new:true} ).exec();
+      const user = await UserModel.findById(userId).exec();
+      const cartProductIds = user.cart;
+      const productsInCart = await productModel
+        .find({ _id: { $in: cartProductIds }, isDeleted: false })
+        .exec();
+       console.log(productsInCart);
+      res.render('cart', { productsInCart }); 
+     
 
+    }catch(err){
+        console.log("error while geting cart",err);
+    }
+  }
 
+//cartItemDelete
+exports.cartItemDelete = async(req,res)=>{
+  try{
+    const productId  = req.params.id;
+    console.log(productId);
+    await  UserModel.findByIdAndUpdate(productId,{$pull:{cart:[productId]}},{new:true}).exec();
+    res.redirect('/getCart');
+        
+  }catch(err){
+   console.error("error while deleting the cart");
+   res.redirect('/getCart');
+  }
+}
 
 
 exports.logout = (req,res)=>{
@@ -249,6 +325,17 @@ exports.getCheckout = async(req,res)=>{
 }
 
 exports.getCart = async(req,res)=>{
-    res.render('cart');
+  try{
+    const userId = req.session.user;
+  console.log(userId);
+  const user = await UserModel.findById(userId).exec();
+  const productsInCart = user.cart;
+
+    res.render('cart',{productsInCart});
+  }catch(err){
+    console.error("error while getting produts ",err);
+    res.redirect('/shop');
+  }
+
 }
 

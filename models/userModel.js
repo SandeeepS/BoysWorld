@@ -9,7 +9,8 @@ const sch = {
     status:{
         type:Boolean,
         default:true
-    }
+    },
+    cart:[{}],
 }
 const monmodel = mongoose.model("users",sch);
 module.exports = monmodel;

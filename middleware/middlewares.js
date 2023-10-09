@@ -1,5 +1,7 @@
 /**middleware for user */
 
+const moment = require('moment');
+
 function isUser(req,res,next){
     if(req.session.user){
         res.redirect('/shop');
@@ -34,6 +36,8 @@ function isAdmin(req,res,next){
     }
 }
 
+
+
 module.exports = {
-    isUser,user,admin,isAdmin
+    isUser,user,admin,isAdmin,
 }

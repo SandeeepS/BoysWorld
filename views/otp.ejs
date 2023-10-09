@@ -75,11 +75,17 @@
 					<div class="login-form">
 						
 						<h1>We sent your code</h1>
-						<h2>Enter the conformation code below</h2>
+						<h2><%=message%></h2>
 						<form action="/verifyOtp" method="post">
 							<input type="text" id="userid" name="userotp" placeholder="enter the conformation code" />
 							
-							<button type="submit" class="btn btn-default">Submit</button>
+							<p id="otpExpiryTime"></p>
+							<button type="submit" >Submit</button>
+							
+						</form>
+
+						<form action="/resendOTP" method="post">
+							<button type="submit" class="btn btn-default" id="resendOTP">Resend OTP</button>
 						</form>
 					</div>
 					<!--/login form-->
@@ -178,5 +184,34 @@
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+	<script>
+		const resendButton = document.getElementById('resendOTP');
+		const otpExpiryTimeElement = document.getElementById('otpExpiryTime');
+		
+		let otpExpiryTime = 30; // Set the OTP expiry time in seconds (e.g., 300 seconds = 5 minutes)
+		
+		function updateExpiryTime() {
+			if (otpExpiryTime > 0) {
+				otpExpiryTimeElement.textContent = `OTP will expire in ${otpExpiryTime} seconds`;
+				otpExpiryTime -= 1;
+			} else {
+				otpExpiryTimeElement.textContent = '';
+			}
+		}
+		
+		// Update the OTP expiry time every second
+		setInterval(updateExpiryTime, 1000);
+		
+		resendButton.addEventListener('click', () => {
+			// You can implement the logic to resend the OTP here
+			// For example, make an AJAX request to your server to trigger OTP resend
+			// You will need to handle this on your server-side as well.
+			
+			// After resending, reset the OTP expiry time
+			otpExpiryTime = 30;
+			updateExpiryTime();
+		});
+	</script>
+	
 </body>
 </html>
