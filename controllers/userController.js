@@ -295,10 +295,21 @@ exports.verifyOtp = async (req, res) => {
 //cartItemDelete
 exports.cartItemDelete = async(req,res)=>{
   try{
+    console.log("deleting");
     const productId  = req.params.id;
+    const user = req.session.user;
+    console.log(user);
     console.log(productId);
-    await  UserModel.findByIdAndUpdate(productId,{$pull:{cart:[productId]}},{new:true}).exec();
-    res.redirect('/getCart');
+    const updateUser =  await  UserModel.findOneAndUpdate({_id:user},{$pull:{cart:productId}},{new:true}).exec();
+    console.log(updateUser);
+    if(!updateUser){
+      console.error("user not found");
+      res.redirect('/getCart');
+    }else{
+      console.log("cart item is deleted");
+      res.redirect('/getCart');
+    }
+  
         
   }catch(err){
    console.error("error while deleting the cart");
@@ -342,7 +353,7 @@ exports.getCart = async(req,res)=>{
         const productsInCart = await productModel
           .find({ _id: { $in: cartProductIds }, isDeleted: false })
           .exec();
-         console.log(productsInCart);
+         
         res.render('cart', { productsInCart }); 
   }catch(err){
     console.error("error while getting produts ",err);
