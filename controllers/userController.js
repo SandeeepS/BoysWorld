@@ -268,14 +268,23 @@ exports.verifyOtp = async (req, res) => {
       console.log(productId);
       console.log(userId);
       const productData = await productModel.findById(productId,{isDeleted:false}).exec();
-      UserModel.findByIdAndUpdate(userId,{$push:{"cart":productId}},{new:true} ).exec();
       const user = await UserModel.findById(userId).exec();
-      const cartProductIds = user.cart;
-      const productsInCart = await productModel
-        .find({ _id: { $in: cartProductIds }, isDeleted: false })
-        .exec();
-       console.log(productsInCart);
-      res.render('cart', { productsInCart }); 
+
+      if(!user.cart.includes(productId)){
+        user.cart.push(productId);
+        await user.save();
+
+        const cartProductIds = user.cart;
+        const productsInCart = await productModel
+          .find({ _id: { $in: cartProductIds }, isDeleted: false })
+          .exec();
+         console.log(productsInCart);
+        res.render('cart', { productsInCart }); 
+      }else{
+        console.log("product already exist!!");
+        res.redirect('/getCart');
+      }
+ 
      
 
     }catch(err){
@@ -329,9 +338,12 @@ exports.getCart = async(req,res)=>{
     const userId = req.session.user;
   console.log(userId);
   const user = await UserModel.findById(userId).exec();
-  const productsInCart = user.cart;
-
-    res.render('cart',{productsInCart});
+    const cartProductIds = user.cart;
+        const productsInCart = await productModel
+          .find({ _id: { $in: cartProductIds }, isDeleted: false })
+          .exec();
+         console.log(productsInCart);
+        res.render('cart', { productsInCart }); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
