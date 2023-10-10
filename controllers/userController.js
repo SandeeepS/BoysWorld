@@ -377,19 +377,16 @@ exports.getCheckout = async(req,res)=>{
 exports.getCart = async(req,res)=>{
   try{
     const userId = req.session.user;
-    const cartProductIds = [];
-  console.log(userId);
+    const cartProductIds=[];
   const user = await UserModel.findById(userId).exec();
   for(let product of user.cart){
-    console.log(product.productId);
+     cartProductIds.push(product.productId);
   }
-
-    // const cartProductIds = user.cart.productId;
-        const products = await productModel
-          .find({ _id: { $in: cartProductIds}, isDeleted: false })
-          .exec();
-      
-        res.render('cart', { products }); 
+  const cartProducts = cartProductIds;
+  console.log(cartProducts);
+  const products = await productModel.find({_id:{$in:cartProducts}}).exec();
+  console.log(products);
+  res.render('cart', { products }); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
