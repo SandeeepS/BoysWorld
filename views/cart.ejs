@@ -107,9 +107,11 @@
 						</tr>
 					</thead>
 					<tbody>
-                        <% for(let product of productsInCart){ %>
+                     
 
-						
+						<% for(product of products){ %>
+
+					
 						<tr>
 							<td class="cart_product">
 								<a href=""><img src="" alt=""></a>
@@ -119,7 +121,7 @@
 								<p>Web ID: 1089772</p>
 							</td>
 							<td class="cart_price">
-								<p>₹<%=product.price%></p>
+								<p>₹<%=productsInCart.price%></p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
@@ -129,13 +131,13 @@
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
+								<p class="cart_total_price">₹<%= product.price %></p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= product._id %>"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
-					<%}%>
+					<% } %>
 					</tbody>
 				</table>
 			</div>

@@ -260,35 +260,65 @@ exports.verifyOtp = async (req, res) => {
     }
   }
 
-  //geting cart
+  //adding  cart
   exports.addToCart = async(req,res)=>{
     try{
       const productId = req.params.id;
       const userId = req.session.user
+
       console.log(productId);
       console.log(userId);
+
       const productData = await productModel.findById(productId,{isDeleted:false}).exec();
+
+      if(!productData){
+        return res.status(404).send("Product not found");
+      }
+
+      const productPrice = productData.price;   
       const user = await UserModel.findById(userId).exec();
 
-      if(!user.cart.includes(productId)){
-        user.cart.push(productId);
-        await user.save();
+      if(!user){
+        return res.status(404).send("user not found");
+      }
+     
+      const existingCartItem = user.cart.findIndex(
+        (item) => item.productId === productId
+      );
 
-        const cartProductIds = user.cart;
-        const productsInCart = await productModel
-          .find({ _id: { $in: cartProductIds }, isDeleted: false })
-          .exec();
-         console.log(productsInCart);
-        res.render('cart', { productsInCart }); 
+      if(existingCartItem ===-1){
+        const newCartItem = {
+          productId,
+          quantity:1,
+          price:productPrice
+        };
+        user.cart.push(newCartItem);
+        await user.save();
       }else{
         console.log("product already exist!!");
-        res.redirect('/getCart');
+        res.redirect('/getCart')
+
       }
- 
-     
+
+      const updateUser = await UserModel.findById(userId)
+      .populate("cart.productId")
+      .exec();
+      
+      const userWithCart = await UserModel.findById(userId);
+      const productIdArray = [];
+      productsInCart = userWithCart.cart;
+      for(const pro of productsInCart){
+           productIdArray.push(pro.productId);
+      }
+
+      const productIds = productIdArray;
+      const products = await productModel.find({_id:{$in:productIds}}).exec();
+      console.log(products);
+      res.render('cart',{products});
 
     }catch(err){
         console.log("error while geting cart",err);
+        res.status(500).send("internal server error");
     }
   }
 
@@ -347,14 +377,19 @@ exports.getCheckout = async(req,res)=>{
 exports.getCart = async(req,res)=>{
   try{
     const userId = req.session.user;
+    const cartProductIds = [];
   console.log(userId);
   const user = await UserModel.findById(userId).exec();
-    const cartProductIds = user.cart;
-        const productsInCart = await productModel
-          .find({ _id: { $in: cartProductIds }, isDeleted: false })
+  for(let product of user.cart){
+    console.log(product.productId);
+  }
+
+    // const cartProductIds = user.cart.productId;
+        const products = await productModel
+          .find({ _id: { $in: cartProductIds}, isDeleted: false })
           .exec();
-         
-        res.render('cart', { productsInCart }); 
+      
+        res.render('cart', { products }); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
