@@ -314,7 +314,7 @@ exports.verifyOtp = async (req, res) => {
       const productIds = productIdArray;
       const products = await productModel.find({_id:{$in:productIds}}).exec();
       console.log(products);
-      res.render('cart',{products});
+      res.redirect('/getCart?products='+JSON.stringify(products));
 
     }catch(err){
         console.log("error while geting cart",err);
@@ -346,7 +346,7 @@ exports.cartItemDelete = async(req,res)=>{
         await currentUser.save();
 
         // Render the cart with the updated products
-        res.render('cart', { products: currentUser.cart });
+        res.redirect('/getCart');
       }else{
         console.log("product not found in the cart");
       }
@@ -379,7 +379,7 @@ exports.logout = (req,res)=>{
 
 
 exports.getAccount = async(req,res)=>{
-    res.render('accound');
+    res.render('account');
 }
 
 exports.getWishlist = async(req,res)=>{
@@ -398,11 +398,13 @@ exports.getCart = async(req,res)=>{
   for(let product of user.cart){
      cartProductIds.push(product.productId);
   }
+  const userData = user.cart;
+  console.log(userData.quantity);
   const cartProducts = cartProductIds;
   console.log(cartProducts);
   const products = await productModel.find({_id:{$in:cartProducts}}).exec();
   console.log(products);
-  res.render('cart', { products }); 
+  res.render('cart', { products ,userData}); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');

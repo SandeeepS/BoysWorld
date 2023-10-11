@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 
 const cartItemSchema = new mongoose.Schema({
     productId:String,
-    quantity:Number,
+    quantity:{
+        type:Number,
+        default:1
+    },
     price:Number,
 });
 
