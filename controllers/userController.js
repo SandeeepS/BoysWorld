@@ -327,19 +327,35 @@ exports.cartItemDelete = async(req,res)=>{
   try{
     console.log("deleting");
     const productId  = req.params.id;
-    const user = req.session.user;
-    console.log(user);
+    const userId = req.session.user;
+    console.log(userId);
     console.log(productId);
-    const updateUser =  await  UserModel.findOneAndUpdate({_id:user},{$pull:{cart:productId}},{new:true}).exec();
-    console.log(updateUser);
-    if(!updateUser){
-      console.error("user not found");
-      res.redirect('/getCart');
+    const currentUser = await UserModel.findById(userId).exec();
+    console.log(currentUser);
+
+   
+    if (currentUser) {
+      // Find the index of the product with the given productId in the cart
+      const productIndex = currentUser.cart.findIndex(product => product.productId.toString() === productId);
+
+      if (productIndex !== -1) {
+        // Remove the product from the cart array
+        currentUser.cart.splice(productIndex, 1);
+
+        // Save the updated user object
+        await currentUser.save();
+
+        // Render the cart with the updated products
+        res.render('cart', { products: currentUser.cart });
+      }else{
+        console.log("product not found in the cart");
+      }
+  
     }else{
-      console.log("cart item is deleted");
+      console.log("item not deleted");
       res.redirect('/getCart');
     }
-  
+    
         
   }catch(err){
    console.error("error while deleting the cart");
