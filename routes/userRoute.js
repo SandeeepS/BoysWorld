@@ -31,7 +31,6 @@ route.post('/signupUser',userController.signup)
 
 route.get('/sportswear',userController.sportsWear);
 
-
 //route for navbar
 route.get('/getAccount',auth.user,userController.getAccount);
 route.get('/getWishlist',auth.user,userController.getWishlist);
@@ -39,6 +38,8 @@ route.get('/getCheckout',auth.user,userController.getCheckout);
 route.get('/getCart',auth.user,userController.getCart);
 route.get('/addToCart/:id',userController.addToCart);
 route.get('/cartItemDelete/:id',userController.cartItemDelete);
+
+route.get('/addAddress',userController.addAddressPage);
 
 
 module.exports = route

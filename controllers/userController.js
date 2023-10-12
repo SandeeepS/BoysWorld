@@ -379,7 +379,15 @@ exports.logout = (req,res)=>{
 
 
 exports.getAccount = async(req,res)=>{
-    res.render('account');
+  try{
+       const user = req.session.user;
+       const userData = await UserModel.findById(user).exec();
+       console.log(userData);
+       res.render('account',{userData});
+  }catch(err){
+    console.error("error while ")
+  }
+    
 }
 
 exports.getWishlist = async(req,res)=>{
@@ -410,5 +418,14 @@ exports.getCart = async(req,res)=>{
     res.redirect('/shop');
   }
 
+}
+
+//add address
+exports.addAddressPage = async(req,res)=>{
+  try{
+    res.render('addAddress');
+  }catch(err){
+    console.error("error while loading add Address page",err);
+  }
 }
 

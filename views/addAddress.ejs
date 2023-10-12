@@ -181,7 +181,10 @@
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <h4 class="panel-title">
-                                                        <a  href="/addAddress">add address</a>
+                                                        <a data-toggle="collapse" data-parent="#accordian" href="#womens">
+                                                          
+                                                            add address
+                                                        </a>
                                                     </h4>
                                                 </div>
                                                
@@ -201,20 +204,50 @@
 				</div>
 					<div class="col-sm-8">
                       
-							<p><%= userData.name%></p>
-							<div class="form-one">
-							<br>
-						    <br>
-								<ul>
-									<li>Email :<span>     <%=userData.email%></span></li>
-									<br>
-							        <li>Mobile Number :<span><%=userData.number%></span></li>
-									<br>
-									<li>Address :<span></span></li>
-								
-								</ul>
-									
-							</div>
+                        <p>Add Address</p>
+                        <div class="form-one">
+                            <form>
+                                <input type="text" placeholder="Company Name">
+                                <input type="text" placeholder="Email*">
+                                <input type="text" placeholder="Title">
+                                <input type="text" placeholder="First Name *">
+                                <input type="text" placeholder="Middle Name">
+                                <input type="text" placeholder="Last Name *">
+                                <input type="text" placeholder="Address 1 *">
+                                <input type="text" placeholder="Address 2">
+                            </form>
+                        </div>
+                        <div class="form-two">
+                            <form>
+                                <input type="text" placeholder="Zip / Postal Code *">
+                                <select>
+                                    <option>-- Country --</option>
+                                    <option>United States</option>
+                                    <option>Bangladesh</option>
+                                    <option>UK</option>
+                                    <option>India</option>
+                                    <option>Pakistan</option>
+                                    <option>Ucrane</option>
+                                    <option>Canada</option>
+                                    <option>Dubai</option>
+                                </select>
+                                <select>
+                                    <option>-- State / Province / Region --</option>
+                                    <option>United States</option>
+                                    <option>Bangladesh</option>
+                                    <option>UK</option>
+                                    <option>India</option>
+                                    <option>Pakistan</option>
+                                    <option>Ucrane</option>
+                                    <option>Canada</option>
+                                    <option>Dubai</option>
+                                </select>
+                                <input type="password" placeholder="Confirm password">
+                                <input type="text" placeholder="Phone *">
+                                <input type="text" placeholder="Mobile Phone">
+                                <input type="text" placeholder="Fax">
+                            </form>
+                        </div>
 					
 						<p></p>
 						<h4></h4>
