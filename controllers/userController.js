@@ -429,3 +429,51 @@ exports.addAddressPage = async(req,res)=>{
   }
 }
 
+
+//adresss
+exports.address = async(req,res)=>{
+  try{
+      const user = req.session.user;
+      // const userData = await UserModel.findById(user).exec();
+      const address = {
+        "formName": req.body.name,
+        "formNumber":req.body.number,
+        "formemail":req.body.email,
+        "formhouseName":req.body.houseName,
+        "formhouseNumber":req.body.houseNumber,
+        "formstate":req.body.state,
+        "formcity":req.body.city,
+        "formstreet":req.body.street,
+        "formlandmark":req.body.landmark,
+        "formpin":req.body.pin,
+      };
+       const userData = await UserModel.findByIdAndUpdate(user,{
+        $push:{
+          address:{
+            "name":address.formName,
+            "number":address.formNumber,
+            "email":address.formemail,
+            "houseName":address.formhouseName,
+            "houseNumber":address.houseNumber,
+            "state":address.formstate,
+            "city":address.formcity,
+            "street":address.formlandmark,
+            "pin":address.formpin
+          }
+        }
+       },{new:true});
+
+       
+       if(userData){
+        console.log("Address inserted susscessfully");
+        res.redirect('/getAccount');
+       }else{
+        console.log("record not inserted");
+        res.redirect('/getAccount');
+       }
+
+    
+  }catch(err){
+    console.error("error while adding address",err);
+  }
+}

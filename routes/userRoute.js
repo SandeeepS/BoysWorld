@@ -40,6 +40,7 @@ route.get('/addToCart/:id',userController.addToCart);
 route.get('/cartItemDelete/:id',userController.cartItemDelete);
 
 route.get('/addAddress',userController.addAddressPage);
+route.post('/address',userController.address);
 
 
 module.exports = route

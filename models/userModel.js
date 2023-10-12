@@ -19,6 +19,7 @@ const addressSchema = new mongoose.Schema({
     city:String,
     street:String,
     landMark:String,
+    pin:Number,
 })
 
 const sch = {
