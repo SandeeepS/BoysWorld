@@ -1,10 +1,14 @@
 
+
+
+
 const UserModel = require('../models/userModel');
 const productModel = require('../models/productModel');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
 const moment =  require('moment');
+
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -18,6 +22,8 @@ const transporter = nodemailer.createTransport({
 const {user} = require('../models/userModel');
 const {otp}  = require('../models/otp');
 const categoryModel = require('../models/categoryModel');
+const { default: mongoose } = require('mongoose');
+const {ObjectId} = mongoose.Types;
 
 exports.home = async(req,res)=>{
     res.render("index");
@@ -485,12 +491,39 @@ exports.showAddress = async(req,res)=>{
   try{
     const userId = req.session.user;
     const userData = await UserModel.findById(userId).exec();
-    console.log(userData);
+ 
     const address = userData.address;
     console.log(address);
     res.render('showAddress',{address});
 
   }catch(err){
     console.error("error while getting show address page",err);
+  }
+}
+
+//address delete
+
+exports.addressDelete = async(req,res)=>{
+  try{
+    const userId = req.session.user;
+    const addressId = req.params.id;
+    const addressObjectId = new ObjectId(addressId).toString();
+    console.log(addressObjectId);
+    const user = await UserModel.findById(userId).exec();
+  
+    if(user){
+      const addressIndex = user.address.findIndex((add) => add.id === addressObjectId);
+      
+      if(addressIndex !== -1){
+        user.address.splice(addressIndex,1);
+        await user.save();
+        res.redirect('/showAddress');
+      }else{
+        console.log("address not found in the database");
+      }
+    }
+
+  }catch(err){
+    console.error("error while deleting the address",err);
   }
 }
