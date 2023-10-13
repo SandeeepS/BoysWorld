@@ -458,6 +458,7 @@ exports.address = async(req,res)=>{
             "state":address.formstate,
             "city":address.formcity,
             "street":address.formlandmark,
+            "landMark":address.formlandmark,
             "pin":address.formpin
           }
         }
@@ -475,5 +476,21 @@ exports.address = async(req,res)=>{
     
   }catch(err){
     console.error("error while adding address",err);
+  }
+}
+
+
+//show address page
+exports.showAddress = async(req,res)=>{
+  try{
+    const userId = req.session.user;
+    const userData = await UserModel.findById(userId).exec();
+    console.log(userData);
+    const address = userData.address;
+    console.log(address);
+    res.render('showAddress',{address});
+
+  }catch(err){
+    console.error("error while getting show address page",err);
   }
 }

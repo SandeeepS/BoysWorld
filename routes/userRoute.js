@@ -41,6 +41,7 @@ route.get('/cartItemDelete/:id',userController.cartItemDelete);
 
 route.get('/addAddress',userController.addAddressPage);
 route.post('/address',userController.address);
+route.get('/showAddress',userController.showAddress);
 
 
 module.exports = route
