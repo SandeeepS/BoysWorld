@@ -3,7 +3,7 @@
 
 
 const UserModel = require('../models/userModel');
-const productModel = require('../models/productModel');
+
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
@@ -23,6 +23,7 @@ const {user} = require('../models/userModel');
 const {otp}  = require('../models/otp');
 const categoryModel = require('../models/categoryModel');
 const { default: mongoose } = require('mongoose');
+const productModel = require('../models/productModel');
 const {ObjectId} = mongoose.Types;
 
 exports.home = async(req,res)=>{
@@ -294,7 +295,7 @@ exports.verifyOtp = async (req, res) => {
 
       if(existingCartItem ===-1){
         const newCartItem = {
-          productId,
+          productId:productId,
           quantity:1,
           price:productPrice
         };
@@ -408,17 +409,24 @@ exports.getCart = async(req,res)=>{
   try{
     const userId = req.session.user;
     const cartProductIds=[];
-  const user = await UserModel.findById(userId).exec();
+   const quty = [];
+    const user = await UserModel.findById(userId).exec();
   for(let product of user.cart){
      cartProductIds.push(product.productId);
   }
+
+  for(let pro of user.cart){
+    quty.push(pro.quantity);
+  }
   const userData = user.cart;
-  console.log(userData.quantity);
+ console.log(userData);
   const cartProducts = cartProductIds;
   console.log(cartProducts);
   const products = await productModel.find({_id:{$in:cartProducts}}).exec();
+ 
   console.log(products);
-  res.render('cart', { products ,userData}); 
+  console.log(quty);
+  res.render('cart', { products ,userData,quty}); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
