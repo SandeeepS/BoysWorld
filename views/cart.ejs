@@ -109,32 +109,35 @@
 						</tr>
 					</thead>
 					<tbody>
-                       		<% for(product of products){ %>
+
+						   <!-- hdghghdkjgh -->
+						    <% for(let i = 0 ; i< products.length ; i++){ %>
+
 							<tr>
 							<td class="cart_product">
 								
-									<a href=""><img src="views/productImages/<%= product.image[0]%>" alt="" height="100px" width="100px"></a>
+									<a href=""><img src="views/productImages/<%= products[i].image[0]%>" alt="" height="100px" width="100px"></a>
 								
 								
 							</td>
 							<td class="cart_description">
-								<h4><a href=""><%=product.productName%></a></h4>
+								<h4><a href=""><%=products[i].productName%></a></h4>
 								<p>Web ID: 1089772</p>
 							</td>
 							<td class="cart_price">
-								<p>₹<%=product.price%></p>
+								<p>₹<%=products[i].price%></p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
 									<a class="cart_quantity_up" href=""> + </a>
 									
-									<span class="cart_quantity_value" autocomplete="off" size="2"><%= %></span>
+									<span class="cart_quantity_value" autocomplete="off" size="2"><%= userData[i].quantity %></span>
 								
 									<a class="cart_quantity_down" href=""> - </a>
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">₹<%= product.price %></p>
+								<p class="cart_total_price">₹<%= products[i].price %></p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= product._id %>"><i class="fa fa-times"></i></a>
