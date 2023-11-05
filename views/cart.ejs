@@ -22,8 +22,31 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-
-
+   <style>
+    .cart-quantity {
+		display: flex;
+		align-items: center;
+	}
+	
+	.cart-quantity-button {
+		padding: 5px 10px;
+		background-color: #3498db;
+		color: #fff;
+		cursor: pointer;
+	}
+	
+	.cart-quantity-value {
+		padding: 5px 10px;
+		border: 1px solid #ccc;
+		text-align: center;
+		min-width: 30px;
+	}
+	
+	.cart-quantity-button:hover {
+		background-color: #2980b9;
+	}
+</style>
+	
 </head><!--/head-->
 
 <body>
@@ -128,13 +151,12 @@
 								<p>₹<%=products[i].price%></p>
 							</td>
 							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									
-									<span class="cart_quantity_value" autocomplete="off" size="2"><%= userData[i].quantity %></span>
-								
-									<a class="cart_quantity_down" href=""> - </a>
+								<div class="cart-quantity">
+									<a class="cart-quantity-button " href="#">+</a>
+									<span class="cart-quantity-value" autocomplete="off" size="2"><%= userData[i].quantity %></span>
+									<a class="cart-quantity-button" href="#">-</a>
 								</div>
+								
 							</td>
 							<td class="cart_total">
 								<p class="cart_total_price">₹<%= products[i].price %></p>
