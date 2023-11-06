@@ -28,7 +28,14 @@
 		align-items: center;
 	}
 	
-	.cart-quantity-button {
+	.cart-quantity-button1 {
+		padding: 5px 10px;
+		background-color: #3498db;
+		color: #fff;
+		cursor: pointer;
+	}
+
+	.cart-quantity-button2 {
 		padding: 5px 10px;
 		background-color: #3498db;
 		color: #fff;
@@ -152,17 +159,18 @@
 							</td>
 							<td class="cart_quantity">
 								<div class="cart-quantity">
-									<a class="cart-quantity-button " href="#">+</a>
+									<a class="cart-quantity-button1 "  data-productid="<%= products[i]._id %>">+</a>
 									<span class="cart-quantity-value" autocomplete="off" size="2"><%= userData[i].quantity %></span>
-									<a class="cart-quantity-button" href="#">-</a>
+									<a class="cart-quantity-button2" data-productid="<%= products[i]._id %>">-</a>
 								</div>
 								
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">₹<%= products[i].price %></p>
+								
+								<p class="cart_total_price" total-Price="<%=userData[i].price %>"><%= userData[i].price %></p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href="/cartItemDelete/<%= product._id %>"><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="/cartItemDelete/<%= products[i]._id %>"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
 					<% } %>
@@ -296,5 +304,64 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const incrementButtons = document.querySelectorAll(".cart-quantity-button1");
+			const decrementButtons = document.querySelectorAll(".cart-quantity-button2");
+			const quantityValues = document.querySelectorAll(".cart-quantity-value");
+			const totalPrice  = document.querySelectorAll(".cart_total_price");
+			
+		  
+			incrementButtons.forEach((incrementButton, i) => {
+			  incrementButton.addEventListener("click", function (event) {
+				event.preventDefault();
+				const productId = this.getAttribute("data-productId");
+				updateQuantity(i, 1,productId);
+			  });
+			});
+		  
+			decrementButtons.forEach((decrementButton, i) => {
+			  decrementButton.addEventListener("click", function (event) {
+				event.preventDefault();
+				const productId = this.getAttribute("data-productid");
+				updateQuantity(i, -1,productId);
+			  });
+			});
+		  
+			function updateQuantity(index, change,productId) {
+			  const currentQuantity = parseInt(quantityValues[index].innerText);
+			  const currentPrice = parseFloat(totalPrice[index].innerText);
+			  const total = parseInt(totalPrice[index].innerText);
+			  console.log(total);
+			  const newQuantity = currentQuantity + change;
+			  
+			   // Replace with actual product ID
+			   
+			   if (newQuantity < 1) {
+				newQuantity = 1;
+			   } 
+
+			   const newTotal = (total/currentQuantity)*newQuantity;
+
+			  fetch("/update-quantity", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify({ productId, newQuantity,newTotal }),
+			  })
+				.then((response) => response.json())
+				.then((data) => {
+				  quantityValues[index].innerText = data.newQuantity;
+				  totalPrice[index].innerText = data.newTotal;
+				})
+				.catch((error) => {
+				  console.error("Error updating the quantity:", error);
+				});
+			}
+		  });
+		  
+	</script>
 </body>
 </html>

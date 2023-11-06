@@ -409,15 +409,12 @@ exports.getCart = async(req,res)=>{
   try{
     const userId = req.session.user;
     const cartProductIds=[];
-   const quty = [];
     const user = await UserModel.findById(userId).exec();
   for(let product of user.cart){
      cartProductIds.push(product.productId);
   }
 
-  for(let pro of user.cart){
-    quty.push(pro.quantity);
-  }
+
   const userData = user.cart;
  console.log(userData);
   const cartProducts = cartProductIds;
@@ -425,14 +422,47 @@ exports.getCart = async(req,res)=>{
   const products = await productModel.find({_id:{$in:cartProducts}}).exec();
  
   console.log(products);
-  console.log(quty);
-  res.render('cart', { products ,userData,quty}); 
+ 
+  res.render('cart', { products ,userData}); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
   }
 
 }
+
+//updateQuantity
+exports.updateQuantity = async (req, res) => {
+  try {
+    const { productId, newQuantity ,newTotal} = req.body;
+    console.log(newTotal);
+    const userId = req.session.user; // Assuming user is authenticated
+
+    // Find the user and their cart
+    const user = await UserModel.findById(userId).exec();
+    
+    // Check if the product exists in the user's cart
+    const cartItem = user.cart.find((item) => item.productId === productId);
+    console.log(cartItem.quantity);
+    if (cartItem ) {
+      // Update the quantity
+      cartItem.quantity = newQuantity;
+      cartItem.price = newTotal;
+
+      // Save the updated user data
+      await user.save();
+    
+      res.json({ newQuantity ,newTotal});
+    }
+     else {
+      res.status(404).json({ error: "Product not found in the cart" });
+    }
+  } catch (err) {
+    console.error("Error while updating the quantity:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 //add address
 exports.addAddressPage = async(req,res)=>{
