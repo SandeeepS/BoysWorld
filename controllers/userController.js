@@ -413,14 +413,17 @@ exports.getCart = async(req,res)=>{
   for(let product of user.cart){
      cartProductIds.push(product.productId);
   }
-
-
+  console.log(cartProductIds);
   const userData = user.cart;
- console.log(userData);
-  const cartProducts = cartProductIds;
-  console.log(cartProducts);
-  const products = await productModel.find({_id:{$in:cartProducts}}).exec();
- 
+  // const cartProducts = cartProductIds;
+  const products = [];
+  for (let productId of cartProductIds) {
+    const product = await productModel.findById(productId).exec();
+    if (product) {
+      products.push(product);
+    }
+  }
+
   console.log(products);
  
   res.render('cart', { products ,userData}); 
