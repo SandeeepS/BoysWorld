@@ -22,6 +22,8 @@
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
+
 		<style>
 			.xzoom-thumbs img {
 				display: inline-block;
@@ -37,6 +39,9 @@
 				left: 100%; /* Position to the right of the main image */
 				margin-left: 10px; /* Add some spacing */
 				width: 80px; /* Adjust the width as needed */
+			}
+			.pro-row{
+				display: flex;
 			}
 		</style>
 		
@@ -123,15 +128,18 @@
 
    
 		    
-			<div class="row">
+			<div class="pro-row">
 				<div class="col-sm-1">
 
 					<div class="xzoom-thumbs">
 						<% for(let i = 0 ; i < productData.image.length ; i++){ %>
-							<a href="" data-index="<%= i %>">
-								<img class="xzoom-gallery" src="/views/productImages/<%= productData.image[i]%>" alt="">
-							</a>
-
+							<div>
+								<a href="" data-index="<%= i %>">
+									<img class="xzoom-gallery" src="/views/productImages/<%= productData.image[i]%>" alt="">
+								</a>
+	
+							</div>
+						
 						<%}%>
 					</div>
 				</div>
@@ -144,20 +152,18 @@
 										<div  id="xzoom-default">
 											<img src="/views/productImages/<%= productData.image[0]%>" alt="" id="zoom-image">
 										</div>
-										
-										
 									</div>
-									
-												
 							</div>
 						</div>
-											
-						</div>
 					</div>
-					<div class="col-sm-4">
+				</div> 
+					
+					<div class="col-sm-4" >
 						<p><%=productData.discription%></p>
 						<h4>₹<%=productData.price%></h4>
 						<a href="/addToCart/<%=productData._id%>" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
+						<a href="#" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Buy Now</a>
+
 					</div>
 				</div>
 				
@@ -204,7 +210,48 @@
 	<script src="../js/price-range.js"></script>
     <script src="../js/jquery.prettyPhoto.js"></script>
     <script src="../js/main.js"></script>
+    
+
+
+    <!-- Include the Zoom Elevate library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
+
+
+
+	<script>
+		$(document).ready(function () {
+			// Initialize the xZoom on the xzoom-default element
+			$('#xzoom-default').zoom({
+				touch: false,
+				zoomLevel: 50,
+			});
 	
+			// Add a click event to the thumbnails in xzoom-thumbs
+			$('.xzoom-thumbs a').on('click', function (e) {
+				e.preventDefault(); // Prevent the default click behavior
+	
+				// Get the index of the clicked thumbnail
+				var index = $(this).data('index');
+	
+				// Update the src attribute of the xzoom-default image
+				$('#xzoom-default img').attr('src', '/views/productImages/' + productData.image[index]);
+			});
+	
+			// Add a mouseenter event to display the zoomed image container
+			$('#xzoom-default').on('mouseenter', function () {
+				$('#zoomed-image-container').show();
+			});
+	
+			// Add a mouseleave event to hide the zoomed image container
+			$('#xzoom-default').on('mouseleave', function () {
+				$('#zoomed-image-container').hide();
+			});
+		});
+	</script>
+	
+   
+
+
 
 </body>
 </html>

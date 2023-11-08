@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-	<style>
+	<!-- <style>
         /* Style for the modal container */
         .modal {
             display: none; /* Hidden by default */
@@ -69,8 +69,8 @@
 			height: 100%;
 			padding-top: 20%;
 		}
-    </style>
-</head><!--/head-->
+    </style> -->
+</head>
 
 <body>
 	<header id="header"><!--header-->
@@ -230,7 +230,8 @@
 					</div>	
 				</div>		
 				<div class="col-sm-9 padding-right">
-					<div class="features_items"><!--features_items-->
+					<div class="features_items">
+						<!--features_items-->
 
 
 
@@ -239,9 +240,9 @@
 
 						<% for(const pro of product){ %>
 
-							
+                        <!-- 							
 						<div id="myModal" class="modal">
-							<!-- Modal content -->
+							
 							<div class="modal-content">
 								<span class="close" id="closeModalBtn">&times;</span>
 								<div class="modal-style">
@@ -258,7 +259,7 @@
 
 								</div>
 							</div>
-						</div>
+						</div> -->
 
 
                              <div class="col-sm-4">
@@ -270,7 +271,7 @@
 										<img src="/views/productImages/<%= pro.image[1]%>" alt="" height="400px" width="100px" />
 										
 										<p><%=pro.discription%></p>
-										<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Buy Now</a>
+										<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
 										<a href="/addToCart/<%=pro._id%>" class="btn btn-default add-to-cart buy-now-btn" data-product-id="<%=pro._id%>"  data-image="/views/productImages/<%=pro.image[1]%>">Add to Cart</a>
 									</div>
 								</div>
@@ -332,33 +333,6 @@
 	<script src="js/price-range.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
-	<script>
-		// Get references to the modal and the button to open/close it
-		var modal = document.getElementById("myModal");
-		var openModalBtn = document.querySelectorAll(".buy-now-btn");
-		var closeModalBtn = document.getElementById("closeModalBtn");
 	
-		// Event listener to open the modal
-		document.querySelectorAll(".buy-now-btn").forEach(function (btn) {
-			btn.onclick = function () {
-				modal.style.display = "block";
-				var productImage = btn.getAttribute("data-image");
-				var modalImage = document.querySelector(".modal-pic img");
-				modalImage.src = productImage;
-			};
-		});
-	
-		// Event listener to close the modal
-		closeModalBtn.onclick = function() {
-			modal.style.display = "none";
-		}
-	
-		// Close the modal if the user clicks outside of it
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
-			}
-		}
-	</script>
 </body>
 </html>
