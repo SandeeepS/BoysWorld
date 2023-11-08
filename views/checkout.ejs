@@ -22,6 +22,89 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+	<style>
+		.a-box {
+			display: block;
+			border-radius: 8px;
+			background-color: #fff;
+			border: 1px #D5D9D9 solid;
+			padding-left: 30px;
+			
+		}
+		.box-sub{
+			display: flex;
+			flex-wrap: wrap;
+			position: relative;
+			box-sizing: border-box;
+			padding-left: 0%;
+			float: left;
+			border-radius: 8px;
+			background-color: #fff;
+			margin-top: 15px;
+			width: 97%;
+
+		}
+		.box-sub p{
+			font-weight: 700!important;
+		}
+		.cash{
+			padding-top: 2px;
+			padding-left: 15px;
+		}
+		.highlighted {
+            background-color: #f2f2f2; /* Light background color */
+            border: 1px solid #ccc; /* Border style */
+        }
+
+
+
+		/* Style for the modal container */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.7); /* Black with a little transparency */
+        }
+
+        /* Style for the modal content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%; /* Could be more or less, depending on screen size */
+        }
+
+        /* Style for the close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+		.modal-style{
+			display: flex;
+		}
+		.modal-text{
+			display: flex;
+			justify-content: center; 
+			align-items: center;     
+			width: 100%;             
+			height: 100%;
+			padding-top: 20%;
+		}
+	</style>
 </head><!--/head-->
 
 <body>
@@ -51,25 +134,131 @@
 	<div class="container">
 		<table class="table  table-condensed">
            <thead>
-               
+			<tr>
+				<td>
+					<h4>1</h4>
+				</td>
+				<td>
+					<h4 class="title ">Delevery Address</h4>
+				</td>
+				<td>
+					<h4>adddress</h4>
+				</td>
+				<td>
+					<a class="title" href="#" id="openModalBtn"><h5>Change</h5></a>
+				</td>
+			</tr>
 		   </thead>
 		   <tbody>
-			    <tr>
+
+			<!-- modal -->
+			<div id="myModal" class="modal">
+				<div class="modal-content">
+					<span class="close" id="closeModalBtn">&times;</span>
+					<div class="modal-style">
+						<p>uihfgfhiuhdfgjgfidghfdghighfdiugh</p>
+
+					</div>
+				</div>
+			</div>
+			   
+				<% for(const add of address){ %>
+
+				<tr>
 					<td>
-						<h4>1</h4>
+
 					</td>
 					<td>
-						<h4 class="title ">Delevery Address</h4>
+
 					</td>
-					<td>
-						<h4>adddress</h4>
-					</td>
-					<td>
-						<a class="title" href="#"><h5>Change</h5></a>
-					</td>
+					<td >
+						
+							<h4><%= add.name%></h4>
+							<h5>Mobile number: <%= add.number %></h5>
+							<h5>House Name: <%= add.houseName%></h5>
+							<h5>House Number: <%= add.houseNumber%></h5>
+							<h5>State: <%= add.state%></h5>
+							<h5>city: <%= add.city%></h5>
+							<h5>street: <%= add.street%></h5>
+							<h5>LandMark: <%= add.landMark%></h5>
+							<h5>Pin Code: <%= add.pin%></h5>
+							<% break %>
+			        </td>
 				</tr>
+				<% } %>
+
+				<thead>
+					<tr>
+						<td>
+							<h4>2</h4>
+						</td>
+						<td>
+							<h4 class="title ">Select a payment method</h4>
+						</td>
+						<td>
+
+						</td>
+						<td>
+
+						</td>
+					
+					</tr>
+				   </thead>
+
+
 		   </tbody>
+
 	    </table>
+		<div class="a-box">
+			<div class="row">
+				<div class="box-sub">
+					<div>
+						<input type="radio" name="checkout">
+					</div>
+					<div class="cash">
+						<p>Credit or Debit card</p>
+					</div>
+				
+				</div>
+			</div>
+			    
+			<div class="row">
+				<div class="box-sub">
+					<div>
+						<input type="radio" name="checkout">
+					</div>
+					<div class="cash">
+						<p>Net Banking</p>
+					</div>
+				
+				</div> 
+			</div>
+
+			<div class="row">
+				<div class="box-sub">
+					<div>
+						<input type="radio" name="checkout">
+					</div>
+					<div class="cash">
+						<p>Other UPI Apps</p>
+					</div>
+				
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="box-sub">
+					<div>
+						<input type="radio" name="checkout">
+					</div>
+					<div class="cash">
+						<p>Cash on Deleivery/Pay on Deleivery</p>
+					</div>
+				
+				</div>
+			</div>
+			   
+		</div>
     </div>
 </section>
 	<footer id="footer"><!--Footer-->
@@ -112,5 +301,49 @@
     <script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+	<script>
+        // Add a JavaScript function to handle the radio button click event
+        document.addEventListener("DOMContentLoaded", function () {
+            const radioButtons = document.querySelectorAll("input[type='radio']");
+            const boxSubs = document.querySelectorAll(".box-sub");
+
+            for (let i = 0; i < radioButtons.length; i++) {
+                radioButtons[i].addEventListener("click", function () {
+                    // Remove the 'highlighted' class from all box-subs
+                    for (let j = 0; j < boxSubs.length; j++) {
+                        boxSubs[j].classList.remove("highlighted");
+                    }
+
+                    // Add the 'highlighted' class to the selected box-sub
+                    boxSubs[i].classList.add("highlighted");
+                });
+            }
+        });
+    </script>
+
+	<script>
+		// Get references to the modal and the button to open/close it
+		var modal = document.getElementById("myModal");
+		var openModalBtn = document.getElementById("openModalBtn");
+		var closeModalBtn = document.getElementById("closeModalBtn");
+	
+		// Event listener to open the modal
+		openModalBtn.onclick = function() {
+			modal.style.display = "block";
+		}
+	
+		// Event listener to close the modal
+		closeModalBtn.onclick = function() {
+			modal.style.display = "none";
+		}
+	
+		// Close the modal if the user clicks outside of it
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+	</script>
 </body>
 </html>

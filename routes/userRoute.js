@@ -39,7 +39,6 @@ route.get('/getCart',auth.user,userController.getCart);
 route.post('/update-quantity',userController.updateQuantity);
 route.get('/addToCart/:id',userController.addToCart);
 route.get('/cartItemDelete/:id',userController.cartItemDelete);
-
 route.get('/addAddress',userController.addAddressPage);
 route.post('/address',userController.address);
 route.get('/showAddress',userController.showAddress);

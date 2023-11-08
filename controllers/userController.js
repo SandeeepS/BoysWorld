@@ -406,12 +406,18 @@ exports.getWishlist = async(req,res)=>{
 
 exports.getCheckoutPage = async(req,res)=>{
   try{
-    res.render
+    const userId = req.session.user;
+    const userData = await UserModel.findById(userId).exec();
+ 
+    const address = userData.address;
+    res.render('checkout',{address});
+    
 
   }catch(err){
     console.error("error while getting checkout",err);
+    res.redirect('/selectedProduct');
   }
-    res.render('checkout');
+  
 }
 
 exports.getCart = async(req,res)=>{
