@@ -50,6 +50,7 @@
     </head><!--/head-->
 
 <body>
+	
 	<header id="header"><!--header-->
 	
 		
@@ -210,21 +211,22 @@
 	<script src="../js/price-range.js"></script>
     <script src="../js/jquery.prettyPhoto.js"></script>
     <script src="../js/main.js"></script>
-    
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
 
-
-    <!-- Include the Zoom Elevate library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
-
-
-
-	<script>
+    <script>
 		$(document).ready(function () {
 			// Initialize the xZoom on the xzoom-default element
 			$('#xzoom-default').zoom({
 				touch: false,
 				zoomLevel: 50,
 			});
+
+			function initializeZoom() {
+				$('#xzoom-default').zoom({
+				  touch: false,
+				  zoomLevel: 50,
+				});
+			  }
 	
 			// Add a click event to the thumbnails in xzoom-thumbs
 			$('.xzoom-thumbs a').on('click', function (e) {
@@ -232,9 +234,11 @@
 	
 				// Get the index of the clicked thumbnail
 				var index = $(this).data('index');
-	
+				var productData = <%- JSON.stringify(productData)%>;
+			   
 				// Update the src attribute of the xzoom-default image
 				$('#xzoom-default img').attr('src', '/views/productImages/' + productData.image[index]);
+				initializeZoom();
 			});
 	
 			// Add a mouseenter event to display the zoomed image container
@@ -250,7 +254,7 @@
 	</script>
 	
    
-
+	
 
 
 </body>
