@@ -13,6 +13,7 @@ route.get('/shop',auth.user,userController.shopPage);
 route.get('/contact',auth.user,userController.contactPage);
 route.get('/selectedProduct/:id',auth.user,userController.selectedProduct)
 route.get('/getOtpPage',auth.isUser,userController.getOtpPage);
+route.get('/getCheckout',userController.getCheckoutPage);
 
 
 //varifying otp
@@ -34,7 +35,6 @@ route.get('/sportswear',userController.sportsWear);
 //route for navbar
 route.get('/getAccount',auth.user,userController.getAccount);
 route.get('/getWishlist',auth.user,userController.getWishlist);
-route.get('/getCheckout',auth.user,userController.getCheckout);
 route.get('/getCart',auth.user,userController.getCart);
 route.post('/update-quantity',userController.updateQuantity);
 route.get('/addToCart/:id',userController.addToCart);

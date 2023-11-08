@@ -24,6 +24,7 @@ const {otp}  = require('../models/otp');
 const categoryModel = require('../models/categoryModel');
 const { default: mongoose } = require('mongoose');
 const productModel = require('../models/productModel');
+const { render } = require('../routes/userRoute');
 const {ObjectId} = mongoose.Types;
 
 exports.home = async(req,res)=>{
@@ -401,7 +402,15 @@ exports.getWishlist = async(req,res)=>{
     res.render('wishlist');
 }
 
-exports.getCheckout = async(req,res)=>{
+
+
+exports.getCheckoutPage = async(req,res)=>{
+  try{
+    res.render
+
+  }catch(err){
+    console.error("error while getting checkout",err);
+  }
     res.render('checkout');
 }
 
