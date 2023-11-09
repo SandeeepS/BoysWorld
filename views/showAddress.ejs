@@ -22,6 +22,14 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+	<style>
+	       .table-row{
+		
+			box-sizing: border-box;
+			
+			
+		   }
+	</style>
 </head><!--/head-->
 
 <body>
@@ -93,51 +101,83 @@
 				<table class="table table-condensed">
 					<thead>
 						<tr >
-							<td class="image">Address</td>
+							<td class="image">Default</td>
 						</tr>
 					</thead>
 					<tbody>
-                        <% for(const add of address){ %>
+						<% for(let i = 0 ;i< currentAddress.length;i++) {%>
 
                         
                     <tr>
 							<td class="cart_product">
 								
+								<h5><%= currentAddress[i].name%>,</h5>
+								<h5> <%=  currentAddress[i].number %>,</h5>
+								<h5><%= currentAddress[i].houseName%>,</h5>
+								<h5><%= currentAddress[i].houseNumber%></h5>
+								<h5> <%= currentAddress[i].state%>,</h5>
+								<h5><%= currentAddress[i].city%>,</h5>
+								<h5><%= currentAddress[i].street%>,</h5>
+								<h5><%= currentAddress[i].landMark%></h5>
+								<h5><%= currentAddress[i].pin%>,</h5>
 									
-								    <h4><%= add.name%></h4>
-									<h5>Mobile number: <%= add.number %></h5>
-									<h5>House Name: <%= add.houseName%></h5>
-									<h5>House Number: <%= add.houseNumber%></h5>
-									<h5>State: <%= add.state%></h5>
-									<h5>city: <%= add.city%></h5>
-									<h5>street: <%= add.street%></h5>
-									<h5>LandMark: <%= add.landMark%></h5>
-									<h5>Pin Code: <%= add.pin%></h5>
+									
+							</td>
+                                    
+						
+						</tr>
+                   <% } %>
+					</tbody>
+				</table>
+
+				<table class="table table-condensed">
+					<thead>
+						<tr >
+							<td class="image">Address</td>
+						</tr>
+					</thead>
+					<tbody>
+						<% for(let i = 0 ;i< address.length;i++) {%>
+
+					    
+                        <tr class="table-row">
+							
+							
+							
+							<td class="cart_product">
+								
+								<h5><%= address[i].name%>,</h5>
+								<h5> <%= address[i].number %>,</h5>
+								<h5><%= address[i].houseName%>,</h5>
+								<h5><%= address[i].houseNumber%></h5>
+								<h5> <%= address[i].state%>,</h5>
+								<h5><%= address[i].city%>,</h5>
+								<h5><%= address[i].street%>,</h5>
+								<h5><%= address[i].landMark%></h5>
+								<h5><%= address[i].pin%>,</h5>
+									
 							</td>
                                     
 						
 							</td>
 							<td class="cart_description">
 								<h4><a href=""></a></h4>
-								<p>Web ID: 1089772</p>
+								<a href=""><p>Edit</p></a>
 							</td>
-							<td class="cart_price">
-								<p></p>
-							</td>
+							
 							<td class="cart_quantity">
-								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
+								<div >
+									<a href="/setDefaultAddress/<%=address[i]._id %>" ><h5>Set as Default</h5></a>
 								</div>
 							</td>
 							<td class="cart_total">
 								<p class="cart_total_price"></p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href="/addressDelete/<%= add._id %>"><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="/addressDelete/<%= address[i]._id %>"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
+						
                    <% } %>
 					</tbody>
 				</table>
@@ -192,5 +232,6 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+	
 </body>
 </html>

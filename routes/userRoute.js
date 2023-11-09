@@ -43,6 +43,8 @@ route.get('/addAddress',userController.addAddressPage);
 route.post('/address',userController.address);
 route.get('/showAddress',userController.showAddress);
 route.get('/addressDelete/:id',userController.addressDelete);
+route.get('/setDefaultAddress/:id',userController.setDefaultAddress);
+route.get('/setDefaultAddressFromCheckout/:id',userController.setDefaultAddressFromCheckouts);
 
 
 module.exports = route

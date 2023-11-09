@@ -159,14 +159,14 @@
 					<div class="modal-style">
 						<div class="container">
 							<% for(let i = 0 ;i< address.length;i++) {%>
-
+							<a href="/setDefaultAddressFromCheckout/<%= address[i]._id%>" data-index="<%= i %>">
                             <div class="row">
 								<div class="box-sub">
 									<div>
-										<a href="#" data-index="<%= i %>">
+										
 
 											<input type="radio" name="checkout" >
-										</a>
+									
 										
 									</div>
 									<div>
@@ -182,8 +182,8 @@
 									</div>
 							
 								</div>	
-							</div>
-							
+						 	</div>
+						    </a>
 							<% } %>
 						</div>
 					
@@ -191,7 +191,7 @@
 				</div>
 			</div>
 			   
-			<% for(let i = 0 ;i< address.length;i++) {%>
+			<% for(let i = 0 ;i< currentAddress.length;i++) {%>
 
 				<tr>
 					<td>
@@ -202,15 +202,15 @@
 					</td>
 					<td >
 						
-						<h4 id="selectedAddressName"><%= address[0].name %></h4>
-						<h5 id="selectedAddressNumber">Mobile number: <%= address[0].number %></h5>
-						<h5 id="selectedAddressHouseName">House Name: <%= address[0].houseName %></h5>
-						<h5 id="selectedAddressHouseNumber">House Number: <%= address[0].houseNumber %></h5>
-						<h5 id="selectedAddressState">State: <%= address[0].state %></h5>
-						<h5 id="selectedAddressCity">City: <%= address[0].city %></h5>
-						<h5 id="selectedAddressStreet">Street: <%= address[0].street %></h5>
-						<h5 id="selectedAddressLandMark">LandMark: <%= address[0].landMark %></h5>
-						<h5 id="selectedAddressPinCode">Pin Code: <%= address[0].pin %></h5>
+						<h4 id="selectedAddressName"><%= currentAddress[0].name %></h4>
+						<h5 id="selectedAddressNumber">Mobile number: <%= currentAddress[0].number %></h5>
+						<h5 id="selectedAddressHouseName">House Name: <%= currentAddress[0].houseName %></h5>
+						<h5 id="selectedAddressHouseNumber">House Number: <%= currentAddress[0].houseNumber %></h5>
+						<h5 id="selectedAddressState">State: <%= currentAddress[0].state %></h5>
+						<h5 id="selectedAddressCity">City: <%= currentAddress[0].city %></h5>
+						<h5 id="selectedAddressStreet">Street: <%= currentAddress[0].street %></h5>
+						<h5 id="selectedAddressLandMark">LandMark: <%= currentAddress[0].landMark %></h5>
+						<h5 id="selectedAddressPinCode">Pin Code: <%= currentAddress[0].pin %></h5>
 							<% break %>
 			        </td>
 				</tr>
@@ -375,22 +375,5 @@
 		}
 	</script>
 
-	<script>
-		$('.box-sub a').on('click', function(e){
-			e.preventDefault();
-		    var address = <%- JSON.stringify(address)%>
-			var index = $(this).data('index');
-			console.log(index);
-			$('#selectedAddressName').text(address[index].name);
-			$('#selectedAddressNumber').text('Mobile number: ' + address[index].number);
-			$('#selectedAddressHouseName').text('House Name: ' + address[index].houseName);
-			$('#selectedAddressHouseNumber').text('House Number: ' + address[index].houseNumber);
-			$('#selectedAddressState').text('State: ' + address[index].state);
-			$('#selectedAddressCity').text('City: ' + address[index].city);
-			$('#selectedAddressStreet').text('Street: ' + address[index].street);
-			$('#selectedAddressLandMark').text('LandMark: ' + address[index].landMark);
-			$('#selectedAddressPinCode').text('Pin Code: ' + address[index].pin);
-		})
-	</script>
 </body>
 </html>

@@ -410,7 +410,8 @@ exports.getCheckoutPage = async(req,res)=>{
     const userData = await UserModel.findById(userId).exec();
  
     const address = userData.address;
-    res.render('checkout',{address});
+    const currentAddress = userData.currentAddress;
+    res.render('checkout',{address,currentAddress});
     
 
   }catch(err){
@@ -549,8 +550,9 @@ exports.showAddress = async(req,res)=>{
     const userData = await UserModel.findById(userId).exec();
  
     const address = userData.address;
+    const currentAddress = userData.currentAddress;
     console.log(address);
-    res.render('showAddress',{address});
+    res.render('showAddress',{address,currentAddress});
 
   }catch(err){
     console.error("error while getting show address page",err);
@@ -581,5 +583,62 @@ exports.addressDelete = async(req,res)=>{
 
   }catch(err){
     console.error("error while deleting the address",err);
+  }
+}
+
+
+exports.setDefaultAddress = async (req, res) => {
+  try {
+    const userId = req.session.user;
+    const addressId = req.params.id;
+    const addressObjectId = new ObjectId(addressId).toString();
+    const user = await UserModel.findById(userId).exec();
+
+    if (user) {
+      let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
+      console.log(currentAddressIndex);
+      if (currentAddressIndex !== -1) { // Check if the index is valid
+        console.log("helooooooooo");
+
+        const currentAddress = user.address[currentAddressIndex]; // Fetch the current address from user.address
+        user.currentAddress.splice(0, 1, currentAddress); // Replace the existing current address with the new one
+        await user.save();
+      } else {
+        console.log("Address not found.");
+      }
+    }
+
+    res.redirect('/showAddress');
+  } catch (err) {
+    console.error("Error while updating the default address", err);
+    res.redirect('/showAddress');
+  }
+}
+
+//setaddressFrom checkout
+
+exports.setDefaultAddressFromCheckouts = async (req, res) => {
+  try {
+    const userId = req.session.user;
+    const addressId = req.params.id;
+    const addressObjectId = new ObjectId(addressId).toString();
+    const user = await UserModel.findById(userId).exec();
+
+    if (user) {
+      let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
+      console.log(currentAddressIndex);
+      if (currentAddressIndex !== -1) { // Check if the index is valid
+        const currentAddress = user.address[currentAddressIndex]; // Fetch the current address from user.address
+        user.currentAddress.splice(0, 1, currentAddress); // Replace the existing current address with the new one
+        await user.save();
+      } else {
+        console.log("Address not found.");
+      }
+    }
+
+    res.redirect('/getCheckout');
+  } catch (err) {
+    console.error("Error while updating the default address", err);
+    res.redirect('getCheckout');
   }
 }

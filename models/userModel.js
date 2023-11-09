@@ -30,7 +30,8 @@ const sch = {
         default:true
     },
     cart:[cartItemSchema],
-    address:[addressSchema]
+    address:[addressSchema],
+    currentAddress:[addressSchema]
      
 }
 const monmodel = mongoose.model("users",sch);
