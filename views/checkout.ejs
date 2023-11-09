@@ -104,6 +104,7 @@
 			height: 100%;
 			padding-top: 20%;
 		}
+		
 	</style>
 </head><!--/head-->
 
@@ -156,8 +157,35 @@
 				<div class="modal-content">
 					<span class="close" id="closeModalBtn">&times;</span>
 					<div class="modal-style">
-						<p>uihfgfhiuhdfgjgfidghfdghighfdiugh</p>
+						<div class="container">
+							<% for(let i = 0 ;i< address.length;i++) {%>
 
+                            <div class="row">
+								<div class="box-sub">
+									<div>
+										<a href="" index="i">
+											<input type="radio" name="checkout">
+										</a>
+										
+									</div>
+									<div>
+										<h5><%= address[i].name%>,</h5>
+										<h5> <%= address[i].number %>,</h5>
+										<h5><%= address[i].houseName%>,</h5>
+										<h5><%= address[i].houseNumber%></h5>
+										<h5> <%= address[i].state%>,</h5>
+										<h5><%= address[i].city%>,</h5>
+										<h5><%= address[i].street%>,</h5>
+										<h5><%= address[i].landMark%></h5>
+										<h5><%= address[i].pin%>,</h5>
+									</div>
+							
+								</div>	
+							</div>
+							
+							<% } %>
+						</div>
+					
 					</div>
 				</div>
 			</div>
