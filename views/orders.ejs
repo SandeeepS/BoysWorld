@@ -29,6 +29,19 @@
 			
 			
 		   }
+           .a-box {
+			display: block;
+			border-radius: 8px;
+			background-color: #fff;
+			border: 1px #D5D9D9 solid;
+			padding-left: 30px;
+			
+		    }
+           
+           .content{
+			display: flex;
+			margin: 10px 10px 10px 10px;
+		   }
 	</style>
 </head><!--/head-->
 
@@ -96,31 +109,22 @@
 
 	<section id="cart_items">
 		<div class="container">
-			
-			<div class="table-responsive cart_info">
-                <p class="text text-center"><h4>Orders</h4></p>
-				<table class="table table-condensed">
-					<thead>
-						<tr >
-							<td class="image">Default</td>
-						</tr>
-					</thead>
-					<tbody>
-					
-					</tbody>
-				</table>
-
-				<table class="table table-condensed">
-					<thead>
-						<tr >
-							<td class="image">Address</td>
-						</tr>
-					</thead>
-					<tbody>
-						
-					</tbody>
-				</table>
-			</div>
+            <% for(let i = 0; i< oders.length; i ++) { %>
+                <% const productId = oders[i].productId; %>
+                <% const product = products.find(p => p._id === productId); %>
+                
+                
+			<div class="a-box">
+               <div class="content">
+                    <div>
+                    
+                    </div>
+                    <div>
+                        <p><h6><%= oders[i].quantity%></h6></p>
+                    </div>
+               </div>
+            </div>
+            <% } %>
 		</div>
 	</section> <!--/#cart_items-->
 

@@ -682,7 +682,13 @@ exports.placeOrder = async (req, res) => {
 
 exports.oders = async(req,res)=>{
   try{
-    res.render('orders');
+    const userId = req.session.user;
+    const user = await UserModel.findById(userId).exec();
+    const oders = user.oders;
+    const products = await productModel.find().exec();
+  
+    console.log(oders);
+    res.render('orders',{oders,products});
 
   }catch(err){
     console.error("error while getting oders");
