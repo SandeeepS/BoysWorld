@@ -678,3 +678,15 @@ exports.placeOrder = async (req, res) => {
   }
 };
 
+//oders
+
+exports.oders = async(req,res)=>{
+  try{
+    res.render('orders');
+
+  }catch(err){
+    console.error("error while getting oders");
+    res.redirect('/getAccount');
+  }
+}
+

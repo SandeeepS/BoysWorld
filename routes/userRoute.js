@@ -47,6 +47,7 @@ route.get('/showAddress',userController.showAddress);
 route.get('/addressDelete/:id',userController.addressDelete);
 route.get('/setDefaultAddress/:id',userController.setDefaultAddress);
 route.get('/setDefaultAddressFromCheckout/:id',userController.setDefaultAddressFromCheckouts);
+route.get('/oders',userController.oders);
 
 
 module.exports = route
