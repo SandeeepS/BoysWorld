@@ -163,8 +163,9 @@
                             <div class="row">
 								<div class="box-sub">
 									<div>
-										<a href="" index="i">
-											<input type="radio" name="checkout">
+										<a href="#" data-index="<%= i %>">
+
+											<input type="radio" name="checkout" >
 										</a>
 										
 									</div>
@@ -190,7 +191,7 @@
 				</div>
 			</div>
 			   
-				<% for(const add of address){ %>
+			<% for(let i = 0 ;i< address.length;i++) {%>
 
 				<tr>
 					<td>
@@ -201,15 +202,15 @@
 					</td>
 					<td >
 						
-							<h4><%= add.name%></h4>
-							<h5>Mobile number: <%= add.number %></h5>
-							<h5>House Name: <%= add.houseName%></h5>
-							<h5>House Number: <%= add.houseNumber%></h5>
-							<h5>State: <%= add.state%></h5>
-							<h5>city: <%= add.city%></h5>
-							<h5>street: <%= add.street%></h5>
-							<h5>LandMark: <%= add.landMark%></h5>
-							<h5>Pin Code: <%= add.pin%></h5>
+						<h4 id="selectedAddressName"><%= address[0].name %></h4>
+						<h5 id="selectedAddressNumber">Mobile number: <%= address[0].number %></h5>
+						<h5 id="selectedAddressHouseName">House Name: <%= address[0].houseName %></h5>
+						<h5 id="selectedAddressHouseNumber">House Number: <%= address[0].houseNumber %></h5>
+						<h5 id="selectedAddressState">State: <%= address[0].state %></h5>
+						<h5 id="selectedAddressCity">City: <%= address[0].city %></h5>
+						<h5 id="selectedAddressStreet">Street: <%= address[0].street %></h5>
+						<h5 id="selectedAddressLandMark">LandMark: <%= address[0].landMark %></h5>
+						<h5 id="selectedAddressPinCode">Pin Code: <%= address[0].pin %></h5>
 							<% break %>
 			        </td>
 				</tr>
@@ -372,6 +373,24 @@
 				modal.style.display = "none";
 			}
 		}
+	</script>
+
+	<script>
+		$('.box-sub a').on('click', function(e){
+			e.preventDefault();
+		    var address = <%- JSON.stringify(address)%>
+			var index = $(this).data('index');
+			console.log(index);
+			$('#selectedAddressName').text(address[index].name);
+			$('#selectedAddressNumber').text('Mobile number: ' + address[index].number);
+			$('#selectedAddressHouseName').text('House Name: ' + address[index].houseName);
+			$('#selectedAddressHouseNumber').text('House Number: ' + address[index].houseNumber);
+			$('#selectedAddressState').text('State: ' + address[index].state);
+			$('#selectedAddressCity').text('City: ' + address[index].city);
+			$('#selectedAddressStreet').text('Street: ' + address[index].street);
+			$('#selectedAddressLandMark').text('LandMark: ' + address[index].landMark);
+			$('#selectedAddressPinCode').text('Pin Code: ' + address[index].pin);
+		})
 	</script>
 </body>
 </html>
