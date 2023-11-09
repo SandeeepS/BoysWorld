@@ -59,6 +59,21 @@
 			opacity: 0.3; /* Adjust the opacity value as needed */
 		  }
 
+		.content{
+			display: flex;
+			margin: 10px 10px 10px 10px;
+		}
+		.photo{
+			
+		}
+		.photo img{
+			height: 200px;
+			width: 200px;
+		}
+		.discription{
+			margin-left: 25px;
+		}
+
 
 		/* Style for the modal container */
         .modal {
@@ -311,17 +326,27 @@
 
 		   
         </table>
-		<div class="row">
-			<div class="box-sub">
-				
-			
-			</div>
-		</div>
+		
 
-		<br>
-		<br>
-		<div>
-			<a href="#" class="btn btn-default add-to-cart" >Place your order</a>
+		<div class="a-box">
+		   <div class="content">
+			       <div class="photo">
+					 <img src="/views/productImages/<%=product.image[0]%>" alt="">
+				   </div>
+				   <div class="discription">
+                      <h5><%=product.name%></h5>
+					  <h5><%=product.discription%></h5>
+					  <h5>R <%=product.price%></h5>
+					  <h5>Qty:<%=quantity%></h5>
+					  <h5>Order Total : <%=totalPrice%></h5>
+				   </div>
+                  
+		   </div>
+		</div>
+		<div class="a-box text-center" >
+			<div>
+				<a href="#" class="btn btn-default add-to-cart" >Place your order</a>
+			</div>
 		</div>
     </div>
 </section>
@@ -408,6 +433,35 @@
 				modal.style.display = "none";
 			}
 		}
+	</script>
+
+	<script>
+		// Function to get product details from the cookie
+		function getProductDetailsFromCookie() {
+			const cookieValue = document.cookie
+				.split('; ')
+				.find(row => row.startsWith('productDetails='))
+				?.split('=')[1];
+	
+			return cookieValue ? JSON.parse(decodeURIComponent(cookieValue)) : null;
+		}
+	
+		// Example usage
+		document.addEventListener('DOMContentLoaded', function () {
+			// Call the function to get product details from the cookie
+			const productDetails = getProductDetailsFromCookie();
+	
+			// Check if product details are available
+			if (productDetails) {
+				console.log("Product ID:", productDetails.id);
+				console.log("Quantity:", productDetails.quantity);
+	
+				// Now you can use the product details as needed in your checkout page
+				// For example, you can update the checkout form with these details
+				document.getElementById('productIdInput').value = productDetails.id;
+				document.getElementById('quantityInput').value = productDetails.quantity;
+			}
+		});
 	</script>
 
 </body>

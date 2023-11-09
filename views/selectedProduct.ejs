@@ -162,8 +162,13 @@
 					<div class="col-sm-4" >
 						<p><%=productData.discription%></p>
 						<h4>₹<%=productData.price%></h4>
+						<div>
+                            <label for="">Quantity</label>
+							<input  type="number" id="quantity" style="width: 50px;">
+						</div>
+						
 						<a href="/addToCart/<%=productData._id%>" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
-						<a href="/getCheckout" class="btn btn-default add-to-cart" >Buy Now</a>
+						<a href="#" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData._id%>')" >Buy Now</a>
 
 					</div>
 				</div>
@@ -251,6 +256,32 @@
 				$('#zoomed-image-container').hide();
 			});
 		});
+	</script>
+
+	<script>
+		function buyNow(productId) {
+			// Get the quantity from the input field
+			var quantity = document.getElementById('quantity').value;
+			if(quantity ==='' || quantity <= 0){
+				quantity = 1;
+			}
+			console.log(quantity);
+	
+			// Call a function to store the product details in the cookie
+			storeProductInCookie(productId, quantity);
+	
+			// Redirect to the checkout page
+			window.location.href = "/getCheckout?productId=" + productId + "&quantity=" + quantity;
+
+		}
+	
+		function storeProductInCookie(productId, quantity) {
+			const productDetails = {
+				id: productId,
+				quantity: quantity
+			};
+			document.cookie = `productDetails=${JSON.stringify(productDetails)}; path=/`;
+		}
 	</script>
 	
    

@@ -408,10 +408,14 @@ exports.getCheckoutPage = async(req,res)=>{
   try{
     const userId = req.session.user;
     const userData = await UserModel.findById(userId).exec();
- 
     const address = userData.address;
     const currentAddress = userData.currentAddress;
-    res.render('checkout',{address,currentAddress});
+    const productId = req.query.productId;
+    const quantity = req.query.quantity;
+    const product = await productModel.findById(productId).exec();
+    const totalPrice = product.price * quantity;
+    console.log(totalPrice);
+    res.render('checkout',{address,currentAddress,product,quantity,totalPrice});
     
 
   }catch(err){

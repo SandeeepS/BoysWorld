@@ -6,6 +6,12 @@ const cartItemSchema = new mongoose.Schema({
     price:Number,
 });
 
+const oderShema = new mongoose.Schema({
+    productId:String,
+    quantity:Number,
+    price:Number,
+});
+
 const addressSchema = new mongoose.Schema({
     name:String,
     number:String,
@@ -31,7 +37,8 @@ const sch = {
     },
     cart:[cartItemSchema],
     address:[addressSchema],
-    currentAddress:[addressSchema]
+    currentAddress:[addressSchema],
+    oders:[oderShema],
      
 }
 const monmodel = mongoose.model("users",sch);
