@@ -27,6 +27,8 @@ route.post('/logout',userController.logout);
 
 route.post('/signupUser',userController.signup)
 
+route.post('/placeOrder',userController.placeOrder);
+
 //cartegoty
 // route.get('/category',userController);
 

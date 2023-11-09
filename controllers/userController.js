@@ -414,7 +414,6 @@ exports.getCheckoutPage = async(req,res)=>{
     const quantity = req.query.quantity;
     const product = await productModel.findById(productId).exec();
     const totalPrice = product.price * quantity;
-    console.log(totalPrice);
     res.render('checkout',{address,currentAddress,product,quantity,totalPrice});
     
 
@@ -646,3 +645,36 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     res.redirect('getCheckout');
   }
 }
+
+
+//place order 
+exports.placeOrder = async (req, res) => {
+  try {
+    const { productId, quantity, total } = req.body;
+    const userId = req.session.user;
+    console.log(quantity);
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    // Insert the order into the user's document
+  const userdata = await UserModel.findByIdAndUpdate(userId,{
+    $push:{
+      oders:{
+        "productId":productId,
+        "quantity":quantity,
+        "price":total,
+      }
+    }
+  },{new:true})
+
+    // Respond with a success message
+    res.status(200).json({ success: true, message: 'Order placed successfully.' });
+  } catch (error) {
+    console.error('Error placing order:', error);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+

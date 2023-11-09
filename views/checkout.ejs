@@ -123,6 +123,46 @@
 		}
 		
 	</style>
+
+	<!-- modal for order place -->
+
+	<style>
+		/* Style for the payment success modal */
+		#paymentSuccessModal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.7);
+		}
+	
+		#paymentSuccessModalContent {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 50%;
+		}
+	
+		#paymentSuccessModalClose {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+	
+		#paymentSuccessModalClose:hover,
+		#paymentSuccessModalClose:focus {
+			color: black;
+			text-decoration: none;
+		}
+	</style>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 </head><!--/head-->
 
 <body>
@@ -207,6 +247,9 @@
 					</div>
 				</div>
 			</div>
+
+
+		   
 			   
 			<% for(let i = 0 ;i< currentAddress.length;i++) {%>
 
@@ -345,10 +388,23 @@
 		</div>
 		<div class="a-box text-center" >
 			<div>
-				<a href="#" class="btn btn-default add-to-cart" >Place your order</a>
+				<a href="#" class="btn btn-default place-order" onclick="placeOrder()">Place your order</a>
 			</div>
 		</div>
     </div>
+
+
+    <div id="paymentSuccessModal" class="modal">
+		<div id="paymentSuccessModalContent" class="modal-content">
+			<span id="paymentSuccessModalClose" class="close">&times;</span>
+			<div class="modal-style">
+				<div class="modal-text">
+					<p>Payment Successful!</p>
+				
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 	<footer id="footer"><!--Footer-->
 		
@@ -456,13 +512,64 @@
 				console.log("Product ID:", productDetails.id);
 				console.log("Quantity:", productDetails.quantity);
 	
-				// Now you can use the product details as needed in your checkout page
-				// For example, you can update the checkout form with these details
-				document.getElementById('productIdInput').value = productDetails.id;
-				document.getElementById('quantityInput').value = productDetails.quantity;
+				
 			}
 		});
 	</script>
+
+
+  
+	<script>
+		// Function to send AJAX request
+		function placeOrder() {
+			// Get product details from the cookie or your preferred method
+			const closeBtn = document.getElementById("paymentSuccessModalClose");
+			const productId = <%-JSON.stringify(product._id)%>;
+			const quantity = <%-JSON.stringify(quantity)%>;
+			const totalPrice = <%-JSON.stringify(totalPrice)%>;
+			
+	
+			// Make AJAX request
+			$.ajax({
+				type: 'POST',
+				url: '/placeOrder', 
+				data: {
+					productId: productId,
+					quantity: quantity,
+					total: totalPrice,
+				},
+				success: function (response) {
+					// Display payment successful modal
+					const modal = document.getElementById("paymentSuccessModal");
+					modal.style.display = "block";
+				},
+				error: function (error) {
+					console.error("Error placing order:", error);
+					// Handle error if needed
+				}
+			});
+		}
+		
+	</script>
+
+	<script>
+		// Get references to the modal and the button to open/close it
+		var modal = document.getElementById("paymentSuccessModal");
+		var closeModalBtn = document.getElementById("paymentSuccessModalClose");
+	
+		// Event listener to close the modal
+		closeModalBtn.onclick = function () {
+			modal.style.display = "none";
+		}
+	
+		// Close the modal if the user clicks outside of it
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+	</script>
+	
 
 </body>
 </html>
