@@ -196,12 +196,12 @@
 					<div class="userDetails d-flex justify-content-center align-items-center text-center ">
 						<div>
 							
-							<div class="form-one">
+							<div class="form-one " style="width: 120%;">
 								<h4 class="font-weight-bold"><%= userData.name %></h4>
 								<ul>
-									<li class="font-weight-normal">Email: <span><%= userData.email %></span></li>
-									<li class="font-weight-normal">Mobile Number: <span><%= userData.number %></span></li>
-									<li class="font-weight-normal">Address: <span></span></li>
+									<li class="font-weight-normal"><b>Email:</b> <span><%= userData.email %></span></li>
+									<li class="font-weight-normal"><b>Mobile Number:</b> <span><%= userData.number %></span></li>
+									<li class="font-weight-normal"><b>Address: </b> <%= userData.currentAddress[0].name %>,<%= userData.currentAddress[0].number %>,<%= userData.currentAddress[0].email%>,<%= userData.currentAddress[0].houseName%>,<%= userData.currentAddress[0].state%>,<%= userData.currentAddress[0].name %> ,<%= userData.currentAddress[0].city %>,<%= userData.currentAddress[0].street %>,<%= userData.currentAddress[0].pin %> <span></span></li>
 								</ul>
 							</div>
 						</div>
