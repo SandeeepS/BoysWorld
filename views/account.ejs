@@ -56,7 +56,14 @@
 				display: flex;
 				justify-content: center; 
 				align-items: center; 
-			/
+			
+			  }
+			  .profile{
+				display: flex;
+			  }
+			  .userDetails{
+				width: 100%;
+				margin-left: 80%;
 			  }
 		</style>
 		
@@ -132,104 +139,78 @@
 	<section>
 		<div class="container">
 			<div class="row">
-			
-				<div class="col-sm-9 padding-right">
-					<div class="features_items"><!--features_items-->
-						<h2 class="title text-center"></h2>
-                    </div>
-				</div>
-			</div>					
-				
-
-   
-		    
-			<div class="row">
-				
-				<div class="col-sm-4">
-					<div class="col-sm-12">
+				<div class="col-sm-3"><!-- Left Sidebar -->
+					<div class="profile">
 						<div class="product-image-wrapper">
 							<div class="single-products align-item-center">
-									<div class="productinfo text-center">
-									
-										<div  class="profile-photo">
-											<img src="/views/productImages/mastang.jpg" alt="" id="zoom-image">
+								<div class="productinfo text-center">
+									<div class="profile-photo">
+										<img src="/views/productImages/mastang.jpg" alt="" id="zoom-image">
+									</div>
+									<div class="panel-group category-products" id="accordian">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<h4 class="panel-title">
+													<a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
+														Edit Profile
+													</a>
+												</h4>
+											</div>
 										</div>
-                                        <div class="panel-group category-products" id="accordian"><!--category-productsr-->
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">
-                                                        <a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
-                                                           
-                                                            edit profile
-                                                        </a>
-                                                    </h4>
-                                                </div>
-                                                
-                                            </div>
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">
-														<a  href="/oders">Orders</a>
-                                                    </h4>
-                                                </div>
-                                                
-                                            </div>
-
-											 
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">
-                                                        <a  href="/showAddress">show address</a>
-                                                    </h4>
-                                                </div>
-                                            
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">
-                                                        <a  href="/addAddress">add address</a>
-                                                    </h4>
-                                                </div>
-                                               
-                                            </div>
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title"><a href="#">change password</a></h4>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<h4 class="panel-title">
+													<a href="/orders">Orders</a>
+												</h4>
+											</div>
+										</div>
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<h4 class ="panel-title">
+													<a href="/showAddress">Show Address</a>
+												</h4>
+											</div>
+										</div>
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<h4 class="panel-title">
+													<a href="/addAddress">Add Address</a>
+												</h4>
+											</div>
+										</div>
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<h4 class="panel-title">
+													<a href="#">Change Password</a>
+												</h4>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-											
 					</div>
 				</div>
-				<div class="col-sm-8">
-                      
-							<p><%= userData.name%></p>
+	
+				<div class="col-sm-4 text-center" ><!-- Right Content -->
+					<div class="userDetails d-flex justify-content-center align-items-center text-center ">
+						<div>
+							
 							<div class="form-one">
-							<br>
-						    <br>
+								<h4 class="font-weight-bold"><%= userData.name %></h4>
 								<ul>
-									<li>Email :<span>     <%=userData.email%></span></li>
-									<br>
-							        <li>Mobile Number :<span><%=userData.number%></span></li>
-									<br>
-									<li>Address :<span></span></li>
-								
+									<li class="font-weight-normal">Email: <span><%= userData.email %></span></li>
+									<li class="font-weight-normal">Mobile Number: <span><%= userData.number %></span></li>
+									<li class="font-weight-normal">Address: <span></span></li>
 								</ul>
-									
 							</div>
-					
-						<p></p>
-						<h4></h4>
-				
-                    
+						</div>
+					</div>
 				</div>
-				
 			</div>
 		</div>
 	</section>
+	
 	
 	<footer id="footer"><!--Footer-->
 		

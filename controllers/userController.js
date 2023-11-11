@@ -686,8 +686,6 @@ exports.oders = async(req,res)=>{
     const user = await UserModel.findById(userId).exec();
     const oders = user.oders;
     const products = await productModel.find().exec();
-  
-    console.log(oders);
     res.render('orders',{oders,products});
 
   }catch(err){
