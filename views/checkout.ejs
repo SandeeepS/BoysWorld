@@ -394,8 +394,8 @@
     </div>
 
 
-    <div id="paymentSuccessModal" class="modal">
-		<div id="paymentSuccessModalContent" class="modal-content">
+    <div id="paymentSuccessModal" class="modal2">
+		<div id="paymentSuccessModalContent" class="modal-content2">
 			<span id="paymentSuccessModalClose" class="close">&times;</span>
 			<div class="modal-style">
 				<div class="modal-text">
@@ -540,8 +540,8 @@
 				},
 				success: function (response) {
 					// Display payment successful modal
-					const modal = document.getElementById("paymentSuccessModal");
-					modal.style.display = "block";
+					const modal2 = document.getElementById("paymentSuccessModal");
+					modal2.style.display = "block";
 				},
 				error: function (error) {
 					console.error("Error placing order:", error);
@@ -554,18 +554,18 @@
 
 	<script>
 		// Get references to the modal and the button to open/close it
-		var modal = document.getElementById("paymentSuccessModal");
-		var closeModalBtn = document.getElementById("paymentSuccessModalClose");
+		var modal2 = document.getElementById("paymentSuccessModal");
+		var closeModalBtn2 = document.getElementById("paymentSuccessModalClose");
 	
 		// Event listener to close the modal
-		closeModalBtn.onclick = function () {
-			modal.style.display = "none";
+		closeModalBtn2.onclick = function () {
+			modal2.style.display = "none";
 		}
 	
 		// Close the modal if the user clicks outside of it
 		window.onclick = function (event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
+			if (event.target == modal2) {
+				modal2.style.display = "none";
 			}
 		}
 	</script>

@@ -630,9 +630,9 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     if (user) {
       let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
       console.log(currentAddressIndex);
-      if (currentAddressIndex !== -1) { // Check if the index is valid
-        const currentAddress = user.address[currentAddressIndex]; // Fetch the current address from user.address
-        user.currentAddress.splice(0, 1, currentAddress); // Replace the existing current address with the new one
+      if (currentAddressIndex !== -1) { 
+        const currentAddress = user.address[currentAddressIndex]; 
+        user.currentAddress.splice(0, 1, currentAddress);
         await user.save();
       } else {
         console.log("Address not found.");
@@ -642,7 +642,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     res.redirect('/getCheckout');
   } catch (err) {
     console.error("Error while updating the default address", err);
-    res.redirect('getCheckout');
+    res.redirect('/getCheckout');
   }
 }
 
