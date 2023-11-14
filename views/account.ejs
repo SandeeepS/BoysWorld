@@ -307,7 +307,7 @@
 								 <input type="password" name="new" id="new" placeholder="Enter new password "> 
 								 <label for="">Conform password</label>
 								 <input type="password" name="conform" id="conform" placeholder=" conform new password">
-								 <a href="#" class="btn btn-default update " id="updateBtn" onclick="ChangePassword()">Change</a>
+								 <a href="#" class="btn btn-default update " id="changePassBtn" onclick="ChangePassword()">Change</a>
 							 </form>
 						  </div>
 						 
@@ -315,6 +315,18 @@
 				 </div>
 			</div>
 		 </div>
+
+		 <!-- password changed successfull modal -->
+		 <div id="afterPassChange" class="modal">
+			<div class="modal-content">
+				 <span class="close" id="closeModalBtn4">&times;</span>
+				 <div class="modal-style">
+					   <div class="container">
+							   <P><H5>Password changed successfully</H5></P>
+					   </div>
+				 </div>
+			</div>
+	   </div>
 	</section>
 	
 	
@@ -439,6 +451,7 @@
 		<!-- password modal -->
 		<script>
 			var modal3 = document.getElementById("psswordModal");
+			
 			var openModal3Btn = document.getElementById("changePass");
 			var closeModal3Btn = document.getElementById("closeModalBtn3");
 
@@ -463,9 +476,14 @@
 
 	   <!-- change password req -->
 	   <script>
-		    const currentPassword = document.getElementById("current");
-			const newPassword = document.getElementById("new");
-			const conformPassword = document.getElementById("conform");
+		function ChangePassword(){
+
+		
+		    const currentPassword = document.getElementById("current").value;
+			const newPassword = document.getElementById("new").value;
+			const conformPassword = document.getElementById("conform").value;
+
+			
 
 				//ajax req
 				$.ajax({
@@ -477,14 +495,39 @@
 						conformPassword:conformPassword,
 					},
 					success: function(response){
-						const modal3 = document.getElementById('psswordModal');
-						modal.style.display = "none";
+						var  modal4 = document.getElementById('afterPassChange');
+						modal4.style.display = "block";
 						
 					},
 					error: function(error){
 						console.error("error while updating user data ",error);
 					}
 				});
+		}
+	   </script>
+
+	   <script>
+		      var modal3 = document.getElementById("psswordModal");
+			  var closeModal3Btn = document.getElementById("closeModalBtn3");
+		      var modal4 = document.getElementById("afterPassChange");
+		      var closeModalBtn4 = document.getElementById("closeModalBtn4");
+
+			  	//to close the modal
+			closeModalBtn4.onclick = function(){
+				
+				modal4.style.display = "none";
+				modal3.style.display = "none";
+			}
+			 
+			//close the modal if the user clicks the outside of it 
+			window.onclick = function(event){
+				if(event.target == modal4){
+					modal4.style.display = "none";
+					modal3.style.display = "none";
+				}
+			}
+	
+
 	   </script>
 </body>
 </html>

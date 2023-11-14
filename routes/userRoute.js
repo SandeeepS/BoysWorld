@@ -31,6 +31,7 @@ route.post('/placeOrder',userController.placeOrder);
 
 
 route.post('/updateProfileDetails',userController.updateProfileDetails);
+route.post('/changePassword',userController.changePassword);
 
 //cartegoty
 // route.get('/category',userController);

@@ -26,6 +26,8 @@ const { default: mongoose } = require('mongoose');
 const productModel = require('../models/productModel');
 const { render } = require('../routes/userRoute');
 const {ObjectId} = mongoose.Types;
+const crypto = require('crypto');
+const { log } = require('console');
 
 exports.home = async(req,res)=>{
     res.render("index");
@@ -712,6 +714,43 @@ exports.updateProfileDetails = async(req,res)=>{
     res.status(200).json({ success: true, message: 'Updated successfully.' });
   }catch(err){
     console.error("error while updating the user",err);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+}
+
+//change password 
+exports.changePassword = async(req,res)=>{
+  try{
+       const userId = req.session.user;
+       const saltRouds = 10;
+       const {currentPassword,newPassword,conformPassword} = req.body;
+       const hashedNewPassword = crypto.createHash('md5').update(newPassword).digest('hex');
+       const hashedConformPassword = crypto.createHash('md5').update(conformPassword).digest('hex');
+
+       const user = await UserModel.findById(userId).exec();
+       const password = user.pass;
+       const isPasswordMatch = await bcrypt.compare(currentPassword,password);
+       console.log(isPasswordMatch);
+
+       if(!isPasswordMatch){
+          console.log("current password is incorrecnt");
+       }      
+       
+       if(isPasswordMatch == true && (hashedNewPassword == hashedConformPassword) ){
+             user.pass = await bcrypt.hash(newPassword,saltRouds);
+             await user.save();
+             res.status(200).json({ success: true, message: 'Updated successfully.' });
+       }else{
+        console.log("error occured");
+       }
+       
+ 
+       
+    }
+    
+       
+  catch(err){
+    console.error("error while changing password",err);
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 }
