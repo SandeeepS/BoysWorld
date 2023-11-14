@@ -226,7 +226,7 @@
 										<div class="panel panel-default">
 											<div class="panel-heading">
 												<h4 class="panel-title">
-													<a href="#">Change Password</a>
+													<a href="#" id="changePass">Change Password</a>
 												</h4>
 											</div>
 										</div>
@@ -290,6 +290,31 @@
 				  </div>
 			 </div>
 		</div>
+
+		<!-- change Password modal -->
+		
+		<div id="psswordModal" class="modal">
+			<div class="modal-content">
+				 <span class="close" id="closeModalBtn3">&times;</span>
+				 <div class="modal-style">
+					 <div class="container">
+						 <h4 class="text text-center">Change Password</h4>
+						  <div class="form-one" style="width: 100%;">
+							 <form action="">
+								 <label for="">Current Password</label>
+								 <input type="password" name="current" placeholder="Enter  current password" id="current">
+								 <label for="">New Password </label>
+								 <input type="password" name="new" id="new" placeholder="Enter new password "> 
+								 <label for="">Conform password</label>
+								 <input type="password" name="conform" id="conform" placeholder=" conform new password">
+								 <a href="#" class="btn btn-default update " id="updateBtn" onclick="ChangePassword()">Change</a>
+							 </form>
+						  </div>
+						 
+					 </div>
+				 </div>
+			</div>
+		 </div>
 	</section>
 	
 	
@@ -410,5 +435,56 @@
 	
 	
 		</script>
+
+		<!-- password modal -->
+		<script>
+			var modal3 = document.getElementById("psswordModal");
+			var openModal3Btn = document.getElementById("changePass");
+			var closeModal3Btn = document.getElementById("closeModalBtn3");
+
+			  //to open the modal
+			  openModal3Btn.onclick = function(){
+				modal3.style.display = "block";
+			}
+	
+			//to close the modal
+			closeModalBtn3.onclick = function(){
+				modal3.style.display = "none";
+			}
+			 
+			//close the modal if the user clicks the outside of it 
+			window.onclick = function(event){
+				if(event.target == modal3){
+					modal3.style.display = "none";
+				}
+			}
+	
+		</script>
+
+	   <!-- change password req -->
+	   <script>
+		    const currentPassword = document.getElementById("current");
+			const newPassword = document.getElementById("new");
+			const conformPassword = document.getElementById("conform");
+
+				//ajax req
+				$.ajax({
+					type: 'POST',
+					url:'/changePassword',
+					data:{
+						currentPassword: currentPassword,
+						newPassword: newPassword,
+						conformPassword:conformPassword,
+					},
+					success: function(response){
+						const modal3 = document.getElementById('psswordModal');
+						modal.style.display = "none";
+						
+					},
+					error: function(error){
+						console.error("error while updating user data ",error);
+					}
+				});
+	   </script>
 </body>
 </html>
