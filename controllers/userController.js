@@ -694,3 +694,25 @@ exports.oders = async(req,res)=>{
   }
 }
 
+
+//update userprofile
+
+exports.updateProfileDetails = async(req,res)=>{
+  try{
+      const userId = req.session.user;
+      const name = req.body.name;
+      const email = req.body.email;
+      const number = req.body.number;
+
+      if (!name || !email || !number) {
+      return res.status(400).json({ success: false, message: 'Name, email, and number are required.' });
+    }
+
+    await UserModel.findByIdAndUpdate(userId, {name,email,number}).exec();
+    res.status(200).json({ success: true, message: 'Updated successfully.' });
+  }catch(err){
+    console.error("error while updating the user",err);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+}
+

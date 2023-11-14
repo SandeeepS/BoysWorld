@@ -260,10 +260,35 @@
                 <span class="close" id="closeModalBtn">&times;</span>
 				<div class="modal-style">
                     <div class="container">
-                           <p>isuhfidhgidhdhgh</p>
+						<h4 class="text text-center">Edit Profile</h4>
+                         <div class="form-one" style="width: 100%;">
+                            <form action="">
+								<label for="">Name</label>
+								<input type="text" name="name" value="<%= userData.name %>" id="name1">
+								<label for="">mobile</label>
+								<input type="text" name="number" id="number1" value="<%= userData.number %>"> 
+								<label for="">Email</label>
+								<input type="text" name="email" id="email1" value="<%= userData.email %>">
+								<a href="#" class="btn btn-default update " id="updateBtn" onclick="updateBtn()">Update</a>
+							</form>
+						 </div>
+						
 					</div>
 				</div>
 		   </div>
+		</div>
+
+
+		<!-- updated modal -->
+		<div id="updatedModal" class="modal">
+             <div class="modal-content">
+				  <span class="close" id="closeModalBtn2">&times;</span>
+                  <div class="modal-style">
+						<div class="container">
+								<P><H5>Updated  Successful</H5></P>
+						</div>
+				  </div>
+			 </div>
 		</div>
 	</section>
 	
@@ -309,6 +334,7 @@
     <script src="../js/main.js"></script>
 	<script>
 		var modal = document.getElementById('myModal');
+		var modal2 = document.getElementById('updatedModal');
 		var openModalBtn = document.getElementById("openModalBtn");
 		var closeModalBtn = document.getElementById("closeModalBtn");
 
@@ -329,8 +355,60 @@
 			}
 		}
 
+	
+
 
 	</script>
 
+
+
+    <!-- update userdata -->
+ 
+	<script>
+		function updateBtn(){
+			const name = document.getElementById("name1").value;
+			const number = document.getElementById("number1").value;
+			const email = document.getElementById("email1").value;
+			
+			//ajax req
+			$.ajax({
+				type: 'POST',
+				url:'/updateProfileDetails',
+				data:{
+					name : name,
+					email: email,
+					number: number,
+				},
+				success: function(response){
+					const modal2 = document.getElementById('updatedModal');
+					modal.style.display = "none";
+					modal2.style.display = "block";
+				},
+				error: function(error){
+					console.error("error while updating user data ",error);
+				}
+			});
+
+		}
+	</script>
+
+		<!-- modal2 -->
+		<script>
+			var modal2 = document.getElementById('updatedModal');
+			var closeModalBtn = document.getElementById('closeModalBtn2');
+	
+			closeModalBtn2.onclick = function(){
+				modal2.style.display = "none";
+			}
+	
+			window.onclick = function(event){
+				if(event.target == modal2){
+					modal2.style.display = "none";
+				}
+			}
+	
+	
+	
+		</script>
 </body>
 </html>

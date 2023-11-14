@@ -29,6 +29,9 @@ route.post('/signupUser',userController.signup)
 
 route.post('/placeOrder',userController.placeOrder);
 
+
+route.post('/updateProfileDetails',userController.updateProfileDetails);
+
 //cartegoty
 // route.get('/category',userController);
 
