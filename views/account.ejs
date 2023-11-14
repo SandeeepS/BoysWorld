@@ -322,7 +322,7 @@
 				 <span class="close" id="closeModalBtn4">&times;</span>
 				 <div class="modal-style">
 					   <div class="container">
-							   <P><H5>Password changed successfully</H5></P>
+							   <P id="para"><H5></H5></P>
 					   </div>
 				 </div>
 			</div>
@@ -495,7 +495,9 @@
 						conformPassword:conformPassword,
 					},
 					success: function(response){
-						var  modal4 = document.getElementById('afterPassChange');
+						var modal4 = document.getElementById('afterPassChange');
+						var para = document.getElementById("para");
+						para.innerHTML = '<p>' + response.message + '</p>';
 						modal4.style.display = "block";
 						
 					},

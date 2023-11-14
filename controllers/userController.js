@@ -734,6 +734,7 @@ exports.changePassword = async(req,res)=>{
 
        if(!isPasswordMatch){
           console.log("current password is incorrecnt");
+
        }      
        
        if(isPasswordMatch == true && (hashedNewPassword == hashedConformPassword) ){
@@ -741,7 +742,7 @@ exports.changePassword = async(req,res)=>{
              await user.save();
              res.status(200).json({ success: true, message: 'Updated successfully.' });
        }else{
-        console.log("error occured");
+             res.status(200).json({success:true, message: 'Something went Wrong!!'});
        }
        
  
