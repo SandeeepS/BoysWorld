@@ -183,8 +183,13 @@ exports.signup = async(req,res)=>{
 //resendOTP
 exports.resendOTP = async(req,res)=>{
     try{
-        const otp = otpGenerator(4,{upperCase:false,specialChars:false});
-        req.session.otpStorage = otp;
+      const extime = moment().add(30,'seconds').toISOString();
+
+      const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
+      req.session.otpStorage = {
+        otp,
+        expirationTime: extime,
+      };
            // Create a Nodemailer transporter
         const transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -209,12 +214,13 @@ exports.resendOTP = async(req,res)=>{
           res.status(500).json({ message: 'Failed to resend OTP' });
         } else {
           console.log('Email sent:', info.response);
-          res.status(200).json({ message: 'OTP resent successfully' });
+          const message = "otp resended ";
+          res.render('otp',{message});
         }
       });
     } catch (error) {
       console.error("Error resending OTP:", error);
-      res.status(500).json({ message: 'Failed to resend OTP' });
+      res.status(500).json({ message: 'error!!!!' });
     }
     
 }
@@ -228,11 +234,14 @@ exports.verifyOtp = async (req, res) => {
     try {
     const {userotp} = req.body;
     const otpStorage = req.session.otpStorage.otp;
+    const currentTimeStamp = moment();
+    const exTime = req.session.otpStorage.expirationTime;
+    const exTimeMoment = moment(exTime);
     const userData = req.session.userData;
 
    
-    console.log(userData);
-    console.log(otpStorage);
+   console.log(currentTimeStamp);
+   console.log(exTime);
     if(userotp === otpStorage){
       const data = new UserModel({
         "name":userData.username,
@@ -242,28 +251,34 @@ exports.verifyOtp = async (req, res) => {
         "pass":userData.password,
         
     });
+    if(currentTimeStamp.isBefore(exTimeMoment)){
 
-    const {name} = data;
-    console.log(name);
-    const savedData = await data.save();
-     req.session.user = req.session.userData.email;
-    console.log(req.session.user);
-    if(savedData){
-        console.log("Record inserted successfully");
-      
-        res.redirect('/shop');
-            
+            const {name} = data;
+            console.log(name);
+            const savedData = await data.save();
+            req.session.user = req.session.userData.email;
+            console.log(req.session.user);
+            if(savedData){
+                console.log("Record inserted successfully");
+              
+                res.redirect('/shop');
+                    
 
 
-    }else{
-        console.log("failed to insert record");
-        res.redirect("/");
-    }
-    }else{
-    console.log("incorrect otp");
-    const message = "Invalid OTP";
-    res.render('otp',{message});
-    }
+            }else{
+                console.log("failed to insert record");
+                res.redirect("/");
+            }
+            }else{
+            console.log("incorrect otp");
+            const message = "Invalid OTP";
+            res.render('otp',{message});
+            }
+  }else{
+        console.log("time is expired ");
+        const message = "time over";
+        res.render('otp',{message});
+  }
     }catch (error) {
       console.error('Error during OTP verification:', error);
       res.redirect('/Otp'); 
