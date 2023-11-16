@@ -180,13 +180,39 @@
 				 <span class="close" id="closeModalBtn2">&times;</span>
 				 <div class="modal-style">
 					 <div class="container">
-						 <h4 class="text text-center">Enter</h4>
+						<h4>Please enter the OTP</h4>
 						
 						  <div class="form-one" style="width: 100%;">
 							 <form class="signup-form" action="">
-								<input type="email" name="variEmail" id="variEmail" placeholder="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
+								
+								<input type="text" name="otpConform" id="otpConform" placeholder="Enter the Otp " >
 								<div class="error-message" id="error-message"></div>
-								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="" id="sentOtp">Sent OTP</a>
+								 <a href="#" class="btn btn-default update " id="conformOtp" onclick="conformOtp()" >Conform OTP</a>
+							 </form>
+						  </div>
+						
+					 </div>
+				 </div>
+			</div>
+		 </div>
+
+
+		 <!-- modal3 for reset password  -->
+		 <div id="resetPassword" class="modal">
+			<div class="modal-content">
+				 <span class="close" id="closeModalBtn3">&times;</span>
+				 <div class="modal-style">
+					 <div class="container">
+						
+						
+						  <div class="form-one" style="width: 100%;">
+							 <form class="signup-form" action="">
+								<label for="">Enter new password</label>
+								<input type="password" name="new" id="newPass" placeholder="Enter new password" >
+								<label for="">Conform new password</label>
+								<input type="password" name="cPass" id="cPass" placeholder="Conform password" >
+								<div class="error-message" id="error-message"></div>
+								 <a href="#" class="btn btn-default update " id="resetPass" onclick="" >Reset Password</a>
 							 </form>
 						  </div>
 						
@@ -342,6 +368,41 @@
 				modal2.style.display = "none";
 			}
 		}
+		}
+
+
+		//conform otp function
+		function conformOtp(){
+			const otp = document.getElementById("otpConform").value;
+			const modal3 = document.getElementById("resetPassword");
+			const closeModalBtn3 = document.getElementById("closeModalBtn3");
+			
+			$.ajax({
+				type:'POST',
+				url:'/conformOTPResetPassword',
+				data:{
+					otp : otp,
+				},success:function(response){
+                       
+					   modal3.style.display = "block";
+				},
+				error: function(error){
+					console.log("error while updating user data ",error);
+				}
+			});
+
+						//to close the modal2
+				closeModalBtn3.onclick = function(){
+					
+					modal3.style.display = "none";
+				}
+				
+				//close the modal2 if the user clicks the outside of it 
+				window.onclick = function(event){
+					if(event.target == modal3){
+						modal3.style.display = "none";
+					}
+				}
 		}
 	</script>
 

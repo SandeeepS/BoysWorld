@@ -783,6 +783,7 @@ exports.sendResetOtpmail = async(req,res)=>{
       otp,
       expirationTime: extime,
     };
+    req.session.user = email;
 
 
      // Create a Nodemailer transporter
@@ -817,6 +818,27 @@ exports.sendResetOtpmail = async(req,res)=>{
     res.status(200).json({success: true,message:"otp send successfully"})
   }catch(err){
     console.error("error while sending otp",err);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+}
+
+
+//conform otp while restting the password
+exports.conformOTPResetPassword = async(req,res)=>{
+  try{
+     const otp = req.body.otp;
+     const email = req.session.user;
+     const realOtp = req.session.otpStorage.otp;
+    if(otp == realOtp){
+      console.log("otp verified");
+      res.status(200).json({success:true,message:"otp varified"});
+    }
+    else{
+      console.log("incorrect otp");
+      res.status(200).json({success:false,message:"incorrect otp"});
+    }
+  }catch(err){
+    console.error("error while conforming the otp ",err);
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 }
