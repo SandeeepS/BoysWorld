@@ -164,7 +164,29 @@
 							 <form class="signup-form" action="">
 								<input type="email" name="variEmail" id="variEmail" placeholder="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
 								<div class="error-message" id="error-message"></div>
-								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="return sentOTP()">Sent OTP</a>
+								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="sentOTP()" id="sentOtp">Sent OTP</a>
+							 </form>
+						  </div>
+						
+					 </div>
+				 </div>
+			</div>
+		 </div>
+
+
+		 <!-- modal2 after otp send -->
+		 <div id="afterOtpSend" class="modal">
+			<div class="modal-content">
+				 <span class="close" id="closeModalBtn2">&times;</span>
+				 <div class="modal-style">
+					 <div class="container">
+						 <h4 class="text text-center">Enter</h4>
+						
+						  <div class="form-one" style="width: 100%;">
+							 <form class="signup-form" action="">
+								<input type="email" name="variEmail" id="variEmail" placeholder="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
+								<div class="error-message" id="error-message"></div>
+								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="" id="sentOtp">Sent OTP</a>
 							 </form>
 						  </div>
 						
@@ -274,7 +296,8 @@
              const email = document.getElementById("variEmail").value;
 			 const emailInput = document.getElementById("variEmail");
 			 const errorMessage = document.getElementById("error-message");
-
+			 var modal2 = document.getElementById("afterOtpSend");
+			 var modal = document.getElementById('myModal');
              if(email === ""|| email === null){
 				errorMessage.innerText = "please fill the fields";
 				errorMessage.style.display = "block";
@@ -293,7 +316,35 @@
 					errorMessage.style.display = "none";
 				}, 3000);
 			}
+
+			$.ajax({
+				type:'POST',
+				url:'/sendResetOtpmail',
+				data:{
+					email : email,
+				},success:function(response){
+                     
+					   modal2.style.display = "block";
+				},
+				error: function(error){
+					console.log("error while updating user data ",error);
+				}
+			});
+		//to close the modal2
+		closeModalBtn2.onclick = function(){
+			modal.style.display = "none";
+			modal2.style.display = "none";
+		}
+         
+		//close the modal2 if the user clicks the outside of it 
+		window.onclick = function(event){
+			if(event.target == modal2){
+				modal2.style.display = "none";
+			}
+		}
 		}
 	</script>
+
+	
 </body>
 </html>

@@ -20,6 +20,8 @@ route.get('/getCheckout',userController.getCheckoutPage);
 route.post('/verifyOtp',auth.isUser,userController.verifyOtp);
 route.post('/resendOTP',userController.resendOTP);
 
+route.post('/sendResetOtpmail',userController.sendResetOtpmail);
+
 
 route.post('/loginUser',auth.isUser,userController.userEntry);
 route.post('/logout',userController.logout);

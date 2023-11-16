@@ -771,3 +771,52 @@ exports.changePassword = async(req,res)=>{
   }
 }
 
+
+//sendResetOtpmail loginform reset password
+exports.sendResetOtpmail = async(req,res)=>{
+  try{
+     const email = req.body.email;
+     const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
+     const extime = moment().add(30,'seconds').toISOString();
+     const saltRouds = 10;
+     req.session.otpStorage = {
+      otp,
+      expirationTime: extime,
+    };
+
+
+     // Create a Nodemailer transporter
+     const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: email,
+        pass: 'ijpzysobzeshejlv',
+      },
+    });
+    
+    // Email configuration
+    const mailOptions = {
+      from: 'sandeeps@gmail.com',
+      to: '2002m9002@gmail.com',
+      subject: 'OTP Verification',
+      text: `Your OTP is: ${otp}`,
+    };
+    
+    // Send the email with OTP
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        res.redirect('/');
+      } else {
+        console.log('Email sent:', info.response);
+        
+        res.redirect('/getOtpPage');
+      }
+    });
+
+    res.status(200).json({success: true,message:"otp send successfully"})
+  }catch(err){
+    console.error("error while sending otp",err);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+}
