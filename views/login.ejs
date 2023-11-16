@@ -27,6 +27,54 @@
             color: red;
             display: none;
         }
+
+		
+			  /* Style for the modal container */
+			  .modal {
+				display: none; /* Hidden by default */
+				position: fixed; /* Stay in place */
+				z-index: 1; /* Sit on top */
+				left: 0;
+				top: 0;
+				width: 100%; /* Full width */
+				height: 100%; /* Full height */
+				background-color: rgba(0, 0, 0, 0.7); /* Black with a little transparency */
+			}
+	
+			/* Style for the modal content */
+			.modal-content {
+				background-color: #fefefe;
+				margin: 15% auto; /* 15% from the top and centered */
+				padding: 20px;
+				border: 1px solid #888;
+				width: 50%; /* Could be more or less, depending on screen size */
+			}
+	
+			/* Style for the close button */
+			.close {
+				color: #aaa;
+				float: right;
+				font-size: 28px;
+				font-weight: bold;
+			}
+	
+			.close:hover,
+			.close:focus {
+				color: black;
+				text-decoration: none;
+				cursor: pointer;
+			}
+			.modal-style{
+				display: flex;
+			}
+			.modal-text{
+				display: flex;
+				justify-content: center; 
+				align-items: center;     
+				width: 100%;             
+				height: 100%;
+				padding-top: 20%;
+			}
     </style>
 </head><!--/head-->
 
@@ -90,6 +138,9 @@
 						<form action="/loginUser" method="post" onsubmit="return validateform()">
 							<input type="email" id="userid" name="Email" placeholder="Email Id" />
 							<input type="password" id="password" name="Password" placeholder="Password" />
+							<br>
+							<h5 id="forgotPassword">Forgot your password?<a href="#">Reset password</a></h5>
+							
 							<h5>New User?<a href="/signup">SignUp</a></h5>
 							<button type="submit" class="btn btn-default">Login</button>
 						</form>
@@ -100,6 +151,27 @@
 				
 			</div>
 		</div>
+
+		<!-- modal1 for password reset  -->
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				 <span class="close" id="closeModalBtn">&times;</span>
+				 <div class="modal-style">
+					 <div class="container">
+						 <h4 class="text text-center">Enter your email and we'll send you a link to reset your password</h4>
+						  <div class="form-one" style="width: 100%;">
+							 <form action="">
+								 
+								
+								 <input type="text" name="name" value="email" id="name1">
+								 <a href="#" class="btn btn-default update " id="updateBtn" onclick="updateBtn()">Sent OTP</a>
+							 </form>
+						  </div>
+						 
+					 </div>
+				 </div>
+			</div>
+		 </div>
 	</section><!--/form-->
 	
 	
@@ -164,6 +236,35 @@
 				return true;
 			}
 	    }
+
+	</script>
+
+	<!-- modal1 for password reset -->
+	<script>
+		var modal = document.getElementById('myModal');
+		var modal2 = document.getElementById('updatedModal');
+		var openModalBtn = document.getElementById("forgotPassword");
+		var closeModalBtn = document.getElementById("closeModalBtn");
+
+        //to open the modal
+        openModalBtn.onclick = function(){
+			modal.style.display = "block";
+		}
+
+		//to close the modal
+		closeModalBtn.onclick = function(){
+			modal.style.display = "none";
+		}
+         
+		//close the modal if the user clicks the outside of it 
+		window.onclick = function(event){
+			if(event.target == modal){
+				modal.style.display = "none";
+			}
+		}
+
+	
+
 
 	</script>
 </body>
