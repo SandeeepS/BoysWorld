@@ -159,15 +159,15 @@
 				 <div class="modal-style">
 					 <div class="container">
 						 <h4 class="text text-center">Enter your email and we'll send you a link to reset your password</h4>
+						
 						  <div class="form-one" style="width: 100%;">
-							 <form action="">
-								 
-								
-								 <input type="text" name="name" value="email" id="name1">
-								 <a href="#" class="btn btn-default update " id="updateBtn" onclick="updateBtn()">Sent OTP</a>
+							 <form class="signup-form" action="">
+								<input type="email" name="variEmail" id="variEmail" placeholder="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
+								<div class="error-message" id="error-message"></div>
+								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="return sentOTP()">Sent OTP</a>
 							 </form>
 						  </div>
-						 
+						
 					 </div>
 				 </div>
 			</div>
@@ -266,6 +266,34 @@
 	
 
 
+	</script>
+
+	<!-- validating the email for password reset -->
+	<script>
+		function sentOTP(){
+             const email = document.getElementById("variEmail").value;
+			 const emailInput = document.getElementById("variEmail");
+			 const errorMessage = document.getElementById("error-message");
+
+             if(email === ""|| email === null){
+				errorMessage.innerText = "please fill the fields";
+				errorMessage.style.display = "block";
+
+				setTimeout(function(){
+					errorMessage.style.display = "none";
+				},3000);
+			
+			 }
+
+			 if (!emailInput.checkValidity()) {
+				errorMessage.innerText = "Please enter a valid email address";
+				errorMessage.style.display = "block";
+		
+				setTimeout(function () {
+					errorMessage.style.display = "none";
+				}, 3000);
+			}
+		}
 	</script>
 </body>
 </html>
