@@ -207,7 +207,7 @@
                                           
                                         <p>
                                           <label for="add-category">Category:</label>
-                                          <select class="form-control" id="category" name="category">
+                                          <select id="category" name="category">
                                               <% for (cat of category) { %>
                                               <option value="<%= cat._id %>"><%= cat.categoryName %></option>
                                               <% } %>
@@ -320,6 +320,7 @@
         selectedCategoryIdInput.value = selectedOption.value;
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
   <!-- End custom js for this page-->
 </body>

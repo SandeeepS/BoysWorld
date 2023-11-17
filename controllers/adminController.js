@@ -274,9 +274,18 @@ exports.updateStatus = async (req, res) => {
         
         user.status = isBlocked;
         await user.save(); 
-
-        res.json({ success: true, message: `User status updated to ${isBlocked ? "Blocked" : "Active"}` });
-
+         // Invalidate the user's session
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                res.status(500).send('Internal Server Error');
+            }
+            else 
+            {
+            res.json({ success: true, message: `User status updated to ${isBlocked ? "Blocked" : "Active"}` });
+            }
+        });
+       
     } catch (err) {
         console.error("Error updating status:", err);
         res.redirect('/admin/customers');

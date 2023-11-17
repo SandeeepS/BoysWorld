@@ -189,6 +189,9 @@
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
+
+          <a href="/admin/addProductPage">Add Product</a>
+
           <div class="row">
             <div class="col-sm-12">
               <div class="home-tab">
@@ -231,7 +234,13 @@
                                         </td>
                                         
                                           <td><%= pro.productName %></td>
-                                          <td><%= categories[pro.category] %></td>
+                                          <td>
+                                           <% if( categories[pro.category]) { %>
+                                            <%= categories[pro.category] %>
+                                            <%} else { %>
+                                              <p>No category</p>
+                                             <% } %>
+                                          </td>
                                           <td><%= pro.price %></td>
                                           <td><%= pro.stock %></td>
                                           <td><%= pro.discription %></td>
@@ -258,7 +267,7 @@
                                   </table>
                                     
                                   </div>
-                                  <a href="/admin/addProductPage">Add Product</a>
+                               
                               </div>
                              
                             </div>
