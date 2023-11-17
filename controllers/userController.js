@@ -783,7 +783,7 @@ exports.sendResetOtpmail = async(req,res)=>{
       otp,
       expirationTime: extime,
     };
-    req.session.user = email;
+    req.session.tempEmail = email;
     const user = await UserModel.findOne({ email: email});
 
     if (!user) {
@@ -836,7 +836,6 @@ exports.sendResetOtpmail = async(req,res)=>{
 exports.conformOTPResetPassword = async(req,res)=>{
   try{
      const otp = req.body.otp;
-     const email = req.session.user;
      const realOtp = req.session.otpStorage.otp;
     if(otp == realOtp){
       console.log("otp verified");
@@ -857,7 +856,7 @@ exports.conformOTPResetPassword = async(req,res)=>{
 exports.resetPasswordLogin = async(req,res)=>{
   try{
       const newPass = req.body.newPass;
-      const email = req.session.user;
+      const email =  req.session.tempEmail;
       const saltRouds = 10;
       const hashedpassword = await bcrypt.hash(newPass,saltRouds);
       const user = await UserModel.findOne({email:email});
