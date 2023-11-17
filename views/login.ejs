@@ -213,9 +213,28 @@
 								<input type="password" name="new" id="newPass" placeholder="Enter new password" >
 								<label for="">Conform new password</label>
 								<input type="password" name="cPass" id="cPass" placeholder="Conform password" >
-								<div class="error-message" id="error-message2"></div>
+								<div class="error-message" id="error-message3"></div>
 								 <a href="#" class="btn btn-default update " id="resetPass" onclick="resetpassword()" >Reset Password</a>
 							 </form>
+						  </div>
+						
+					 </div>
+				 </div>
+			</div>
+		 </div>
+
+		  <!-- modal4 for conformation message for password resetted   -->
+		  <div id="conformationReset" class="modal">
+			<div class="modal-content">
+				 <span class="close" id="closeModalBtn4">&times;</span>
+				 <div class="modal-style">
+					 <div class="container">
+						
+						
+						  <div class="form-one" style="width: 100%;">
+							<div>
+								<h5 id="message"></h5>
+							</div>
 						  </div>
 						
 					 </div>
@@ -431,25 +450,56 @@
 		function resetpassword(){
 			const newPass = document.getElementById("newPass").value;
 			const cPass = document.getElementById("cPass").value;
-			const errorMessage2 = document.getElementById("error-message2");
+			const errorMessage = document.getElementById("error-message3");
+			const conformationMessage = document.getElementById("message");
+			const modal4 = document.getElementById("conformationReset");
+			const closeModalBtn4 = document.getElementById("closeModalBtn4");
 
 			if(newPass === "" || newPass === null || cPass === ""|| cPass === null){
-				errorMessage2.innerText = "please fill the fields";
-				errorMessage2.style.display = "block";
+				errorMessage.innerText = "please fill the fields";
+				errorMessage.style.display = "block";
 
 				setTimeout(function(){
-					errorMessage2.style.display = "none";
+					errorMessage.style.display = "none";
 				},3000);
 			
 			}
 			if(newPass !== cPass){
-				errorMessage2.innerText = "Passwords are not match";
-				errorMessage2.style.display = "block";
+				errorMessage.innerText = "Passwords are not match";
+				errorMessage.style.display = "block";
 
 				setTimeout(function(){
-					errorMessage2.style.display = "none";
+					errorMessage.style.display = "none";
 				},3000);
 			}
+            $.ajax({
+				type:'POST',
+				url:'/resetPasswordLogin',
+				data:{
+					newPass: newPass,
+				},success:function(response){
+                       if(response.success){
+						modal3.style.display = "block";
+						conformationMessage.innerText = response.success.message;
+					   }
+					  
+				},
+				error: function(error){
+					console.log("error while updating password ",error);
+				}
+			});
+            			//to close the modal4
+				closeModalBtn4.onclick = function(){
+					
+					modal4.style.display = "none";
+				}
+				
+				//close the modal4 if the user clicks the outside of it 
+				window.onclick = function(event){
+					if(event.target == modal4){
+						modal4.style.display = "none";
+					}
+				}
 		}
 	</script>
 

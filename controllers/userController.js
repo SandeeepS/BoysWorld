@@ -851,3 +851,29 @@ exports.conformOTPResetPassword = async(req,res)=>{
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 }
+
+
+///resetPasswordLogin
+exports.resetPasswordLogin = async(req,res)=>{
+  try{
+      const newPass = req.body.newPass;
+      const email = req.session.user;
+      const saltRouds = 10;
+      const hashedpassword = await bcrypt.hash(newPass,saltRouds);
+      const user = await UserModel.findOne({email:email});
+      if(user){
+        user.pass = hashedpassword;
+        await user.save();
+        console.log("password updated");
+        res.status(200).json({success:true,message:"password is updated successfully"});
+      }else{
+        res.status(200).json({success:true,message:"something went wrong !! password updation failed "});
+      }
+    
+
+
+  }catch(err){
+    console.error("error while updating the password ",err);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};

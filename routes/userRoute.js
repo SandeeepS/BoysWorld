@@ -22,6 +22,7 @@ route.post('/resendOTP',userController.resendOTP);
 
 route.post('/sendResetOtpmail',userController.sendResetOtpmail);
 route.post('/conformOTPResetPassword',userController.conformOTPResetPassword);
+route.post('/resetPasswordLogin',userController.resetPasswordLogin);
 
 
 route.post('/loginUser',auth.isUser,userController.userEntry);
