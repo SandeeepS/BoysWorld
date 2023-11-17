@@ -452,8 +452,15 @@
 			const cPass = document.getElementById("cPass").value;
 			const errorMessage = document.getElementById("error-message3");
 			const conformationMessage = document.getElementById("message");
-			const modal4 = document.getElementById("conformationReset");
+			var modal4 = document.getElementById("conformationReset");
 			const closeModalBtn4 = document.getElementById("closeModalBtn4");
+			var modal = document.getElementById('myModal');
+			var modal2 = document.getElementById("afterOtpSend");
+			var modal3 = document.getElementById("resetPassword");
+
+			const  closeModalBtn2 = document.getElementById("closeModalBtn2");
+			const closeModalBtn3 = document.getElementById("closeModalBtn3");
+
 
 			if(newPass === "" || newPass === null || cPass === ""|| cPass === null){
 				errorMessage.innerText = "please fill the fields";
@@ -478,10 +485,11 @@
 				data:{
 					newPass: newPass,
 				},success:function(response){
-                       if(response.success){
-						modal3.style.display = "block";
-						conformationMessage.innerText = response.success.message;
-					   }
+                    
+						modal4.style.display = "block";
+						conformationMessage.innerText = response.message;
+						
+					  
 					  
 				},
 				error: function(error){
@@ -492,12 +500,18 @@
 				closeModalBtn4.onclick = function(){
 					
 					modal4.style.display = "none";
+					modal3.style.display = "none";
+					modal2.style.display = "none";
+					modal.style.display = "none";
 				}
 				
 				//close the modal4 if the user clicks the outside of it 
 				window.onclick = function(event){
 					if(event.target == modal4){
 						modal4.style.display = "none";
+						modal3.style.display = "none";
+						modal2.style.display = "none";
+						modal.style.display = "none";
 					}
 				}
 		}
