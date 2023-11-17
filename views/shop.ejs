@@ -217,7 +217,7 @@
 									
 									<h4 class="panel-title">
 										
-										<a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
+										<a  class="category-link" data-category="<%=cat.categoryName%>" href="#">
 											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
 											<%=cat.categoryName%>
 										</a>	
@@ -230,6 +230,8 @@
 					</div>	
 				</div>		
 				<div class="col-sm-9 padding-right">
+					<div id="product-container" class="features_items"></div>
+
 					<div class="features_items">
 						<!--features_items-->
 
@@ -287,6 +289,7 @@
 						<%}%>
 						
 					</div><!--features_items-->
+					</div>
 			    </div>
 			</div>
 		</div>
@@ -333,6 +336,62 @@
 	<script src="js/price-range.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// Function to handle category link clicks
+			function handleCategoryClick(event) {
+				event.preventDefault();
+	
+				// Get the selected category
+				const selectedCategory = event.target.dataset.category;
+	
+				// Fetch products for the selected category
+				fetch(`/getProductsByCategory?category=${selectedCategory}`)
+					.then(response => response.json())
+					.then(products => {
+						// Clear the previous content of the product container
+						const productContainer = document.getElementById("product-container");
+						productContainer.innerHTML = "";
+	
+						products.forEach(product => {
+							// Create HTML for each product and append it to the container
+							const productHTML = `
+								<div class="col-sm-4">
+									<!-- Product HTML goes here -->
+									<!-- You can use the product data to dynamically generate the product HTML -->
+								</div>
+							`;
+							productContainer.innerHTML += productHTML;
+						});
+	
+						// Detach existing event listeners before attaching new ones
+						detachCategoryClickListeners();
+						attachCategoryClickListeners();
+					})
+					.catch(error => console.error("Error fetching products:", error));
+			}
+	
+			// Attach click event listeners to category links
+			function attachCategoryClickListeners() {
+				const categoryLinks = document.querySelectorAll(".category-link");
+				categoryLinks.forEach(link => {
+					link.addEventListener("click", handleCategoryClick);
+				});
+			}
+	
+			// Detach click event listeners from category links
+			function detachCategoryClickListeners() {
+				const categoryLinks = document.querySelectorAll(".category-link");
+				categoryLinks.forEach(link => {
+					link.removeEventListener("click", handleCategoryClick);
+				});
+			}
+	
+			attachCategoryClickListeners();
+		});
+	</script>
+	
+	
 	
 </body>
 </html>

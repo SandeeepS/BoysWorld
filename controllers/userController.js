@@ -58,6 +58,16 @@ exports.shopPage = async(req,res)=>{
    
 }
 
+//get product by category
+exports.getProductsByCategory = async(req,res)=>{
+  try{
+    const selectedCategory = req.query.category;
+    console.log(selectedCategory);
+  }catch(err){
+    console.error("error getting the product in the category",err);
+  }
+}
+
 //selected product
 
 exports.selectedProduct = async(req,res)=>{

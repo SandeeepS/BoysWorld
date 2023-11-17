@@ -9,7 +9,9 @@ const auth = require('../middleware/middlewares');
 route.get('/',userController.home);
 route.get('/login',auth.isUser,userController.loginPage);
 route.get('/signup',auth.isUser,userController.signupPage);
-route.get('/shop',auth.user,userController.shopPage);
+route.get('/shop',auth.user,userController.shopPage);   
+route.get('/getProductsByCategory',userController.getProductsByCategory);
+
 route.get('/contact',auth.user,userController.contactPage);
 route.get('/selectedProduct/:id',auth.user,userController.selectedProduct)
 route.get('/getOtpPage',auth.isUser,userController.getOtpPage);

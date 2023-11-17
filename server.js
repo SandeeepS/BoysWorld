@@ -1,5 +1,5 @@
 const env = require('dotenv').config();
-
+const crypto = require('crypto');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -19,12 +19,17 @@ app.use(express.static("views"));
 app.use(express.static(__dirname));
 app.use(nocache())
 
+const generateRandomKey = (length) => {
+  return crypto.randomBytes(length).toString('hex');
+};
+
+const secretKey = process.env.SECRET_KEY || generateRandomKey(32);
 
 //session
 const oneDay = 1000 * 60 * 60 * 24;
 //configuring express session
 app.use(session({
-    secret: 'your_secret_key', // Change this to a strong, random key for session encryption
+    secret: secretKey, // Change this to a strong, random key for session encryption
     resave: false,
     saveUninitialized: true,
     cookie:{maxAge:oneDay}
