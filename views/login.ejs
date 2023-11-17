@@ -164,6 +164,8 @@
 							 <form class="signup-form" action="">
 								<input type="email" name="variEmail" id="variEmail" placeholder="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
 								<div class="error-message" id="error-message"></div>
+									
+								<a href="/signup" class="btn btn-default update " id="signinBtn" style="display: none;" >Signin</a>
 								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="sentOTP()" id="sentOtp">Sent OTP</a>
 							 </form>
 						  </div>
@@ -186,7 +188,7 @@
 							 <form class="signup-form" action="">
 								
 								<input type="text" name="otpConform" id="otpConform" placeholder="Enter the Otp " >
-								<div class="error-message" id="error-message"></div>
+								<div class="error-message" id="error-message2"></div>
 								 <a href="#" class="btn btn-default update " id="conformOtp" onclick="conformOtp()" >Conform OTP</a>
 							 </form>
 						  </div>
@@ -324,6 +326,7 @@
 			 const errorMessage = document.getElementById("error-message");
 			 var modal2 = document.getElementById("afterOtpSend");
 			 var modal = document.getElementById('myModal');
+			 const signinBtn = document.getElementById("signinBtn");
              if(email === ""|| email === null){
 				errorMessage.innerText = "please fill the fields";
 				errorMessage.style.display = "block";
@@ -349,8 +352,15 @@
 				data:{
 					email : email,
 				},success:function(response){
-                     
-					   modal2.style.display = "block";
+					console.log(response);
+                     if(response.count === 1){
+						errorMessage.innerText = "provided email address is not in the database ,you need to sign in";
+						errorMessage.style.display = "block";
+						signinBtn.style.display = "block";
+					 }else{
+						modal2.style.display = "block";
+					 }
+					
 				},
 				error: function(error){
 					console.log("error while updating user data ",error);
@@ -376,15 +386,27 @@
 			const otp = document.getElementById("otpConform").value;
 			const modal3 = document.getElementById("resetPassword");
 			const closeModalBtn3 = document.getElementById("closeModalBtn3");
+			const errorMessage = document.getElementById("error-message2");
 			
+			if(otp === "" || otp === null){
+				errorMessage.innerText = "please fill the fields";
+				errorMessage.style.display = "block";
+
+				setTimeout(function(){
+					errorMessage.style.display = "none";
+				},3000);
+			}
+
 			$.ajax({
 				type:'POST',
 				url:'/conformOTPResetPassword',
 				data:{
 					otp : otp,
 				},success:function(response){
-                       
-					   modal3.style.display = "block";
+                       if(response.success){
+						modal3.style.display = "block";
+					   }
+					  
 				},
 				error: function(error){
 					console.log("error while updating user data ",error);

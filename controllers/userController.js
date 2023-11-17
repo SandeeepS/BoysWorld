@@ -784,6 +784,15 @@ exports.sendResetOtpmail = async(req,res)=>{
       expirationTime: extime,
     };
     req.session.user = email;
+    const user = await UserModel.findOne({ email: email});
+
+    if (!user) {
+      // Email not found in the database
+      console.log("this email is not in the database");
+      const count = 1;
+      return res.status(400).json({ success: false, message: 'Email not registered. Please sign up.',count });
+      
+    }
 
 
      // Create a Nodemailer transporter
@@ -814,8 +823,8 @@ exports.sendResetOtpmail = async(req,res)=>{
         res.redirect('/getOtpPage');
       }
     });
-
-    res.status(200).json({success: true,message:"otp send successfully"})
+    const count = 0;
+    res.status(200).json({success: true,message:"otp send successfully",count})
   }catch(err){
     console.error("error while sending otp",err);
     res.status(500).json({ success: false, message: 'Internal server error.' });
