@@ -35,12 +35,19 @@
 			background-color: #fff;
 			border: 1px #D5D9D9 solid;
 			padding-left: 30px;
+			height: 200px;
+			width: 100%;
 			
 		    }
            
            .content{
 			display: flex;
 			margin: 10px 10px 10px 10px;
+		   }
+		   .a-box img{
+			height: 150px;
+			width: 100px;
+			object-fit: contain;
 		   }
 	</style>
 </head><!--/head-->
@@ -111,16 +118,14 @@
 		<div class="container">
 			<% for (let i = 0; i < oders.length; i++) { %>
 			  
-			  <% const productId = oders[i].productId; %>
-			  <% const product = products.find(p => p._id === productId); %>
 			 
-			  <% if (product) { %>
+			  <% if (products) { %>
 				<div class="a-box">
 				  <div class="content">
 					<div>
-					  <img src="/views//productImages/<%= product.image[0]%>" alt="<%= product.name %>" />
-					  <h6><%= product.name %></h6>
-					  <p>Price: $<%= product.price %></p>
+					  <img src="/views//productImages/<%= products[i].image[0]%>" alt="<%= products[i].name %>" />
+					  <h6><%= products[i].name %></h6>
+					  <p>Price: $<%= products[i].price %></p>
 					</div>
 					<div>
 					  <p><h6>Quantity: <%= oders[i].quantity %></h6></p>

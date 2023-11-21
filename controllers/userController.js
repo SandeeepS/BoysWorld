@@ -710,9 +710,18 @@ exports.placeOrder = async (req, res) => {
 exports.oders = async(req,res)=>{
   try{
     const userId = req.session.user;
+    const productsInOrders = [];
     const user = await UserModel.findById(userId).exec();
     const oders = user.oders;
-    const products = await productModel.find().exec();
+    console.log(oders);
+    for(let i=0;i<oders.length;i++){
+      productsInOrders.push(oders[i].productId);
+
+    }
+    console.log(productsInOrders);
+
+    const products = await productModel.find({ _id: { $in: productsInOrders } }).exec();
+    console.log(products);
     res.render('orders',{oders,products});
 
   }catch(err){
