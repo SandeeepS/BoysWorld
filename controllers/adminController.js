@@ -116,7 +116,20 @@ exports.getCategories = async (req, res) => {
 }
 
 exports.getOrders = async(req,res)=>{
-    res.render('adminpanel/orders');
+    try{
+        
+       const userId = req.session.user;
+       console.log(userId);
+        const user = await userModel.findById(userId).exec();
+        console.log(user);
+        const oders = user.oders;
+     
+        const products = await productModel.find().exec();
+        res.render('adminpanel/orders',{oders,products});
+    }catch(err){
+        console.error("error while getting the orders list  page",err);
+    }
+  
 }
 
 exports.getBanner = async(req,res)=>{

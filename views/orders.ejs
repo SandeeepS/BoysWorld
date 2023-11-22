@@ -163,11 +163,12 @@
 				  <div class="content">
 					<div class="product-details">
 					<div>
-					  <img src="/views//productImages/<%= products[i].image[0]%>" alt="<%= products[i].name %>" />
-					  <h6><%= products[i].name %></h6>
-					  <p>Price: $<%= products[i].price %></p>
+					  <img src="/views/productImages/<%= products[i].image[0]%>" alt="<%= products[i].productName %>">
+					  
 					</div>
 					<div>
+						<h6><%= products[i].productName %></h6>
+					  <p>Price: $<%= products[i].price %></p>
 					  <p><h6>Quantity: <%= oders[i].quantity %></h6></p>
 					  <p><h5><%= products[i].discription %></h5></p>
 					</div>
