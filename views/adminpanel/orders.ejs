@@ -203,28 +203,53 @@
                                 <div class="d-sm-flex justify-content-between align-items-start">
                                   <table class="table table-condensed">
                                     <tr class="cart_menu">
+                                        <th>OrderId</th>
+                                        <th>UserName</th>
                                         <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Number</th>
+                                        <th>Total Amount</th>
+                                        <th>Date&Time</th>
+                                        <th>paymentMethod</th>
                                         <th>Status</th>
                                     </tr>
-                                  
-                                    <tr>
-                                        <td><%=  %></td>
-                                        <td><%=  %></td>
-                                        <td><%=  %></td>
-                                        <td>
-                                          <span class="user-status">
-                                              <span class="status-text"></span>
-                                              <button class="btn btn-sm btn toggle-status-btn">
-                                                
-                                              </button>
-                                          
-                                          </span>
-                                      </td>
-                                      
-                                    </tr>
-                                 
+                                    <% for(let i = 0;i< oders.length;i++){ %>
+                                                      <% const productId = oders[i].productId %>
+                                                      <% let product = {} %>
+                                                      <% for(let j = 0; j< products.length;j++){ %>
+                                                                <% if(products[j].id === productId){ %>
+                                                                      <% product = products[j] %>
+                                                          
+                                                                      <% const randomId = 10000 + Math.floor(Math.random() * 90000) %>
+                                                                      <% product.randomId = randomId %>
+                                                                      <% const orderDate = new Date() %>
+                                                                      <% product.orderDate = orderDate.toISOString() %>
+                                                                      <% break %>
+                                                                <% }   %>                      
+                                                      <% } %>
+                                                      <% if(product) { %>
+                                                      <tr>
+                                                          <td><%=product.randomId%></td>
+                                                          <td><%=product.productName %></td>
+                                                          <td><%=product.productName %></td>
+                                                          <td>R <%=oders[i].price  %></td>
+                                                          <td><%= formatDate(product.orderDate) %></td>    
+                                                          <td></td>                                                      <td>
+                                                            <span class="user-status">
+                                                                <span class="status-text"></span>
+                                                                <button class="btn btn-sm btn toggle-status-btn">
+                                                                  
+                                                                </button>
+                                                            
+                                                            </span>
+                                                        </td>
+                                                        
+                                                      </tr>
+                                                      <% } %>
+                                                      <% function formatDate(dateString) { %>
+                                                        <% const date = new Date(dateString) %>
+                                                        <% return date.toLocaleString() %>
+                                                      <% } %>
+                                      <% } %>
+
                                     <tr>
                                         <td colspan="4">Users Not Found</td>
                                     </tr>
