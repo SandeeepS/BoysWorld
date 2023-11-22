@@ -185,16 +185,30 @@
 						<div class="modal-content">
 							<span id="conformModalClose" class="close">&times;</span>
 							<div class="modal-style">
-								<div class="modal-text">
+								<div class="modal-text" >
 									<p>Are you sure for cancelling the order?</p>
+								</div>
+								<div style="display: flex;">
+									<a href="#" class="cancelOrder" orderId="<%= oders[i]._id %>"><h3>Yes</h3></a>
+									 <a href="/orders" style="padding-left: 25px;"><h3>No</h3></a>
+									
 								</div>
 							</div>
 						</div>
-				</div>
+				    </div>
 			<% } %>
 		  </div>
 
-		 
+		  <div id="Conform2Modal" class="modal">
+			<div class="modal-content">
+				<span id="conform2ModalClose" class="close">&times;</span>
+				<div class="modal-style">
+					<div class="modal-text" >
+						<p>Order cancelled successfully</p>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	</section> <!--/#cart_items-->
 
@@ -279,6 +293,48 @@
 				}
 			});
 		};
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const cancelOrder = document.querySelectorAll(".cancelOrder");
+			cancelOrder.forEach((cancelOrder,i)=>{
+				cancelOrder.addEventListener("click",function(event){
+					event.preventDefault();
+					const orderId = this.getAttribute("orderId");
+
+				    var modal2 = document.getElementById("Conform2Modal");
+					var closeModalBtn2 = document.getElementById("conform2ModalClose");
+					 //make ajax request
+					 $.ajax({
+						type:'POST',
+						url:'/cancelOrder',
+						data:{
+							orderId: orderId,
+						},
+						success:function(respond){
+							//display the cancel order modal
+                             modal2.style.display = "block";
+							 location.reload();
+						},
+						error:function(error){
+							console.error("error while canceling order",error);
+
+						}
+					 });
+						// Event listener to close the modal
+						closeModalBtn2.onclick = function () {
+							modal2.style.display = "none";
+						}
+					
+						// Close the modal if the user clicks outside of it
+						window.onclick = function (event) {
+							if (event.target == modal2) {
+								modal2.style.display = "none";
+							}
+						}
+				});
+			});
+		});
 	</script>
 	
 	

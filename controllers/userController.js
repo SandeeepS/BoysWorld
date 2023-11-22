@@ -731,6 +731,20 @@ exports.oders = async(req,res)=>{
 }
 
 
+//cancel orders by user
+exports.cancelOrder = async(req,res)=>{
+  try{
+        const {orderId} = req.body;
+        const userId = req.session.user;
+        const user = await UserModel.findById(userId).exec();
+        await UserModel.findByIdAndUpdate(userId,{$pull:{oders:{_id:orderId}}}).exec();
+        res.status(200).send({message:"order cancelled successfully"});
+  }catch(err){
+    console.error("error while canceling the order",err);
+    res.status(500).send({error:"internal server error"});
+  }
+}
+
 //update userprofile
 
 exports.updateProfileDetails = async(req,res)=>{
