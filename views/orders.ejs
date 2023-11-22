@@ -58,6 +58,36 @@
 			width: 50%;
 			display: flex;
 		   }
+
+		   
+			  /* Style for the modal container */
+			  .modal {
+				display: none; /* Hidden by default */
+				position: fixed; /* Stay in place */
+				z-index: 1; /* Sit on top */
+				left: 0;
+				top: 0;
+				width: 100%; /* Full width */
+				height: 100%; /* Full height */
+				background-color: rgba(0, 0, 0, 0.7); /* Black with a little transparency */
+			}
+	
+			/* Style for the modal content */
+			.modal-content {
+				background-color: #fefefe;
+				margin: 15% auto; /* 15% from the top and centered */
+				padding: 20px;
+				border: 1px solid #888;
+				width: 50%; /* Could be more or less, depending on screen size */
+			}
+	
+			/* Style for the close button */
+			.close {
+				color: #aaa;
+				float: right;
+				font-size: 28px;
+				font-weight: bold;
+			}
 	</style>
 </head><!--/head-->
 
@@ -143,25 +173,28 @@
 					</div>
 				    </div>
 					<div class="cancel-order">
-                           <a href="">Cancel order</a>
+                           <a href="#" class="cancelOrder" data-orderId="<%= oders[i]._id %>">Cancel order</a>
 					</div>
 				  </div>
 				</div>
 			  <% } else { %>
 				<p> product data is not getting</p>
 			  <% } %>
+						<!-- first modal for conformation -->
+					<div id="conformModal-<%= oders[i]._id %>" class="modal">
+						<div class="modal-content">
+							<span id="conformModalClose" class="close">&times;</span>
+							<div class="modal-style">
+								<div class="modal-text">
+									<p>Are you sure for cancelling the order?</p>
+								</div>
+							</div>
+						</div>
+				</div>
 			<% } %>
 		  </div>
 
-		  <!-- first modal for conformation -->
-		  <div id="conformModal" class="modal">
-			<span id="conformModalClose" class="close">&times;</span>
-			<div class="modal-style">
-				<div class="modal-text">
-					<p>Are you sure for cancelling the order?</p>
-				</div>
-			</div>
-		</div>
+		 
 
 	</section> <!--/#cart_items-->
 
@@ -212,6 +245,42 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+	<script>
+		var openModalLinks = document.querySelectorAll(".cancelOrder");
+		var closeModal = document.getElementById("conformModalClose");
+		var modals = document.querySelectorAll(".modal");
+	
+		// Attach event listeners to each "Cancel Order" link
+		openModalLinks.forEach(function (link) {
+			link.onclick = function () {
+				// Get the order ID from the data attribute
+				var orderId = link.getAttribute("data-orderId");
+	
+				// Find the corresponding modal using the order ID
+				var modal = document.getElementById("conformModal-" + orderId);
+	
+				// Display the modal
+				modal.style.display = "block";
+			};
+		});
+	
+		// Attach event listeners to close the modal
+		closeModal.onclick = function () {
+			modals.forEach(function (modal) {
+				modal.style.display = "none";
+			});
+		};
+	
+		// Close the modal if the user clicks outside of it
+		window.onclick = function (event) {
+			modals.forEach(function (modal) {
+				if (event.target == modal) {
+					modal.style.display = "none";
+				}
+			});
+		};
+	</script>
+	
 	
 	
 </body>
