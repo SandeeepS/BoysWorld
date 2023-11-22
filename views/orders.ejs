@@ -38,6 +38,7 @@
 			height: 200px;
 			width: 100%;
 			
+			
 		    }
            
            .content{
@@ -48,6 +49,14 @@
 			height: 150px;
 			width: 100px;
 			object-fit: contain;
+		   }
+		   .cancel-order{
+			margin-left: 200px;
+			margin-top: 95px;
+		   }
+		   .product-details{
+			width: 50%;
+			display: flex;
 		   }
 	</style>
 </head><!--/head-->
@@ -122,6 +131,7 @@
 			  <% if (products) { %>
 				<div class="a-box">
 				  <div class="content">
+					<div class="product-details">
 					<div>
 					  <img src="/views//productImages/<%= products[i].image[0]%>" alt="<%= products[i].name %>" />
 					  <h6><%= products[i].name %></h6>
@@ -129,6 +139,11 @@
 					</div>
 					<div>
 					  <p><h6>Quantity: <%= oders[i].quantity %></h6></p>
+					  <p><h5><%= products[i].discription %></h5></p>
+					</div>
+				    </div>
+					<div class="cancel-order">
+                           <a href="">Cancel order</a>
 					</div>
 				  </div>
 				</div>
@@ -137,6 +152,17 @@
 			  <% } %>
 			<% } %>
 		  </div>
+
+		  <!-- first modal for conformation -->
+		  <div id="conformModal" class="modal">
+			<span id="conformModalClose" class="close">&times;</span>
+			<div class="modal-style">
+				<div class="modal-text">
+					<p>Are you sure for cancelling the order?</p>
+				</div>
+			</div>
+		</div>
+
 	</section> <!--/#cart_items-->
 
 	
