@@ -39,3 +39,5 @@ module.exports = adminRoute;
 //user(block/unblock)
 adminRoute.post('/checkStatus',adminController.updateStatus)
 
+//update order status
+adminRoute.post('/updateStatus',adminController.updateOrderStatus)

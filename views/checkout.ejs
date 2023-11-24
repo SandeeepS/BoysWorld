@@ -190,6 +190,7 @@
 
 <section>
 	<div class="container">
+		<form action="">
 		<table class="table  table-condensed">
            <thead>
 			<tr>
@@ -298,6 +299,7 @@
 		   </tbody>
 
 	    </table>
+	    
 		<div class="a-box">
 			<div class="row">
 				<div class="box-sub">
@@ -368,8 +370,8 @@
 		   </thead>
 
 		   
-        </table>
-		
+          </table>
+	</form>
 
 		<div class="a-box">
 		   <div class="content">
@@ -405,8 +407,21 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- modal last for select payment warning -->
+	<div id="selectPaymentWarnning" class="modal">
+		<div id="selectModalContent" class="modal-content">
+			<span id="selectPaymentModalClose" class="close">&times;</span>
+			<div class="modal-style">
+				<div class="modal-text">
+					<p>Select a payment method</p>
+				
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
-	<footer id="footer"><!--Footer-->
+	<footer id="footer">
 		
 		
 		<div class="footer-widget">
@@ -437,7 +452,7 @@
 			</div>
 		</div>
 		
-	</footer><!--/Footer-->
+	</footer>
 	
 
 
@@ -528,6 +543,13 @@
 			const quantity = <%-JSON.stringify(quantity)%>;
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
 			const currentAddress = <%-JSON.stringify(currentAddress)%>;
+
+			const cashOnDeliverySelected = document.querySelector('input[name="checkout"]:checked');
+			if(!cashOnDeliverySelected){
+				const selectPaymentModal = document.getElementById('selectPaymentWarnning');
+				selectPaymentModal.style.display = "block";
+				return;
+			}
 	
 			// Make AJAX request
 			$.ajax({
@@ -557,7 +579,9 @@
 		// Get references to the modal and the button to open/close it
 		var modal2 = document.getElementById("paymentSuccessModal");
 		var closeModalBtn2 = document.getElementById("paymentSuccessModalClose");
-	
+		const selectPaymentModal = document.getElementById('selectPaymentWarnning');
+        const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
+
 		// Event listener to close the modal
 		closeModalBtn2.onclick = function () {
 			modal2.style.display = "none";
@@ -569,6 +593,18 @@
 				modal2.style.display = "none";
 			}
 		}
+     
+		selectPaymentModalClose.onclick = function(){
+			selectPaymentModal.style.display = "none";
+
+		}
+
+		window.onclick = function(event){
+			if(event.target == selectPaymentModal){
+				selectPaymentModal.style.display = "none";
+			}
+		}
+
 	</script>
 	
 

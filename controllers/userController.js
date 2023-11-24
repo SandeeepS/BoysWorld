@@ -678,6 +678,8 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
 exports.placeOrder = async (req, res) => {
   try {
     const { productId, quantity, total,currentAddress } = req.body;
+    const cashOnDelivery = "cashOnDelivery";
+    const status = "Conformed";
     const userId = req.session.user;
     console.log(quantity);
     const user = await UserModel.findById(userId);
@@ -694,6 +696,8 @@ exports.placeOrder = async (req, res) => {
         "quantity":quantity,
         "price":total,
         "currentAddress":currentAddress,
+        "paymentMethod": cashOnDelivery,
+        "status":status,
       }
     }
   },{new:true})

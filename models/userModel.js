@@ -11,6 +11,8 @@ const oderShema = new mongoose.Schema({
     quantity:Number,
     price:Number,
     currentAddress:Object,
+    paymentMethod:String,
+    status:String,
 });
 
 const addressSchema = new mongoose.Schema({

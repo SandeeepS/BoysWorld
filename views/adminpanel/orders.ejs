@@ -274,9 +274,11 @@
                                                           <td><%=product.productName %></td>
                                                           <td>R <%=oders[i].price  %></td>
                                                           <td><%= formatDate(product.orderDate) %></td>    
-                                                          <td>Cash on delivery</td>                                                      <td>
+                                                          <td><%= oders[i].paymentMethod%></td>     
+                                                          <td><%=oders[i].status%></td>   
+                                                          <form action="">                                             
                                                            <td>
-                                                            <select id="orderStatus" name="orderStatus" class="order-status-dropdown">
+                                                            <select id="orderStatus" name="orderStatus" class="order-status-dropdown" orderId="<%=oders[i]._id%>">
                                                               <option value="confirmed">Confirmed</option>
                                                               <option value="shipped">Shipped</option>
                                                               <option value="outOfDelivery">Out of Delivery</option>
@@ -285,8 +287,9 @@
                                                           
                                                            </td>
                                                            <td>
-                                                            <a href="#">Update</a>
+                                                            <a href="#" onclick="updateOderStatus()">Update</a>
                                                            </td>
+                                                          </form>
                                                         </td>
                                                         
                                                       </tr>
@@ -335,6 +338,9 @@
   <!-- plugins:js -->
   <script src="vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
+  
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
   <!-- Plugin js for this page -->
   <script src="vendors/chart.js/Chart.min.js"></script>
   <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
@@ -363,6 +369,25 @@
       });
     });
     
+  </script>
+  <script>
+    function updateOderStatus(){
+      var selectedStatus = $("#orderStatus").val();
+      var orderId = $("#orderStatus").data("orderId");    
+         console.log(orderId);
+
+      $.ajax({
+        type:'POST',
+        url:'/admin/updateStatus',
+        data:{orderStatus:selectedStatus,orderId},
+        success:function (response){
+          console.log("update successfull",response);
+        },
+        error:function (error){
+          console.error("error while updating the status:",error);
+        }
+      })
+    }
   </script>
 </body>
 

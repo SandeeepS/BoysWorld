@@ -306,7 +306,33 @@ exports.updateStatus = async (req, res) => {
 }
 
 
+//update order status
+exports.updateOrderStatus = async(req,res)=>{
+    try{
+         const {orderStatus,orderId} = req.body;
+         console.log(orderId);
+         const userId = req.session.user;
+         const user = await userModel.findById(userId).exec();
+         // Find the specific order you want to update in the array
+        
+         const orderToUpdate = user.oders.find(order => order._id === orderId );
 
+         // Update the status if the order is found
+         if (orderToUpdate) {
+             orderToUpdate.status = orderStatus;
+             await user.save();
+             console.log("Successfully updated order status");
+             res.status(200).json({ message: "Updated successfully" });
+         } else {
+             console.log("Order not found");
+             res.status(404).json({ message: "Order not found" });
+         }
+ 
+    }catch(err){
+        console.log("error");
+        console.error("error while updating the status in the server side ",err);
+    }
+}
 
 
 
