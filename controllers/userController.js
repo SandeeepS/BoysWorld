@@ -677,7 +677,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
 //place order 
 exports.placeOrder = async (req, res) => {
   try {
-    const { productId, quantity, total } = req.body;
+    const { productId, quantity, total,currentAddress } = req.body;
     const userId = req.session.user;
     console.log(quantity);
     const user = await UserModel.findById(userId);
@@ -693,6 +693,7 @@ exports.placeOrder = async (req, res) => {
         "productId":productId,
         "quantity":quantity,
         "price":total,
+        "currentAddress":currentAddress,
       }
     }
   },{new:true})

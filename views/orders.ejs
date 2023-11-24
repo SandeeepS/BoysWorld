@@ -35,7 +35,6 @@
 			background-color: #fff;
 			border: 1px #D5D9D9 solid;
 			padding-left: 30px;
-			height: 200px;
 			width: 100%;
 			
 			
@@ -173,6 +172,21 @@
 					  <p><h5><%= products[i].discription %></h5></p>
 					</div>
 				    </div>
+						<div class="address">
+							<h5>Delivery Address</h5>
+							<div>
+								<h5><%= oders[i].currentAddress[0].name%>,</h5>
+								<h5> <%= oders[i].currentAddress[0].number %>,</h5>
+								<h5><%= oders[i].currentAddress[0].houseName%>,</h5>
+								<h5><%= oders[i].currentAddress[0].houseNumber%></h5>
+								<h5> <%= oders[i].currentAddress[0].state%>,</h5>
+								<h5><%= oders[i].currentAddress[0].city%>,</h5>
+								<h5><%= oders[i].currentAddress[0].street%>,</h5>
+								<h5><%= oders[i].currentAddress[0].landMark%></h5>
+								<h5><%= oders[i].currentAddress[0].pin%>,</h5>
+							</div>
+						</div>
+
 					<div class="cancel-order">
                            <a href="#" class="cancelOrder" data-orderId="<%= oders[i]._id %>">Cancel order</a>
 					</div>

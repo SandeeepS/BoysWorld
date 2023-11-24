@@ -527,7 +527,7 @@
 			const productId = <%-JSON.stringify(product._id)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
-			
+			const currentAddress = <%-JSON.stringify(currentAddress)%>;
 	
 			// Make AJAX request
 			$.ajax({
@@ -537,6 +537,7 @@
 					productId: productId,
 					quantity: quantity,
 					total: totalPrice,
+					currentAddress:currentAddress,
 				},
 				success: function (response) {
 					// Display payment successful modal

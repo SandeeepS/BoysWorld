@@ -10,6 +10,7 @@ const oderShema = new mongoose.Schema({
     productId:String,
     quantity:Number,
     price:Number,
+    currentAddress:Object,
 });
 
 const addressSchema = new mongoose.Schema({
