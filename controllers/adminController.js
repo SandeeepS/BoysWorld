@@ -320,11 +320,11 @@ exports.updateOrderStatus = async (req, res) => {
         if (orderToUpdate) {
             orderToUpdate.status = orderStatus;
             await user.save();
-            console.log("Successfully updated order status");
-            res.status(200).json({ message: "Updated successfully" });
+            res.redirect('/admin/orders')
+         
         } else {
             console.log("Order not found");
-            res.status(404).json({ message: "Order not found" });
+            res.redirect('/admin/orders')
         }
 
     } catch (err) {
