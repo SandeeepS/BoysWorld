@@ -51,7 +51,7 @@
       color: #333;
     }
     
-    .order-status-dropdown option[value="outOfDelivery"] {
+    .order-status-dropdown option[value="Out Of Delivery"] {
       background-color: #FFA500;
       color: #333;
     }
@@ -281,7 +281,7 @@
                                                             <select id="orderStatus" name="orderStatus" class="order-status-dropdown" orderId="<%=oders[i]._id%>">
                                                               <option value="confirmed">Confirmed</option>
                                                               <option value="shipped">Shipped</option>
-                                                              <option value="outOfDelivery">Out of Delivery</option>
+                                                              <option value="Out Of Delivery">Out of Delivery</option>
                                                               <option value="cancelled">Cancelled</option>
                                                             </select>
                                                           
@@ -373,8 +373,8 @@
   <script>
     function updateOderStatus(){
       var selectedStatus = $("#orderStatus").val();
-      var orderId = $("#orderStatus").data("orderId");    
-         console.log(orderId);
+      var orderId = $("#orderStatus").attr("orderId");     
+        
 
       $.ajax({
         type:'POST',

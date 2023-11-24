@@ -186,6 +186,10 @@
 								<h5><%= oders[i].currentAddress[0].pin%>,</h5>
 							</div>
 						</div>
+ 
+						<div class="order-Status" style="padding-left: 70px;padding-top:90px">
+							<h6>(<%=oders[i].status%>)</h6>
+					    </div>
 
 					<div class="cancel-order">
                            <a href="#" class="cancelOrder" data-orderId="<%= oders[i]._id %>">Cancel order</a>
