@@ -162,6 +162,8 @@
 		}
 	</style>
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
 </head><!--/head-->
 
@@ -390,7 +392,7 @@
 		</div>
 		<div class="a-box text-center" >
 			<div>
-				<a href="#" class="btn btn-default place-order" onclick="placeOrder()">Place your order</a>
+				<a href="" class="btn btn-default place-order" onclick="placeOrder()">Place your order</a>
 			</div>
 		</div>
     </div>
@@ -532,6 +534,46 @@
 		});
 	</script>
 
+	<script>
+		function initiateRazorpayPayment(orderId, amount, currency, description,key) {
+			var options = {
+				key:key,  // Replace with your Razorpay API Key
+				amount: amount,
+				currency: currency,
+				name: 'Your Company Name',
+				description: description,
+				order_id: orderId,
+				handler: function (response) {
+					// Handle the successful payment response here
+					console.log(response);
+				},
+				prefill: {
+					name: 'User Name',
+					email: 'user@example.com',
+					contact: '1234567890'
+				},
+				notes: {
+					address: 'User Address'
+				},
+				theme: {
+					color: '#F37254'
+				}
+			};
+	        var rzp1 = new Razorpay(options);
+			rzp1.on('payment.failed', function (response){
+					alert(response.error.code);
+					alert(response.error.description);
+					alert(response.error.source);
+					alert(response.error.step);
+					alert(response.error.reason);
+					alert(response.error.metadata.order_id);
+					alert(response.error.metadata.payment_id);
+			});
+			
+		}
+	</script>
+	
+
 
   
 	<script>
@@ -544,17 +586,12 @@
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
 			const currentAddress = <%-JSON.stringify(currentAddress)%>;
 
-			const cashOnDeliverySelected = document.querySelector('input[name="checkout"]:checked');
-			if(!cashOnDeliverySelected){
-				const selectPaymentModal = document.getElementById('selectPaymentWarnning');
-				selectPaymentModal.style.display = "block";
-				return;
-			}
+			
 	
 			// Make AJAX request
 			$.ajax({
 				type: 'POST',
-				url: '/placeOrder', 
+				url: '/createRazorpayOrder', 
 				data: {
 					productId: productId,
 					quantity: quantity,

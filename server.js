@@ -1,6 +1,6 @@
 const env = require('dotenv').config();
 const crypto = require('crypto');
-
+const razorpay = require('razorpay');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -23,8 +23,16 @@ const generateRandomKey = (length) => {
   return crypto.randomBytes(length).toString('hex');
 };
 
-const secretKey = process.env.SECRET_KEY || generateRandomKey(32);
+//razorpay
+const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
+var instance = new razorpay({
+  key_id: 'RAZORPAY_ID_KEY',
+  key_secret: 'RAZORPAY_SECRET_KEY',
+});
+
+
+const secretKey = process.env.SECRET_KEY || generateRandomKey(32);
 //session
 const oneDay = 1000 * 60 * 60 * 24;
 //configuring express session

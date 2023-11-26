@@ -8,7 +8,8 @@ const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
 const moment =  require('moment');
-
+const Razorpay = require('razorpay');
+const { v4: uuidv4 } = require('uuid');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -28,6 +29,14 @@ const { render } = require('../routes/userRoute');
 const {ObjectId} = mongoose.Types;
 const crypto = require('crypto');
 const { log } = require('console');
+
+
+const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
+
+const razorpay = new Razorpay({
+  key_id: 'RAZORPAY_ID_KEY',
+  key_secret: 'RAZORPAY_SECRET_KEY',
+});
 
 exports.home = async(req,res)=>{
     res.render("index");
@@ -675,7 +684,9 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
 
 
 //place order 
-exports.placeOrder = async (req, res) => {
+
+//place order 
+exports.createRazorpayOrder = async (req, res) => {
   try {
     const { productId, quantity, total,currentAddress } = req.body;
     const cashOnDelivery = "cashOnDelivery";
