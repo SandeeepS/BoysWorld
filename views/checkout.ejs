@@ -303,37 +303,15 @@
 	    </table>
 	    
 		<div class="a-box">
-			<div class="row">
-				<div class="box-sub">
-					<div>
-						<input type="radio" name="checkout" disabled>
-					</div>
-					<div class="cash">
-						<p>Credit or Debit card</p>
-					</div>
-				
-				</div>
-			</div>
-			    
-			<div class="row">
-				<div class="box-sub">
-					<div>
-						<input type="radio" name="checkout" disabled>
-					</div>
-					<div class="cash">
-						<p>Net Banking</p>
-					</div>
-				
-				</div> 
-			</div>
+			
 
 			<div class="row">
 				<div class="box-sub">
 					<div>
-						<input type="radio" name="checkout" disabled>
+						<input type="radio" name="checkout" value="online-payment" >
 					</div>
 					<div class="cash">
-						<p>Other UPI Apps</p>
+						<p>Online Payment</p>
 					</div>
 				
 				</div>
@@ -342,10 +320,10 @@
 			<div class="row">
 				<div class="box-sub">
 					<div>
-						<input type="radio" name="checkout">
+						<input type="radio" name="checkout" value="cash-on-delivery">
 					</div>
 					<div class="cash">
-						<p>Cash on Deleivery/Pay on Deleivery</p>
+						<p>Cash on Deleivery</p>
 					</div>
 				
 				</div>
@@ -534,44 +512,6 @@
 		});
 	</script>
 
-	<script>
-		function initiateRazorpayPayment(orderId, amount, currency, description,key) {
-			var options = {
-				key:key,  // Replace with your Razorpay API Key
-				amount: amount,
-				currency: currency,
-				name: 'Your Company Name',
-				description: description,
-				order_id: orderId,
-				handler: function (response) {
-					// Handle the successful payment response here
-					console.log(response);
-				},
-				prefill: {
-					name: 'User Name',
-					email: 'user@example.com',
-					contact: '1234567890'
-				},
-				notes: {
-					address: 'User Address'
-				},
-				theme: {
-					color: '#F37254'
-				}
-			};
-	        var rzp1 = new Razorpay(options);
-			rzp1.on('payment.failed', function (response){
-					alert(response.error.code);
-					alert(response.error.description);
-					alert(response.error.source);
-					alert(response.error.step);
-					alert(response.error.reason);
-					alert(response.error.metadata.order_id);
-					alert(response.error.metadata.payment_id);
-			});
-			
-		}
-	</script>
 	
 
 
@@ -581,37 +521,83 @@
 		function placeOrder() {
 			// Get product details from the cookie or your preferred method
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
+			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
+			const modal2 = document.getElementById("paymentSuccessModal");
 			const productId = <%-JSON.stringify(product._id)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
 			const currentAddress = <%-JSON.stringify(currentAddress)%>;
 
-			
+			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
+			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
+
+	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
+				// Make AJAX request
+				$.ajax({
+					type: 'POST',
+					url: '/placeOrder', 
+					data: {
+						productId: productId,
+						quantity: quantity,
+						total: totalPrice,
+						currentAddress:currentAddress,
+					},
+					success: function (response) {
+						// Display payment successful modal
+					
+						modal2.style.display = "block";
+					},
+					error: function (error) {
+						console.error("Error placing order:", error);
+						// Handle error if needed
+					}
+				});
 	
-			// Make AJAX request
-			$.ajax({
-				type: 'POST',
-				url: '/createRazorpayOrder', 
-				data: {
-					productId: productId,
-					quantity: quantity,
-					total: totalPrice,
-					currentAddress:currentAddress,
-				},
-				success: function (response) {
-					// Display payment successful modal
-					const modal2 = document.getElementById("paymentSuccessModal");
-					modal2.style.display = "block";
-				},
-				error: function (error) {
-					console.error("Error placing order:", error);
-					// Handle error if needed
-				}
-			});
+			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
+				console.log("online");
+			}else{
+				
+               selectPaymentModal.style.display = "block";
+			}
+		
+			function initiateRazorpayPayment(orderId) {
+			
+				var options = {
+					"key": "rzp_test_t03CSatWp5XBXp", // Enter the Key ID generated from the Dashboard
+					"amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+					"currency": "INR",
+					"name": "Acme Corp",
+					"description": "Test Transaction",
+					"image": "https://example.com/your_logo",
+					"order_id": orderId,
+					"handler": function (response){
+						alert(response.razorpay_payment_id);
+						alert(response.razorpay_order_id);
+						alert(response.razorpay_signature)
+					},
+					"prefill": {
+						"name": "Gaurav Kumar",
+						"email": "gaurav.kumar@example.com",
+						"contact": "9000090000"
+					},
+					"notes": {
+						"address": "Razorpay Corporate Office"
+					},
+					"theme": {
+						"color": "#3399cc"
+					}
+				};
+			
+				var rzp1 = new Razorpay(options);
+				rzp1.open();
+				
+			}
 		}
 		
 	</script>
 
+	
+	
 	<script>
 		// Get references to the modal and the button to open/close it
 		var modal2 = document.getElementById("paymentSuccessModal");

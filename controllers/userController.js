@@ -34,8 +34,8 @@ const { log } = require('console');
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
 const razorpay = new Razorpay({
-  key_id: 'RAZORPAY_ID_KEY',
-  key_secret: 'RAZORPAY_SECRET_KEY',
+  key_id: RAZORPAY_ID_KEY,
+  key_secret: RAZORPAY_SECRET_KEY,
 });
 
 exports.home = async(req,res)=>{
@@ -686,7 +686,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
 //place order 
 
 //place order 
-exports.createRazorpayOrder = async (req, res) => {
+exports.placeOrder = async (req, res) => {
   try {
     const { productId, quantity, total,currentAddress } = req.body;
     const cashOnDelivery = "cashOnDelivery";
@@ -720,7 +720,6 @@ exports.createRazorpayOrder = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 };
-
 //oders
 
 exports.oders = async(req,res)=>{

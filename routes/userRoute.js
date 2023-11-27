@@ -33,7 +33,7 @@ route.post('/logout',userController.logout);
 
 route.post('/signupUser',userController.signup)
 
-route.post('/createRazorpayOrder',userController.createRazorpayOrder);
+route.post('/placeOrder',userController.placeOrder);
 
 
 route.post('/updateProfileDetails',userController.updateProfileDetails);
