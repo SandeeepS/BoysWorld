@@ -33,7 +33,7 @@ const { log } = require('console');
 
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
-const razorpay = new Razorpay({
+var instance = new Razorpay({
   key_id: RAZORPAY_ID_KEY,
   key_secret: RAZORPAY_SECRET_KEY,
 });
@@ -720,8 +720,59 @@ exports.placeOrder = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 };
-//oders
 
+//online payment through razorpay
+exports.generateRazorpay = async(req,res)=>{
+     try{
+        const {productId, quantity, total,currentAddress} = req.body;
+        const onlinePayment = "Online Payment";
+        const status = "Pending";
+        const userId = req.session.user;
+        // Insert the order into the user's document
+        const userdata = await UserModel.findByIdAndUpdate(userId,{
+          $push:{
+            oders:{
+              "productId":productId,
+              "quantity":quantity,
+              "price":total,
+              "currentAddress":currentAddress,
+              "paymentMethod": onlinePayment,
+              "status":status,
+            }
+          }
+        },{new:true})
+        const user = await UserModel.findById(userId).exec();
+        const order = user.oders;
+        const currentOrder = order.find(orderItem => orderItem.productId === productId);
+        const   orderId = JSON.stringify(currentOrder._id);
+        console.log(orderId);
+        var options = {
+          amount: total,  // amount in the smallest currency unit
+          currency: "INR",
+          receipt: orderId
+        };
+       
+        const razorpayOrder = await new Promise((resolve,reject)=>{
+          instance.orders.create(options,(err,order)=>{
+            if(err){
+              console.error("error creating razorpay order:",err);
+              reject(err);
+            }else{
+              console.log("Razorpay order:",order);
+              resolve(order);
+            }
+          });
+        });
+        res.status(200).json({success:true,order:razorpayOrder});
+
+     }catch(err){
+      console.error("error while online payment from serverside :",err);
+      res.status(500).json({success:false,error:err.message});
+     }
+}
+
+
+//oders
 exports.oders = async(req,res)=>{
   try{
     const userId = req.session.user;
