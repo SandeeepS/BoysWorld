@@ -758,11 +758,12 @@ exports.generateRazorpay = async(req,res)=>{
               console.error("error creating razorpay order:",err);
               reject(err);
             }else{
-              console.log("Razorpay order:",order);
               resolve(order);
             }
           });
         });
+        console.log("Razorpay order:",razorpayOrder);
+
         res.status(200).json({success:true,order:razorpayOrder});
 
      }catch(err){

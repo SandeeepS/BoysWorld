@@ -196,7 +196,7 @@
 				<div class="col-sm-6"  style="width: 100%;">
 					<div class="total_area">
 						<ul>
-							<li>Cart Sub Total <span>$<%=totalAmount%></span></li>
+							<li>Cart Sub Total <span id="cartTotalAmount">$<%=totalAmount%></span></li>
 							
 						</ul>
 							
@@ -260,7 +260,8 @@
 			const decrementButtons = document.querySelectorAll(".cart-quantity-button2");
 			const quantityValues = document.querySelectorAll(".cart-quantity-value");
 			const totalPrice  = document.querySelectorAll(".cart_total_price");
-			
+			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
+
 		  
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
