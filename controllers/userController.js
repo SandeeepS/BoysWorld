@@ -27,10 +27,9 @@ const { default: mongoose } = require('mongoose');
 const productModel = require('../models/productModel');
 const { render } = require('../routes/userRoute');
 const {ObjectId} = mongoose.Types;
-const crypto = require('crypto');
+
 const { log } = require('console');
-
-
+const crypto = require('crypto');
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
 var instance = new Razorpay({
@@ -778,20 +777,52 @@ exports.generateRazorpay = async(req,res)=>{
 exports.verifyPayment = async(req,res)=>{
   try{ 
     const {payment,oders} = req.body;
-
+    const userId = req.session.user;
+    const {productId, quantity, total,currentAddress} = req.body;
     console.log(oders);
     console.log(payment);
-  const status = "conformed";
-    const userId = req.session.user;
-    // Insert the order into the user's document
-    const userdata = await UserModel.findByIdAndUpdate(userId,{
-      $set:{
-        oders:{
-        
-          "status":status,
+   
+
+    let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
+    hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
+    hmac = hmac.digest('hex');
+    if(hmac == payment.razorpay_signature){
+      const status = "Placed";
+      const onlinePayment = "OnlinePayment";
+      const userdata = await UserModel.findByIdAndUpdate(userId,{
+        $set:{
+          oders:{
+            "productId":productId,
+            "quantity":quantity,
+            "price":total,
+            "currentAddress":currentAddress,
+            "paymentMethod": onlinePayment,
+            "status":status,
+          }
         }
-      }
-    },{new:true})
+      },{new:true})
+      res.status(200).json({success:true,message:"order placed successfully"});
+    }else{
+
+       const status = "Failed";
+       const onlinePayment = "OnlinePayment";
+       const userdata = await UserModel.findByIdAndUpdate(userId,{
+        $set:{
+          oders:{
+            "productId":productId,
+            "quantity":quantity,
+            "price":total,
+            "currentAddress":currentAddress,
+            "paymentMethod": onlinePayment,
+            "status":status,
+          }
+        }
+      },{new:true})
+      res.status(400).json({success:false,message:"failed to payment"});
+    }
+    
+
+  
 
   }catch(err){
     console.error("error while varifying the payment form server!",err)
@@ -847,7 +878,7 @@ exports.updateProfileDetails = async(req,res)=>{
       const email = req.body.email;
       const number = req.body.number;
 
-      if (!name || !email || !number) {
+      if (!name || !email || !number) {   
       return res.status(400).json({ success: false, message: 'Name, email, and number are required.' });
     }
 
