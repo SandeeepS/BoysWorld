@@ -578,18 +578,21 @@
 
 
 				function rezorpayPayment(order){
+					const oders = <%-JSON.stringify(oders)%>;
 					var options = {
 						"key": "rzp_test_t03CSatWp5XBXp", // Enter the Key ID generated from the Dashboard
-						"amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+						"amount": order.amount_due, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
 						"currency": "INR",
-						"name": "Sandeep",
+						"name": "BoysWorld",
 						"description": "Test Transaction",
 						"image": "https://example.com/your_logo",
 						"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
 						"handler": function (response){
 							alert(response.razorpay_payment_id);
 							alert(response.razorpay_order_id);
-							alert(response.razorpay_signature)
+							alert(response.razorpay_signature);
+
+							verifyPayment(response,oders);
 						},
 						"prefill": {
 							"name": "Gaurav Kumar",
@@ -606,7 +609,21 @@
 					var rzp1 = new Razorpay(options);
                      rzp1.open();
 				}
+           
+				 
+				 function verifyPayment(payment,oders){
+                       $.ajax({
+						method:'POST',
+						url:'/verify-payment',
+                        data:{
+							payment,
+							oders,
+							
 
+						},
+
+					   })
+				 }
 
 
 

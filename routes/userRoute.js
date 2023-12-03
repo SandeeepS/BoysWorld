@@ -35,7 +35,7 @@ route.post('/signupUser',userController.signup)
 
 route.post('/placeOrder',userController.placeOrder);
 route.post('/generateRazorpay',userController.generateRazorpay);
-
+route.post('/verify-payment',userController.verifyPayment);
 
 route.post('/updateProfileDetails',userController.updateProfileDetails);
 route.post('/changePassword',userController.changePassword);

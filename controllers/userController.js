@@ -446,11 +446,12 @@ exports.getCheckoutPage = async(req,res)=>{
     const userData = await UserModel.findById(userId).exec();
     const address = userData.address;
     const currentAddress = userData.currentAddress;
+    const oders = userData.oders;
     const productId = req.query.productId;
     const quantity = req.query.quantity;
     const product = await productModel.findById(productId).exec();
     const totalPrice = product.price * quantity;
-    res.render('checkout',{address,currentAddress,product,quantity,totalPrice});
+    res.render('checkout',{address,currentAddress,product,quantity,totalPrice,oders});
     
 
   }catch(err){
@@ -772,6 +773,31 @@ exports.generateRazorpay = async(req,res)=>{
      }
 }
 
+
+//verify payment
+exports.verifyPayment = async(req,res)=>{
+  try{ 
+    const {payment,oders} = req.body;
+
+    console.log(oders);
+    console.log(payment);
+  const status = "conformed";
+    const userId = req.session.user;
+    // Insert the order into the user's document
+    const userdata = await UserModel.findByIdAndUpdate(userId,{
+      $set:{
+        oders:{
+        
+          "status":status,
+        }
+      }
+    },{new:true})
+
+  }catch(err){
+    console.error("error while varifying the payment form server!",err)
+    res.status(500).json({success:false, message:"internal server error"});
+  }
+}
 
 //oders
 exports.oders = async(req,res)=>{
