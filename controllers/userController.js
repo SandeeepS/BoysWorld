@@ -3,6 +3,7 @@
 
 
 const UserModel = require('../models/userModel');
+const orderModel = require('../models/ordersModel');
 
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
@@ -30,6 +31,7 @@ const {ObjectId} = mongoose.Types;
 
 const { log } = require('console');
 const crypto = require('crypto');
+const { name } = require('ejs');
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
 var instance = new Razorpay({
@@ -692,9 +694,12 @@ exports.placeOrder = async (req, res) => {
     const cashOnDelivery = "cashOnDelivery";
     const status = "Conformed";
     const userId = req.session.user;
-    console.log(quantity);
     const user = await UserModel.findById(userId);
-
+    const product = await productModel.findById(productId).exec();
+    const productName = product.productName;
+    const userName = user.name;
+    const date = new Date();
+    const randomId = 10000+Math.floor(Math.random()*90000);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
@@ -713,6 +718,20 @@ exports.placeOrder = async (req, res) => {
     }
   },{new:true})
 
+  const order = new orderModel({
+      "userId":userId,
+      "productId":productId,
+      "orderId":randomId,
+      "userName":userName,
+      "productName":productName,
+      "totalAmount":total,
+      "currentAddress":currentAddress,
+      "date":date,
+      "paymentMethod":cashOnDelivery,
+      "currentStatus":status,
+
+  })
+   const savedData = await order.save();
     // Respond with a success message
     res.status(200).json({ success: true, message: 'Order placed successfully.' });
   } catch (error) {
