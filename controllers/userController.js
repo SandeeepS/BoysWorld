@@ -713,7 +713,7 @@ exports.placeOrder = async (req, res) => {
         "price":total,
         "currentAddress":currentAddress,
         "paymentMethod": cashOnDelivery,
-       
+        "status":status,
       }
     }
   },{new:true})
