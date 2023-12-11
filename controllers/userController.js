@@ -856,7 +856,8 @@ exports.oders = async(req,res)=>{
     const productsInOrders = [];
     const user = await UserModel.findById(userId).exec();
     const oders = user.oders;
-    console.log(oders);
+    const order2 = await orderModel.find({userId:{$in:userId}});
+    console.log(order2.userName);
     for(let i=0;i<oders.length;i++){
       productsInOrders.push(oders[i].productId);
 
