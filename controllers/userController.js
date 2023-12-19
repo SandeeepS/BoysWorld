@@ -745,8 +745,14 @@ exports.generateRazorpay = async(req,res)=>{
      try{
         const {productId, quantity, total,currentAddress} = req.body;
         const onlinePayment = "Online Payment";
-        const status = "Pending";
+        const status = "pending";
         const userId = req.session.user;
+        const user = await UserModel.findById(userId);
+        const product = await productModel.findById(productId).exec();
+        const productName = product.productName;
+        const userName = user.name;
+        const date = new Date();
+        const randomId = 10000+Math.floor(Math.random()*90000);
         // Insert the order into the user's document
         const userdata = await UserModel.findByIdAndUpdate(userId,{
           $push:{
@@ -760,7 +766,24 @@ exports.generateRazorpay = async(req,res)=>{
             }
           }
         },{new:true})
-        const user = await UserModel.findById(userId).exec();
+        
+        const orders = new orderModel({
+          "userId":userId,
+          "productId":productId,
+          "orderId":randomId,
+          "userName":userName,
+          "productName":productName,
+          "totalAmount":total,
+          "currentAddress":currentAddress,
+          "date":date,
+          "paymentMethod":onlinePayment,
+          "currentStatus":status,
+    
+      })
+       const savedData = await orders.save();
+     
+
+       
         const order = user.oders;
         const currentOrder = order.find(orderItem => orderItem.productId === productId);
         const   orderId = JSON.stringify(currentOrder._id);

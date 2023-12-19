@@ -35,6 +35,7 @@ var instance = new razorpay({
 const secretKey = process.env.SECRET_KEY || generateRandomKey(32);
 //session
 const oneDay = 1000 * 60 * 60 * 24;
+
 //configuring express session
 app.use(session({
     secret: secretKey, // Change this to a strong, random key for session encryption
