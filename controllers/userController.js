@@ -753,19 +753,7 @@ exports.generateRazorpay = async(req,res)=>{
         const userName = user.name;
         const date = new Date();
         const randomId = 10000+Math.floor(Math.random()*90000);
-        // Insert the order into the user's document
-        const userdata = await UserModel.findByIdAndUpdate(userId,{
-          $push:{
-            oders:{
-              "productId":productId,
-              "quantity":quantity,
-              "price":total,
-              "currentAddress":currentAddress,
-              "paymentMethod": onlinePayment,
-              "status":status,
-            }
-          }
-        },{new:true})
+      
         
         const orders = new orderModel({
           "userId":userId,
@@ -782,11 +770,11 @@ exports.generateRazorpay = async(req,res)=>{
       })
        const savedData = await orders.save();
      
+       const order = await orderModel.findOne({productId:productId});
+       const orderId = order._id;
 
-       
-        const order = user.oders;
-        const currentOrder = order.find(orderItem => orderItem.productId === productId);
-        const   orderId = JSON.stringify(currentOrder._id);
+
+     
         console.log(orderId);
         var options = {
           amount: total,  // amount in the smallest currency unit
@@ -820,46 +808,46 @@ exports.verifyPayment = async(req,res)=>{
   try{ 
     const {payment,oders} = req.body;
     const userId = req.session.user;
-    const {productId, quantity, total,currentAddress} = req.body;
+    const { quantity, total,currentAddress} = req.body;
     console.log(oders);
     console.log(payment);
+    const productId = oders[0].productId;
+    console.log(productId);
    
 
     let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
     hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
     hmac = hmac.digest('hex');
     if(hmac == payment.razorpay_signature){
-      const status = "Placed";
-      const onlinePayment = "OnlinePayment";
-      const userdata = await UserModel.findByIdAndUpdate(userId,{
-        $set:{
-          oders:{
-            "productId":productId,
-            "quantity":quantity,
-            "price":total,
-            "currentAddress":currentAddress,
-            "paymentMethod": onlinePayment,
-            "status":status,
+      
+      try{
+        const status = "Placed";
+        const filter = {productId:productId};
+        const updateDocument = {
+          $set:{
+            "currentStatus":status
           }
-        }
-      },{new:true})
-      res.status(200).json({success:true,message:"order placed successfully"});
+        };
+        const result = await orderModel.updateOne(filter,updateDocument);
+        console.log("kdjhkdfjgkjdfgdfgdfghhg");
+        console.log(result);
+        res.status(200).json({success:true,message:"order placed successfully"});
+      }
+      catch(err){
+        console.log("error while updating the order ",err);
+      }
+      
+
     }else{
 
        const status = "Failed";
-       const onlinePayment = "OnlinePayment";
-       const userdata = await UserModel.findByIdAndUpdate(userId,{
+      const filter = {productId:productId};
+      const updateDocument = {
         $set:{
-          oders:{
-            "productId":productId,
-            "quantity":quantity,
-            "price":total,
-            "currentAddress":currentAddress,
-            "paymentMethod": onlinePayment,
-            "status":status,
-          }
+          "status":status
         }
-      },{new:true})
+      };
+      const result = await orderModel.updateOne(filter,updateDocument);
       res.status(400).json({success:false,message:"failed to payment"});
     }
     
