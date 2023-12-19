@@ -578,7 +578,7 @@
 
 
 				function rezorpayPayment(order){
-					const oders = <%-JSON.stringify(oders)%>;
+				
 					var options = {
 						"key": "rzp_test_t03CSatWp5XBXp", // Enter the Key ID generated from the Dashboard
 						"amount": order.amount_due, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -592,7 +592,7 @@
 							alert(response.razorpay_order_id);
 							alert(response.razorpay_signature);
 
-							verifyPayment(response,oders);
+							verifyPayment(response);
 						},
 						"prefill": {
 							"name": "Gaurav Kumar",
@@ -611,13 +611,12 @@
 				}
            
 				 
-				 function verifyPayment(payment,oders){
+				 function verifyPayment(payment){
                        $.ajax({
 						method:'POST',
 						url:'/verify-payment',
                         data:{
 							payment,
-							oders,
 							productId: productId,
 							quantity: quantity,
 							total: totalPrice,

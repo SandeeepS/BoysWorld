@@ -809,7 +809,7 @@ exports.generateRazorpay = async(req,res)=>{
 //verify payment
 exports.verifyPayment = async(req,res)=>{
   try{ 
-    const {payment,oders,productId} = req.body;
+    const {payment,productId} = req.body;
     const userId = req.session.user;
     const current_Order = await orderModel.findOne({productId:productId}).exec();
     console.log("current order:",current_Order);
@@ -823,7 +823,6 @@ exports.verifyPayment = async(req,res)=>{
     hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
     hmac = hmac.digest('hex');
     if(hmac == payment.razorpay_signature){
-      
       try{
         const status = "Placed";
         const filter = {_id:current_orderId};
@@ -845,7 +844,7 @@ exports.verifyPayment = async(req,res)=>{
     }else{
 
        const status = "Failed";
-      const filter = {productId:productId};
+      const filter = {_id:current_orderId};
       const updateDocument = {
         $set:{
           "status":status
