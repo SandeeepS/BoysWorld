@@ -771,6 +771,9 @@ exports.generateRazorpay = async(req,res)=>{
        const savedData = await orders.save();
      
        const order = await orderModel.findOne({productId:productId});
+       console.log("heloo world");
+       console.log(order);
+       console.log("hihihih");
        const orderId = order._id;
 
 
@@ -806,13 +809,14 @@ exports.generateRazorpay = async(req,res)=>{
 //verify payment
 exports.verifyPayment = async(req,res)=>{
   try{ 
-    const {payment,oders} = req.body;
+    const {payment,oders,productId} = req.body;
     const userId = req.session.user;
-    const { quantity, total,currentAddress} = req.body;
-    console.log(oders);
+    const current_Order = await orderModel.findOne({productId:productId}).exec();
+    console.log("current order:",current_Order);
     console.log(payment);
-    const productId = oders[0].productId;
-    console.log(productId);
+    const current_orderId = current_Order._id;
+    
+   
    
 
     let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
@@ -822,7 +826,7 @@ exports.verifyPayment = async(req,res)=>{
       
       try{
         const status = "Placed";
-        const filter = {productId:productId};
+        const filter = {_id:current_orderId};
         const updateDocument = {
           $set:{
             "currentStatus":status
