@@ -2,6 +2,7 @@ const userModel = require('../models/userModel');
 const adModel = require('../models/adminModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
+const orderModel = require('../models/ordersModel');
 
 
 
@@ -118,13 +119,22 @@ exports.getCategories = async (req, res) => {
 exports.getOrders = async(req,res)=>{
     try{
         
-       const userId = req.session.user;
-       console.log(userId);
-        const user = await userModel.findById(userId).exec();
-        console.log(user);
-        const oders = user.oders;
      
+      
+        
         const products = await productModel.find().exec();
+        const oders = await orderModel.aggregate([
+            {
+                $lookup:{
+                    from:'users',
+                    localField:'userId',
+                    foreignField:'_id',
+                    as:"userDetails"
+                }
+            }
+        ]).exec();
+
+        console.log(oders);
         res.render('adminpanel/orders',{oders,products});
     }catch(err){
         console.error("error while getting the orders list  page",err);

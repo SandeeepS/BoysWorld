@@ -705,19 +705,7 @@ exports.placeOrder = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
 
-    // Insert the order into the user's document
-  const userdata = await UserModel.findByIdAndUpdate(userId,{
-    $push:{
-      oders:{
-        "productId":productId,
-        "quantity":quantity,
-        "price":total,
-        "currentAddress":currentAddress,
-        "paymentMethod": cashOnDelivery,
-        "status":status,
-      }
-    }
-  },{new:true})
+  
 
   const order = new orderModel({
       "userId":userId,
