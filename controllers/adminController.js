@@ -127,14 +127,14 @@ exports.getOrders = async(req,res)=>{
             {
                 $lookup:{
                     from:'users',
-                    localField:'userId',
+                    localField: 'userId',
                     foreignField:'_id',
                     as:"userDetails"
                 }
             }
         ]).exec();
 
-        console.log(oders);
+      
         res.render('adminpanel/orders',{oders,products});
     }catch(err){
         console.error("error while getting the orders list  page",err);

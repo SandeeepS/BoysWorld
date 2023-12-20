@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const sch ={
-    userId:String,
+    userId:{
+        type:mongoose.Schema.ObjectId,
+    },
     productId:String,
     orderId:String,
     userName:String,

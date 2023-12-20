@@ -694,7 +694,8 @@ exports.placeOrder = async (req, res) => {
     const { productId, quantity, total,currentAddress } = req.body;
     const cashOnDelivery = "cashOnDelivery";
     const status = "Conformed";
-    const userId = req.session.user;
+    const userId1 = req.session.user;
+    const userId =  new mongoose.Types.ObjectId(userId1);
     const user = await UserModel.findById(userId);
     const product = await productModel.findById(productId).exec();
     const productName = product.productName;

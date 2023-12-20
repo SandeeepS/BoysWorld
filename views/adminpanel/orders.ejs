@@ -270,12 +270,13 @@
                                                       <% if(product) { %>
                                                       <tr>
                                                           <td><%=product.randomId%></td>
+                                                          <td><%=oders[i].userDetails[0].name %></td>
                                                           <td><%=product.productName %></td>
-                                                          <td><%=product.productName %></td>
-                                                          <td>R <%=oders[i].price  %></td>
+                                                          <td>R <%=oders[i].totalAmount  %></td>
                                                           <td><%= formatDate(product.orderDate) %></td>    
                                                           <td><%= oders[i].paymentMethod%></td>     
-                                                          <td><%=oders[i].status%></td>   
+                                                          <td><%=oders[i].currentStatus%></td>  
+                                                            
                                                           <form action="">                                             
                                                            <td>
                                                             <select id="orderStatus" name="orderStatus" class="order-status-dropdown" orderId="<%=oders[i]._id%>">
