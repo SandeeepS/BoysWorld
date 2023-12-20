@@ -261,7 +261,15 @@
 			const quantityValues = document.querySelectorAll(".cart-quantity-value");
 			const totalPrice  = document.querySelectorAll(".cart_total_price");
 			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
-
+          
+			        let totalAmount = 0;
+			        // Calculate total amount on page load
+					totalPrice.forEach((totalPrice) => {
+						totalAmount += parseFloat(totalPrice.getAttribute("total-Price"));
+					});
+			
+					// Update cart total amount
+					cartTotalAmountElement.innerText = "$" + totalAmount.toFixed(2);
 		  
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
@@ -309,6 +317,14 @@
 				.catch((error) => {
 				  console.error("Error updating the quantity:", error);
 				});
+                  // Update the quantity and total in the DOM
+            quantityValues[index].innerText = newQuantity;
+            totalPrice[index].innerText = newTotal.toFixed(2);
+
+            // Update the total amount
+            totalAmount += change * parseFloat(totalPrice[index].getAttribute("total-Price"));
+            cartTotalAmountElement.innerText = "$" + totalAmount.toFixed(2);
+
 			}
 		  });
 		  
