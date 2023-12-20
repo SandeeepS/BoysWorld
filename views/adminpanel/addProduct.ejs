@@ -22,7 +22,12 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
-  
+  <style>
+    .error-message {
+        color: red;
+        display: none;
+    }
+</style>
 </head>
 <body>
   <div class="container-scroller"> 
@@ -203,7 +208,7 @@
                                   <div class="table-responsive cart_info">
                                     <div >
                                        <h2>Add products</h2>
-                                       <form action="/admin/addingProduct" method="post" enctype="multipart/form-data">
+                                       <form action="/admin/addingProduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                                           
                                         <p>
                                           <label for="add-category">Category:</label>
@@ -220,32 +225,32 @@
 
                                            <p>
                                             <label for="productName">Product Name</label>      
-                                            <input type="text" class="form-control" name="productName">
+                                            <input type="text" class="form-control" name="productName" id="productName">
                                            </p>
                                           
                                            
 
                                            <p>
                                              <label for="price">Price</label>
-                                             <input type="number" class="form-control" name="price">
+                                             <input type="number" class="form-control" name="price" id="price">
                                            </p>
                                            
                                                   
                                              
                                             <p>
                                             <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock">
+                                            <input type="text" class="form-control" name="stock" id="stock">
                                             </p>  
                                               
 
                                             
                                             <label for="discription">discription</label>
-                                            <input type="text" class="form-control" name="discription">
+                                            <input type="text" class="form-control" name="discription" id="dis">
                                            </p>
 
                                            <p>
                                             <label for="image">Image</label>
-                                            <input type="file" class="form-control" name="productImages" multiple>
+                                            <input type="file" class="form-control" name="productImages" multiple id="img">
                                         </p>
 
 
@@ -258,6 +263,11 @@
                                    
                                   </div>
                               </div>
+
+                              <div class="error-message" id="error-message">
+							
+                              </div>
+
                             </div>
                           </div>
                         </div>
@@ -322,6 +332,43 @@
 </script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<script>
+  function validateForm(){
+            const productName = document.getElementById('productName').value;
+            const price = document.getElementById('price').value;
+            const stock = document.getElementById('stock').value;
+            const dis = document.getElementById('dis').value;
+            const img = document.getElementById('img');
+            const errorMessage = document.getElementById('error-message');
+
+            if(productName==="" || productName===null || price==="" || price===null || stock==="" || stock===null || dis==="" || dis===null){
+               errorMessage.innerText ="Please fill in all the fields!!";
+               errorMessage.style.display = "block";
+
+               setTimeout(function(){
+                    errorMessage.style.display ="none";
+               },3000);
+               return false;
+            }else if(img.files.length === 0){
+                   
+                  
+                    errorMessage.innerText = "Please upload atleast one image!";
+                    errorMessage.style.display= "block";
+
+                    setTimeout(()=>{
+                      errorMessage.style.display= "none";
+                    },3000);
+                  
+                  return false;
+            }
+            else{
+              return true;
+            }
+
+
+
+  }
+</script>
   <!-- End custom js for this page-->
 </body>
 
