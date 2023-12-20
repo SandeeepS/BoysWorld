@@ -425,10 +425,11 @@ exports.logout = (req,res)=>{
 
 exports.getAccount = async(req,res)=>{
   try{
-       const user = req.session.user;
-       const userData = await UserModel.findById(user).exec();
-       console.log(userData);
-       res.render('account',{userData});
+       const userId = req.session.user;
+       const userData = await UserModel.findById(userId).exec();
+       const orders = await orderModel.find({userId:userId}).exec();
+       console.log(orders);
+       res.render('account',{orders,userData});
   }catch(err){
     console.error("error while ")
   }
