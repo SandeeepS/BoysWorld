@@ -30,6 +30,56 @@
 			
 		   }
 	</style>
+	<style>
+		  /* Style for the modal container */
+		  .modal {
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			background-color: rgba(0, 0, 0, 0.7); /* Black with a little transparency */
+		}
+
+		/* Style for the modal content */
+		.modal-content {
+			justify-content: center;
+			align-items: center;
+			background-color: #fefefe;
+			margin: 15% auto; /* 15% from the top and centered */
+			padding: 20px;
+			border: 1px solid #888;
+			width: 25%; /* Could be more or less, depending on screen size */
+		}
+
+		/* Style for the close button */
+		.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+		.modal-style{
+			display: flex;
+		}
+		.modal-text{
+			display: flex;
+			justify-content: center; 
+			align-items: center;     
+			width: 100%;             
+			height: 100%;
+			padding-top: 20%;
+		}
+	</style>
 </head><!--/head-->
 
 <body>
@@ -162,7 +212,7 @@
 							</td>
 							<td class="cart_description">
 								<h4><a href=""></a></h4>
-								<a href=""><p>Edit</p></a>
+								<a href="#" id="openModalbtn2"><p>Edit</p></a>
 							</td>
 							
 							<td class="cart_quantity">
@@ -186,6 +236,38 @@
 			</div>
 			<a href="/addAddress" class="btn btn-default add-to-cart">Add Address</a>
 		</div>
+      
+		
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				 <span class="close" id="closeModalBtn">&times;</span>
+				 <div class="modal-style">
+					 <div class="container" >
+						 <h4 class="text text-center">Edit Address</h4>
+						 <div class="form-one" style="width: 100%;">
+							 <form action="/address" method="post" >
+								 <input type="text" placeholder="Name" name="name">
+								 <input type="text" placeholder="Number" name="number">
+								 <input type="text" placeholder="Email" name="email">
+								 <input type="text" placeholder="House Name" name="houseName">
+								 <input type="text" placeholder="House Number" name="houseNumber">
+								 <input type="text" placeholder="State" name="state">
+								 <input type="text" placeholder="city" name="city">
+								 <input type="text" placeholder="street" name="street">
+								 <input type="text" placeholder="Landmark" name="landmark">
+								 <input type="text" placeholder="Pin Code" name="pin">
+								 
+								 <button type="submit" class="btn btn-default update" >Save</button>
+								 <br>
+								 <br>
+							 </form>
+						 </div>
+						 
+					 </div>
+				 </div>
+			</div>
+		 </div>
+
 	</section> <!--/#cart_items-->
 
 	
@@ -236,5 +318,31 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
 	
+	<script>
+		var modal = document.getElementById('myModal');
+		var openModalBtn2 = document.getElementById("openModalbtn2");
+		var closeModalBtn = document.getElementById("closeModalBtn");
+
+        //to open the modal
+        openModalBtn2.onclick = function(){
+			modal.style.display = "block";
+		}
+
+		//to close the modal
+		closeModalBtn.onclick = function(){
+			modal.style.display = "none";
+		}
+         
+		//close the modal if the user clicks the outside of it 
+		window.onclick = function(event){
+			if(event.target == modal){
+				modal.style.display = "none";
+			}
+		}
+
+	
+
+
+	</script>
 </body>
 </html>
