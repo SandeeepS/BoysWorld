@@ -871,11 +871,18 @@ exports.oders = async(req,res)=>{
     const orderedProductId =[];
     const userData = await UserModel.findById(userId).exec();
     const oders = await orderModel.find({userId:userId}).exec();
+    console.log("oders:",oders);
     for(let i=0;i<oders.length;i++){
       orderedProductId.push(oders[i].productId);
 
     }
-    const products = await productModel.find({_id:{$in:orderedProductId}}).exec();
+    console.log("productId:",orderedProductId);
+    const products = [];
+    for(let i=0;i<orderedProductId.length;i++){
+      const product = await productModel.findById(orderedProductId[i]).exec();
+      products.push(product);
+    }
+    console.log("products:",products);
     res.render('orders',{oders,userData,products});
 
   }catch(err){
@@ -890,7 +897,7 @@ exports.cancelOrder = async(req,res)=>{
   try{
         const {orderId} = req.body;
         console.log(orderId);
-        await orderModel.updateOne({_id:orderId},{$pull:{orders:{_id:orderId}}}).exec();
+        await orderModel.deleteOne({_id:orderId}).exec();
         res.status(200).send({message:"order cancelled successfully"});
   }catch(err){
     console.error("error while canceling the order in server",err);
