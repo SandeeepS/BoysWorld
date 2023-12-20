@@ -868,23 +868,18 @@ exports.verifyPayment = async(req,res)=>{
 exports.oders = async(req,res)=>{
   try{
     const userId = req.session.user;
-    const productsInOrders = [];
-    const user = await UserModel.findById(userId).exec();
-    const oders = user.oders;
-    const order2 = await orderModel.find({userId:{$in:userId}});
-    console.log(order2.userName);
+    const orderedProductId =[];
+    const userData = await UserModel.findById(userId).exec();
+    const oders = await orderModel.find({userId:userId}).exec();
     for(let i=0;i<oders.length;i++){
-      productsInOrders.push(oders[i].productId);
+      orderedProductId.push(oders[i].productId);
 
     }
-    console.log(productsInOrders);
-
-    const products = await productModel.find({ _id: { $in: productsInOrders } }).exec();
-    console.log(products);
-    res.render('orders',{oders,products});
+    const products = await productModel.find({_id:{$in:orderedProductId}}).exec();
+    res.render('orders',{oders,userData,products});
 
   }catch(err){
-    console.error("error while getting oders");
+    console.error("error while getting oders",err);
     res.redirect('/getAccount');
   }
 }
@@ -894,12 +889,11 @@ exports.oders = async(req,res)=>{
 exports.cancelOrder = async(req,res)=>{
   try{
         const {orderId} = req.body;
-        const userId = req.session.user;
-        const user = await UserModel.findById(userId).exec();
-        await UserModel.findByIdAndUpdate(userId,{$pull:{oders:{_id:orderId}}}).exec();
+        console.log(orderId);
+        await orderModel.updateOne({_id:orderId},{$pull:{orders:{_id:orderId}}}).exec();
         res.status(200).send({message:"order cancelled successfully"});
   }catch(err){
-    console.error("error while canceling the order",err);
+    console.error("error while canceling the order in server",err);
     res.status(500).send({error:"internal server error"});
   }
 }

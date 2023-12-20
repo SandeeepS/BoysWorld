@@ -156,7 +156,6 @@
 		<div class="container">
 			<% for (let i = 0; i < oders.length; i++) { %>
 			  
-			 
 			  <% if (products) { %>
 				<div class="a-box">
 				  <div class="content">
@@ -175,6 +174,9 @@
 						<div class="address">
 							<h5>Delivery Address</h5>
 							<div>
+								<% if (oders[i].currentAddress){ %>
+
+								
 								<h5><%= oders[i].currentAddress[0].name%>,</h5>
 								<h5> <%= oders[i].currentAddress[0].number %>,</h5>
 								<h5><%= oders[i].currentAddress[0].houseName%>,</h5>
@@ -184,6 +186,10 @@
 								<h5><%= oders[i].currentAddress[0].street%>,</h5>
 								<h5><%= oders[i].currentAddress[0].landMark%></h5>
 								<h5><%= oders[i].currentAddress[0].pin%>,</h5>
+
+								<% } else { %>
+									<p>select address</p>
+								<% } %>
 							</div>
 						</div>
  
@@ -208,7 +214,7 @@
 									<p>Are you sure for cancelling the order?</p>
 								</div>
 								<div style="display: flex;">
-									<a href="#" class="cancelOrder" orderId="<%= oders[i]._id %>"><h3>Yes</h3></a>
+									<a href="#" class="conformCancelOrder" orderId="<%= oders[i]._id %>"><h3>Yes</h3></a>
 									 <a href="/orders" style="padding-left: 25px;"><h3>No</h3></a>
 									
 								</div>
@@ -278,6 +284,7 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+    <!-- for cancelling the order -->
 	<script>
 		var openModalLinks = document.querySelectorAll(".cancelOrder");
 		var closeModal = document.getElementById("conformModalClose");
@@ -286,13 +293,8 @@
 		// Attach event listeners to each "Cancel Order" link
 		openModalLinks.forEach(function (link) {
 			link.onclick = function () {
-				// Get the order ID from the data attribute
 				var orderId = link.getAttribute("data-orderId");
-	
-				// Find the corresponding modal using the order ID
 				var modal = document.getElementById("conformModal-" + orderId);
-	
-				// Display the modal
 				modal.style.display = "block";
 			};
 		});
@@ -313,9 +315,10 @@
 			});
 		};
 	</script>
+	<!-- to cancle order -->
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
-			const cancelOrder = document.querySelectorAll(".cancelOrder");
+			const cancelOrder = document.querySelectorAll(".conformCancelOrder");
 			cancelOrder.forEach((cancelOrder,i)=>{
 				cancelOrder.addEventListener("click",function(event){
 					event.preventDefault();
@@ -336,7 +339,7 @@
 							 location.reload();
 						},
 						error:function(error){
-							console.error("error while canceling order",error);
+							console.error("error while canceling order in ejs",error);
 
 						}
 					 });
