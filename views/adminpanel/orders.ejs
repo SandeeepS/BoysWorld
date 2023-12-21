@@ -270,10 +270,11 @@
                                                           <form action="">                                             
                                                            <td>
                                                             <select id="orderStatus" name="orderStatus" class="order-status-dropdown" orderId="<%=oders[i]._id%>">
+                                                              <option disabled selected>Select</option>
                                                               <option value="confirmed">Confirmed</option>
                                                               <option value="shipped">Shipped</option>
                                                               <option value="Out Of Delivery">Out of Delivery</option>
-                                                              <option value="cancelled">Cancelled</option>
+                                                              <option value="cancelled">Cancel</option>
                                                             </select>
                                                           
                                                            </td>
@@ -373,11 +374,18 @@
         data:{orderStatus:selectedStatus,orderId},
         success:function (response){
           console.log("update successfull",response);
+          updateUIWithNewStatus(orderId, selectedStatus);
+
         },
         error:function (error){
           console.error("error while updating the status:",error);
         }
       })
+    }
+
+    function updateUIWithNewStatus(orderId, newStatus) {
+      var dropdown = $(`[orderId="${orderId}"]`);
+      dropdown.val(newStatus).change();
     }
   </script>
 </body>

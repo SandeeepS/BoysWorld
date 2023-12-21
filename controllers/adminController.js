@@ -320,22 +320,10 @@ exports.updateOrderStatus = async (req, res) => {
     try {
         const { orderStatus, orderId } = req.body;
         const userId = req.session.user;
-
-        const user = await userModel.findById(userId).exec();
-
-        // Find the specific order you want to update in the array
-        const orderToUpdate = user.oders.find(order => order._id == orderId);
-
-        // Update the status if the order is found
-        if (orderToUpdate) {
-            orderToUpdate.status = orderStatus;
-            await user.save();
-            res.redirect('/admin/orders')
-         
-        } else {
-            console.log("Order not found");
-            res.redirect('/admin/orders')
-        }
+    
+         const orderToUpdate = await orderModel.updateOne({_id:orderId},{$set:{"currentStatus":orderStatus}}).exec();
+         res.redirect('/admin/orders')
+       
 
     } catch (err) {
         console.error("Error while updating the status on the server side ", err);

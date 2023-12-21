@@ -11,6 +11,7 @@ const bcrypt  = require('bcrypt');
 const moment =  require('moment');
 const Razorpay = require('razorpay');
 const { v4: uuidv4 } = require('uuid');
+const { format } = require('date-fns');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -745,7 +746,7 @@ exports.placeOrder = async (req, res) => {
       const productName = cartDetail[i].productDetail[0].productName;
       const userName = cartDetail[i].name;
       const date = new Date();
-      const formattedDate = `${date.toLocaleDateString('en-US')}, ${date.toLocaleTimeString('en-US')}`;
+      const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
       const randomId = 10000+Math.floor(Math.random()*90000);
       const total = totalAmount;
       const currentAddress = cartDetail[i].currentAddress[0];
@@ -774,6 +775,45 @@ exports.placeOrder = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 };
+
+
+exports.placeOrder2 = async(req,res)=>{
+  try{
+    const {productId,quantity,totalPrice,currentAddress} = req.body;
+    const userId2 = req.session.user;
+    const user = await UserModel.findById(userId2).exec();
+    const product = await productModel.findById(productId).exec();
+    const cashOnDelivery = "cashOnDelivery";
+    const status = "Conformed";
+    const userId = user._id;
+    const productId2 = product._id;
+    const productName = product.productName;
+    const userName = user.name;
+    const date = new Date();
+      const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+      const randomId = 10000+Math.floor(Math.random()*90000);
+      
+      const order = new orderModel({
+        "userId":userId,
+        "productId":productId,
+        "orderId":randomId,
+        "userName":userName,
+        "productName":productName,
+        "totalAmount":totalPrice,
+        "currentAddress":currentAddress,
+        "date": formattedDate,
+        "paymentMethod":cashOnDelivery,
+        "currentStatus":status,
+
+    })
+    const savedData = await order.save();
+    res.status(200).json({ success: true, message: 'Order placed successfully.' });
+
+
+  }catch(err){
+    console.log(err);
+  }
+}
 
 //online payment through razorpay
 exports.generateRazorpay = async(req,res)=>{

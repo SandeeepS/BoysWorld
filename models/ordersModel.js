@@ -11,7 +11,7 @@ const sch ={
     productName:String,
     totalAmount:String,
     currentAddress:Object,
-    date:Date,
+    date:String,
     paymentMethod:String,
     currentStatus:String,
 }
