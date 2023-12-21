@@ -16,6 +16,7 @@ route.get('/contact',auth.user,userController.contactPage);
 route.get('/selectedProduct/:id',auth.user,userController.selectedProduct)
 route.get('/getOtpPage',auth.isUser,userController.getOtpPage);
 route.get('/getCheckout',userController.getCheckoutPage);
+route.post('/getCheckout2',userController.getCheckoutPage2);
 
 
 //varifying otp

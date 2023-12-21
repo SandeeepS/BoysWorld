@@ -200,7 +200,7 @@
 							
 						</ul>
 							
-							<a class="btn btn-default check_out" href="/getCheckout">Check Out</a>
+							<a  id="checkoutBtn" class="btn btn-default check_out" href="#">Check Out</a>
 					</div>
 				</div>
 			</div>
@@ -253,7 +253,7 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
-
+ 
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			const incrementButtons = document.querySelectorAll(".cart-quantity-button1");
@@ -329,5 +329,34 @@
 		  });
 		  
 	</script>
+
+	
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const checkout = document.getElementById("checkoutBtn");
+            const cart = <%-JSON.stringify(userData)%>;
+			const totalAmount = document.getElementById('cartTotalAmount').innerText;
+
+			checkout.addEventListener("click",function(){
+                //making ajax request
+				$.ajax({
+					type:'POST',
+					url:'/getCheckout2',
+					data:{
+						cart : cart,
+						totalAmount:totalAmount
+					},
+					success:function(response){
+						console.log("success");
+					},
+					error:function(err){
+						console.log("error while geting checkout",err);
+					}
+				});
+			})
+		})
+	</script>
+
+
 </body>
 </html>

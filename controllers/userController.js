@@ -440,27 +440,50 @@ exports.getWishlist = async(req,res)=>{
     res.render('wishlist');
 }
 
-
-
 exports.getCheckoutPage = async(req,res)=>{
   try{
-    const userId = req.session.user;
-    const userData = await UserModel.findById(userId).exec();
-    const address = userData.address;
-    const currentAddress = userData.currentAddress;
-    const oders = userData.oders;
-    const productId = req.query.productId;
-    const quantity = req.query.quantity;
-    const product = await productModel.findById(productId).exec();
-    const totalPrice = product.price * quantity;
-    res.render('checkout',{address,currentAddress,product,quantity,totalPrice,oders});
-    
+   
+      const userId = req.session.user;
+      const userData = await UserModel.findById(userId).exec();
+      const address = userData.address;
+      const currentAddress = userData.currentAddress;
+      const productId = req.query.productId;
+      const quantity = req.query.quantity;
+      const product = await productModel.findById(productId).exec();
+      const totalPrice = product.price * quantity;
+      res.render('checkout',{address,currentAddress,product,quantity,totalPrice});
 
   }catch(err){
     console.error("error while getting checkout",err);
     res.redirect('/selectedProduct');
   }
   
+}
+//from cart
+exports.getCheckoutPage2 = async(req,res)=>{
+  try{
+    console.log("kjgjgfgjd");
+    const {cart,totalAmount} = req.body;
+    const userId = req.session.user;
+    console.log(userId);
+    const userData = await UserModel.findById(userId).exec();
+    const userIdObj =  userData._id;
+    const address = userData.address;
+    const currentAddress = userData.currentAddress;
+    const cartDetails = await UserModel.aggregate([
+        {
+          $match:{_id:userIdObj}
+        },
+        {
+         $unwind:"$cart"
+        }
+    ]);
+    console.log("cart details:",cartDetails);
+    res.render('checkout',{address,currentAddress,cart,totalAmount});
+
+  }catch(err){
+      console.log("error in getcheckout2 ",err);
+  }
 }
 
 exports.getCart = async(req,res)=>{
