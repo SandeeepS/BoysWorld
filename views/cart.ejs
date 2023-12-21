@@ -200,7 +200,7 @@
 							
 						</ul>
 							
-							<a  id="checkoutBtn" class="btn btn-default check_out" href="#">Check Out</a>
+							<button id="checkoutBtn" class="btn btn-default check_out" href="#" onclick="checkout()">Check Out</a></button> 
 					</div>
 				</div>
 			</div>
@@ -332,29 +332,17 @@
 
 	
 	<script>
-		document.addEventListener("DOMContentLoaded",function(){
+		function checkout(){
+
+		
 			const checkout = document.getElementById("checkoutBtn");
             const cart = <%-JSON.stringify(userData)%>;
+			console.log(cart);
 			const totalAmount = document.getElementById('cartTotalAmount').innerText;
 
-			checkout.addEventListener("click",function(){
-                //making ajax request
-				$.ajax({
-					type:'POST',
-					url:'/getCheckout2',
-					data:{
-						cart : cart,
-						totalAmount:totalAmount
-					},
-					success:function(response){
-						console.log("success");
-					},
-					error:function(err){
-						console.log("error while geting checkout",err);
-					}
-				});
-			})
-		})
+			window.location.href = "/getCheckout2?cart=" + cart + "&totalAmount="+totalAmount ;
+		}
+		
 	</script>
 
 

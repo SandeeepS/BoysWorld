@@ -472,7 +472,7 @@ exports.getCheckoutPage = async(req,res)=>{
 exports.getCheckoutPage2 = async(req,res)=>{
   try{
     console.log("kjgjgfgjd");
-    const {cart,totalAmount} = req.body;
+    const {cart,totalAmount} = req.query;
     const userId = req.session.user;
     console.log(userId);
     const userData = await UserModel.findById(userId).exec();
@@ -512,7 +512,6 @@ exports.getCart = async(req,res)=>{
   for(let product of user.cart){
      cartProductIds.push(product.productId);
   }
-  console.log(cartProductIds);
   const userData = user.cart;
   // const cartProducts = cartProductIds;
   const products = [];
@@ -523,7 +522,8 @@ exports.getCart = async(req,res)=>{
     }
   }
 
-  console.log(products);
+
+ console.log(userData);
  
   res.render('cart', { products ,userData}); 
   }catch(err){

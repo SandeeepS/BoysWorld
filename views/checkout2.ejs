@@ -360,12 +360,12 @@
 		<div class="a-box">
 		   <div class="content">
 				   <div class="photo">
-					 <img src="/views/productImages/<%=cartDetails[i].productDetail.image%>" alt="">
+					 <img src="/views/productImages/<%=cartDetails[i].productDetail[0].image[0]%>" alt="">
 				   </div>
 				   <div class="discription">
-					  <h5><%=cartDetails[i].productDetail.name%></h5>
-					  <h5><%=cartDetails[i].productDetail.discription%></h5>
-					  <h5>R <%=cartDetails[i].productDetail.price%></h5>
+					  <h5><%=cartDetails[i].productDetail[0].name%></h5>
+					  <h5><%=cartDetails[i].productDetail[0].discription%></h5>
+					  <h5>R <%=cartDetails[i].productDetail[0].price%></h5>
 					  <h5>Qty:<%=cartDetails[i].cart.quantity%></h5>
 					  <h5>Order Total : <%=cartDetails[i].cart.price%></h5>
 				   </div>
@@ -381,6 +381,10 @@
 
 		<div class="a-box text-center" >
 			<div>
+                <ul>
+                    <li>Cart Sub Total <span id="cartTotalAmount"><%=totalAmount%></span></li>
+                    
+                </ul>
 				<Button class="btn btn-default place-order" onclick="placeOrder()">Place your order</Button>
 			</div>
 		</div>
@@ -534,11 +538,7 @@
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const modal2 = document.getElementById("paymentSuccessModal");
-			const productId = <%-JSON.stringify(cartDetails)%>;
-			const quantity = <%-JSON.stringify(quantity)%>;
-			const totalPrice = <%-JSON.stringify(totalPrice)%>;
-			const currentAddress = <%-JSON.stringify(currentAddress)%>;
-
+			const cartDetail= <%-JSON.stringify(cartDetails)%>;
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
 
