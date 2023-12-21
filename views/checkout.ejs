@@ -533,7 +533,10 @@
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const modal2 = document.getElementById("paymentSuccessModal");
-			const cartDetail= <%-JSON.stringify(product)%>;
+			const productId= <%-JSON.stringify(product[0]._id)%>;
+			const quantity = <%-JSON.stringify(quantity)%>;
+			const totalPrice = <%-JSON.stringify(totalPrice)%>;
+			const currentAddress =  <%-JSON.stringify(currentAddress)%>;
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
 
