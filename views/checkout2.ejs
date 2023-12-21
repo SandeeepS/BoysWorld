@@ -539,6 +539,8 @@
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const modal2 = document.getElementById("paymentSuccessModal");
 			const cartDetail= <%-JSON.stringify(cartDetails)%>;
+            const totalAmount = document.getElementById("cartTotalAmount").innerText;
+
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
 
@@ -548,10 +550,9 @@
 					type: 'POST',
 					url: '/placeOrder', 
 					data: {
-						productId: productId,
-						quantity: quantity,
-						total: totalPrice,
-						currentAddress:currentAddress,
+						cartDetail:cartDetail,
+                        totalAmount:totalAmount
+					
 					},
 					success: function (response) {
 						console.log("hello world");

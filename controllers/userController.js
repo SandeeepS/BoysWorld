@@ -732,37 +732,38 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
 //place order 
 exports.placeOrder = async (req, res) => {
   try {
-    const { productId, quantity, total,currentAddress } = req.body;
-    const cashOnDelivery = "cashOnDelivery";
-    const status = "Conformed";
-    const userId1 = req.session.user;
-    const userId =  new mongoose.Types.ObjectId(userId1);
-    const user = await UserModel.findById(userId);
-    const product = await productModel.findById(productId).exec();
-    const productName = product.productName;
-    const userName = user.name;
-    const date = new Date();
-    const randomId = 10000+Math.floor(Math.random()*90000);
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found.' });
+    const { cartDetail,totalAmount} = req.body;
+    console.log(cartDetail);
+
+    for(let i=0;i<cartDetail.length;i++){
+      const cashOnDelivery = "cashOnDelivery";
+      const status = "Conformed";
+      const userId = cartDetail[i]._id;
+      const productId = cartDetail[i].productDetail[0]._id;
+      const productName = cartDetail[i].productDetail[0].productName;
+      const userName = cartDetail[i].name;
+      const date = new Date();
+      const randomId = 10000+Math.floor(Math.random()*90000);
+      const total = totalAmount;
+      const currentAddress = cartDetail[i].currentAddress[0];
+
+      
+              const order = new orderModel({
+                "userId":userId,
+                "productId":productId,
+                "orderId":randomId,
+                "userName":userName,
+                "productName":productName,
+                "totalAmount":total,
+                "currentAddress":currentAddress,
+                "date":date,
+                "paymentMethod":cashOnDelivery,
+                "currentStatus":status,
+
+            })
+            const savedData = await order.save();
+
     }
-
-  
-
-  const order = new orderModel({
-      "userId":userId,
-      "productId":productId,
-      "orderId":randomId,
-      "userName":userName,
-      "productName":productName,
-      "totalAmount":total,
-      "currentAddress":currentAddress,
-      "date":date,
-      "paymentMethod":cashOnDelivery,
-      "currentStatus":status,
-
-  })
-   const savedData = await order.save();
     // Respond with a success message
     res.status(200).json({ success: true, message: 'Order placed successfully.' });
   } catch (error) {
