@@ -449,9 +449,11 @@ exports.getCheckoutPage = async(req,res)=>{
       const address = userData.address;
       const currentAddress = userData.currentAddress;
       const productId = req.query.productId;
+      console.log("productId:",productId);
       const productId2 = new mongoose.Types.ObjectId(productId);
       const quantity = req.query.quantity;
       const product2 = await productModel.findById(productId).exec();
+      console.log("product2",product2);
       const totalPrice = product2.price * quantity;
       const product = await productModel.aggregate([
         {
@@ -705,9 +707,12 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
   try {
     const userId = req.session.user;
     const addressId = req.params.id;
+    const productId = req.params.id;
+    const quantity = req.params.id;
+    console.log(productId,quantity);
     const addressObjectId = new ObjectId(addressId).toString();
-    const user = await UserModel.findById(userId).exec();
-
+        const user = await UserModel.findById(userId).exec();
+   
     if (user) {
       let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
       console.log(currentAddressIndex);
@@ -720,7 +725,8 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
       }
     }
 
-    res.redirect('/getCheckout');
+
+    res.redirect('/getCheckout',productId,quantity);
   } catch (err) {
     console.error("Error while updating the default address", err);
     res.redirect('/getCheckout');
@@ -763,6 +769,7 @@ exports.placeOrder = async (req, res) => {
                 "date": formattedDate,
                 "paymentMethod":cashOnDelivery,
                 "currentStatus":status,
+                
 
             })
             const savedData = await order.save();
@@ -804,6 +811,7 @@ exports.placeOrder2 = async(req,res)=>{
         "date": formattedDate,
         "paymentMethod":cashOnDelivery,
         "currentStatus":status,
+        
 
     })
     const savedData = await order.save();
@@ -967,7 +975,6 @@ exports.oders = async(req,res)=>{
     res.redirect('/getAccount');
   }
 }
-
 
 //cancel orders by user
 exports.cancelOrder = async(req,res)=>{

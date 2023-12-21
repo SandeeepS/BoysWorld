@@ -14,6 +14,7 @@ const sch ={
     date:String,
     paymentMethod:String,
     currentStatus:String,
+    
 }
 
 const orderModel = mongoose.model("orders",sch);

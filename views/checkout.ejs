@@ -219,7 +219,7 @@
 					<div class="modal-style">
 						<div class="container">
 							<% for(let i = 0 ;i< address.length;i++) {%>
-							<a href="/setDefaultAddressFromCheckout/<%= address[i]._id%>" data-index="<%= i %>">
+							<a href="/setDefaultAddressFromCheckout/<%= address[i]._id%>?productId=<%=product[0]._id%>&quantity=<%=quantity%>" data-index="<%= i %>" >
                             <div class="row">
 								<div class="box-sub">
 									<div>
@@ -308,7 +308,7 @@
 			<div class="row">
 				<div class="box-sub">
 					<div>
-						<input type="radio" name="checkout" value="online-payment" >
+						<input type="radio" name="checkout" value="online-payment" disabled>
 					</div>
 					<div class="cash">
 						<p>Online Payment</p>
