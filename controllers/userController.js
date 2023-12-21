@@ -310,8 +310,8 @@ exports.verifyOtp = async (req, res) => {
     try{
       const productId = req.params.id;
       const userId = req.session.user
-
-      console.log(productId);
+      const productId2 =new mongoose.Types.ObjectId(productId);
+      console.log(productId2);
       console.log(userId);
 
       const productData = await productModel.findById(productId,{isDeleted:false}).exec();
@@ -333,7 +333,7 @@ exports.verifyOtp = async (req, res) => {
 
       if(existingCartItem ===-1){
         const newCartItem = {
-          productId:productId,
+          productId:productId2,
           quantity:1,
           price:productPrice
         };
