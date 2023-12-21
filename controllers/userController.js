@@ -735,6 +735,8 @@ exports.placeOrder = async (req, res) => {
     const { cartDetail,totalAmount} = req.body;
     console.log(cartDetail);
 
+
+
     for(let i=0;i<cartDetail.length;i++){
       const cashOnDelivery = "cashOnDelivery";
       const status = "Conformed";
@@ -743,6 +745,7 @@ exports.placeOrder = async (req, res) => {
       const productName = cartDetail[i].productDetail[0].productName;
       const userName = cartDetail[i].name;
       const date = new Date();
+      const formattedDate = `${date.toLocaleDateString('en-US')}, ${date.toLocaleTimeString('en-US')}`;
       const randomId = 10000+Math.floor(Math.random()*90000);
       const total = totalAmount;
       const currentAddress = cartDetail[i].currentAddress[0];
@@ -756,7 +759,7 @@ exports.placeOrder = async (req, res) => {
                 "productName":productName,
                 "totalAmount":total,
                 "currentAddress":currentAddress,
-                "date":date,
+                "date": formattedDate,
                 "paymentMethod":cashOnDelivery,
                 "currentStatus":status,
 
@@ -899,22 +902,25 @@ exports.verifyPayment = async(req,res)=>{
 exports.oders = async(req,res)=>{
   try{
     const userId = req.session.user;
-    const orderedProductId =[];
     const userData = await UserModel.findById(userId).exec();
-    const oders = await orderModel.find({userId:userId}).exec();
-    console.log("oders:",oders);
-    for(let i=0;i<oders.length;i++){
-      orderedProductId.push(oders[i].productId);
-
-    }
-    console.log("productId:",orderedProductId);
-    const products = [];
-    for(let i=0;i<orderedProductId.length;i++){
-      const product = await productModel.findById(orderedProductId[i]).exec();
-      products.push(product);
-    }
-    console.log("products:",products);
-    res.render('orders',{oders,userData,products});
+    const userIdObj =  userData._id;
+    console.log("userid",userIdObj);
+    const orderDetails = await orderModel.aggregate([
+      {
+        $match:{userId:userIdObj}
+      },
+      {
+        $lookup:{
+          from:'products',
+          localField:'productId',
+          foreignField:'_id',
+          as:"productDetail"
+        }
+      }
+  ]).exec();
+  console.log("corderDetails :",orderDetails )
+  console.log("pro:",orderDetails [0].productDetail);
+  res.render('orders',{orderDetails});
 
   }catch(err){
     console.error("error while getting oders",err);

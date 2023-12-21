@@ -3,7 +3,9 @@ const sch ={
     userId:{
         type:mongoose.Schema.ObjectId,
     },
-    productId:String,
+    productId:{
+        type:mongoose.Schema.ObjectId,
+    },
     orderId:String,
     userName:String,
     productName:String,

@@ -256,24 +256,14 @@
                                     <% for(let i = 0;i< oders.length;i++){ %>
                                                       <% const productId = oders[i].productId %>
                                                       <% let product = {} %>
-                                                      <% for(let j = 0; j< products.length;j++){ %>
-                                                                <% if(products[j].id === productId){ %>
-                                                                      <% product = products[j] %>
-                                                          
-                                                                      <% const randomId = 10000 + Math.floor(Math.random() * 90000) %>
-                                                                      <% product.randomId = randomId %>
-                                                                      <% const orderDate = new Date() %>
-                                                                      <% product.orderDate = orderDate.toISOString() %>
-                                                                      <% break %>
-                                                                <% }   %>                      
-                                                      <% } %>
+                                                   
                                                       <% if(product) { %>
                                                       <tr>
-                                                          <td><%=product.randomId%></td>
+                                                          <td><%=oders[i].orderId%></td>
                                                           <td><%=oders[i].userDetails[0].name %></td>
-                                                          <td><%=product.productName %></td>
+                                                          <td><%=oders[i].productName %></td>
                                                           <td>R <%=oders[i].totalAmount  %></td>
-                                                          <td><%= formatDate(product.orderDate) %></td>    
+                                                          <td><%= oders[i].date %></td>    
                                                           <td><%= oders[i].paymentMethod%></td>     
                                                           <td><%=oders[i].currentStatus%></td>  
                                                             

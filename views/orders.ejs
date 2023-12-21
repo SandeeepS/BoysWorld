@@ -154,59 +154,62 @@
 
 	<section id="cart_items">
 		<div class="container">
-			<% for (let i = 0; i < oders.length; i++) { %>
+			<% for (let i = 0; i < orderDetails.length; i++) { %>
+			   <% for(let j=0;j< orderDetails[i].productDetail.length;j++){ %>
+
 			  
-			  <% if (products) { %>
-				<div class="a-box">
-				  <div class="content">
-					<div class="product-details">
-					<div>
-					  <img src="/views/productImages/<%= products[i].image[0]%>" alt="<%= products[i].productName %>">
-					  
-					</div>
-					<div>
-						<h6><%= products[i].productName %></h6>
-					  <p>Price: $<%= oders[i].price %></p>
-					  <p><h6>Quantity: <%= oders[i].quantity %></h6></p>
-					  <p><h5><%= products[i].discription %></h5></p>
-					</div>
-				    </div>
-						<div class="address">
-							<h5>Delivery Address</h5>
-							<div>
-								<% if (oders[i].currentAddress){ %>
+								<% if (orderDetails[i].productDetail[j]) { %>
+									<div class="a-box">
+									<div class="content">
+										<div class="product-details">
+										<div>
+										<img src="/views/productImages/<%= orderDetails[i].productDetail[j].image[0]%>" alt="<%= orderDetails[i].productDetail[j].productName %>">
+										
+										</div>
+										<div>
+											<h6><%= orderDetails[i].productDetail[j].productName %></h6>
+										<p>Price: $<%= orderDetails[i].productDetail[j].price %></p>
+										<p><h6>Quantity: <%=  %></h6></p>
+										<p><h5><%= orderDetails[i].productDetail[j].discription %></h5></p>
+										</div>
+										</div>
+											<div class="address">
+												<h5>Delivery Address</h5>
+												<div>
+													<% if (orderDetails[i].currentAddress[0]){ %>
 
-								
-								<h5><%= oders[i].currentAddress[0].name%>,</h5>
-								<h5> <%= oders[i].currentAddress[0].number %>,</h5>
-								<h5><%= oders[i].currentAddress[0].houseName%>,</h5>
-								<h5><%= oders[i].currentAddress[0].houseNumber%></h5>
-								<h5> <%= oders[i].currentAddress[0].state%>,</h5>
-								<h5><%= oders[i].currentAddress[0].city%>,</h5>
-								<h5><%= oders[i].currentAddress[0].street%>,</h5>
-								<h5><%= oders[i].currentAddress[0].landMark%></h5>
-								<h5><%= oders[i].currentAddress[0].pin%>,</h5>
+													
+													<h5><%= orderDetails[i].currentAddress[0].name%>,</h5>
+													<h5> <%= orderDetails[i].currentAddress[0].number %>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].houseName%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].houseNumber%></h5>
+													<h5> <%= orderDetails[i].currentAddress[0].state%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].city%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].street%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].landMark%></h5>
+													<h5><%= orderDetails[i].currentAddress[0].pin%>,</h5>
 
+													<% } else { %>
+														<p>select address</p>
+													<% } %>
+												</div>
+											</div>
+					
+											<div class="order-Status" style="padding-left: 70px;padding-top:90px">
+												<h6>(<%=orderDetails[i].currentStatus%>)</h6>
+											</div>
+
+										<div class="cancel-order">
+											<a href="#" class="cancelOrder" data-orderId="<%= orderDetails[i]._id %>">Cancel order</a>
+										</div>
+									</div>
+									</div>
 								<% } else { %>
-									<p>select address</p>
+									<p> product data is not getting</p>
 								<% } %>
-							</div>
-						</div>
- 
-						<div class="order-Status" style="padding-left: 70px;padding-top:90px">
-							<h6>(<%=oders[i].status%>)</h6>
-					    </div>
-
-					<div class="cancel-order">
-                           <a href="#" class="cancelOrder" data-orderId="<%= oders[i]._id %>">Cancel order</a>
-					</div>
-				  </div>
-				</div>
-			  <% } else { %>
-				<p> product data is not getting</p>
-			  <% } %>
+							<%}%>
 						<!-- first modal for conformation -->
-					<div id="conformModal-<%= oders[i]._id %>" class="modal">
+					<div id="conformModal-<%= orderDetails[i]._id %>" class="modal">
 						<div class="modal-content">
 							<span id="conformModalClose" class="close">&times;</span>
 							<div class="modal-style">
@@ -214,7 +217,7 @@
 									<p>Are you sure for cancelling the order?</p>
 								</div>
 								<div style="display: flex;">
-									<a href="#" class="conformCancelOrder" orderId="<%= oders[i]._id %>"><h3>Yes</h3></a>
+									<a href="#" class="conformCancelOrder" orderId="<%= orderDetails[i]._id %>"><h3>Yes</h3></a>
 									 <a href="/orders" style="padding-left: 25px;"><h3>No</h3></a>
 									
 								</div>
