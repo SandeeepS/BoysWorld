@@ -448,10 +448,19 @@ exports.getCheckoutPage = async(req,res)=>{
       const address = userData.address;
       const currentAddress = userData.currentAddress;
       const productId = req.query.productId;
+      const productId2 = new mongoose.Types.ObjectId(productId);
       const quantity = req.query.quantity;
-      const product = await productModel.findById(productId).exec();
-      const totalPrice = product.price * quantity;
-      res.render('checkout',{address,currentAddress,product,quantity,totalPrice});
+      const product2 = await productModel.findById(productId).exec();
+      const totalPrice = product2.price * quantity;
+      const product = await productModel.aggregate([
+        {
+          $match:{
+            '_id':productId2
+          }
+        }
+      ])
+      console.log("productdetails:", product);
+      res.render('checkout',{address,currentAddress, product,quantity,totalPrice});
 
   }catch(err){
     console.error("error while getting checkout",err);
@@ -476,10 +485,19 @@ exports.getCheckoutPage2 = async(req,res)=>{
         },
         {
          $unwind:"$cart"
+        },
+        {
+          $lookup:{
+            from:'products',
+            localField:'cart.productId',
+            foreignField:'_id',
+            as:"productDetail"
+          }
         }
-    ]);
-    console.log("cart details:",cartDetails);
-    res.render('checkout',{address,currentAddress,cart,totalAmount});
+    ]).exec();
+    console.log("cartdetails:",cartDetails)
+    console.log("pro:",cartDetails[0].productDetail);
+    res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
 
   }catch(err){
       console.log("error in getcheckout2 ",err);

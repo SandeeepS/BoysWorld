@@ -353,27 +353,28 @@
           </table>
 	</form>
 
-	
-		<% if(product) {%>
+	<% if(cartDetails){%>
+		<% for(let i=0;i<cartDetails.length;i++){ %>
 
-		
+	
 		<div class="a-box">
 		   <div class="content">
-			       <div class="photo">
-					 <img src="/views/productImages/<%=product[0].image[0]%>" alt="">
+				   <div class="photo">
+					 <img src="/views/productImages/<%=cartDetails[i].productDetail.image%>" alt="">
 				   </div>
 				   <div class="discription">
-                      <h5><%=product[0].name%></h5>
-					  <h5><%=product[0].discription%></h5>
-					  <h5>R <%=product[0].price%></h5>
-					  <h5>Qty:<%=quantity%></h5>
-					  <h5>Order Total : <%=totalPrice%></h5>
+					  <h5><%=cartDetails[i].productDetail.name%></h5>
+					  <h5><%=cartDetails[i].productDetail.discription%></h5>
+					  <h5>R <%=cartDetails[i].productDetail.price%></h5>
+					  <h5>Qty:<%=cartDetails[i].cart.quantity%></h5>
+					  <h5>Order Total : <%=cartDetails[i].cart.price%></h5>
 				   </div>
-                  
 		   </div>
 		</div>
-		<% } %>
 
+	    <% } %>
+		<% } %>
+	
 
 	
 
@@ -533,7 +534,7 @@
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const modal2 = document.getElementById("paymentSuccessModal");
-			const productId = <%-JSON.stringify(product._id)%>;
+			const productId = <%-JSON.stringify(cartDetails)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
 			const currentAddress = <%-JSON.stringify(currentAddress)%>;
