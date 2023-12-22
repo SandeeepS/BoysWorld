@@ -58,6 +58,9 @@ exports.shopPage = async(req,res)=>{
     try{
         const productData = await productModel.find({isDeleted:false}).exec();
         const categoryData = await categoryModel.find({isDelete:false}).exec();
+        console.log("productdata:",productData);
+        console.log("--------------");
+        console.log("categorydata",categoryData);
       
         res.render('shop',{product:productData,category:categoryData});
 
@@ -70,10 +73,28 @@ exports.shopPage = async(req,res)=>{
 }
 
 //get product by category
-exports.getProductsByCategory = async(req,res)=>{
+exports.categoryBasedProduct = async(req,res)=>{
   try{
-    const selectedCategory = req.query.category;
-    console.log(selectedCategory);
+    const {categoryId } = req.body;
+    const  newCategoryId = new mongoose.Types.ObjectId(categoryId);
+    console.log("category id",newCategoryId);
+    const categoryData = await categoryModel.find({isDelete:false}).exec();
+    const productData = await productModel.aggregate([
+           {
+            $match:{
+              $and:[
+                {isDeleted:false},
+                {category:newCategoryId}
+              ]
+            },
+           }
+    ]).exec();
+
+    console.log("products:",productData);
+    res.render('shop',{product:productData,category:categoryData});
+
+
+
   }catch(err){
     console.error("error getting the product in the category",err);
   }

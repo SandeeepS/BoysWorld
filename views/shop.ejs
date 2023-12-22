@@ -210,14 +210,14 @@
 						
 						<h2>Category</h2>
 					    <% for(const cat of category){ %>
-						<div class="panel-group category-products" id="accordian">
+						<div class="panel-group category-products categorySelect" id="accordian" data-categoryId="<%=cat._id%>">
 							<div class="panel panel-default">
 								
 								<div class="panel-heading">
 									
 									<h4 class="panel-title">
 										
-										<a  class="category-link" data-category="<%=cat.categoryName%>" href="#">
+										<a  class="category-link" data-categoryId="<%=cat._id%>" href="#" class="categorySelect">
 											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
 											<%=cat.categoryName%>
 										</a>	
@@ -337,60 +337,34 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Function to handle category link clicks
-			function handleCategoryClick(event) {
-				event.preventDefault();
-	
-				// Get the selected category
-				const selectedCategory = event.target.dataset.category;
-	
-				// Fetch products for the selected category
-				fetch(`/getProductsByCategory?category=${selectedCategory}`)
-					.then(response => response.json())
-					.then(products => {
-						// Clear the previous content of the product container
-						const productContainer = document.getElementById("product-container");
-						productContainer.innerHTML = "";
-	
-						products.forEach(product => {
-							// Create HTML for each product and append it to the container
-							const productHTML = `
-								<div class="col-sm-4">
-									<!-- Product HTML goes here -->
-									<!-- You can use the product data to dynamically generate the product HTML -->
-								</div>
-							`;
-							productContainer.innerHTML += productHTML;
-						});
-	
-						// Detach existing event listeners before attaching new ones
-						detachCategoryClickListeners();
-						attachCategoryClickListeners();
-					})
-					.catch(error => console.error("Error fetching products:", error));
+		document.addEventListener("DOMContentLoaded",function(){
+			const selectedCategory = document.querySelectorAll(".categorySelect");
+			Array.from(selectedCategory).forEach((selectedCategory,i)=>{
+				selectedCategory.addEventListener("click",function(event){
+						event.preventDefault();
+						const categoryId = this.getAttribute("data-categoryId");
+						updateCategoryProduct(categoryId);
+				})
+			})
+
+			function updateCategoryProduct(categoryId){
+				
+                $.ajax({
+					type:'POST',
+					url:'/categoryBasedProduct',
+					data:{
+						categoryId
+					},
+					success:function(response){
+						console.log(response);
+					},
+					error:function(err){
+						console.log("error getting product based on category");
+					}
+				})
 			}
-	
-			// Attach click event listeners to category links
-			function attachCategoryClickListeners() {
-				const categoryLinks = document.querySelectorAll(".category-link");
-				categoryLinks.forEach(link => {
-					link.addEventListener("click", handleCategoryClick);
-				});
-			}
-	
-			// Detach click event listeners from category links
-			function detachCategoryClickListeners() {
-				const categoryLinks = document.querySelectorAll(".category-link");
-				categoryLinks.forEach(link => {
-					link.removeEventListener("click", handleCategoryClick);
-				});
-			}
-	
-			attachCategoryClickListeners();
-		});
+		})
 	</script>
-	
 	
 	
 </body>
