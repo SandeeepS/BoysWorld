@@ -91,7 +91,7 @@ exports.categoryBasedProduct = async(req,res)=>{
     ]).exec();
 
     console.log("products:",productData);
-    res.render('shop',{product:productData,category:categoryData});
+    res.status(200).json({success:true,product:productData,category:categoryData});
 
 
 

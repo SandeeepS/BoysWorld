@@ -232,14 +232,9 @@
 				<div class="col-sm-9 padding-right">
 					<div id="product-container" class="features_items"></div>
 
-					<div class="features_items">
+					<div class="features_items" id="feature">
 						<!--features_items-->
-
-
-
-
 						<h2 class="title text-center">Features Items</h2>
-
 						<% for(const pro of product){ %>
 
                         <!-- 							
@@ -264,9 +259,9 @@
 						</div> -->
 
 
-                             <div class="col-sm-4">
+                             <div class="col-sm-4" id="data">
                                 <div class="product-image-wrapper">
-								<div class="single-products" >
+								<div class="single-products" id="single-porduct">
 									
 										
 									<div class="productinfo text-center">
@@ -356,7 +351,31 @@
 						categoryId
 					},
 					success:function(response){
-						console.log(response);
+					    if (response && response.product && response.category) {
+							const productContainer = document.getElementById('feature');
+							const feature = document.getElementById('feature');
+							productContainer.innerHTML = '';
+							let productHTML = '';
+							response.product.forEach((pro) => {
+								productHTML += `
+									<div class="col-sm-4">
+										<div class="product-image-wrapper">
+											<div class="single-products">
+												<div class="productinfo text-center">
+													<img src="/views/productImages/${pro.image[1]}" alt="" height="400px" width="100px" style="object-fit: cover;">
+													<p>${pro.discription}</p>
+													<a href="/selectedProduct/${pro._id}" class="btn btn-default add-to-cart">Buy Now</a>
+													<a href="/addToCart/${pro._id}" class="btn btn-default add-to-cart buy-now-btn" data-product-id="${pro._id}"  data-image="/views/productImages/${pro.image[1]}">Add to Cart</a>
+												</div>
+											</div>
+										</div>
+									</div>`;
+							    
+								productContainer.innerHTML = productHTML;
+							});
+						} else {
+							console.error('Invalid response format');
+						}
 					},
 					error:function(err){
 						console.log("error getting product based on category");
