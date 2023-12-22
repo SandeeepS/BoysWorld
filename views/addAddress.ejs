@@ -58,6 +58,14 @@
 				align-items: center; 
 			/
 			  }
+
+			  
+		</style>
+		<style>
+			.error-message {
+				color: red;
+				display: none;
+			}
 		</style>
 		
 
@@ -152,10 +160,10 @@
 									<div class="productinfo text-center">
 									
 										<div  class="profile-photo">
-											<img src="/views/productImages/mastang.jpg" alt="" id="zoom-image">
+											<img src="/views/productImages/profile.jpg" alt="" id="zoom-image">
 										</div>
                                         <div class="panel-group category-products" id="accordian"><!--category-productsr-->
-                                            <div class="panel panel-default">
+                                            <!-- <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <h4 class="panel-title">
                                                         <a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
@@ -176,9 +184,15 @@
                                                     </h4>
                                                 </div>
                                                 
-                                            </div>
-                                            
-                                            <div class="panel panel-default">
+                                            </div> -->
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													<h4 class ="panel-title">
+														<a href="/showAddress">Show Address</a>
+													</h4>
+												</div>
+											</div>
+                                            <!-- <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <h4 class="panel-title">
                                                         <a data-toggle="collapse" data-parent="#accordian" href="#womens">
@@ -188,12 +202,12 @@
                                                     </h4>
                                                 </div>
                                                
-                                            </div>
-                                            <div class="panel panel-default">
+                                            </div> -->
+                                            <!-- <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <h4 class="panel-title"><a href="#">change password</a></h4>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             
                                         </div>
                                     </div>
@@ -203,22 +217,24 @@
 					</div>
 				</div>
 					<div class="col-sm-8">
-                      
+						<div class="error-message" id="error-message">
+							
+						</div>
                         <p><h4>Add Address</h4></p>
                         <div class="form-one">
                             <form action="/address" method="post" >
-                                <input type="text" placeholder="Name" name="name">
-                                <input type="text" placeholder="Number" name="number">
-                                <input type="text" placeholder="Email" name="email">
-                                <input type="text" placeholder="House Name" name="houseName">
-                                <input type="text" placeholder="House Number" name="houseNumber">
-                                <input type="text" placeholder="State" name="state">
-                                <input type="text" placeholder="city" name="city">
-                                <input type="text" placeholder="street" name="street">
-                                <input type="text" placeholder="Landmark" name="landmark">
-                                <input type="text" placeholder="Pin Code" name="pin">
+                                <input type="text" placeholder="Name" name="name" id="name">
+                                <input type="text" placeholder="Number" name="number" id="number">
+                                <input type="text" placeholder="Email" name="email" id="email">
+                                <input type="text" placeholder="House Name" name="houseName" id="houseName">
+                                <input type="text" placeholder="House Number" name="houseNumber" id="houseNumber">
+                                <input type="text" placeholder="State" name="state" id="state">
+                                <input type="text" placeholder="city" name="city" id="city">
+                                <input type="text" placeholder="street" name="street" id="street">
+                                <input type="text" placeholder="Landmark" name="landmark" id="landmark">
+                                <input type="text" placeholder="Pin Code" name="pin" id="pin">
                                 <!-- <a class="btn btn-default update" href="">Update</a> -->
-                                <button type="submit" class="btn btn-default update" >Add Address</button>
+                                <button type="submit" class="btn btn-default update" onclick="return  validate()">Add Address</button>
                                 <br>
                                 <br>
                             </form>
@@ -274,6 +290,39 @@
 	<script src="../js/price-range.js"></script>
     <script src="../js/jquery.prettyPhoto.js"></script>
     <script src="../js/main.js"></script>
+
+	<script>
+		function validate(){
+			const name = document.getElementById("name").value;
+			const number = document.getElementById("number").value;
+			const email= document.getElementById("email").value;
+			const houseName = document.getElementById("houseName").value;
+			const state = document.getElementById("state").value;
+			const city = document.getElementById("city").value;
+			const street = document.getElementById("street").value;
+			const landmark = document.getElementById("landmark").value;
+			const pin= document.getElementById("pin").value;
+			const errorMessage = document.getElementById("error-message");
+
+			if (name==='' || name===null || number==="" || number===null || email==="" || email===null || houseName==="" || houseName===null || state==="" || state===null || city==="" || city===null || street==="" || street===null || landmark==="" || landmark===null || pin==="" || pin===null) {
+				errorMessage.innerText = "Please fill in all the fields.";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}else{
+				
+				return true;
+			}
+
+
+
+
+		}
+	</script>
 	
 
 </body>
