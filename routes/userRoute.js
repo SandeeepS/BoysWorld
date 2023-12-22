@@ -15,8 +15,8 @@ route.post('/categoryBasedProduct',userController.categoryBasedProduct);
 route.get('/contact',auth.user,userController.contactPage);
 route.get('/selectedProduct/:id',auth.user,userController.selectedProduct)
 route.get('/getOtpPage',auth.isUser,userController.getOtpPage);
-route.get('/getCheckout',userController.getCheckoutPage);
-route.get('/getCheckout2',userController.getCheckoutPage2);
+route.get('/getCheckout',auth.user,userController.getCheckoutPage);
+route.get('/getCheckout2',auth.user,userController.getCheckoutPage2);
 
 
 //varifying otp
@@ -34,18 +34,18 @@ route.post('/logout',userController.logout);
 
 route.post('/signupUser',userController.signup)
 
-route.post('/placeOrder',userController.placeOrder);
-route.post('/placeOrder2',userController.placeOrder2);
-route.post('/generateRazorpay',userController.generateRazorpay);
-route.post('/verify-payment',userController.verifyPayment);
+route.post('/placeOrder',auth.user,userController.placeOrder);
+route.post('/placeOrder2',auth.user,userController.placeOrder2);
+route.post('/generateRazorpay',auth.user,userController.generateRazorpay);
+route.post('/verify-payment',auth.user,userController.verifyPayment);
 
-route.post('/updateProfileDetails',userController.updateProfileDetails);
-route.post('/changePassword',userController.changePassword);
+route.post('/updateProfileDetails',auth.user,userController.updateProfileDetails);
+route.post('/changePassword',auth.user,userController.changePassword);
 
 //cartegoty
 // route.get('/category',userController);
 
-route.get('/sportswear',userController.sportsWear);
+route.get('/sportswear',auth.user,userController.sportsWear);
 
 //route for navbar
 route.get('/getAccount',auth.user,userController.getAccount);

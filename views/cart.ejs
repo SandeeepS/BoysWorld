@@ -196,7 +196,7 @@
 				<div class="col-sm-6"  style="width: 100%;">
 					<div class="total_area">
 						<ul>
-							<li>Cart Sub Total <span id="cartTotalAmount">$<%=totalAmount%></span></li>
+							<li>Cart Sub Total <span id="cartTotalAmount">₹<%=totalAmount%></span></li>
 							
 						</ul>
 							
@@ -269,7 +269,7 @@
 					});
 			
 					// Update cart total amount
-					cartTotalAmountElement.innerText = "$" + totalAmount.toFixed(2);
+					cartTotalAmountElement.innerText = "₹" + totalAmount.toFixed(2);
 		  
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
