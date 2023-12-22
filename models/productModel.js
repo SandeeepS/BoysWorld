@@ -10,7 +10,9 @@ const sch = {
         type:Boolean,
         default:false,
     },
-    category:String,
+    category:{
+        type:mongoose.Schema.ObjectId,
+    },
 
 }
 
