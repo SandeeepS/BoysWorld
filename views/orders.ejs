@@ -176,21 +176,29 @@
 											<div class="address">
 												<h5>Delivery Address</h5>
 												<div>
-													<% if (orderDetails[i].currentAddress){ %>
+													<% if (orderDetails[i].currentAddress[0]){ %>
 
 													
-													<h5><%= orderDetails[i].currentAddress.name%>,</h5>
-													<h5> <%= orderDetails[i].currentAddress.number %>,</h5>
-													<h5><%= orderDetails[i].currentAddress.houseName%>,</h5>
-													<h5><%= orderDetails[i].currentAddress.houseNumber%></h5>
-													<h5> <%= orderDetails[i].currentAddress.state%>,</h5>
-													<h5><%= orderDetails[i].currentAddress.city%>,</h5>
-													<h5><%= orderDetails[i].currentAddress.street%>,</h5>
-													<h5><%= orderDetails[i].currentAddress.landMark%></h5>
-													<h5><%= orderDetails[i].currentAddress.pin%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].name%>,</h5>
+													<h5> <%= orderDetails[i].currentAddress[0].number %>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].houseName%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].houseNumber%></h5>
+													<h5> <%= orderDetails[i].currentAddress[0].state%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].city%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].street%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].landMark%></h5>
+													<h5><%= orderDetails[i].currentAddress[0].pin%>,</h5>
 
 													<% } else { %>
-														<p>select address</p>
+														<h5><%= orderDetails[i].currentAddress.name%>,</h5>
+														<h5> <%= orderDetails[i].currentAddress.number %>,</h5>
+														<h5><%= orderDetails[i].currentAddress.houseName%>,</h5>
+														<h5><%= orderDetails[i].currentAddress.houseNumber%></h5>
+														<h5> <%= orderDetails[i].currentAddress.state%>,</h5>
+														<h5><%= orderDetails[i].currentAddress.city%>,</h5>
+														<h5><%= orderDetails[i].currentAddress.street%>,</h5>
+														<h5><%= orderDetails[i].currentAddress.landMark%></h5>
+														<h5><%= orderDetails[i].currentAddress.pin%>,</h5>
 													<% } %>
 												</div>
 											</div>
