@@ -561,23 +561,26 @@ exports.getCart = async(req,res)=>{
 exports.updateQuantity = async (req, res) => {
   try {
     const { productId, newQuantity ,newTotal} = req.body;
+    const newProductId = new mongoose.Types.ObjectId(productId);
+    console.log(newProductId);
     console.log(newTotal);
-    const userId = req.session.user; // Assuming user is authenticated
-
-    // Find the user and their cart
+    const userId = req.session.user; 
     const user = await UserModel.findById(userId).exec();
-    
-    // Check if the product exists in the user's cart
-    const cartItem = user.cart.find((item) => item.productId === productId);
+    const cartItem = await UserModel.aggregate([
+      {
+        $match:{"_id":userId},
+
+      },{
+        $unwind: "$cart"
+      }
+    ])
+    console.log("cartItem:",cartItem);
     console.log(cartItem.quantity);
     if (cartItem ) {
-      // Update the quantity
+      
       cartItem.quantity = newQuantity;
       cartItem.price = newTotal;
-
-      // Save the updated user data
       await user.save();
-    
       res.json({ newQuantity ,newTotal});
     }
      else {

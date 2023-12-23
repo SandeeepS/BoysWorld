@@ -174,7 +174,7 @@
 								
 							</td>
 							<td class="cart_total">
-							     <p class="cart_total_price" total-Price="<%=userData[i].price %>"><%= userData[i].price %></p>
+							     <p class="cart_total_price" total-Price="<%=userData[i].price %>">₹<%= userData[i].price %></p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= products[i]._id %>"><i class="fa fa-times"></i></a>
@@ -261,20 +261,24 @@
 			const quantityValues = document.querySelectorAll(".cart-quantity-value");
 			const totalPrice  = document.querySelectorAll(".cart_total_price");
 			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
-          
+
 			        let totalAmount = 0;
 			        // Calculate total amount on page load
-					totalPrice.forEach((totalPrice) => {
+					totalPrice.forEach((totalPrice,i) => {
+						
+					
 						totalAmount += parseFloat(totalPrice.getAttribute("total-Price"));
+						
 					});
 			
 					// Update cart total amount
-					cartTotalAmountElement.innerText = "₹" + totalAmount.toFixed(2);
+					cartTotalAmountElement.innerText = "₹" + totalAmount
+				
 		  
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
 				event.preventDefault();
-				const productId = this.getAttribute("data-productId");
+				const productId = this.getAttribute("data-productid");
 				updateQuantity(i, 1,productId);
 			  });
 			});
@@ -288,11 +292,16 @@
 			});
 		  
 			function updateQuantity(index, change,productId) {
+ 
+			
+
 			  const currentQuantity = parseInt(quantityValues[index].innerText);
-			  const currentPrice = parseFloat(totalPrice[index].innerText);
-			  const total = parseInt(totalPrice[index].innerText);
-			  console.log(total);
+			  const total = parseFloat(totalPrice[index].getAttribute("total-Price"));
 			  const newQuantity = currentQuantity + change;
+			  console.log("currenrtQuantity",currentQuantity);
+			  console.log("total",total);
+			  console.log("newQuantity",newQuantity);
+
 			  
 			   // Replace with actual product ID
 			   
@@ -301,6 +310,8 @@
 			   } 
 
 			   const newTotal = (total/currentQuantity)*newQuantity;
+			  console.log("newTotal",newTotal);
+
 
 			  fetch("/update-quantity", {
 				method: "POST",
@@ -313,6 +324,7 @@
 				.then((data) => {
 				  quantityValues[index].innerText = data.newQuantity;
 				  totalPrice[index].innerText = data.newTotal;
+				 
 				})
 				.catch((error) => {
 				  console.error("Error updating the quantity:", error);
@@ -326,6 +338,8 @@
             cartTotalAmountElement.innerText = "$" + totalAmount.toFixed(2);
 
 			}
+
+			
 		  });
 		  
 	</script>
