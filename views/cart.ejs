@@ -83,7 +83,7 @@
 								<li><a href="/getAccount"><i class="fa fa-user"></i> Account</a></li>
 								<!-- <li><a href="/getWishlist"><i class="fa fa-star"></i> Wishlist</a></li>
 								<li><a href="/getcheckout"><i class="fa fa-crosshairs"></i> Checkout</a></li> -->
-								<li><a href="/getCart" class="active"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+								<li><a href="/getCart" class="active"><i class="fa fa-shopping-cart"></i> Cart (<span id="cartCounter"><%=userData.length %></span>)</a></li>
 								
 							</ul>
 						</div>
@@ -253,7 +253,6 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
- 
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			const incrementButtons = document.querySelectorAll(".cart-quantity-button1");
