@@ -118,10 +118,7 @@ exports.getCategories = async (req, res) => {
 
 exports.getOrders = async(req,res)=>{
     try{
-        
-     
       
-        
         const products = await productModel.find().exec();
         const oders = await orderModel.aggregate([
             {
@@ -130,6 +127,11 @@ exports.getOrders = async(req,res)=>{
                     localField: 'userId',
                     foreignField:'_id',
                     as:"userDetails"
+                }
+            },
+            {
+                $sort:{
+                    date:-1
                 }
             }
         ]).exec();
