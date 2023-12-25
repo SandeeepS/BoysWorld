@@ -291,7 +291,7 @@
 			const password = document.getElementById('password').value;
 			const errorMessage = document.getElementById('error-messsage');
 
-			if(userid === ""||userid ===null||password ===""||password===null){
+			if(userid === ""  && password ==="" ){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
 
@@ -301,9 +301,30 @@
                 }, 3000);
 				return false;
 			
-		    }else{
-				return true;
+		    }
+			if(userid === ""){
+					
+				errorMessage.innerText ="please enter your Email id";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
 			}
+
+			if(password === ""){
+				errorMessage.innerText ="please enter your Password";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
+			
 	    }
 
 	</script>
