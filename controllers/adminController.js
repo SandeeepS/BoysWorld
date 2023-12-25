@@ -215,9 +215,20 @@ exports.addcategoryPage = async(req,res)=>{
 exports.addingCategory = async(req,res)=>{
     try{
         const {categoryName} = req.body;
-        console.log(categoryName);
-        const newData = new categoryModel({categoryName});
-        await newData.save();
+        console.log("catyer",categoryName);
+        const existingCategory = await categoryModel.findOne({"categoryName":categoryName}).exec();
+
+       if(existingCategory){
+           await categoryModel.updateOne({"categoryName":categoryName},{$set:{"isDelete":false}});
+           console.log("category already exists .updated existing category");
+       }else{
+         const newCategory = new categoryModel({
+           "categoryName":categoryName,
+            "isDelete":false
+         });
+         await newCategory.save();
+         console.log("category added successfully");
+       }
         res.redirect('/admin/categories');
     }catch(err){
         console.error("error while creating categories",err);
