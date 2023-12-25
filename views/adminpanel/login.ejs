@@ -91,7 +91,7 @@
 			const password = document.getElementById('adPassword').value;
 			const errorMessage = document.getElementById('error-messsage');
 
-			if(email === ""||email ===null||password ===""||password===null){
+			 if(email === "" && password ===""){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
 
@@ -101,9 +101,28 @@
                 }, 3000);
         return false;
 			
-		    }else{
-				return true;
-			}
+		    }
+        if(email === ""){
+          errorMessage.innerText = "Please enter the Email ";
+          errorMessage.style.display = "block";
+
+          setTimeout(function () {
+              errorMessage.style.display = "none";
+          }, 3000);
+          
+          return false;
+        }
+
+        if(password === ""){
+          errorMessage.innerText = "Please enter the Password ";
+          errorMessage.style.display = "block";
+
+          setTimeout(function () {
+              errorMessage.style.display = "none";
+          }, 3000);
+          
+          return false;
+        }
 	    }
 
 	</script>
