@@ -19,6 +19,7 @@ route.get('/getCheckout',auth.user,userController.getCheckoutPage);
 route.get('/getCheckout2',auth.user,userController.getCheckoutPage2);
 
 
+
 //varifying otp
 route.post('/verifyOtp',auth.isUser,userController.verifyOtp);
 route.post('/resendOTP',userController.resendOTP);
@@ -29,6 +30,7 @@ route.post('/resetPasswordLogin',userController.resetPasswordLogin);
 
 
 route.post('/loginUser',auth.isUser,userController.userEntry);
+route.get('/reSendotpResetPassword',userController.reSendotpResetPassword)
 route.post('/logout',userController.logout);
 
 

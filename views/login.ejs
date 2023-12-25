@@ -75,6 +75,13 @@
 				height: 100%;
 				padding-top: 20%;
 			}
+			.form-one {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+			  }
     </style>
 </head><!--/head-->
 
@@ -167,6 +174,7 @@
 									
 								<a href="/signup" class="btn btn-default update " id="signinBtn" style="display: none;" >Signin</a>
 								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="sentOTP()" id="sentOtp">Sent OTP</a>
+
 							 </form>
 						  </div>
 						
@@ -189,7 +197,10 @@
 								
 								<input type="text" name="otpConform" id="otpConform" placeholder="Enter the Otp " >
 								<div class="error-message" id="error-message2"></div>
+								<p id="otpExpiryTime"></p>
 								 <a href="#" class="btn btn-default update " id="conformOtp" onclick="conformOtp()" >Conform OTP</a>
+								 <a href="#" class="btn btn-default update " id="reSentOtp" >Resent OTP</a>
+
 							 </form>
 						  </div>
 						
@@ -467,6 +478,9 @@
 				}
 		}
 
+		
+	
+
 
 		function resetpassword(){
 			const newPass = document.getElementById("newPass").value;
@@ -536,6 +550,68 @@
 					}
 				}
 		}
+	</script>
+
+	<script>
+		const resendButton = document.getElementById('reSentOtp');
+		const otpExpiryTimeElement = document.getElementById('otpExpiryTime');
+		
+		let otpExpiryTime = 30; // Set the OTP expiry time in seconds (e.g., 300 seconds = 5 minutes)
+		
+		function updateExpiryTime() {
+			if (otpExpiryTime > 0) {
+				otpExpiryTimeElement.textContent = `OTP will expire in ${otpExpiryTime} seconds`;
+				otpExpiryTime -= 1;
+			} else {
+				otpExpiryTimeElement.textContent = '';
+			}
+		}
+		
+		// Update the OTP expiry time every second
+		setInterval(updateExpiryTime, 1000);
+		
+		resendButton.addEventListener('click', () => {
+			// You can implement the logic to resend the OTP here
+			// For example, make an AJAX request to your server to trigger OTP resend
+			// You will need to handle this on your server-side as well.
+			
+			// After resending, reset the OTP expiry time
+			otpExpiryTime = 30;
+			updateExpiryTime();
+		});
+	</script>
+
+	<script>
+		
+		const resendotp = document.getElementById("reSentOtp");
+		var modal2 = document.getElementById("afterOtpSend");
+		var modal = document.getElementById('myModal');
+		const closeModalBtn2 = document.getElementById("closeModalBtn2");
+
+		resendOtp.addEventListener("click",function(event){
+		 event.preventDefault();
+		 $.ajax({
+			 type:'POST',
+			 url:'/reSendotpResetPassword',
+			 data:{
+				 
+			 },success:function(response){
+					if(response.success){
+					 modal2.style.display = "block";
+					}
+				   
+			 },
+			 error: function(error){
+				 console.log("error while updating user data ",error);
+			 }
+		 });
+		})
+		
+
+	 closeModalBtn2.onclick = function(){
+			 
+		 modal2.style.display = "none";
+	 }
 	</script>
 
 	

@@ -166,8 +166,6 @@ exports.userEntry = async(req,res)=>{
 
 exports.signup = async(req,res)=>{
     try{
-
-          
     // Generate a random OTP
     const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
     const extime = moment().add(30,'seconds').toISOString();
@@ -222,7 +220,7 @@ exports.signup = async(req,res)=>{
 };
 
 
-//resendOTP
+//resendOTP when signUp
 exports.resendOTP = async(req,res)=>{
     try{
       const extime = moment().add(30,'seconds').toISOString();
@@ -244,7 +242,7 @@ exports.resendOTP = async(req,res)=>{
       // Email configuration
       const mailOptions = {
         from: 'sandeeps@gmail.com',
-        to: '2002m9002@gmail.com', // Replace with the recipient's email
+        to: '2002m9002@gmail.com',
         subject: 'Resend OTP Verification',
         text: `Your new OTP is: ${otp}`,
       };
@@ -267,9 +265,54 @@ exports.resendOTP = async(req,res)=>{
     
 }
 
+//resent otp for resetPassword in login
+exports.reSendotpResetPassword = async(req,res)=>{
+  try{ 
+    console.log("hello");
+    const extime = moment().add(30,'seconds').toISOString();
 
-//varify otp
+    const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
+    req.session.otpStorage = {
+      otp,
+      expirationTime: extime,
+    };
+         // Create a Nodemailer transporter
+      const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'iamsandeep6969400@gmail.com',
+        pass: 'ijpzysobzeshejlv',
+         },
+       });
 
+    // Email configuration
+    const mailOptions = {
+      from: 'sandeeps@gmail.com',
+      to: '2002m9002@gmail.com',
+      subject: 'Resend OTP Verification',
+      text: `Your new OTP is: ${otp}`,
+    };
+
+    // Send the email with the new OTP
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({ message: 'Failed to resend OTP' });
+      } else {
+        console.log('Email sent:', info.response);
+        const message = "otp resended ";
+       
+        res.send(200,{success:true,message})
+      }
+    });
+
+  }catch(err){
+    console.error("error in resending the otp while login",err);
+  }
+}
+
+
+//varify otp for signup
 exports.verifyOtp = async (req, res) => {
  
   

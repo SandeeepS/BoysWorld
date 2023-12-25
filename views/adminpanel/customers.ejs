@@ -219,7 +219,7 @@
                                         <td><%= users[i].number %></td>
                                         <td>
                                           <span class="user-status">
-                                              <span class="status-text"><%= users[i].status ? 'Active' : 'Blocked' %></span>
+                                              
                                               <button class="btn btn-sm btn-<%= users[i].status ? 'danger' : 'success' %> toggle-status-btn" data-user-id="<%= users[i]._id %>">
                                                   <%= users[i].status ? 'Block' : 'Unblock' %>
                                               </button>
@@ -300,8 +300,7 @@
           button.addEventListener("click", function () {
             button.disabled = true;
               const userId = this.getAttribute("data-user-id");
-              const statusText = this.parentElement.querySelector(".status-text");
-              const isBlocked = statusText.textContent === "Blocked";
+              const isBlocked = !button.classList.contains("btn-danger");
   
               // Send an AJAX request to update the user's status
               fetch("/admin/checkStatus", {
@@ -315,7 +314,6 @@
                   .then((data) => {
                       // Update the status text and button text based on the server response
                       if (data.success) {
-                          statusText.textContent = isBlocked ? "Active" : "Blocked";
                           button.textContent = isBlocked ? "Block" : "Unblock";
                           button.classList.toggle("btn-success");
                           button.classList.toggle("btn-danger");
