@@ -787,13 +787,14 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
         const currentAddress = user.address[currentAddressIndex]; 
         user.currentAddress.splice(0, 1, currentAddress);
         await user.save();
+        console.log("address saved successfuly");
       } else {
         console.log("Address not found.");
       }
     }
 
 
-    res.redirect('/getCheckout',productId,quantity);
+    res.redirect('/getCheckout2',productId,quantity);
   } catch (err) {
     console.error("Error while updating the default address", err);
     res.redirect('/getCheckout');
