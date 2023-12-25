@@ -216,10 +216,11 @@ exports.addingCategory = async(req,res)=>{
     try{
         const {categoryName} = req.body;
         console.log("catyer",categoryName);
-        const existingCategory = await categoryModel.findOne({"categoryName":categoryName}).exec();
-
+        const lowercaseCategoryName = typeof categoryName === 'string' ? categoryName.toLowerCase() : categoryName;
+        const existingCategory = await categoryModel.findOne({ "categoryName": { $regex: new RegExp('^' + lowercaseCategoryName + '$', 'i') }})
+        console.log("existing category",existingCategory);
        if(existingCategory){
-           await categoryModel.updateOne({"categoryName":categoryName},{$set:{"isDelete":false}});
+           await categoryModel.updateOne({"categoryName":{ $regex: new RegExp('^' + lowercaseCategoryName + '$', 'i') }},{$set:{"isDelete":false}});
            console.log("category already exists .updated existing category");
        }else{
          const newCategory = new categoryModel({
