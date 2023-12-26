@@ -212,7 +212,7 @@
 							</td>
 							<td class="cart_description">
 								<h4><a href=""></a></h4>
-								<a href="#" id="openModalbtn2" AddressId="<%= address[i]._id%>"><p>Edit</p></a>
+								<a href="#" id="openModalbtn2" AddressId="<%= address[i]._id%>" class="selected"><p>Edit</p></a>
 							</td>
 							
 							<td class="cart_quantity">
@@ -319,26 +319,34 @@
     <script src="js/main.js"></script>
 	
 	<script>
-		var modal = document.getElementById('myModal');
-		var openModalBtn2 = document.getElementById("openModalbtn2");
-		var closeModalBtn = document.getElementById("closeModalBtn");
+		document.addEventListener("DOMContentLoaded",function(){
+			var modal = document.getElementById('myModal');
+			var closeModalBtn = document.getElementById("closeModalBtn");
+			const selectedAddress = document.querySelectorAll(".selected");
 
-        //to open the modal
-        openModalBtn2.onclick = function(){
-			modal.style.display = "block";
-		}
+			selectedAddress.forEach((selectedAddress,i)=>{
+				selectedAddress.addEventListener("click",function(event){
+					event.preventDefault();
+					const addressId = this.getAttribute("AddressId");
+					getEditAddress(addressId);
+				})
+			})
+
+			function getEditAddress(addressId){
+                  
+				  
+			}
+
+
+		})
+
+
 
 		//to close the modal
 		closeModalBtn.onclick = function(){
 			modal.style.display = "none";
 		}
-         
-		//close the modal if the user clicks the outside of it 
-		window.onclick = function(event){
-			if(event.target == modal){
-				modal.style.display = "none";
-			}
-		}
+      
 
 	
 
