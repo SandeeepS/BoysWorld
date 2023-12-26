@@ -1032,6 +1032,10 @@ exports.oders = async(req,res)=>{
           foreignField:'_id',
           as:"productDetail"
         }
+      },{
+        $sort:{
+              date:-1
+              }
       }
   ]).exec();
   console.log("corderDetails :",orderDetails )
@@ -1094,22 +1098,23 @@ exports.changePassword = async(req,res)=>{
 
        if(!isPasswordMatch){
           console.log("current password is incorrecnt");
-
+          let count = 1 ;
+         return res.status(200).json({success:true,message:"Current Password is incorrect",count});
        }      
        
        if(isPasswordMatch == true && (hashedNewPassword == hashedConformPassword) ){
+             let count = 2 ;
              user.pass = await bcrypt.hash(newPassword,saltRouds);
              await user.save();
-             res.status(200).json({ success: true, message: 'Updated successfully.' });
+             res.status(200).json({ success: true, message: 'Updated successfully.' ,count});
        }else{
-             res.status(200).json({success:true, message: 'Something went Wrong!!'});
+             let count = 3 ;
+             res.status(200).json({success:true, message: 'Something went Wrong!!', count});
        }
        
- 
        
     }
     
-       
   catch(err){
     console.error("error while changing password",err);
     res.status(500).json({ success: false, message: 'Internal server error.' });

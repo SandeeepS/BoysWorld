@@ -297,14 +297,23 @@
 			const number = document.getElementById("number").value;
 			const email= document.getElementById("email").value;
 			const houseName = document.getElementById("houseName").value;
+			const houseNumber = document.getElementById("houseNumber").value;
 			const state = document.getElementById("state").value;
 			const city = document.getElementById("city").value;
 			const street = document.getElementById("street").value;
 			const landmark = document.getElementById("landmark").value;
 			const pin= document.getElementById("pin").value;
 			const errorMessage = document.getElementById("error-message");
+			const phonePattern = /^(?=.*[1-9])\d{10}$/;
+			
+			
+			function isValidEmail(email) {
+				// Regular expression for a simple email validation
+				const emailRegex = /^[^\s@]+@gmail\.com$/;
+				return emailRegex.test(email);
+			}
 
-			if (name==='' || name===null || number==="" || number===null || email==="" || email===null || houseName==="" || houseName===null || state==="" || state===null || city==="" || city===null || street==="" || street===null || landmark==="" || landmark===null || pin==="" || pin===null) {
+			if (name==='' && number===""  && email===""  && houseName===""  && state===""  && city==="" && street===""  && landmark==="" && pin==="" ) {
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
 
@@ -313,13 +322,140 @@
                     errorMessage.style.display = "none";
                 }, 3000);
 				return false;
-			}else{
-				
-				return true;
 			}
 
+			if(name === ""){
+				errorMessage.innerText = "Please enter Name";
+                errorMessage.style.display = "block";
 
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
 
+			if(number === ""){
+				errorMessage.innerText = "Please enter your number";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(!phonePattern.test(number)){
+				errorMessage.innerText = "please enter a valid phone  number.";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
+
+			if(email === ""){
+				errorMessage.innerText = "please your email address";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
+
+			if (!isValidEmail(email)) {
+				errorMessage.innerText = "Please enter a valid email address";
+				errorMessage.style.display = "block";
+		
+				setTimeout(function () {
+					errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			}
+ 
+			if(houseName === ""){
+				errorMessage.innerText = "Please enter your House Name";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if( houseNumber === ""){
+				errorMessage.innerText = "Please enter your house number";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(state === ""){
+				errorMessage.innerText = "Please enter your State";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(city === ""){
+				errorMessage.innerText = "Please enter your city";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(street === ""){
+				errorMessage.innerText = "Please enter your street";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(landmark === ""){
+				errorMessage.innerText = "Please enter your Land Mark";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(pin === ""){
+				errorMessage.innerText = "Please enter your pincode";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			return true;
 
 		}
 	</script>

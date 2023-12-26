@@ -23,6 +23,10 @@
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
 		<style>
+			.error-message {
+				color: red;
+				display: none;
+			}
 			.xzoom-thumbs img {
 				display: inline-block;
 				height: 80px;
@@ -216,20 +220,8 @@
 												</h4>
 											</div>
 										</div>
-										<div class="panel panel-default">
-											<div class="panel-heading">
-												<h4 class="panel-title">
-													<a href="/addAddress">Add Address</a>
-												</h4>
-											</div>
-										</div>
-										<div class="panel panel-default">
-											<div class="panel-heading">
-												<h4 class="panel-title">
-													<a href="#" id="changePass">Change Password</a>
-												</h4>
-											</div>
-										</div>
+									
+									
 									</div>
 								</div>
 							</div>
@@ -277,6 +269,8 @@
 								<label for="">Email</label>
 								<input type="text" name="email" id="email1" value="<%= userData.email %>">
 								<a href="#" class="btn btn-default update " id="updateBtn" onclick="updateBtn()">Update</a>
+								<a href="#" class="btn btn-default update " id="changePass" >Change password</a>
+
 							</form>
 						 </div>
 						
@@ -306,6 +300,8 @@
 				 <div class="modal-style">
 					 <div class="container">
 						 <h4 class="text text-center">Change Password</h4>
+						 <div class="error-message" id="error-messsage"></div>
+
 						  <div class="form-one" style="width: 100%;">
 							 <form action="">
 								 <label for="">Current Password</label>
@@ -489,8 +485,64 @@
 		    const currentPassword = document.getElementById("current").value;
 			const newPassword = document.getElementById("new").value;
 			const conformPassword = document.getElementById("conform").value;
+	  		const  errorMessage =  document.getElementById("error-messsage");
 
-			
+			if(currentPassword === "" && newPassword === "" && conformPassword === ""){
+				errorMessage.innerText = "Please fill in all the fields.";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(currentPassword === ""){
+				errorMessage.innerText = "Please Enter the current Password";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(newPassword === ""){
+				errorMessage.innerText = "Please Enter the new password";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(conformPassword === ""){
+				errorMessage.innerText = "Please Enter the current password";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+			if(conformPassword !== newPassword){
+				errorMessage.innerText = "New password and Conform passwords are not match!";
+                errorMessage.style.display = "block";
+
+                // Hide the error message after 3 seconds
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+				return false;
+			}
+
+
 
 				//ajax req
 				$.ajax({
@@ -502,10 +554,27 @@
 						conformPassword:conformPassword,
 					},
 					success: function(response){
-						var modal4 = document.getElementById('afterPassChange');
-						var para = document.getElementById("para");
-						para.innerHTML = '<p>' + response.message + '</p>';
-						modal4.style.display = "block";
+						if(response.count === 1){
+							errorMessage.innerText = response.message;
+							errorMessage.style.display = "block";
+			
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}else if(response.count === 2){
+							var modal4 = document.getElementById('afterPassChange');
+							var para = document.getElementById("para");
+							para.innerHTML = '<p>' + response.message + '</p>';
+							modal4.style.display = "block";
+						}else{
+							var modal4 = document.getElementById('afterPassChange');
+							var para = document.getElementById("para");
+							para.innerHTML = '<p>' + response.message + '</p>';
+							modal4.style.display = "block";
+						}
+					
 						
 					},
 					error: function(error){
