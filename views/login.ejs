@@ -169,10 +169,10 @@
 						
 						  <div class="form-one" style="width: 100%;">
 							 <form class="signup-form" action="">
-								<input type="email" name="variEmail" id="variEmail" placeholder="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
+								<input type="email" name="variEmail" id="variEmail" placeholder="Enter your registered email " pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
 								<div class="error-message" id="error-message"></div>
 									
-								<a href="/signup" class="btn btn-default update " id="signinBtn" style="display: none;" >Signin</a>
+								<a href="/signup" class="btn btn-default update " id="signinBtn" style="display: none;" >SignUp</a>
 								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="sentOTP()" id="sentOtp">Sent OTP</a>
 
 							 </form>
@@ -378,35 +378,54 @@
 			 var modal2 = document.getElementById("afterOtpSend");
 			 var modal = document.getElementById('myModal');
 			 const signinBtn = document.getElementById("signinBtn");
+
+			 function isValidEmail(email) {
+				// Regular expression for a simple email validation
+				const emailRegex = /^[^\s@]+@gmail\.com$/;
+				return emailRegex.test(email);
+			}
+
              if(email === ""|| email === null){
-				errorMessage.innerText = "please fill the fields";
+				errorMessage.innerText = "please Enter the email address!";
 				errorMessage.style.display = "block";
 
 				setTimeout(function(){
 					errorMessage.style.display = "none";
 				},3000);
+				return false;
 			
 			 }
 
-			 if (!emailInput.checkValidity()) {
+			 if (!isValidEmail(email)) {
 				errorMessage.innerText = "Please enter a valid email address";
 				errorMessage.style.display = "block";
 		
 				setTimeout(function () {
 					errorMessage.style.display = "none";
 				}, 3000);
+				return false;
 			}
 
 			$.ajax({
 				type:'POST',
 				url:'/sendResetOtpmail',
-				data:{
-					email : email,
-				},success:function(response){
-					console.log(response);
+				data:JSON.stringify({email:email}),
+				contentType:'application/json',	
+				dataType:'json',
+				success:function(response){
+				    
+					console.log("hello");
+					console.log("message:",response.message);
+					console.log(response.count);
+
                      if(response.count === 1){
-						errorMessage.innerText = "provided email address is not in the database ,you need to sign in";
+						$('#variEmail').val('');
+						errorMessage.innerText = "provided email address is not in the database ,you need to Sign Up  ";
 						errorMessage.style.display = "block";
+						setTimeout(function () {
+							errorMessage.style.display = "none";
+							signinBtn.style.display = "none";
+						}, 5000);
 						signinBtn.style.display = "block";
 					 }else{
 						modal2.style.display = "block";
@@ -414,7 +433,7 @@
 					
 				},
 				error: function(error){
-					console.log("error while updating user data ",error);
+					console.error("error while updating user data ",error);
 				}
 			});
 		//to close the modal2
@@ -439,13 +458,15 @@
 			const closeModalBtn3 = document.getElementById("closeModalBtn3");
 			const errorMessage = document.getElementById("error-message2");
 			
-			if(otp === "" || otp === null){
+			if(otp === "" ){
 				errorMessage.innerText = "please fill the fields";
 				errorMessage.style.display = "block";
 
 				setTimeout(function(){
 					errorMessage.style.display = "none";
 				},3000);
+
+				return false;
 			}
 
 			$.ajax({
@@ -456,6 +477,14 @@
 				},success:function(response){
                        if(response.success){
 						modal3.style.display = "block";
+					   }else{
+
+						errorMessage.innerText = "incorrect OTP";
+						errorMessage.style.display = "block";
+		
+						setTimeout(function(){
+							errorMessage.style.display = "none";
+						},3000);
 					   }
 					  
 				},
@@ -553,9 +582,11 @@
 	</script>
 
 	<script>
-		const resendButton = document.getElementById('reSentOtp');
+		const resendButton = document.getElementById("reSentOtp");
 		const otpExpiryTimeElement = document.getElementById('otpExpiryTime');
-		
+		var modal2 = document.getElementById("afterOtpSend");
+		var modal = document.getElementById('myModal');
+		const closeModalBtn2 = document.getElementById("closeModalBtn2");
 		let otpExpiryTime = 30; // Set the OTP expiry time in seconds (e.g., 300 seconds = 5 minutes)
 		
 		function updateExpiryTime() {
@@ -579,40 +610,36 @@
 			otpExpiryTime = 30;
 			updateExpiryTime();
 		});
+         
+		
+		resendButton.addEventListener("click",function(event){
+			event.preventDefault();
+			$.ajax({
+				type:'POST',
+				url:'/reSendotpResetPassword',
+				data:{
+					
+				},success:function(response){
+					   if(response.success){
+						modal2.style.display = "block";
+					   }
+					  
+				},
+				error: function(error){
+					console.log("error while updating user data ",error);
+				}
+			});
+		   })
+		   
+   
+		closeModalBtn2.onclick = function(){
+				
+			modal2.style.display = "none";
+		}
+
 	</script>
 
-	<script>
-		
-		const resendotp = document.getElementById("reSentOtp");
-		var modal2 = document.getElementById("afterOtpSend");
-		var modal = document.getElementById('myModal');
-		const closeModalBtn2 = document.getElementById("closeModalBtn2");
 
-		resendOtp.addEventListener("click",function(event){
-		 event.preventDefault();
-		 $.ajax({
-			 type:'POST',
-			 url:'/reSendotpResetPassword',
-			 data:{
-				 
-			 },success:function(response){
-					if(response.success){
-					 modal2.style.display = "block";
-					}
-				   
-			 },
-			 error: function(error){
-				 console.log("error while updating user data ",error);
-			 }
-		 });
-		})
-		
-
-	 closeModalBtn2.onclick = function(){
-			 
-		 modal2.style.display = "none";
-	 }
-	</script>
 
 	
 </body>

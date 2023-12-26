@@ -30,7 +30,7 @@ route.post('/resetPasswordLogin',userController.resetPasswordLogin);
 
 
 route.post('/loginUser',auth.isUser,userController.userEntry);
-route.get('/reSendotpResetPassword',userController.reSendotpResetPassword)
+route.post('/reSendotpResetPassword',userController.reSendotpResetPassword)
 route.post('/logout',userController.logout);
 
 

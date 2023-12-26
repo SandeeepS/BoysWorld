@@ -1135,41 +1135,41 @@ exports.sendResetOtpmail = async(req,res)=>{
       // Email not found in the database
       console.log("this email is not in the database");
       const count = 1;
-      return res.status(400).json({ success: false, message: 'Email not registered. Please sign up.',count });
+     res.status(200).json({ success: true, message: 'Email not registered. Please sign up.',count });
       
-    }
+    }else{
 
-
-     // Create a Nodemailer transporter
-     const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: email,
-        pass: 'ijpzysobzeshejlv',
-      },
-    });
-    
-    // Email configuration
-    const mailOptions = {
-      from: 'sandeeps@gmail.com',
-      to: '2002m9002@gmail.com',
-      subject: 'OTP Verification',
-      text: `Your OTP is: ${otp}`,
-    };
-    
-    // Send the email with OTP
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Error sending email:', error);
-        res.redirect('/');
-      } else {
-        console.log('Email sent:', info.response);
-        
-        res.redirect('/getOtpPage');
-      }
-    });
-    const count = 0;
-    res.status(200).json({success: true,message:"otp send successfully",count})
+            // Create a Nodemailer transporter
+            const transporter = nodemailer.createTransport({
+              service: 'Gmail',
+              auth: {
+                user: email,
+                pass: 'ijpzysobzeshejlv',
+              },
+            });
+            
+            // Email configuration
+            const mailOptions = {
+              from: 'sandeeps@gmail.com',
+              to: '2002m9002@gmail.com',
+              subject: 'OTP Verification',
+              text: `Your OTP is: ${otp}`,
+            };
+            
+            // Send the email with OTP
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.error('Error sending email:', error);
+                res.redirect('/');
+              } else {
+                console.log('Email sent:', info.response);
+                
+                res.redirect('/getOtpPage');
+              }
+            });
+            const count = 0;
+            res.status(200).json({success: true,message:"otp send successfully",count})
+  }
   }catch(err){
     console.error("error while sending otp",err);
     res.status(500).json({ success: false, message: 'Internal server error.' });
