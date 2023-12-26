@@ -274,7 +274,7 @@ exports.reSendotpResetPassword = async(req,res)=>{
     const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
     req.session.otpStorage = {
       otp,
-      expirationTime: extime,
+      extime,
     };
          // Create a Nodemailer transporter
       const transporter = nodemailer.createTransport({
@@ -1126,7 +1126,7 @@ exports.sendResetOtpmail = async(req,res)=>{
      const saltRouds = 10;
      req.session.otpStorage = {
       otp,
-      expirationTime: extime,
+      extime,
     };
     req.session.tempEmail = email;
     const user = await UserModel.findOne({ email: email});
@@ -1168,7 +1168,7 @@ exports.sendResetOtpmail = async(req,res)=>{
               }
             });
             const count = 0;
-            res.status(200).json({success: true,message:"otp send successfully",count})
+            res.status(200).json({success: true,message:"otp send successfully",})
   }
   }catch(err){
     console.error("error while sending otp",err);
@@ -1182,7 +1182,11 @@ exports.conformOTPResetPassword = async(req,res)=>{
   try{
      const otp = req.body.otp;
      const realOtp = req.session.otpStorage.otp;
-    if(otp == realOtp){
+     const expTime = req.session.otpStorage.extime;
+     console.log("exptime",expTime);
+     const currentTime = moment().toISOString();
+     console.log("current time",currentTime);
+    if(otp == realOtp && expTime > currentTime ){
       console.log("otp verified");
       res.status(200).json({success:true,message:"otp varified"});
     }
