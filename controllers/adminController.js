@@ -332,11 +332,11 @@ exports.updateStatus = async (req, res) => {
 
 exports.updateOrderStatus = async (req, res) => {
     try {
-        const { orderStatus, orderId } = req.body;
+        const { newStatus, orderId } = req.body;
         const userId = req.session.user;
     
-         const orderToUpdate = await orderModel.updateOne({_id:orderId},{$set:{"currentStatus":orderStatus}}).exec();
-         res.redirect('/admin/orders')
+         const orderToUpdate = await orderModel.updateOne({_id:orderId},{$set:{"currentStatus":newStatus}}).exec();
+        res.status(200).json({success:true,message:"status updated succesfully",newStatus,orderId});
        
 
     } catch (err) {

@@ -230,7 +230,7 @@
                                                             
                                                        
                                                          <td>
-                                                          <button id="updateOrderStatusBtn" class="order-status-button" orderId="<%=oders[i]._id%>">Update Order Status</button>
+                                                          <button id="updateOrderStatusBtn" class="order-status-button" orderId="<%=oders[i]._id%>"><%= oders[i].currentStatus%></button>
 
                                                          </td>
                                                         
@@ -305,47 +305,52 @@
 
   <!-- End custom js for this page-->
   <script>
-   
-    $(document).ready(function(){
-      var orderStatus = ["Shipped","Out of Delivery","Deliverd"];
-      var currentStatusIndex = 0;
-      const updateButton = $(".order-status-button");
-      updateButton.text(orderStatus[currentStatusIndex]);
-      
-
-      
-     
-
-    })
-
+   document.addEventListener("DOMContentLoaded",function(){
+      const updateButton = document.querySelectorAll(".order-status-button");
+      var  oders = <%- JSON.stringify(oders) %>;
     
-  </script>
-  <script>
-    function updateOderStatus(){
-      var selectedStatus = $("#orderStatus").val();
-      var orderId = $("#orderStatus").attr("orderId");     
+      updateButton.forEach((updateButton,i)=>{
+        var orderStatus = ["Shipped","Out of Delivery","Deliverd"];
+        var currentStatusIndex = 0
+        console.log(orderStatus[currentStatusIndex])
+        var orderStatusIndex = oders[i].currentStatus;
+        updateButton.innerHTML = orderStatus[currentStatusIndex];
+
+       
+
+        updateButton.addEventListener("click",function(event){
+          event.preventDefault();
         
+            const orderId = this.getAttribute("orderId");
+            updateOrderStatus(orderStatus[currentStatusIndex],orderId);
+      
+        })
+       
+        function updateOrderStatus(newStatus,orderId){
+        
+            updateButton.innerHTML = newStatus;
+           
 
-      $.ajax({
-        type:'POST',
-        url:'/admin/updateStatus',
-        data:{orderStatus:selectedStatus,orderId},
-        success:function (response){
-          console.log("update successfull",response);
-          updateUIWithNewStatus(orderId, selectedStatus);
-
-        },
-        error:function (error){
-          console.error("error while updating the status:",error);
+            $.ajax({
+              type:'POST',
+              url:'/admin/updateStatus',
+              data:{
+                newStatus,
+                orderId
+              },
+              success:function(response){
+                console.log("response",response);
+                console.log(response.newStatus);
+                currentStatusIndex = (currentStatusIndex + 1) % orderStatus.length;
+              
+              }
+            })
+        
         }
       })
-    }
-
-    function updateUIWithNewStatus(orderId, newStatus) {
-      var dropdown = $(`[orderId="${orderId}"]`);
-      dropdown.val(newStatus).change();
-    }
+    })
   </script>
+
 </body>
 
 </html>
