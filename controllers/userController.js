@@ -696,6 +696,54 @@ exports.address = async(req,res)=>{
 }
 
 
+//save userAddress
+exports.saveAddress = async(req,res)=>{
+  try{
+    const user = req.session.user;
+    const address = {
+      "formName": req.body.name,
+      "formNumber":req.body.number,
+      "formemail":req.body.email,
+      "formhouseName":req.body.houseName,
+      "formhouseNumber":req.body.houseNumber,
+      "formstate":req.body.state,
+      "formcity":req.body.city,
+      "formstreet":req.body.street,
+      "formlandmark":req.body.landmark,
+      "formpin":req.body.pin,
+    };
+     const userData = await UserModel.findByIdAndUpdate(user,{
+      $push:{
+        address:{
+          "name":address.formName,
+          "number":address.formNumber,
+          "email":address.formemail,
+          "houseName":address.formhouseName,
+          "houseNumber":address.houseNumber,
+          "state":address.formstate,
+          "city":address.formcity,
+          "street":address.formlandmark,
+          "landMark":address.formlandmark,
+          "pin":address.formpin
+        }
+      }
+     },{new:true});
+
+     
+     if(userData){
+      console.log("Address saved susscessfully");
+      res.redirect('/getAccount');
+     }else{
+      console.log("record not inserted");
+      res.redirect('/getAccount');
+     }
+
+
+  }catch(err){
+    console.log("error in saving address",err);
+  }
+}
+
 //show address page
 exports.showAddress = async(req,res)=>{
   try{
