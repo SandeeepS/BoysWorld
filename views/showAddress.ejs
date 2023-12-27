@@ -323,24 +323,44 @@
 			var modal = document.getElementById('myModal');
 			var closeModalBtn = document.getElementById("closeModalBtn");
 			const selectedAddress = document.querySelectorAll(".selected");
-
+            
+			const modalContent = document.getElementById("myModal")
+	
 			selectedAddress.forEach((selectedAddress,i)=>{
 				selectedAddress.addEventListener("click",function(event){
 					event.preventDefault();
 					const addressId = this.getAttribute("AddressId");
-					getEditAddress(addressId);
+					const addressIndex = i;
+					getEditAddress(i);
+					
 				})
 			})
 
-			function getEditAddress(addressId){
+			function getEditAddress(i){
                   
-				  
+				var address =<%- JSON.stringify(address) %>;
+				var selectedAddress = address[i];
+				document.querySelector('input[name="name"]').value = selectedAddress.name;
+                document.querySelector('input[name="number"]').value = selectedAddress.number;
+                document.querySelector('input[name="email"]').value = selectedAddress.email;
+				document.querySelector('input[name="houseName"]').value = selectedAddress.houseName;
+                document.querySelector('input[name="houseNumber"]').value = selectedAddress.houseNumber;
+				document.querySelector('input[name="state"]').value = selectedAddress.state;
+				document.querySelector('input[name="city"]').value = selectedAddress.city;
+				document.querySelector('input[name="street"]').value = selectedAddress.street;
+				document.querySelector('input[name="landmark"]').value = selectedAddress.landmark;
+				document.querySelector('input[name="pin"]').value = selectedAddress.pin;
+
+				modal.style.display = "block";
+
 			}
 
-
+			//to close the modal
+			closeModalBtn.onclick = function(){
+				modal.style.display = "none";
+			}
+		  
 		})
-
-
 
 		//to close the modal
 		closeModalBtn.onclick = function(){
