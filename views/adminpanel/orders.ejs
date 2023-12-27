@@ -314,7 +314,15 @@
         var currentStatusIndex = 0
         console.log(orderStatus[currentStatusIndex])
         var orderStatusIndex = oders[i].currentStatus;
-        updateButton.innerHTML = orderStatus[currentStatusIndex];
+        if(orderStatusIndex == "Conformed"){
+             updateButton.innerHTML = orderStatus[currentStatusIndex];
+        }else if(orderStatusIndex == "Shipped"){
+             updateButton.innerHTML = orderStatus[currentStatusIndex+1];
+        }else if(orderStatusIndex == "Out of Delivery"){
+             updateButton.innerHTML = orderStatus[currentStatusIndex+2];
+
+        }
+       
 
        
 
