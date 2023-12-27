@@ -22,6 +22,28 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
+  <style>
+  .status-button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .shipped {
+    background-color: orange;
+  }
+
+  .out-of-delivery {
+    background-color: rgb(49, 177, 228);
+  }
+
+  .delivered {
+    background-color: green;
+  }
+</style>
 
 </head>
 <body>
@@ -312,7 +334,6 @@
       updateButton.forEach((updateButton,i)=>{
         var orderStatus = ["Shipped","Out of Delivery","Deliverd"];
         var currentStatusIndex = 0
-        console.log(orderStatus[currentStatusIndex])
         var orderStatusIndex = oders[i].currentStatus;
         if(orderStatusIndex == "Conformed"){
              updateButton.innerHTML = orderStatus[currentStatusIndex];
@@ -321,10 +342,9 @@
         }else if(orderStatusIndex == "Out of Delivery"){
              updateButton.innerHTML = orderStatus[currentStatusIndex+2];
 
+        }else{
+          updateButton.innerHTML = orderStatus[currentStatusIndex+3];
         }
-       
-
-       
 
         updateButton.addEventListener("click",function(event){
           event.preventDefault();
@@ -335,26 +355,44 @@
         })
        
         function updateOrderStatus(newStatus,orderId){
-        
-            updateButton.innerHTML = newStatus;
-           
+           var index = orderStatus.indexOf(newStatus)
+           lastStatus = orderStatus[index+1];
+            updateButton.innerHTML = lastStatus;
+
 
             $.ajax({
               type:'POST',
               url:'/admin/updateStatus',
               data:{
-                newStatus,
+                lastStatus,
                 orderId
               },
               success:function(response){
-                console.log("response",response);
-                console.log(response.newStatus);
+                const order = response.orderId;
+                const lastStatus = response.lastStatus;
+                const orderToUpdate = oders.find(order=> order._id === orderId);
+                if(orderToUpdate){
+                  orderToUpdate.currentStatus = lastStatus;
+                }
                 currentStatusIndex = (currentStatusIndex + 1) % orderStatus.length;
+
+                updateStatusInDom(orderId,lastStatus);
+                
               
               }
             })
         
         }
+
+        function updateStatusInDom(orderId,lastStatus){
+          const row = document.querySelector(`.order-status-button[orderId="${orderId}"]`);
+          if(row){
+            row.innerContent = lastStatus;
+           
+          }
+        }
+
+         
       })
     })
   </script>
