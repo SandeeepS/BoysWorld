@@ -22,46 +22,7 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
-  <style>
-    .order-status {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    
-    .order-status-dropdown {
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      color: #333;
-    }
-    
-    .order-status-dropdown option[value="confirmed"] {
-      background-color: #4CAF50;
-      color: white;
-    }
-    
-    .order-status-dropdown option[value="shipped"] {
-      background-color: #FFD700;
-      color: #333;
-    }
-    
-    .order-status-dropdown option[value="Out Of Delivery"] {
-      background-color: #FFA500;
-      color: #333;
-    }
-    
-    .order-status-dropdown option[value="cancelled"] {
-      background-color: #FF6347;
-      color: white;
-    }
-    
-  </style>
+
 </head>
 <body>
   <div class="container-scroller"> 
@@ -267,21 +228,12 @@
                                                           <td><%= oders[i].paymentMethod%></td>     
                                                           <td><%=oders[i].currentStatus%></td>  
                                                             
-                                                          <form action="">                                             
-                                                           <td>
-                                                            <select id="orderStatus" name="orderStatus" class="order-status-dropdown" orderId="<%=oders[i]._id%>">
-                                                              <option disabled selected>Select</option>
-                                                              <option value="confirmed">Confirmed</option>
-                                                              <option value="shipped">Shipped</option>
-                                                              <option value="Out Of Delivery">Out of Delivery</option>
-                                                              <option value="cancelled">Cancel</option>
-                                                            </select>
-                                                          
-                                                           </td>
-                                                           <td>
-                                                            <a href="" onclick="updateOderStatus()">Update</a>
-                                                           </td>
-                                                          </form>
+                                                       
+                                                         <td>
+                                                          <button id="updateOrderStatusBtn" class="order-status-button" orderId="<%=oders[i]._id%>">Update Order Status</button>
+
+                                                         </td>
+                                                        
                                                         </td>
                                                         
                                                       </tr>
@@ -349,17 +301,23 @@
   <!-- Custom js for this page-->
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
   <!-- End custom js for this page-->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var orderStatusDropdown = document.getElementById('orderStatus');
-    
-      orderStatusDropdown.addEventListener('change', function () {
-        var selectedOption = orderStatusDropdown.options[orderStatusDropdown.selectedIndex];
-        orderStatusDropdown.style.backgroundColor = selectedOption.style.backgroundColor;
-        orderStatusDropdown.style.color = selectedOption.style.color;
-      });
-    });
+   
+    $(document).ready(function(){
+      var orderStatus = ["Shipped","Out of Delivery","Deliverd"];
+      var currentStatusIndex = 0;
+      const updateButton = $(".order-status-button");
+      updateButton.text(orderStatus[currentStatusIndex]);
+      
+
+      
+     
+
+    })
+
     
   </script>
   <script>

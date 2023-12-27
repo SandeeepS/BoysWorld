@@ -713,7 +713,7 @@ exports.saveAddress = async(req,res)=>{
       "formpin":req.body.pin,
     };
      const userData = await UserModel.findByIdAndUpdate(user,{
-      $push:{
+      $set:{
         address:{
           "name":address.formName,
           "number":address.formNumber,
