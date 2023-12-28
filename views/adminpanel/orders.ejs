@@ -24,25 +24,26 @@
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
   <style>
   .status-button {
+    background-color: rgb(228, 186, 69);
     padding: 5px 10px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    color: #fff;
     font-weight: bold;
+    width: 150px;
   }
 
   .shipped {
-    background-color: orange;
-  }
-
-  .out-of-delivery {
-    background-color: rgb(49, 177, 228);
-  }
-
-  .delivered {
+    background-color: rgb(235, 170, 49);
+   }
+   
+   .out-of-delivery {
+    background-color: skyblue;
+   }
+   
+   .deliverd {
     background-color: green;
-  }
+   }
 </style>
 
 </head>
@@ -252,7 +253,8 @@
                                                             
                                                        
                                                          <td>
-                                                          <button id="updateOrderStatusBtn" class="order-status-button" orderId="<%=oders[i]._id%>"><%= oders[i].currentStatus%></button>
+
+                                                          <button id="updateOrderStatusBtn" class="order-status-button  status-button  " orderId="<%=oders[i]._id%>"><%= oders[i].currentStatus%></button>
 
                                                          </td>
                                                         
@@ -335,6 +337,7 @@
         var currentStatusIndex = 0
         var orderStatusIndex = oders[i].currentStatus;
 
+         //initaly set the values
         if(oders[i].currentStatus == "Deliverd"){
           updateButton.disabled = true;
           
@@ -346,7 +349,6 @@
                   updateButton.innerHTML = orderStatus[currentStatusIndex+1];
               }else if(orderStatusIndex == "Out of Delivery"){
                   updateButton.innerHTML = orderStatus[2];
-
               }
         }
 
@@ -362,7 +364,6 @@
             console.log("newStatus:",newStatus)
             updateButton.innerHTML = newStatus;
             updateButton.disabled  = true;
-
            }
            
             if(index !=2){
@@ -387,11 +388,8 @@
                 }
                 currentStatusIndex = (currentStatusIndex + 1) % orderStatus.length;
                 updateStatusInDom(orderId,newStatus);
-              
               }
             })
-          
-        
         }
 
         function updateStatusInDom(orderId,newStatus){
@@ -403,8 +401,6 @@
             row.innerText = newStatus;
           }
         }
-
-         
       })
     })
   </script>
