@@ -248,7 +248,7 @@
                                                           <td> <%=oders[i].totalAmount  %></td>
                                                           <td><%= oders[i].date %></td>    
                                                           <td><%= oders[i].paymentMethod%></td>     
-                                                          <td><%=oders[i].currentStatus%></td>  
+                                                          <td class="current-status" orderId="<%=oders[i]._id%>" ><%=oders[i].currentStatus%></td>  
                                                             
                                                        
                                                          <td>
@@ -364,19 +364,19 @@
               type:'POST',
               url:'/admin/updateStatus',
               data:{
-                lastStatus,
+                newStatus,
                 orderId
               },
               success:function(response){
                 const order = response.orderId;
-                const lastStatus = response.lastStatus;
+                const lastStatus = response.newStatus;
                 const orderToUpdate = oders.find(order=> order._id === orderId);
                 if(orderToUpdate){
-                  orderToUpdate.currentStatus = lastStatus;
+                  orderToUpdate.currentStatus = newStatus;
                 }
                 currentStatusIndex = (currentStatusIndex + 1) % orderStatus.length;
 
-                updateStatusInDom(orderId,lastStatus);
+                updateStatusInDom(orderId,newStatus);
                 
               
               }
@@ -384,10 +384,13 @@
         
         }
 
-        function updateStatusInDom(orderId,lastStatus){
-          const row = document.querySelector(`.order-status-button[orderId="${orderId}"]`);
+        function updateStatusInDom(orderId,newStatus){
+          const row = document.querySelector(`.current-status[orderId="${orderId}"]`);
+          
           if(row){
-            row.innerContent = lastStatus;
+            row.innerText = newStatus;
+           
+            
            
           }
         }
