@@ -330,35 +330,46 @@
    document.addEventListener("DOMContentLoaded",function(){
       const updateButton = document.querySelectorAll(".order-status-button");
       var  oders = <%- JSON.stringify(oders) %>;
-    
+      var orderStatus = <%- JSON.stringify(orderStatus) %>
       updateButton.forEach((updateButton,i)=>{
-        var orderStatus = ["Shipped","Out of Delivery","Deliverd"];
         var currentStatusIndex = 0
         var orderStatusIndex = oders[i].currentStatus;
-        if(orderStatusIndex == "Conformed"){
-             updateButton.innerHTML = orderStatus[currentStatusIndex];
-        }else if(orderStatusIndex == "Shipped"){
-             updateButton.innerHTML = orderStatus[currentStatusIndex+1];
-        }else if(orderStatusIndex == "Out of Delivery"){
-             updateButton.innerHTML = orderStatus[currentStatusIndex+2];
 
+        if(oders[i].currentStatus == "Deliverd"){
+          updateButton.disabled = true;
+          
         }else{
-          updateButton.innerHTML = orderStatus[currentStatusIndex+3];
+
+              if(orderStatusIndex == "Conformed"){
+                  updateButton.innerHTML = orderStatus[currentStatusIndex];
+              }else if(orderStatusIndex == "Shipped"){
+                  updateButton.innerHTML = orderStatus[currentStatusIndex+1];
+              }else if(orderStatusIndex == "Out of Delivery"){
+                  updateButton.innerHTML = orderStatus[2];
+
+              }
         }
 
         updateButton.addEventListener("click",function(event){
           event.preventDefault();
-        
             const orderId = this.getAttribute("orderId");
             updateOrderStatus(orderStatus[currentStatusIndex],orderId);
-      
         })
        
         function updateOrderStatus(newStatus,orderId){
            var index = orderStatus.indexOf(newStatus)
-           lastStatus = orderStatus[index+1];
-            updateButton.innerHTML = lastStatus;
+           if(index === 2){
+            console.log("newStatus:",newStatus)
+            updateButton.innerHTML = newStatus;
+            updateButton.disabled  = true;
 
+           }
+           
+            if(index !=2){
+              lastStatus = orderStatus[index+1];
+              updateButton.innerHTML = lastStatus;
+            }
+          
 
             $.ajax({
               type:'POST',
@@ -375,23 +386,21 @@
                   orderToUpdate.currentStatus = newStatus;
                 }
                 currentStatusIndex = (currentStatusIndex + 1) % orderStatus.length;
-
                 updateStatusInDom(orderId,newStatus);
-                
               
               }
             })
+          
         
         }
 
         function updateStatusInDom(orderId,newStatus){
+          if(newStatus === "undefined"){
+            newStatus = "Deliverd";
+          }
           const row = document.querySelector(`.current-status[orderId="${orderId}"]`);
-          
           if(row){
             row.innerText = newStatus;
-           
-            
-           
           }
         }
 

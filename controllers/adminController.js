@@ -118,7 +118,7 @@ exports.getCategories = async (req, res) => {
 
 exports.getOrders = async(req,res)=>{
     try{
-      
+        const  orderStatus = ["Shipped","Out for Delivery","Deliverd"];
         const products = await productModel.find().exec();
         const oders = await orderModel.aggregate([
             {
@@ -137,7 +137,7 @@ exports.getOrders = async(req,res)=>{
         ]).exec();
 
       
-        res.render('adminpanel/orders',{oders,products});
+        res.render('adminpanel/orders',{oders,products,orderStatus});
     }catch(err){
         console.error("error while getting the orders list  page",err);
     }
