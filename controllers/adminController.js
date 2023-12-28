@@ -36,7 +36,7 @@ exports.getDashboard = async(req,res)=>{
             console.log(req.session.admin);
             res.redirect('/admin/dashboard');
         }else{
-            const message = "incorrect password or username";
+            const message = "incorrect Password or Email";
             res.render('adminpanel/login',{message});
         }
     }catch(error){

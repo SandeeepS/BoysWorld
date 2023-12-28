@@ -588,17 +588,15 @@ exports.getCart = async(req,res)=>{
       products.push(product);
     }
   }
-
-
- console.log(userData);
- 
-  res.render('cart', { products ,userData}); 
+  res.status(200).render('cart', { products ,userData}); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
   }
 
 }
+
+
 
 //updateQuantity
 exports.updateQuantity = async (req, res) => {

@@ -91,6 +91,13 @@
 			const password = document.getElementById('adPassword').value;
 			const errorMessage = document.getElementById('error-messsage');
 
+      function isValidEmail(email) {
+				// Regular expression for a simple email validation
+				const emailRegex = /^[^\s@]+@gmail\.com$/;
+				return emailRegex.test(email);
+			}
+
+
 			 if(email === "" && password ===""){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
@@ -110,6 +117,16 @@
               errorMessage.style.display = "none";
           }, 3000);
           
+          return false;
+        }
+
+        if (!isValidEmail(email)) {
+          errorMessage.innerText = "Please enter a valid email address";
+          errorMessage.style.display = "block";
+      
+          setTimeout(function () {
+            errorMessage.style.display = "none";
+          }, 3000);
           return false;
         }
 

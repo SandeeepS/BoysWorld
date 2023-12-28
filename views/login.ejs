@@ -302,6 +302,16 @@
 			const password = document.getElementById('password').value;
 			const errorMessage = document.getElementById('error-messsage');
 
+			function isValidEmail(email) {
+				// Regular expression for a simple email validation
+				const emailRegex = /^[^\s@]+@gmail\.com$/;
+				return emailRegex.test(email);
+			}
+
+			function checkWhiteSpace(s){
+				return s.trim() === "";
+			}
+
 			if(userid === ""  && password ==="" ){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
@@ -324,6 +334,15 @@
 
 				return false;
 			}
+			if (!isValidEmail(email)) {
+				errorMessage.innerText = "Please enter a valid email address";
+				errorMessage.style.display = "block";
+		
+				setTimeout(function () {
+					errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			}
 
 			if(password === ""){
 				errorMessage.innerText ="please enter your Password";
@@ -335,6 +354,15 @@
 
 				return false;
 			}
+
+			if(checkWhiteSpace(password)){
+				errorMessage.innerText ="please enter your name";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
 			
 	    }
 

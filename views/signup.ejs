@@ -199,6 +199,9 @@
 			const phonePattern = /^(?=.*[1-9])\d{10}$/;
 
 			errorMessage.innerHTML = '';
+			function checkWhiteSpace(s){
+				return s.trim() === "";
+			}
 
 			if(username ===""&&email === ""&& number ==="" &&pass === ""  &&cpass === "" ){
 				errorMessage.innerText = "Please fill in all the fields.";
@@ -214,7 +217,6 @@
 			
    
 			if(username === ""  ){
-			
 				errorMessage.innerText ="please enter your name";
                 errorMessage.style.display = "block";
 				
@@ -224,6 +226,17 @@
 
 				return false;
 			}
+
+			if(checkWhiteSpace(username)){
+				errorMessage.innerText ="please enter your name";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
+
 			if(email === ""){
 				errorMessage.innerText = "please enter your email address";
                 errorMessage.style.display = "block";
@@ -244,6 +257,8 @@
 
 				return false;
 			}
+
+
 			if(pass === ""){
 				errorMessage.innerText = "please enter a password";
                 errorMessage.style.display = "block";
@@ -254,6 +269,38 @@
 
 				return false;
 			}
+
+			if(checkWhiteSpace(pass)){
+				errorMessage.innerText ="please enter your password";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
+			  if(cpass === ""){
+				errorMessage.innerText = "please conform password";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			  }
+
+			  if(checkWhiteSpace(cpass)){
+				errorMessage.innerText = "please conform password";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			  }
+
 			if(cpass === "" || pass != cpass){
 				errorMessage.innerText = "passwords do not match";
                 errorMessage.style.display = "block";
