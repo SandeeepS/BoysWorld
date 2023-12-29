@@ -145,7 +145,7 @@
 								<p>Web ID: 1089772</p>
 							</td>
 							<td class="cart_price">
-								<p>₹<%=cart[i].product[0].price%></p>
+								<p  class="single-unit-price"  singleUnitPrice="<%=cart[i].product[0].price %>">₹<%=cart[i].product[0].price%></p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart-quantity">
@@ -155,7 +155,7 @@
 								</div>
 							</td>
 							<td class="cart_total">
-							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>">₹<%= cart[i].product[0].price %></p>
+							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>">₹<%= cart[i].cart.total%></p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>
@@ -230,8 +230,11 @@
 			const decrementButtons = document.querySelectorAll(".cart-quantity-button2");
 			const quantityValues = document.querySelectorAll(".cart-quantity-value");
 			const totalPrice  = document.querySelectorAll(".cart_total_price");
+			const singlePrice = document.querySelectorAll(".single-unit-price");
 			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
-					
+			
+
+
 					
 				
 			incrementButtons.forEach((incrementButton, i) => {
@@ -254,7 +257,9 @@
 			function updateQuantity(index, change,productId) {
 			  const currentQuantity = parseInt(quantityValues[index].innerText);
 			  const total = parseFloat(totalPrice[index].getAttribute("total-Price"));
+			  const singleUnitPrice = parseFloat(singlePrice[index].getAttribute("singleUnitPrice"));
 			  const newQuantity = currentQuantity + change;
+			  console.log("singlkeproductPrice:",singleUnitPrice);
 			  console.log("currenrtQuantity",currentQuantity);
 			  console.log("total",total);
 			  console.log("newQuantity",newQuantity);
@@ -262,27 +267,26 @@
 			   if (newQuantity < 1) {
 				newQuantity = 1;
 			   } 
-			  const newTotal = (total/currentQuantity)*newQuantity;
-			  console.log("newTotal",newTotal);
+			 
 
 			  fetch("/update-quantity", {
 				method: "POST",
 				headers: {
 				  "Content-Type": "application/json",
 				},
-				body: JSON.stringify({ productId, newQuantity,newTotal }),
+				body: JSON.stringify({ productId, newQuantity,currentQuantity,singleUnitPrice}),
 			  })
 				.then((response) => response.json())
 				.then((data) => {
 				  quantityValues[index].innerText = data.newQuantity;
-				  totalPrice[index].innerText = data.newTotal;
+				  totalPrice[index].innerText ="₹"+ data.newTotal;
 				})
 				.catch((error) => {
 				  console.error("Error updating the quantity:", error);
 				});
                   // Update the quantity and total in the DOM
             quantityValues[index].innerText = newQuantity;
-            totalPrice[index].innerText = newTotal.toFixed(2);
+            totalPrice[index].innerText = newTotal;
 
             // Update the total amount
             totalAmount += change * parseFloat(totalPrice[index].getAttribute("total-Price"));

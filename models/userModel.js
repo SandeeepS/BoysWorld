@@ -6,6 +6,7 @@ const cartItemSchema = new mongoose.Schema({
     },
     quantity:Number,
     price:Number,
+    total:Number
 });
 
 

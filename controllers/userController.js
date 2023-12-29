@@ -400,7 +400,8 @@ exports.verifyOtp = async (req, res) => {
         const newCartItem = {
           productId:productId2,
           quantity:1,
-          price:productPrice
+          price:productPrice,
+          total:productPrice
         };
         user.cart.push(newCartItem);
         await user.save();
@@ -637,15 +638,18 @@ exports.getCart = async(req,res)=>{
 //updateQuantity
 exports.updateQuantity = async (req, res) => {
   try {
-    const { productId, newQuantity ,newTotal} = req.body;
+    const { productId, newQuantity ,currentQuantity,singleUnitPrice} = req.body;
+    console.log("singleproductprice",singleUnitPrice);
+    const newTotal = newQuantity*singleUnitPrice;
+    console.log("newtotal:",newTotal);
     const newProductId = new mongoose.Types.ObjectId(productId);
     console.log("productId",newProductId);
-    console.log("newtotal",newTotal);
+ 
     const userId = req.session.user; 
     const userId2 = new mongoose.Types.ObjectId(userId);
     const cartItem = await UserModel.findOneAndUpdate(
       {"_id":userId2,"cart.productId":newProductId},
-      {$set:{"cart.$.quantity":newQuantity}},
+      {$set:{"cart.$.quantity":newQuantity,"cart.$.total":newTotal}},
       {new: true}
     );
     console.log("cartItem:",cartItem);
