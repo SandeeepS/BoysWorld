@@ -912,7 +912,7 @@ exports.placeOrder = async (req, res) => {
 
 exports.placeOrder2 = async(req,res)=>{
   try{
-    const {productId,quantity,totalPrice,currentAddress} = req.body;
+    const {productId,quantity,total,currentAddress} = req.body;
     const userId2 = req.session.user;
     const user = await UserModel.findById(userId2).exec();
     const product = await productModel.findById(productId).exec();
@@ -932,7 +932,7 @@ exports.placeOrder2 = async(req,res)=>{
         "orderId":randomId,
         "userName":userName,
         "productName":productName,
-        "totalAmount":totalPrice,
+        "totalAmount":total,
         "currentAddress":currentAddress,
         "date": formattedDate,
         "paymentMethod":cashOnDelivery,
