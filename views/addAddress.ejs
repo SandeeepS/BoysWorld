@@ -313,6 +313,12 @@
 				return emailRegex.test(email);
 			}
 
+			
+
+			function checkWhiteSpace(s){
+				return s.trim() === "";
+			}
+
 			if (name==='' && number===""  && email===""  && houseName===""  && state===""  && city==="" && street===""  && landmark==="" && pin==="" ) {
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
@@ -335,6 +341,15 @@
 				return false;
 			}
 
+			if(checkWhiteSpace(name)){
+				errorMessage.innerText ="please enter your name";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
 			if(number === ""){
 				errorMessage.innerText = "Please enter your number";
                 errorMessage.style.display = "block";
@@ -345,6 +360,15 @@
                 }, 3000);
 				return false;
 			}
+
+			if(checkWhiteSpace(number)){
+				errorMessage.innerText ="please enter your number";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
 
 			if(!phonePattern.test(number)){
 				errorMessage.innerText = "please enter a valid phone  number.";
@@ -389,6 +413,15 @@
 				return false;
 			}
 
+			if(checkWhiteSpace(houseName)){
+				errorMessage.innerText ="please enter your House Name";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
 			if( houseNumber === ""){
 				errorMessage.innerText = "Please enter your house number";
                 errorMessage.style.display = "block";
@@ -399,6 +432,14 @@
                 }, 3000);
 				return false;
 			}
+			if(checkWhiteSpace(houseNumber)){
+				errorMessage.innerText ="please enter your House Number";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
 
 			if(state === ""){
 				errorMessage.innerText = "Please enter your State";
@@ -411,6 +452,15 @@
 				return false;
 			}
 
+			if(checkWhiteSpace(state)){
+				errorMessage.innerText ="please enter your state";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
 			if(city === ""){
 				errorMessage.innerText = "Please enter your city";
                 errorMessage.style.display = "block";
@@ -421,6 +471,15 @@
                 }, 3000);
 				return false;
 			}
+
+			if(checkWhiteSpace(city)){
+				errorMessage.innerText ="please enter your city";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
 
 			if(street === ""){
 				errorMessage.innerText = "Please enter your street";
@@ -433,6 +492,15 @@
 				return false;
 			}
 
+			if(checkWhiteSpace(street)){
+				errorMessage.innerText ="please enter your street";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
 			if(landmark === ""){
 				errorMessage.innerText = "Please enter your Land Mark";
                 errorMessage.style.display = "block";
@@ -443,6 +511,14 @@
                 }, 3000);
 				return false;
 			}
+			if(checkWhiteSpace(landmark)){
+				errorMessage.innerText ="please enter your landmark";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
 
 			if(pin === ""){
 				errorMessage.innerText = "Please enter your pincode";
@@ -454,6 +530,15 @@
                 }, 3000);
 				return false;
 			}
+
+			if(checkWhiteSpace(pin)){
+				errorMessage.innerText ="please enter your pin";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
 
 			return true;
 

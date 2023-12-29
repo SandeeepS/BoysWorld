@@ -203,6 +203,12 @@
 				return s.trim() === "";
 			}
 
+			function isValidEmail(email) {
+				// Regular expression for a simple email validation
+				const emailRegex = /^[^\s@]+@gmail\.com$/;
+				return emailRegex.test(email);
+			}
+
 			if(username ===""&&email === ""&& number ==="" &&pass === ""  &&cpass === "" ){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
@@ -247,6 +253,17 @@
 
 				return false;
 			}
+           
+			if (!isValidEmail(email)) {
+				errorMessage.innerText = "Please enter a valid email address";
+				errorMessage.style.display = "block";
+		
+				setTimeout(function () {
+					errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			}
+
 			if(number === "" || !phonePattern.test(number)){
 				errorMessage.innerText = "please enter a valid phone  number.";
                 errorMessage.style.display = "block";

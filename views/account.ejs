@@ -260,6 +260,8 @@
 				<div class="modal-style">
                     <div class="container">
 						<h4 class="text text-center">Edit Profile</h4>
+						<div class="error-message" id="error-message1"></div>
+
                          <div class="form-one" style="width: 100%;">
                             <form action="">
 								<label for="">Name</label>
@@ -300,7 +302,7 @@
 				 <div class="modal-style">
 					 <div class="container">
 						 <h4 class="text text-center">Change Password</h4>
-						 <div class="error-message" id="error-messsage"></div>
+						 <div class="error-message" id="error-messsage2"></div>
 
 						  <div class="form-one" style="width: 100%;">
 							 <form action="">
@@ -409,6 +411,32 @@
 			const name = document.getElementById("name1").value;
 			const number = document.getElementById("number1").value;
 			const email = document.getElementById("email1").value;
+			const phonePattern = /^(?=.*[1-9])\d{10}$/;
+			const errorMessage = document.getElementById('error-message1');
+ 
+			console.log(name)
+			function checkWhiteSpace(s){
+				return s.trim() === "";
+			}
+
+			function isValidEmail(email) {
+				// Regular expression for a simple email validation
+				const emailRegex = /^[^\s@]+@gmail\.com$/;
+				return emailRegex.test(email);
+			}
+            
+			
+
+			if(number === "" || !phonePattern.test(number)){
+				errorMessage.innerText = "please enter a valid phone  number.";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
 			
 			//ajax req
 			$.ajax({
@@ -446,15 +474,11 @@
 					modal2.style.display = "none";
 				}
 			}
-	
-	
-	
 		</script>
 
 		<!-- password modal -->
 		<script>
 			var modal3 = document.getElementById("psswordModal");
-			
 			var openModal3Btn = document.getElementById("changePass");
 			var closeModal3Btn = document.getElementById("closeModalBtn3");
 
@@ -474,18 +498,19 @@
 					modal3.style.display = "none";
 				}
 			}
-	
 		</script>
 
 	   <!-- change password req -->
 	   <script>
 		function ChangePassword(){
-
-		
 		    const currentPassword = document.getElementById("current").value;
 			const newPassword = document.getElementById("new").value;
 			const conformPassword = document.getElementById("conform").value;
-	  		const  errorMessage =  document.getElementById("error-messsage");
+	  		const  errorMessage =  document.getElementById("error-messsage2");
+
+			function checkWhiteSpace(s){
+				return s.trim() === "";
+			}
 
 			if(currentPassword === "" && newPassword === "" && conformPassword === ""){
 				errorMessage.innerText = "Please fill in all the fields.";
@@ -520,8 +545,17 @@
 				return false;
 			}
 
+			if(checkWhiteSpace(newPassword)){
+				errorMessage.innerText ="please enter the new password";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
 			if(conformPassword === ""){
-				errorMessage.innerText = "Please Enter the current password";
+				errorMessage.innerText = "Please enter the conform password";
                 errorMessage.style.display = "block";
 
                 // Hide the error message after 3 seconds
@@ -530,6 +564,15 @@
                 }, 3000);
 				return false;
 			}
+
+			if(checkWhiteSpace(conformPassword)){
+				errorMessage.innerText ="please conform the password";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
 
 			if(conformPassword !== newPassword){
 				errorMessage.innerText = "New password and Conform passwords are not match!";
@@ -541,8 +584,6 @@
                 }, 3000);
 				return false;
 			}
-
-
 
 				//ajax req
 				$.ajax({
@@ -574,7 +615,6 @@
 							para.innerHTML = '<p>' + response.message + '</p>';
 							modal4.style.display = "block";
 						}
-					
 						
 					},
 					error: function(error){
@@ -604,8 +644,6 @@
 					modal3.style.display = "none";
 				}
 			}
-	
-
 	   </script>
 </body>
 </html>
