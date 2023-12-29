@@ -425,7 +425,37 @@
 				return emailRegex.test(email);
 			}
             
+			if(name === "" ){
+				errorMessage.innerText = "please enter Your Name";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
+
 			
+			if(checkWhiteSpace(name)){
+				errorMessage.innerText ="please enter Your Name";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
+			  if (!isNaN(parseFloat(name))) {
+				errorMessage.innerText = "Please enter a valid Name";
+				errorMessage.style.display = "block";
+		   
+				setTimeout(() => {
+					errorMessage.style.display = "none";
+				}, 3000);
+		   
+				return false;
+			}
 
 			if(number === "" || !phonePattern.test(number)){
 				errorMessage.innerText = "please enter a valid phone  number.";
@@ -435,6 +465,28 @@
                     errorMessage.style.display = "none";
                 }, 3000);
 
+				return false;
+			}
+      
+			if(email === "" ){
+				errorMessage.innerText = "please enter Your Email";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
+
+
+			if (!isValidEmail(email)) {
+				errorMessage.innerText = "Please enter a valid email address";
+				errorMessage.style.display = "block";
+		
+				setTimeout(function () {
+					errorMessage.style.display = "none";
+				}, 3000);
 				return false;
 			}
 			
