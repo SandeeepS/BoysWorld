@@ -382,7 +382,7 @@
 		<div class="a-box text-center" >
 			<div>
                 <ul>
-                    <li>Cart Sub Total <span id="cartTotalAmount"><%=totalAmount%></span></li>
+                    <li>Cart Sub Total <span id="cartTotalAmount">R <%=totalAmount%></span></li>
                     
                 </ul>
 				<Button class="btn btn-default place-order" onclick="placeOrder()">Place your order</Button>
@@ -393,7 +393,6 @@
 
     <div id="paymentSuccessModal" class="modal2">
 		<div id="paymentSuccessModalContent" class="modal-content2">
-			<span id="paymentSuccessModalClose" class="close">&times;</span>
 			<div class="modal-style">
 				<div class="modal-text">
 					<p>Order Successful!</p>
@@ -559,6 +558,9 @@
 						// Display payment successful modal
 					
 						modal2.style.display = "block";
+						setTimeout(function() {
+							window.location.href = "/shop"; 
+						}, 3000);
 					},
 					error: function (error) {
 						console.error("Error placing order:", error);

@@ -221,6 +221,9 @@
 						  <div class="form-one" style="width: 100%;">
 							 <form class="signup-form" action="">
 								<label for="">Enter new password</label>
+								<br>
+								<div class="error-message" id="error-message3"></div>
+                                <br>
 								<input type="password" name="new" id="newPass" placeholder="Enter new password" >
 								<label for="">Conform new password</label>
 								<input type="password" name="cPass" id="cPass" placeholder="Conform password" >
@@ -553,17 +556,40 @@
 
 			const  closeModalBtn2 = document.getElementById("closeModalBtn2");
 			const closeModalBtn3 = document.getElementById("closeModalBtn3");
+			function checkWhiteSpace(s){
+				return s.trim() === "";
+			}
 
-
-			if(newPass === "" || newPass === null || cPass === ""|| cPass === null){
+			if(newPass === "" && cPass === ""){
 				errorMessage.innerText = "please fill the fields";
 				errorMessage.style.display = "block";
 
 				setTimeout(function(){
 					errorMessage.style.display = "none";
 				},3000);
+				return false;
 			
 			}
+
+			if(checkWhiteSpace(newPass)){
+				errorMessage.innerText ="please enter a valid password";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
+			  if(checkWhiteSpace(cPass)){
+				errorMessage.innerText ="please enter a valid conform password";
+				errorMessage.style.display = "block";
+				setTimeout(function () {
+				  errorMessage.style.display = "none";
+				}, 3000);
+				return false;
+			  }
+
+
 			if(newPass !== cPass){
 				errorMessage.innerText = "Passwords are not match";
 				errorMessage.style.display = "block";
@@ -571,6 +597,7 @@
 				setTimeout(function(){
 					errorMessage.style.display = "none";
 				},3000);
+				return false;
 			}
             $.ajax({
 				type:'POST',

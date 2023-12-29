@@ -223,11 +223,7 @@
                             <div class="row">
 								<div class="box-sub">
 									<div>
-										
-
 											<input type="radio" name="checkout" >
-									
-										
 									</div>
 									<div>
 										<h5><%= address[i].name%>,</h5>
@@ -250,21 +246,13 @@
 					</div>
 				</div>
 			</div>
-
-
-		   
-			   
 			<% for(let i = 0 ;i< currentAddress.length;i++) {%>
-
 				<tr>
 					<td>
-
 					</td>
 					<td>
-
 					</td>
 					<td >
-						
 						<h4 id="selectedAddressName"><%= currentAddress[0].name %></h4>
 						<h5 id="selectedAddressNumber">Mobile number: <%= currentAddress[0].number %></h5>
 						<h5 id="selectedAddressHouseName">House Name: <%= currentAddress[0].houseName %></h5>
@@ -278,7 +266,6 @@
 			        </td>
 				</tr>
 				<% } %>
-
 				<thead>
 					<tr>
 						<td>
@@ -291,20 +278,12 @@
 
 						</td>
 						<td>
-
 						</td>
-					
 					</tr>
 				   </thead>
-
-
 		   </tbody>
-
 	    </table>
-	    
 		<div class="a-box">
-			
-
 			<div class="row">
 				<div class="box-sub">
 					<div>
@@ -313,10 +292,8 @@
 					<div class="cash">
 						<p>Online Payment</p>
 					</div>
-				
 				</div>
 			</div>
-
 			<div class="row">
 				<div class="box-sub">
 					<div>
@@ -325,10 +302,8 @@
 					<div class="cash">
 						<p>Cash on Deleivery</p>
 					</div>
-				
 				</div>
 			</div>
-			   
 		</div>
         <table class="table  table-condensed"
 		<thead>
@@ -340,23 +315,14 @@
 					<h4 class="title ">Rivew item and Delevery</h4>
 				</td>
 				<td>
-
 				</td>
 				<td>
-
 				</td>
-			
 			</tr>
 		   </thead>
-
-		   
           </table>
 	</form>
-
-	
 		<% if(product) {%>
-
-		
 		<div class="a-box">
 		   <div class="content">
 			       <div class="photo">
@@ -369,15 +335,9 @@
 					  <h5>Qty:<%=quantity%></h5>
 					  <h5>Order Total :₹<%=totalPrice%></h5>
 				   </div>
-                  
 		   </div>
 		</div>
 		<% } %>
-
-
-	
-
-
 		<div class="a-box text-center" >
 			<div>
 				<Button class="btn btn-default place-order" onclick="placeOrderBtn()">Place your order</Button>
@@ -388,7 +348,6 @@
 
     <div id="paymentSuccessModal" class="modal2">
 		<div id="paymentSuccessModalContent" class="modal-content2">
-			<span id="paymentSuccessModalClose" class="close">&times;</span>
 			<div class="modal-style">
 				<div class="modal-text">
 					<p>Order Successful!</p>
@@ -417,7 +376,6 @@
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
-					
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
@@ -428,7 +386,6 @@
 							</form>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>
@@ -437,7 +394,6 @@
 			<div class="container">
 				<div class="row">
 					<p class="pull-left">Copyright © 2013 BoysWorld Inc. All rights reserved.</p>
-					
 				</div>
 			</div>
 		</div>
@@ -464,7 +420,6 @@
                     for (let j = 0; j < boxSubs.length; j++) {
                         boxSubs[j].classList.remove("highlighted");
                     }
-
                     // Add the 'highlighted' class to the selected box-sub
                     boxSubs[i].classList.add("highlighted");
                 });
@@ -477,17 +432,14 @@
 		var modal = document.getElementById("myModal");
 		var openModalBtn = document.getElementById("openModalBtn");
 		var closeModalBtn = document.getElementById("closeModalBtn");
-	
 		// Event listener to open the modal
 		openModalBtn.onclick = function() {
 			modal.style.display = "block";
 		}
-	
 		// Event listener to close the modal
 		closeModalBtn.onclick = function() {
 			modal.style.display = "none";
 		}
-	
 		// Close the modal if the user clicks outside of it
 		window.onclick = function(event) {
 			if (event.target == modal) {
@@ -503,29 +455,20 @@
 				.split('; ')
 				.find(row => row.startsWith('productDetails='))
 				?.split('=')[1];
-	
 			return cookieValue ? JSON.parse(decodeURIComponent(cookieValue)) : null;
 		}
-	
 		// Example usage
 		document.addEventListener('DOMContentLoaded', function () {
 			// Call the function to get product details from the cookie
 			const productDetails = getProductDetailsFromCookie();
-	
 			// Check if product details are available
 			if (productDetails) {
 				console.log("Product ID:", productDetails.id);
 				console.log("Quantity:", productDetails.quantity);
-	
-				
 			}
 		});
 	</script>
 
-	
-
-
-  
 	<script>
 		// Function to send AJAX request
 		function placeOrderBtn() {
@@ -556,6 +499,9 @@
 						// Display payment successful modal
 					
 						modal2.style.display = "block";
+						setTimeout(function() {
+							window.location.href = "/shop"; 
+						}, 3000);
 					},
 					error: function (error) {
 						console.error("Error placing order:", error);
@@ -575,7 +521,6 @@
 						currentAddress:currentAddress,
 					},
 					success:function(response){
-						
 						rezorpayPayment(response.order);
 					},
 					error:function(error){
@@ -583,11 +528,7 @@
 					}
 				});
 
-
-
-
 				function rezorpayPayment(order){
-				
 					var options = {
 						"key": "rzp_test_t03CSatWp5XBXp", // Enter the Key ID generated from the Dashboard
 						"amount": order.amount_due, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -600,7 +541,6 @@
 							alert(response.razorpay_payment_id);
 							alert(response.razorpay_order_id);
 							alert(response.razorpay_signature);
-
 							verifyPayment(response);
 						},
 						"prefill": {
@@ -619,7 +559,6 @@
                      rzp1.open();
 				}
            
-				 
 				 function verifyPayment(payment){
                        $.ajax({
 						method:'POST',
@@ -630,26 +569,17 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
-
 						},
-
 					   })
 				 }
 
-
-
 			}else{
-				
                selectPaymentModal.style.display = "block";
 			}
 		
-			
 		}
 		
 	</script>
-
-	
-	
 	<script>
 		// Get references to the modal and the button to open/close it
 		var modal2 = document.getElementById("paymentSuccessModal");
@@ -661,27 +591,21 @@
 		closeModalBtn2.onclick = function () {
 			modal2.style.display = "none";
 		}
-	
 		// Close the modal if the user clicks outside of it
 		window.onclick = function (event) {
 			if (event.target == modal2) {
 				modal2.style.display = "none";
 			}
 		}
-     
 		selectPaymentModalClose.onclick = function(){
 			selectPaymentModal.style.display = "none";
 
 		}
-
 		window.onclick = function(event){
 			if(event.target == selectPaymentModal){
 				selectPaymentModal.style.display = "none";
 			}
 		}
-
 	</script>
-	
-
 </body>
 </html>
