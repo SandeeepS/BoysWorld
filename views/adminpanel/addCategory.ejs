@@ -22,7 +22,12 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
-  
+  <style>
+    .error-message {
+        color: red;
+        display: none;
+    }
+</style>
 </head>
 <body>
   <div class="container-scroller"> 
@@ -202,11 +207,14 @@
                                 <div class=" justify-content-between align-items-start">
                                   <div class="table-responsive cart_info">
                                     <div >
-                                       <h2>Update category</h2>
-                                       <form action="/admin/addingCategory" method="post">
+                                       <h2><b>Update Category</b></h2>
+                                       <br>
+                                       <div class="error-message" id="error-message"></div>
+                                       <br>
+                                       <form action="/admin/addingCategory" method="post" onsubmit="return validate()">
                                            <p>
                                             <label for="categoryName">Category Name</label>      
-                                            <input type="text" class="form-control" name="categoryName">
+                                            <input type="text" class="form-control" name="categoryName" id="cat">
                                            </p>
                                           
                                            
@@ -290,6 +298,38 @@
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
+  <script>
+    function validate(){
+      const errorMessage = document.getElementById('error-message');
+      const cat = document.getElementById("cat").value;
+      
+      function checkWhiteSpace(s){
+        return s.trim() === "";
+      }
+      if(cat === ""  ){
+        errorMessage.innerText ="please enter a Category";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+        return false;
+      }
+   
+      if(checkWhiteSpace(cat)){
+        errorMessage.innerText ="please enter a valid Category";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+          errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+        }
+
+        
+
+       return true;
+
+    }
+  </script>
 </body>
 
 </html>
