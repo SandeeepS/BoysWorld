@@ -207,7 +207,10 @@
                                 <div class=" justify-content-between align-items-start">
                                   <div class="table-responsive cart_info">
                                     <div >
-                                       <h2>Add products</h2>
+                                       <h2><b>Add Products</b></h2>
+                                       <br>
+                                       <div class="error-message" id="error-message"></div>
+                                       <br>
                                        <form action="/admin/addingProduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                                           
                                         <p>
@@ -259,14 +262,10 @@
           
                                        </form>
                                     </div>
-
-
-                                   
-                                   
                                   </div>
                               </div>
 
-                              <div class="error-message" id="error-message">
+                              
 							
                               </div>
 
@@ -342,8 +341,14 @@
             const dis = document.getElementById('dis').value;
             const img = document.getElementById('img');
             const errorMessage = document.getElementById('error-message');
+            
+            function checkWhiteSpace(s){
+              return s.trim() === "";
+            }
 
-            if(productName==="" || productName===null || price==="" || price===null || stock==="" || stock===null || dis==="" || dis===null){
+
+
+            if(productName===""  && price===""  && stock==="" && dis==="" ){
                errorMessage.innerText ="Please fill in all the fields!!";
                errorMessage.style.display = "block";
 
@@ -351,7 +356,111 @@
                     errorMessage.style.display ="none";
                },3000);
                return false;
-            }else if(img.files.length === 0){
+            } 
+             
+            if(productName === ""  ){
+              errorMessage.innerText ="please enter your productName";
+                      errorMessage.style.display = "block";
+              
+                      setTimeout(function () {
+                          errorMessage.style.display = "none";
+                      }, 3000);
+      
+              return false;
+            }
+
+            if(checkWhiteSpace(productName)){
+              errorMessage.innerText ="please enter your Product Name";
+              errorMessage.style.display = "block";
+              setTimeout(function () {
+                errorMessage.style.display = "none";
+              }, 3000);
+              return false;
+              }
+
+            if(price === ""  ){
+              errorMessage.innerText ="please enter the price";
+                      errorMessage.style.display = "block";
+              
+                      setTimeout(function () {
+                          errorMessage.style.display = "none";
+                      }, 3000);
+      
+              return false;
+            }
+
+            if(checkWhiteSpace(price)){
+              errorMessage.innerText ="please enter the Price";
+              errorMessage.style.display = "block";
+              setTimeout(function () {
+                errorMessage.style.display = "none";
+              }, 3000);
+              return false;
+              }
+
+              if(price <= 0  ){
+                errorMessage.innerText ="please enter the valid price";
+                        errorMessage.style.display = "block";
+                
+                        setTimeout(function () {
+                            errorMessage.style.display = "none";
+                        }, 3000);
+        
+                return false;
+              }
+
+            if(stock === ""  ){
+              errorMessage.innerText ="please enter Number of Stock";
+                      errorMessage.style.display = "block";
+              
+                      setTimeout(function () {
+                          errorMessage.style.display = "none";
+                      }, 3000);
+      
+              return false;
+            }
+
+            if(checkWhiteSpace(stock)){
+              errorMessage.innerText ="please enter the number of stock";
+              errorMessage.style.display = "block";
+              setTimeout(function () {
+                errorMessage.style.display = "none";
+              }, 3000);
+              return false;
+              }
+
+              if(stock <= 0  ){
+                errorMessage.innerText ="please enter the valid Stock Number";
+                        errorMessage.style.display = "block";
+                
+                        setTimeout(function () {
+                            errorMessage.style.display = "none";
+                        }, 3000);
+        
+                return false;
+              }
+
+            if(dis === ""  ){
+              errorMessage.innerText ="please enter Discription of your product";
+                      errorMessage.style.display = "block";
+              
+                      setTimeout(function () {
+                          errorMessage.style.display = "none";
+                      }, 3000);
+      
+              return false;
+            }
+
+            if(checkWhiteSpace(dis)){
+              errorMessage.innerText ="please enter your Discriptions about Product";
+              errorMessage.style.display = "block";
+              setTimeout(function () {
+                errorMessage.style.display = "none";
+              }, 3000);
+              return false;
+              }
+
+             if(img.files.length === 0){
                    
                   
                     errorMessage.innerText = "Please upload atleast one image!";
@@ -363,10 +472,25 @@
                   
                   return false;
             }
-            else{
-              return true;
-            }
 
+            for (let i = 0; i < img.files.length; i++) {
+              const fileType = img.files[i].type;
+              if (fileType !== "image/jpeg") {
+                  errorMessage.innerText = "Please upload a JPG image file!";
+                  errorMessage.style.display = "block";
+        
+                  setTimeout(() => {
+                      errorMessage.style.display = "none";
+                  }, 3000);
+        
+                  return false;
+              }
+          }
+
+
+           
+              return true;
+            
 
 
   }
