@@ -143,7 +143,7 @@
                            <p style="color: black;"><%= message %></p>
 						<% } %>
 						<form action="/loginUser" method="post" onsubmit="return validateform()">
-							<input type="email" id="userid" name="Email" placeholder="Email Id" />
+							<input type="email" id="emailid" name="Email" placeholder="Email Id" />
 							<input type="password" id="password" name="Password" placeholder="Password" />
 							<br>
 							<h5 id="forgotPassword">Forgot your password?<a href="#">Reset password</a></h5>
@@ -298,9 +298,10 @@
     <script src="js/main.js"></script>
 	<script>
 		function validateform(){
-			const userid = document.getElementById('userid').value;
+			const emailid= document.getElementById('emailid').value;
 			const password = document.getElementById('password').value;
 			const errorMessage = document.getElementById('error-messsage');
+			console.log("on validation");
 
 			function isValidEmail(email) {
 				// Regular expression for a simple email validation
@@ -312,7 +313,7 @@
 				return s.trim() === "";
 			}
 
-			if(userid === ""  && password ==="" ){
+			if(emailid === ""  && password ==="" ){
 				errorMessage.innerText = "Please fill in all the fields.";
                 errorMessage.style.display = "block";
 
@@ -323,7 +324,7 @@
 				return false;
 			
 		    }
-			if(userid === ""){
+			if(emailid === ""){
 					
 				errorMessage.innerText ="please enter your Email id";
                 errorMessage.style.display = "block";
@@ -334,7 +335,7 @@
 
 				return false;
 			}
-			if (!isValidEmail(email)) {
+			if (!isValidEmail(emailid)) {
 				errorMessage.innerText = "Please enter a valid email address";
 				errorMessage.style.display = "block";
 		
@@ -356,14 +357,14 @@
 			}
 
 			if(checkWhiteSpace(password)){
-				errorMessage.innerText ="please enter your name";
+				errorMessage.innerText ="please enter a Valid Password";
 				errorMessage.style.display = "block";
 				setTimeout(function () {
 				  errorMessage.style.display = "none";
 				}, 3000);
 				return false;
 			  }
-			
+			return true;
 	    }
 
 	</script>

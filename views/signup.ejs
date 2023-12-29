@@ -242,6 +242,16 @@
 				return false;
 			  }
 
+			  if (!isNaN(parseFloat(username))) {
+				errorMessage.innerText = "Please enter a valid Name";
+				errorMessage.style.display = "block";
+		   
+				setTimeout(() => {
+					errorMessage.style.display = "none";
+				}, 3000);
+		   
+				return false;
+			}
 
 			if(email === ""){
 				errorMessage.innerText = "please enter your email address";
