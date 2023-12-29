@@ -572,32 +572,6 @@ exports.getCheckoutPage2 = async(req,res)=>{
   }
 }
 
-// exports.getCart = async(req,res)=>{
-//   try{
-//     const userId = req.session.user;
-//     const cartProductIds=[];
-//     const user = await UserModel.findById(userId).exec();
-//   for(let product of user.cart){
-//      cartProductIds.push(product.productId);
-//   }
-//   const userData = user.cart;
-//   // const cartProducts = cartProductIds;
-//   const products = [];
-//   for (let productId of cartProductIds) {
-//     const product = await productModel.findById(productId).exec();
-//     if (product) {
-//       products.push(product);
-//     }
-//   }
-//   res.status(200).render('cart', { products ,userData}); 
-//   }catch(err){
-//     console.error("error while getting produts ",err);
-//     res.redirect('/shop');
-//   }
-
-// }
-
-//getCart
 
 
 exports.getCart = async(req,res)=>{

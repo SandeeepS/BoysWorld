@@ -233,7 +233,6 @@
 			const totalPrice  = document.querySelectorAll(".cart_total_price");
 			const singlePrice = document.querySelectorAll(".single-unit-price");
 			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
-			
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
 				event.preventDefault();
@@ -293,8 +292,7 @@
 		function checkout(){
 			const checkout = document.getElementById("checkoutBtn");
             const cart = <%-JSON.stringify(cart)%>;
-			console.log(cart);
-			const totalAmount = document.getElementById('cartTotalAmount').innerText;
+			const totalAmount  = <%-JSON.stringify(cartTotal) %>;
 			window.location.href = "/getCheckout2?cart=" + cart + "&totalAmount="+totalAmount ;
 		}
 	</script>
