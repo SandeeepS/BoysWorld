@@ -56,13 +56,13 @@ exports.signupPage = async(req,res)=>{
 
 exports.shopPage = async(req,res)=>{
     try{
+        const user = req.session.user;
+        const userId = new mongoose.Types.ObjectId(user);
         const productData = await productModel.find({isDeleted:false}).exec();
         const categoryData = await categoryModel.find({isDelete:false}).exec();
-        console.log("productdata:",productData);
-        console.log("--------------");
-        console.log("categorydata",categoryData);
-      
-        res.render('shop',{product:productData,category:categoryData});
+        const Currentuser = await UserModel.findOne({"_id":userId})
+        console.log("currentUser:",Currentuser);
+        res.render('shop',{product:productData,category:categoryData,Currentuser});
 
      
     }catch(error){
