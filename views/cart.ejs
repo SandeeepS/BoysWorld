@@ -173,7 +173,8 @@
 				<div class="col-sm-6"  style="width: 100%;">
 					<div class="total_area">
 						<ul>
-							<p>total amount</p>
+							<h4 id="totalCartAmount">Total Amount: ₹ <%= cartTotal %></h4>
+
 						</ul>
 							<button id="checkoutBtn" class="btn btn-default check_out" href="#" onclick="checkout()">Check Out</a></button> 
 					</div>
@@ -233,10 +234,6 @@
 			const singlePrice = document.querySelectorAll(".single-unit-price");
 			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
 			
-
-
-					
-				
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
 				event.preventDefault();
@@ -268,7 +265,6 @@
 				newQuantity = 1;
 			   } 
 			 
-
 			  fetch("/update-quantity", {
 				method: "POST",
 				headers: {
@@ -280,6 +276,7 @@
 				.then((data) => {
 				  quantityValues[index].innerText = data.newQuantity;
 				  totalPrice[index].innerText ="₹"+ data.newTotal;
+                 document.getElementById("totalCartAmount").innerText = "Total Amount: ₹"+data.cartTotal;
 				})
 				.catch((error) => {
 				  console.error("Error updating the quantity:", error);
@@ -287,10 +284,6 @@
                   // Update the quantity and total in the DOM
             quantityValues[index].innerText = newQuantity;
             totalPrice[index].innerText = newTotal;
-
-            // Update the total amount
-            totalAmount += change * parseFloat(totalPrice[index].getAttribute("total-Price"));
-            cartTotalAmountElement.innerText = "$" + totalAmount.toFixed(2);
 
 			}
 		  });

@@ -605,6 +605,7 @@ exports.getCart = async(req,res)=>{
        const userId = req.session.user;
        const userId2 = new mongoose.Types.ObjectId(userId);
        console.log("userid:",userId2);
+       let cartTotal = 0;
        const cart = await UserModel.aggregate([
         {
           $match:{_id:userId2}
@@ -622,10 +623,15 @@ exports.getCart = async(req,res)=>{
         }
        ]);
        
+       for(let i = 0; i < cart.length; i++){
+           cartTotal = cartTotal + cart[i].cart.total;
+       }
+      console.log("total:",cartTotal);
+      
       console.log("cart:",cart);
       console.log("firstproduct:",cart[0].product);
       
-  res.render('cart', {cart}); 
+  res.render('cart', {cart,cartTotal}); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
@@ -644,7 +650,7 @@ exports.updateQuantity = async (req, res) => {
     console.log("newtotal:",newTotal);
     const newProductId = new mongoose.Types.ObjectId(productId);
     console.log("productId",newProductId);
- 
+    let cartTotal = 0;
     const userId = req.session.user; 
     const userId2 = new mongoose.Types.ObjectId(userId);
     const cartItem = await UserModel.findOneAndUpdate(
@@ -653,7 +659,11 @@ exports.updateQuantity = async (req, res) => {
       {new: true}
     );
     console.log("cartItem:",cartItem);
-    res.json({ newQuantity ,newTotal});
+    for(let i = 0; i < cartItem.cart.length; i++){
+          cartTotal = cartTotal+cartItem.cart[i].total;
+    }
+    
+    res.json({ newQuantity ,newTotal,cartTotal});
    
   } catch (err) {
     console.error("Error while updating the quantity:", err);
