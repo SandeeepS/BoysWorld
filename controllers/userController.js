@@ -571,24 +571,60 @@ exports.getCheckoutPage2 = async(req,res)=>{
   }
 }
 
+// exports.getCart = async(req,res)=>{
+//   try{
+//     const userId = req.session.user;
+//     const cartProductIds=[];
+//     const user = await UserModel.findById(userId).exec();
+//   for(let product of user.cart){
+//      cartProductIds.push(product.productId);
+//   }
+//   const userData = user.cart;
+//   // const cartProducts = cartProductIds;
+//   const products = [];
+//   for (let productId of cartProductIds) {
+//     const product = await productModel.findById(productId).exec();
+//     if (product) {
+//       products.push(product);
+//     }
+//   }
+//   res.status(200).render('cart', { products ,userData}); 
+//   }catch(err){
+//     console.error("error while getting produts ",err);
+//     res.redirect('/shop');
+//   }
+
+// }
+
+//getCart
+
+
 exports.getCart = async(req,res)=>{
   try{
-    const userId = req.session.user;
-    const cartProductIds=[];
-    const user = await UserModel.findById(userId).exec();
-  for(let product of user.cart){
-     cartProductIds.push(product.productId);
-  }
-  const userData = user.cart;
-  // const cartProducts = cartProductIds;
-  const products = [];
-  for (let productId of cartProductIds) {
-    const product = await productModel.findById(productId).exec();
-    if (product) {
-      products.push(product);
-    }
-  }
-  res.status(200).render('cart', { products ,userData}); 
+       const userId = req.session.user;
+       const userId2 = new mongoose.Types.ObjectId(userId);
+       console.log("userid:",userId2);
+       const cart = await UserModel.aggregate([
+        {
+          $match:{_id:userId2}
+        },
+        {
+          $unwind:'$cart'
+        },
+        {
+          $lookup:{
+            from:'products',
+            localField:'cart.productId',
+            foreignField:'_id',
+            as:"product"
+          }
+        }
+       ]);
+       
+      console.log("cart:",cart);
+      console.log("firstproduct:",cart[0].product);
+      
+  res.render('cart', {cart}); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
@@ -603,30 +639,18 @@ exports.updateQuantity = async (req, res) => {
   try {
     const { productId, newQuantity ,newTotal} = req.body;
     const newProductId = new mongoose.Types.ObjectId(productId);
-    console.log(newProductId);
-    console.log(newTotal);
+    console.log("productId",newProductId);
+    console.log("newtotal",newTotal);
     const userId = req.session.user; 
-    const user = await UserModel.findById(userId).exec();
-    const cartItem = await UserModel.aggregate([
-      {
-        $match:{"_id":userId},
-
-      },{
-        $unwind: "$cart"
-      }
-    ])
+    const userId2 = new mongoose.Types.ObjectId(userId);
+    const cartItem = await UserModel.findOneAndUpdate(
+      {"_id":userId2,"cart.productId":newProductId},
+      {$set:{"cart.$.quantity":newQuantity}},
+      {new: true}
+    );
     console.log("cartItem:",cartItem);
-    console.log(cartItem.quantity);
-    if (cartItem ) {
-      
-      cartItem.quantity = newQuantity;
-      cartItem.price = newTotal;
-      await user.save();
-      res.json({ newQuantity ,newTotal});
-    }
-     else {
-      res.status(404).json({ error: "Product not found in the cart" });
-    }
+    res.json({ newQuantity ,newTotal});
+   
   } catch (err) {
     console.error("Error while updating the quantity:", err);
     res.status(500).json({ error: "Internal server error" });

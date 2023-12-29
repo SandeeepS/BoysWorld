@@ -34,7 +34,7 @@ route.post('/reSendotpResetPassword',userController.reSendotpResetPassword)
 route.post('/logout',userController.logout);
 
 
-route.post('/signupUser',userController.signup)
+route.post('/signupUser',userController.signup);
 
 route.post('/placeOrder',auth.user,userController.placeOrder);
 route.post('/placeOrder2',auth.user,userController.placeOrder2);

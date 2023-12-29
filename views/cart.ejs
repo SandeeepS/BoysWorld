@@ -23,8 +23,6 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
    <style>
-
-
     .cart-quantity {
 		display: flex;
 		align-items: center;
@@ -58,16 +56,10 @@
 		object-fit: contain;
 		
 	}
-
-	
 </style>
-	
 </head><!--/head-->
-
 <body>
 	<header id="header"><!--header-->
-		
-		
 		<div class="header-middle"><!--header-middle-->
 			<div class="container">
 				<div class="row">
@@ -75,7 +67,6 @@
 						<div class="logo pull-left">
 							<a href="index.html"><img src="images/home/logo.png" alt="" /></a>
 						</div>
-						
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
@@ -83,8 +74,7 @@
 								<li><a href="/getAccount"><i class="fa fa-user"></i> Account</a></li>
 								<!-- <li><a href="/getWishlist"><i class="fa fa-star"></i> Wishlist</a></li>
 								<li><a href="/getcheckout"><i class="fa fa-crosshairs"></i> Checkout</a></li> -->
-								<li><a href="/getCart" class="active"><i class="fa fa-shopping-cart"></i> Cart (<span id="cartCounter"><%=userData.length %></span>)</a></li>
-								
+								<li><a href="/getCart" class="active"><i class="fa fa-shopping-cart"></i> Cart (<span id="cartCounter"><%=cart.length %></span>)</a></li>
 							</ul>
 						</div>
 					</div>
@@ -108,10 +98,7 @@
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="/">Home</a></li>
 								<li ><a href="/shop">Shop</i></a>
-                                    
                                 </li> 
-								
-								
 								<li><a href="/contact">Contact</a></li>
 							</ul>
 						</div>
@@ -130,7 +117,6 @@
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
-				 
 				  <li class="active">Shopping Cart</li>
 				</ol>
 			</div>
@@ -147,59 +133,48 @@
 						</tr>
 					</thead>
 					<tbody>
-                            <% let totalAmount = 0 %>
+                           
 						   <!-- hdghghdkjgh -->
-						    <% for(let i = 0 ; i< products.length ; i++){ %>
-                             <%   totalAmount =  totalAmount+userData[i].price %>
+						    <% for(let i = 0 ; i< cart.length ; i++){ %>
 							<tr>
 							<td class="cart_product">
-								
-									<a href=""><img src="views/productImages/<%= products[i].image[0]%>" alt="" height="100px" width="100px"></a>
-								
-								
+									<a href=""><img src="views/productImages/<%= cart[i].product[0].image[0]%>" alt="" height="100px" width="100px"></a>
 							</td>
 							<td class="cart_description">
-								<h4><a href=""><%=products[i].productName%></a></h4>
+								<h4><a href=""><%=cart[i].product[0].productName%></a></h4>
 								<p>Web ID: 1089772</p>
 							</td>
 							<td class="cart_price">
-								<p>₹<%=products[i].price%></p>
+								<p>₹<%=cart[i].product[0].price%></p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart-quantity">
-									<a class="cart-quantity-button1 "  data-productid="<%= products[i]._id %>">+</a>
-									<span class="cart-quantity-value" autocomplete="off" size="2"><%= userData[i].quantity %></span>
-									<a class="cart-quantity-button2" data-productid="<%= products[i]._id %>">-</a>
+									<a class="cart-quantity-button1 "  data-productid="<%= cart[i].product[0]._id %>">+</a>
+									<span class="cart-quantity-value" autocomplete="off" size="2"><%= cart[i].cart.quantity %></span>
+									<a class="cart-quantity-button2" data-productid="<%= cart[i].product[0]._id %>">-</a>
 								</div>
-								
 							</td>
 							<td class="cart_total">
-							     <p class="cart_total_price" total-Price="<%=userData[i].price %>">₹<%= userData[i].price %></p>
+							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>">₹<%= cart[i].product[0].price %></p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href="/cartItemDelete/<%= products[i]._id %>"><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
 					<% } %>
-					
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</section> <!--/#cart_items-->
-
 	<section id="do_action">
 		<div class="container">
-			
 			<div class="row">
-			
 				<div class="col-sm-6"  style="width: 100%;">
 					<div class="total_area">
 						<ul>
-							<li>Cart Sub Total <span id="cartTotalAmount">₹<%=totalAmount%></span></li>
-							
+							<p>total amount</p>
 						</ul>
-							
 							<button id="checkoutBtn" class="btn btn-default check_out" href="#" onclick="checkout()">Check Out</a></button> 
 					</div>
 				</div>
@@ -211,15 +186,12 @@
 		<div class="footer-top">
 			<div class="container">
 				<div class="row">
-					
 				</div>
 			</div>
 		</div>
-		
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
-					
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
@@ -230,7 +202,6 @@
 							</form>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>
@@ -260,24 +231,14 @@
 			const quantityValues = document.querySelectorAll(".cart-quantity-value");
 			const totalPrice  = document.querySelectorAll(".cart_total_price");
 			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
-
-			        let totalAmount = 0;
-			        // Calculate total amount on page load
-					totalPrice.forEach((totalPrice,i) => {
-						
 					
-						totalAmount += parseFloat(totalPrice.getAttribute("total-Price"));
-						
-					});
-			
-					// Update cart total amount
-					cartTotalAmountElement.innerText = "₹" + totalAmount
+					
 				
-		  
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
 				event.preventDefault();
 				const productId = this.getAttribute("data-productid");
+				console.log("productId:",productId);
 				updateQuantity(i, 1,productId);
 			  });
 			});
@@ -291,26 +252,18 @@
 			});
 		  
 			function updateQuantity(index, change,productId) {
- 
-			
-
 			  const currentQuantity = parseInt(quantityValues[index].innerText);
 			  const total = parseFloat(totalPrice[index].getAttribute("total-Price"));
 			  const newQuantity = currentQuantity + change;
 			  console.log("currenrtQuantity",currentQuantity);
 			  console.log("total",total);
 			  console.log("newQuantity",newQuantity);
-
-			  
 			   // Replace with actual product ID
-			   
 			   if (newQuantity < 1) {
 				newQuantity = 1;
 			   } 
-
-			   const newTotal = (total/currentQuantity)*newQuantity;
+			  const newTotal = (total/currentQuantity)*newQuantity;
 			  console.log("newTotal",newTotal);
-
 
 			  fetch("/update-quantity", {
 				method: "POST",
@@ -323,7 +276,6 @@
 				.then((data) => {
 				  quantityValues[index].innerText = data.newQuantity;
 				  totalPrice[index].innerText = data.newTotal;
-				 
 				})
 				.catch((error) => {
 				  console.error("Error updating the quantity:", error);
@@ -337,28 +289,17 @@
             cartTotalAmountElement.innerText = "$" + totalAmount.toFixed(2);
 
 			}
-
-			
 		  });
 		  
 	</script>
-
-	
 	<script>
 		function checkout(){
-
-		
 			const checkout = document.getElementById("checkoutBtn");
-            const cart = <%-JSON.stringify(userData)%>;
+            const cart = <%-JSON.stringify(cart)%>;
 			console.log(cart);
 			const totalAmount = document.getElementById('cartTotalAmount').innerText;
-
-			
 			window.location.href = "/getCheckout2?cart=" + cart + "&totalAmount="+totalAmount ;
 		}
-		
 	</script>
-
-
 </body>
 </html>
