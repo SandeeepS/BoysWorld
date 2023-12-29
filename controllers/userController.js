@@ -1110,8 +1110,9 @@ exports.oders = async(req,res)=>{
 exports.cancelOrder = async(req,res)=>{
   try{
         const {orderId} = req.body;
-        console.log(orderId);
-        await orderModel.deleteOne({_id:orderId}).exec();
+        const orderId2 = new mongoose.Types.ObjectId(orderId);
+        const status = "Cancelled";
+        await orderModel.findByIdAndUpdate({"_id":orderId2},{$set:{"currentStatus":status}});
         res.status(200).send({message:"order cancelled successfully"});
   }catch(err){
     console.error("error while canceling the order in server",err);

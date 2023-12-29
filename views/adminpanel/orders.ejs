@@ -333,9 +333,11 @@
       updateButton.forEach((updateButton,i)=>{
         var currentStatusIndex = 0
         var orderStatusIndex = oders[i].currentStatus;
-
-         //initaly set the values
-        if(oders[i].currentStatus == "Deliverd"){
+        
+        if(oders[i].currentStatus == "Cancelled"){
+          updateButton.disabled = true;
+        }
+        else if(oders[i].currentStatus == "Deliverd"){
           updateButton.disabled = true;
           
         }else{

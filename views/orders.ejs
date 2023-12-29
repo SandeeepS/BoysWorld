@@ -208,7 +208,7 @@
 											</div>
 
 										<div class="cancel-order">
-											<a href="#" class="cancelOrder" data-orderId="<%= orderDetails[i]._id %>">Cancel order</a>
+											<button class="cancelOrder" data-orderId="<%= orderDetails[i]._id %>" >Cancel order</button>
 										</div>
 									</div>
 									</div>
@@ -330,13 +330,29 @@
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
 			const cancelOrder = document.querySelectorAll(".conformCancelOrder");
+			const cancelBtn = document.querySelectorAll(".cancelOrder");
+            const order = <%- JSON.stringify(orderDetails)%>;
+           
+            cancelBtn.forEach((btn,i)=>{
+				if(order[i].currentStatus === "Cancelled" || order[i].currentStatus === "Deliverd" ){
+					console.log("disbled way");
+					btn.disabled = true;
+				}
+			})
+
 			cancelOrder.forEach((cancelOrder,i)=>{
+
+			
+
 				cancelOrder.addEventListener("click",function(event){
 					event.preventDefault();
 					const orderId = this.getAttribute("orderId");
-
 				    var modal2 = document.getElementById("Conform2Modal");
 					var closeModalBtn2 = document.getElementById("conform2ModalClose");
+                    
+				
+
+
 					 //make ajax request
 					 $.ajax({
 						type:'POST',
