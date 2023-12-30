@@ -563,8 +563,7 @@ exports.getCheckoutPage2 = async(req,res)=>{
           }
         }
     ]).exec();
-    console.log("cartdetails:",cartDetails)
-    console.log("pro:",cartDetails[0].productDetail[0]);
+    console.log("total:",totalAmount);
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
 
   }catch(err){
