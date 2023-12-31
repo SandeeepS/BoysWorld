@@ -171,7 +171,7 @@
 							 <form class="signup-form" action="">
 								<input type="email" name="variEmail" id="variEmail" placeholder="Enter your registered email " pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address">
 								<div class="error-message" id="error-message"></div>
-									
+								
 								<a href="/signup" class="btn btn-default update " id="signinBtn" style="display: none;" >SignUp</a>
 								 <a href="#" class="btn btn-default update " id="sentOtp" onclick="sentOTP()" id="sentOtp">Sent OTP</a>
 
@@ -199,7 +199,7 @@
 								<div class="error-message" id="error-message2"></div>
 								<p id="otpExpiryTime"></p>
 								 <a href="#" class="btn btn-default update " id="conformOtp" onclick="conformOtp()" >Conform OTP</a>
-								 <a href="#" class="btn btn-default update " id="reSentOtp" >Resent OTP</a>
+								<button class="btn btn-default update " id="reSentOtp" >Resent OTP</button>
 
 							 </form>
 						  </div>
@@ -299,6 +299,13 @@
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const resendButton = document.getElementById("reSentOtp");
+			resendButton.disabled = true;
+		})
+	</script>
 	<script>
 		function validateform(){
 			const emailid= document.getElementById('emailid').value;
@@ -651,18 +658,16 @@
 				otpExpiryTime -= 1;
 			} else {
 				otpExpiryTimeElement.textContent = '';
+				resendButton.disabled = false;
 			}
 		}
+		
 		
 		// Update the OTP expiry time every second
 		setInterval(updateExpiryTime, 1000);
 		
 		resendButton.addEventListener('click', () => {
-			// You can implement the logic to resend the OTP here
-			// For example, make an AJAX request to your server to trigger OTP resend
-			// You will need to handle this on your server-side as well.
-			
-			// After resending, reset the OTP expiry time
+			resendButton.disabled = true;
 			otpExpiryTime = 30;
 			updateExpiryTime();
 		});
