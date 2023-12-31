@@ -197,7 +197,7 @@
 			const cpass = document.getElementById('cpass').value;
 			const errorMessage = document.getElementById('error-message');
 			const phonePattern = /^(?=.*[1-9])\d{10}$/;
-
+           
 			errorMessage.innerHTML = '';
 			function checkWhiteSpace(s){
 				return s.trim() === "";
@@ -303,6 +303,17 @@
 				setTimeout(function () {
 				  errorMessage.style.display = "none";
 				}, 3000);
+				return false;
+			  }
+              
+			  if(pass.length < 4 ){
+				errorMessage.innerText = "Password strength is atleast 4 ";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
 				return false;
 			  }
 

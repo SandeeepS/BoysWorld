@@ -305,6 +305,7 @@
 			const resendButton = document.getElementById("reSentOtp");
 			resendButton.disabled = true;
 		})
+		updateExpiryTime();
 	</script>
 	<script>
 		function validateform(){
@@ -584,6 +585,17 @@
 				setTimeout(function () {
 				  errorMessage.style.display = "none";
 				}, 3000);
+				return false;
+			  }
+
+			  if(newPass.length < 4 ){
+				errorMessage.innerText = "Password strength is atleast 4 ";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
 				return false;
 			  }
 
