@@ -27,6 +27,13 @@
         color: red;
         display: none;
     }
+    #preview.img{
+      height: 200px;
+      width: 200px;
+    }
+    img{
+      height: 200px;
+    }
 </style>
 </head>
 <body>
@@ -198,10 +205,7 @@
                 
                 <div class="tab-content tab-content-basic">
                   <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
-                    
-                     
                     <div class="row">
-                   
                             <div class="card card-rounded">
                               <div class="card-body">
                                 <div class=" justify-content-between align-items-start">
@@ -212,8 +216,7 @@
                                        <div class="error-message" id="error-message"></div>
                                        <br>
                                        <form action="/admin/addingProduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-                                          
-                                        <p>
+                                          <p>
                                           <label for="add-category">Category:</label>
                                           <select id="category" name="category">
                                               <% for (cat of category) { %>
@@ -222,58 +225,48 @@
                                           </select>
                                           <!-- Hidden input to store the selected category ID -->
                                           <input type="hidden" id="selectedCategoryId" name="selectedCategoryId">
-                                      </p>
-                                      
-                                          
+                                          </p>
 
                                            <p>
                                             <label for="productName">Product Name</label>      
                                             <input type="text" class="form-control" name="productName" id="productName">
                                            </p>
-                                          
-                                           
 
                                            <p>
                                              <label for="price">Price</label>
                                              <input type="number" class="form-control" name="price" id="price">
                                            </p>
                                            
-                                                  
-                                             
                                             <p>
                                             <label for="stock">stock</label>
                                             <input type="text" class="form-control" name="stock" id="stock">
                                             </p>  
                                               
-
-                                            
                                             <label for="discription">discription</label>
                                             <input type="text" class="form-control" name="discription" id="dis">
-                                           </p>
+                                            </p>
 
-                                           <p>
+                                            <p>
                                             <label for="image">Image</label>
-                                            <input type="file" class="form-control" name="productImages" multiple id="img">
-                                        </p>
+                                            <input type="file" class="form-control" name="productImages" multiple id="img" onchange="previewImages(this)">
+                                            </p>
 
-
-                                           <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;">
+                                            <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;">
                                            
-          
                                        </form>
+
+                                            <div id="preview" >
+                                              
+                                            </div>
+
                                     </div>
                                   </div>
+                                </div>
                               </div>
-
-                              
-							
-                              </div>
-
                             </div>
                           </div>
                         </div>
                       </div>
-                     
                     </div>
                   </div>
                 </div>
@@ -346,26 +339,21 @@
               return s.trim() === "";
             }
 
-
-
             if(productName===""  && price===""  && stock==="" && dis==="" ){
                errorMessage.innerText ="Please fill in all the fields!!";
                errorMessage.style.display = "block";
-
                setTimeout(function(){
                     errorMessage.style.display ="none";
                },3000);
                return false;
             } 
-             
+
             if(productName === ""  ){
               errorMessage.innerText ="please enter your productName";
-                      errorMessage.style.display = "block";
-              
-                      setTimeout(function () {
-                          errorMessage.style.display = "none";
-                      }, 3000);
-      
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
               return false;
             }
 
@@ -376,16 +364,14 @@
                 errorMessage.style.display = "none";
               }, 3000);
               return false;
-              }
+            }
 
             if(price === ""  ){
               errorMessage.innerText ="please enter the price";
                       errorMessage.style.display = "block";
-              
                       setTimeout(function () {
                           errorMessage.style.display = "none";
                       }, 3000);
-      
               return false;
             }
 
@@ -400,23 +386,19 @@
 
               if(price <= 0  ){
                 errorMessage.innerText ="please enter the valid price";
-                        errorMessage.style.display = "block";
-                
-                        setTimeout(function () {
-                            errorMessage.style.display = "none";
-                        }, 3000);
-        
+                      errorMessage.style.display = "block";
+                      setTimeout(function () {
+                          errorMessage.style.display = "none";
+                      }, 3000);
                 return false;
               }
 
             if(stock === ""  ){
               errorMessage.innerText ="please enter Number of Stock";
                       errorMessage.style.display = "block";
-              
                       setTimeout(function () {
                           errorMessage.style.display = "none";
                       }, 3000);
-      
               return false;
             }
 
@@ -432,22 +414,18 @@
               if(stock <= 0  ){
                 errorMessage.innerText ="please enter the valid Stock Number";
                         errorMessage.style.display = "block";
-                
                         setTimeout(function () {
                             errorMessage.style.display = "none";
                         }, 3000);
-        
                 return false;
               }
 
             if(dis === ""  ){
               errorMessage.innerText ="please enter Discription of your product";
                       errorMessage.style.display = "block";
-              
                       setTimeout(function () {
                           errorMessage.style.display = "none";
                       }, 3000);
-      
               return false;
             }
 
@@ -461,15 +439,11 @@
               }
 
              if(img.files.length === 0){
-                   
-                  
                     errorMessage.innerText = "Please upload atleast one image!";
                     errorMessage.style.display= "block";
-
                     setTimeout(()=>{
                       errorMessage.style.display= "none";
                     },3000);
-                  
                   return false;
             }
 
@@ -478,25 +452,39 @@
               if (fileType !== "image/jpeg") {
                   errorMessage.innerText = "Please upload a JPG image file!";
                   errorMessage.style.display = "block";
-        
                   setTimeout(() => {
                       errorMessage.style.display = "none";
                   }, 3000);
-        
                   return false;
               }
           }
-
-
-           
               return true;
-            
-
-
   }
+</script>
+
+<script>
+      function previewImages(input){
+          var preview = document.querySelector("#preview");
+          
+          //checking any images were selected 
+          if(!input.files || input.files.length === 0){
+            return;
+          }
+
+          //looping through all files and create an object url for each one
+          for( var i = 0; i < input.files.length; i++){
+            var reader = new FileReader();
+            reader.onload = function(e){
+              var img = document.createElement("img");
+              img.src = e.target.result;
+              img.classList.add("obj");
+              preview.appendChild(img);
+            }
+            reader.readAsDataURL(input.files[i]);
+          }
+      }
 </script>
   <!-- End custom js for this page-->
 </body>
-
 </html>
 
