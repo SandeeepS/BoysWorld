@@ -58,13 +58,26 @@ exports.getCustomer = async(req,res)=>{
 
 exports.getProduct = async(req,res)=>{
     try{
-        const productData = await productModel.find({isDeleted:false}).exec();
+        const page = req.query.page || 1;
+        const currentPage = parseInt(page);
+        console.log("current page:",currentPage);
+        const itemsPerPage = 4;
+        const skip = (page - 1) * itemsPerPage;
+        const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
+        console.log("totalcount:",totalCount);
+        const totalPages = Math.floor(totalCount/itemsPerPage);
+        console.log("totalpages:",totalPages);
+        const productData = await productModel
+                 .find({isDeleted:false})
+                 .skip(skip)
+                 .limit(itemsPerPage)
+                 .exec();
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const categoriesDict = {};
         categoryData.forEach((category) => {
               categoriesDict[category._id.toString()] = category.categoryName;
         });
-        res.render('adminpanel/product',{product:productData,categories:categoriesDict});
+        res.render('adminpanel/product',{product:productData,categories:categoriesDict,totalPages,currentPage,totalCount});
 
      
     }catch(error){
@@ -119,6 +132,15 @@ exports.getCategories = async (req, res) => {
 exports.getOrders = async(req,res)=>{
     try{
         const  orderStatus = ["Shipped","Out for Delivery","Deliverd"];
+        const page = req.query.page || 1;
+        const currentPage = parseInt(page);
+        console.log("current page:",currentPage);
+        const itemsPerPage = 8;
+        const skip = (page - 1) * itemsPerPage;
+        const totalCount = await orderModel.countDocuments({isDeleted:false}).exec();
+        console.log("totalcount:",totalCount);
+        const totalPages = Math.floor(totalCount/itemsPerPage);
+        console.log("totalpages:",totalPages);
         const products = await productModel.find().exec();
         const oders = await orderModel.aggregate([
             {
@@ -130,6 +152,12 @@ exports.getOrders = async(req,res)=>{
                 }
             },
             {
+                $skip:skip
+            },
+            {
+                $limit:itemsPerPage
+            },
+            {
                 $sort:{
                     date:-1
                 }
@@ -137,7 +165,7 @@ exports.getOrders = async(req,res)=>{
         ]).exec();
 
       
-        res.render('adminpanel/orders',{oders,products,orderStatus});
+        res.render('adminpanel/orders',{oders,products,orderStatus,totalPages,currentPage,totalCount});
     }catch(err){
         console.error("error while getting the orders list  page",err);
     }
