@@ -58,7 +58,7 @@ exports.shopPage = async(req,res)=>{
     try{
         const user = req.session.user;
         const userId = new mongoose.Types.ObjectId(user);
-        const page = req.session.page || 1 ;
+        const page = req.query.page || 1;
         const currentPage = parseInt(page);
         console.log("current page:",currentPage);
         const itemsPerPage = 3;
@@ -66,23 +66,23 @@ exports.shopPage = async(req,res)=>{
         const totalCount = await productModel.countDocuments({isDelete:false}).exec();
         const totalPages = Math.ceil(totalCount/itemsPerPage);
         const productData = await productModel
-               .find({isDeleted:false})
-               .skip(skip)
-               .limit(itemsPerPage)
-               .exec();
+                .find({isDeleted:false})
+                .skip(skip)
+                .limit(itemsPerPage)
+                .exec();
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const Currentuser = await UserModel.findOne({"_id":userId})
         console.log("currentUser:",Currentuser);
-      
         res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage});
-
-     
+   
     }catch(error){
         console.error("error while fetching products",error);
         res.redirect('/');
     }
    
 }
+
+
 
 //get product by category
 exports.categoryBasedProduct = async(req,res)=>{

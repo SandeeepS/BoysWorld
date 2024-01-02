@@ -188,33 +188,33 @@
                          
 						<!-- page 1  -->
 						<% if (currentPage == 1) { %>
-							<a href="?page=1" class="page highlighted" page="1">1</a>
+							<a href="?page=1" class="page highlighted" page="1" id="page-1">1</a>
 						<% } else { %>
-							<a href="?page=1" class="page" page="1">1</a>
+							<a href="?page=1" class="page" page="1" id="page-1">1</a>
 						<% } %>
                         <!--  -->
 
 						<!-- page 2  -->
 						<% if (currentPage == 2) { %>
-							<a href="?page=2" class="page highlighted" page="2">2</a>
+							<a href="?page=2" class="page highlighted" page="2" id="page-2">2</a>
 						<% } else { %>
-							<a href="?page=2" class="page" page="2">2</a>
+							<a href="?page=2" class="page" page="2" id="page-2">2</a>
 						<% } %>
 						<!--  -->
 
 						<!-- pages 3  -->
 						<% if (currentPage == 3) { %>
-							<a href="?page=3" class="page highlighted" page="3">3</a>
+							<a href="?page=3" class="page highlighted" page="3" id="page-3">3</a>
 						<% } else { %>
-							<a href="?page=3" class="page" page="3">3</a>
+							<a href="?page=3" class="page" page="3" id="page-3">3</a>
 						<% } %>
 						<!--  -->
 
 						<!-- page 4 -->
 						<% if (currentPage == 4) { %>
-							<a href="?page=4" class="page highlighted" page="4">4</a>
+							<a href="?page=4" class="page highlighted" page="4" id="page-4">4</a>
 						<% } else { %>
-							<a href="?page=4" class="page" page="4">4</a>
+							<a href="?page=4" class="page" page="4" id="page-4">4</a>
 						<% } %>
 						<!--  -->
 
@@ -318,12 +318,22 @@
 			const prevew = document.querySelectorAll(".page");
 			const prevPage = document.getElementById("prevPage");
 			const nextPage = document.getElementById("nextPage");
+			const product = <%- JSON.stringify(product) %>;
+			const category =  <%- JSON.stringify(category) %>;
+			const Currentuser =  <%- JSON.stringify(Currentuser) %>;
+			const currentPage =  <%- JSON.stringify(currentPage) %>;
+			
+			console.log("first current page :" ,currentPage);
 
            Array.from(prevew).forEach((selectedPage,i)=>{
 				selectedPage.addEventListener("click",function(event){
 					event.preventDefault();
 					const pageNumber = this.getAttribute("page");
 					console.log(pageNumber);
+                
+					const newUrl = `/shop?page=${pageNumber}`;
+					window.location.href = newUrl
+
 				})
 			})
 
@@ -331,12 +341,16 @@
 				event.preventDefault();
 				const pageNumber = this.getAttribute("page")
 				console.log("pageNumber:",pageNumber);
+				const newUrl = `/shop?page=${pageNumber}`;
+				window.location.href = newUrl
 			})
 
 			prevPage.addEventListener("click",function(event){
 				event.preventDefault();
 				const pageNumber = this.getAttribute("page");
 				console.log(pageNumber);
+				const newUrl = `/shop?page=${pageNumber}`;
+				window.location.href = newUrl
 			})
 		})
 	</script>
