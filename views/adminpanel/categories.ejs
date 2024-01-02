@@ -24,7 +24,47 @@
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  
+  <style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination a {
+        padding: 8px 16px;
+        text-decoration: none;
+        color: #333;
+        background-color: #f2f2f2;
+        border: 1px solid #ddd;
+        margin: 0 4px;
+        border-radius: 4px;
+    }
+
+    .pagination a:hover {
+        background-color: #ddd;
+    }
+
+    .pagination .current {
+        background-color: #4CAF50;
+        color: white;
+    }
+.pagination a[disabled] {
+  pointer-events: none;
+  color: #999; /* Change the color to indicate a disabled state */
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.pagination a[disabled]:hover {
+  background-color: initial;
+}
+.pagination .page.highlighted {
+  background-color: #e69927;
+  color: white;
+  /* Add any additional styling for the highlighted state */
+}
+</style>
 </head>
 <body>
   <div class="container-scroller"> 
@@ -256,6 +296,66 @@
                       </div>
                      
                     </div>
+
+                    <div class="pagination">
+                      <!-- previous  -->
+                      <% if(currentPage > 1){ %>
+                          <a href="?page=<%= currentPage - 1 %>" class="prev" id="prevPage" page="-1">Previous</a>
+                      <% } else { %>
+                        <a class="prev" id="prevPage" page="-1" disabled>Previous</a>
+                      <% } %>
+                      
+                                  <!--  -->
+                                   
+                      <!-- page 1  -->
+                      <% if(currentPage <= totalPages+1){ %>
+                      <% if (currentPage == 1) { %>
+                        <a href="?page=1" class="page highlighted" page="1" id="page-1">1</a>
+                      <% } else { %>
+                        <a href="?page=1" class="page" page="1" id="page-1">1</a>
+                      <% } %>
+                      <% } %>
+                                  <!--  -->
+          
+                      <!-- page 2  -->
+                      <% if(currentPage <= totalPages+1){ %>
+                      <% if (currentPage == 2 ) { %>
+                        <a href="?page=2" class="page highlighted" page="2" id="page-2">2</a>
+                      <% } else { %>
+                        <a href="?page=2" class="page" page="2" id="page-2">2</a>
+                      <% } %>
+                      <% } %>
+                      <!--  -->
+          
+                      <!-- pages 3  -->
+                      <% if (currentPage <= totalPages+1 ){ %>
+                        <%  if (currentPage == 3) { %>
+                          <a href="?page=3" class="page highlighted" page="3" id="page-3">3</a>
+                        <% } else { %>
+                          <a href="?page=3" class="page" page="3" id="page-3">3</a>
+                        <% } %>
+                      <% } %>
+                    
+                      <!--  -->
+          
+                      <!-- page 4 -->
+                      <% if(currentPage <= totalPages+1){ %>
+                      <% if (currentPage == 4) { %>
+                        <a href="?page=4" class="page highlighted" page="4" id="page-4">4</a>
+                      <% } else { %>
+                        <a href="?page=4" class="page" page="4" id="page-4">4</a>
+                      <% } %>
+                      <% } %>
+                      <!--  -->
+          
+                      <!-- Add more pages if needed -->
+          
+                      <% if(currentPage < 4){ %>
+                        <a href="?page=<%= currentPage + 1 %>" class="next" id="nextPage" page="1">Next</a>
+                      <% } %>
+                    </div>
+
+
                   </div>
                 </div>
               </div>
@@ -298,6 +398,41 @@
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
+  <script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const prevew = document.querySelectorAll(".page");
+			const prevPage = document.getElementById("prevPage");
+			const nextPage = document.getElementById("nextPage");
+
+           Array.from(prevew).forEach((selectedPage,i)=>{
+				selectedPage.addEventListener("click",function(event){
+					event.preventDefault();
+					const pageNumber = this.getAttribute("page");
+					console.log(pageNumber);
+                
+					const newUrl = `/admin/categories?page=${pageNumber}`;
+					window.location.href = newUrl
+
+				})
+			})
+
+			nextPage.addEventListener("click",function(event){
+				event.preventDefault();
+				const pageNumber = this.getAttribute("page")
+				console.log("pageNumber:",pageNumber);
+				const newUrl = `/admin/categories?page=${pageNumber}`;
+				window.location.href = newUrl
+			})
+
+			prevPage.addEventListener("click",function(event){
+				event.preventDefault();
+				const pageNumber = this.getAttribute("page");
+				console.log(pageNumber);
+				const newUrl = `/admin/categories?page=${pageNumber}`;
+				window.location.href = newUrl
+			})
+		})
+	</script>
 </body>
 
 </html>

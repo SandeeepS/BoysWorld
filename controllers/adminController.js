@@ -130,12 +130,25 @@ exports.deleteProductImage = async (req, res) => {
 
 exports.getCategories = async (req, res) => {
     try {
-        const categoryData = await categoryModel.find({isDelete:false}).exec();
+        const page = req.query.page || 1;
+        const currentPage = parseInt(page);
+        console.log("current page:",currentPage);
+        const itemsPerPage = 5;
+        const skip = (page - 1) * itemsPerPage;
+        const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
+        console.log("totalcount:",totalCount);
+        const totalPages = Math.floor(totalCount/itemsPerPage);
+        console.log("totalpages:",totalPages);
+        const categoryData = await categoryModel
+                  .find({isDelete:false})
+                  .skip(skip)
+                  .limit(itemsPerPage)
+                  .exec();
         console.log(categoryData);
         if (!categoryData) {
               console.log("No categories found in the database.");
         } else {
-            res.render('adminpanel/categories', { category: categoryData });
+            res.render('adminpanel/categories', { category: categoryData,totalPages,currentPage,totalCount });
         }
     } catch (error) {
         console.error("Error while fetching categories", error);
