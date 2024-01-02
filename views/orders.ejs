@@ -88,6 +88,48 @@
 				font-weight: bold;
 			}
 	</style>
+    <!-- style for pagination  -->
+	<style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+            border-radius: 4px;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+        .pagination .current {
+            background-color: #4CAF50;
+            color: white;
+        }
+		.pagination a[disabled] {
+			pointer-events: none;
+			color: #999;             /* Change the color to indicate a disabled state */
+			cursor: not-allowed;
+			text-decoration: none;
+		}
+	
+		.pagination a[disabled]:hover {
+			background-color: initial;
+		}
+		.pagination .page.highlighted {
+			background-color: #e69927;
+			color: white;
+		/* Add any additional styling for the highlighted state */
+		}
+    </style>
 </head><!--/head-->
 
 <body>

@@ -1090,6 +1090,15 @@ exports.oders = async(req,res)=>{
   try{
     const userId = req.session.user;
     const userData = await UserModel.findById(userId).exec();
+    const page = req.query.page || 1;
+    const currentPage = parseInt(page);
+    console.log("currnet page:",currentPage);
+    const itemsPerPage = 3;
+    const skip = (page-1)*itemsPerPage;
+    const totalCount = await orderModel.countDocuments({}).exec();
+    console.log("total count:",totalCount);
+    const totalPages = Math.ceil(totalCount/itemsPerPage);
+    console.log("total pages:",totalPages);
     const userIdObj =  userData._id;
     console.log("userid",userIdObj);
     const orderDetails = await orderModel.aggregate([
@@ -1103,15 +1112,24 @@ exports.oders = async(req,res)=>{
           foreignField:'_id',
           as:"productDetail"
         }
-      },{
+      },
+      
+      {
+        $skip:skip
+      },
+      {
+        $limit:itemsPerPage
+      },
+      {
         $sort:{
               date:-1
               }
-      }
+      },
+     
   ]).exec();
   console.log("corderDetails :",orderDetails )
   console.log("pro:",orderDetails [0].productDetail);
-  res.render('orders',{orderDetails});
+  res.render('orders',{orderDetails,totalPages,currentPage});
 
   }catch(err){
     console.error("error while getting oders",err);
