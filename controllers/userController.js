@@ -63,8 +63,10 @@ exports.shopPage = async(req,res)=>{
         console.log("current page:",currentPage);
         const itemsPerPage = 3;
         const skip = (page - 1) * itemsPerPage;
-        const totalCount = await productModel.countDocuments({isDelete:false}).exec();
-        const totalPages = Math.ceil(totalCount/itemsPerPage);
+        const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
+        console.log("totalcount:",totalCount);
+        const totalPages = Math.floor(totalCount/itemsPerPage);
+        console.log("totalpages:",totalPages);
         const productData = await productModel
                 .find({isDeleted:false})
                 .skip(skip)
@@ -73,7 +75,7 @@ exports.shopPage = async(req,res)=>{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const Currentuser = await UserModel.findOne({"_id":userId})
         console.log("currentUser:",Currentuser);
-        res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage});
+        res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
    
     }catch(error){
         console.error("error while fetching products",error);

@@ -160,7 +160,7 @@
                                 <div class="product-image-wrapper">
 								<div class="single-products" id="single-porduct">
 									<div class="productinfo text-center">
-										<img src="/views/productImages/<%= pro.image[1]%>" alt="" height="400px" width="100px" style="object-fit: cover;">
+										<img src="/views/productImages/<%= pro.image[0]%>" alt="" height="400px" width="100px" style="object-fit: cover;">
 										<p><%=pro.discription%></p>
 										<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
 										<a href="/addToCart/<%=pro._id%>" class="btn btn-default add-to-cart buy-now-btn" data-product-id="<%=pro._id%>"  data-image="/views/productImages/<%=pro.image[1]%>">Add to Cart</a>
@@ -184,37 +184,47 @@
 						<% } else { %>
 							<a class="prev" id="prevPage" page="-1" disabled>Previous</a>
 						<% } %>
+						
                         <!--  -->
                          
 						<!-- page 1  -->
+						<% if(currentPage <= totalPages+1){ %>
 						<% if (currentPage == 1) { %>
 							<a href="?page=1" class="page highlighted" page="1" id="page-1">1</a>
 						<% } else { %>
 							<a href="?page=1" class="page" page="1" id="page-1">1</a>
 						<% } %>
+						<% } %>
                         <!--  -->
 
 						<!-- page 2  -->
-						<% if (currentPage == 2) { %>
+						<% if(currentPage <= totalPages+1){ %>
+						<% if (currentPage == 2 ) { %>
 							<a href="?page=2" class="page highlighted" page="2" id="page-2">2</a>
 						<% } else { %>
 							<a href="?page=2" class="page" page="2" id="page-2">2</a>
 						<% } %>
-						<!--  -->
-
-						<!-- pages 3  -->
-						<% if (currentPage == 3) { %>
-							<a href="?page=3" class="page highlighted" page="3" id="page-3">3</a>
-						<% } else { %>
-							<a href="?page=3" class="page" page="3" id="page-3">3</a>
 						<% } %>
 						<!--  -->
 
+						<!-- pages 3  -->
+						<% if (currentPage <= totalPages+1 ){ %>
+							<%  if (currentPage == 3) { %>
+								<a href="?page=3" class="page highlighted" page="3" id="page-3">3</a>
+							<% } else { %>
+								<a href="?page=3" class="page" page="3" id="page-3">3</a>
+							<% } %>
+						<% } %>
+					
+						<!--  -->
+
 						<!-- page 4 -->
+						<% if(currentPage <= totalPages+1){ %>
 						<% if (currentPage == 4) { %>
 							<a href="?page=4" class="page highlighted" page="4" id="page-4">4</a>
 						<% } else { %>
 							<a href="?page=4" class="page" page="4" id="page-4">4</a>
+						<% } %>
 						<% } %>
 						<!--  -->
 
