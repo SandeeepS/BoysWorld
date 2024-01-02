@@ -328,12 +328,6 @@
 			const prevew = document.querySelectorAll(".page");
 			const prevPage = document.getElementById("prevPage");
 			const nextPage = document.getElementById("nextPage");
-			const product = <%- JSON.stringify(product) %>;
-			const category =  <%- JSON.stringify(category) %>;
-			const Currentuser =  <%- JSON.stringify(Currentuser) %>;
-			const currentPage =  <%- JSON.stringify(currentPage) %>;
-			
-			console.log("first current page :" ,currentPage);
 
            Array.from(prevew).forEach((selectedPage,i)=>{
 				selectedPage.addEventListener("click",function(event){
