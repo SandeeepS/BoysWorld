@@ -48,8 +48,21 @@ exports.getDashboard = async(req,res)=>{
 
 exports.getCustomer = async(req,res)=>{
     try{
-        const usersData = await userModel.find().exec();
-        res.render('adminpanel/customers',{users:usersData});
+        const page = req.query.page || 1;
+        const currentPage = parseInt(page);
+        console.log("current page:",currentPage);
+        const itemsPerPage = 5;
+        const skip = (page - 1) * itemsPerPage;
+        const totalCount = await userModel.countDocuments({isDeleted:false}).exec();
+        console.log("totalcount:",totalCount);
+        const totalPages = Math.floor(totalCount/itemsPerPage);
+        console.log("totalpages:",totalPages);
+        const usersData = await userModel
+                    .find({status:true})
+                    .skip(skip)
+                    .limit(itemsPerPage)
+                    .exec();
+        res.render('adminpanel/customers',{users:usersData,totalPages,currentPage,totalCount});
     }catch(error){
         console.error("error while fetching users",error);
     }
