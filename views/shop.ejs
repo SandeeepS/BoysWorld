@@ -22,60 +22,45 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-	<!-- <style>
-        /* Style for the modal container */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            background-color: rgba(0, 0, 0, 0.7); /* Black with a little transparency */
+	<style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        /* Style for the modal content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 25%; /* Could be more or less, depending on screen size */
-        }
-
-        /* Style for the close button */
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
+        .pagination a {
+            padding: 8px 16px;
             text-decoration: none;
-            cursor: pointer;
+            color: #333;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+            border-radius: 4px;
         }
-		.modal-style{
-			display: flex;
-		}
-		.modal-text{
-			display: flex;
-			justify-content: center; 
-			align-items: center;     
-			width: 100%;             
-			height: 100%;
-			padding-top: 20%;
-		}
-    </style> -->
-</head>
 
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+        .pagination .current {
+            background-color: #4CAF50;
+            color: white;
+        }
+		.pagination a[disabled] {
+			pointer-events: none;
+			color: #999; /* Change the color to indicate a disabled state */
+			cursor: not-allowed;
+			text-decoration: none;
+		}
+	
+		.pagination a[disabled]:hover {
+			background-color: initial;
+		}
+    </style>
+</head>
 <body>
 	<header id="header"><!--header-->
-	
-		
 		<div class="header-middle"><!--header-middle-->
 			<div class="container">
 				<div class="row">
@@ -83,7 +68,6 @@
 						<div class="logo pull-left">
 							<a href="index.html"><img src="images/home/logo.png" alt="" /></a>
 						</div>
-						
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
@@ -103,14 +87,12 @@
 										<button type="submit" class="btn btn-default">Logout</button>
 								    </form>
 								</li>
-								
 							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div><!--/header-middle-->
-	
 		<div class="header-bottom"><!--header-bottom-->
 			<div class="container">
 				<div class="row">
@@ -127,8 +109,6 @@
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="/" >Home</a></li>
 								<li><a href="/shop" class="active">Shop</a></li> 
-							
-								
 								<li><a href="/contact">Contact</a></li>
 							</ul>
 						</div>
@@ -143,92 +123,22 @@
 		</div><!--/header-bottom-->
 	</header><!--/header-->
 	
-	<section id="slider"><!--slider-->
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<div id="slider-carousel" class="carousel slide" data-ride="carousel">
-						<ol class="carousel-indicators">
-							<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-							<li data-target="#slider-carousel" data-slide-to="1"></li>
-							<li data-target="#slider-carousel" data-slide-to="2"></li>
-						</ol>
-						
-						<div class="carousel-inner">
-							<div class="item active">
-								<div class="col-sm-6">
-									<h1><span style="color: black;">Boys</span>World</h1>
-									<h2>Elevate your style.</h2>
-									<!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p> -->
-									
-								</div>
-								<div class="col-sm-6">
-									<img src="images/home/carosal.jpg" class="girl img-responsive" alt="" />
-									<!-- <img src="images/home/pricing.png"  class="pricing" alt="" /> -->
-								</div>
-							</div>
-							<div class="item">
-								<div class="col-sm-6">
-									<h1><span style="color: black;">Boys</span>World</h1>
-									<h2>The next level in fashion.</h2>
-									<!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p> -->
-									
-								</div>
-								<div class="col-sm-6">
-									<img src="images/home/carosal2.jpg" class="girl img-responsive" alt="" />
-								
-								</div>
-							</div>
-							
-							<div class="item">
-								<div class="col-sm-6">
-									<h1><span style="color: black;">Boys</span>World</h1>
-									<h2>Fashion with a purpose</h2>
-									<!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p> -->
-									
-								</div>
-								<div class="col-sm-6">
-									<img src="images/home/carosal3.jpg" class="girl img-responsive" alt="" />
-									
-								</div>
-							</div>
-							
-						</div>
-						
-						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-							<i class="fa fa-angle-left"></i>
-						</a>
-						<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-							<i class="fa fa-angle-right"></i>
-						</a>
-					</div>
-					
-				</div>
-			</div>
-		</div>
-	</section><!--/slider-->
-	
 	<section>
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-3">
 					<div class="left-sidebar">
-						
 						<h2>Category</h2>
 					    <% for(const cat of category){ %>
 						<div class="panel-group category-products categorySelect" id="accordian" data-categoryId="<%=cat._id%>">
 							<div class="panel panel-default">
-								
 								<div class="panel-heading">
-									
 									<h4 class="panel-title">
-										
 										<a  class="category-link" data-categoryId="<%=cat._id%>" href="#" class="categorySelect">
 											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
 											<%=cat.categoryName%>
 										</a>	
 									</h4>	
-										
 								</div>		
 							</div>		
 						</div>	
@@ -237,42 +147,15 @@
 				</div>		
 				<div class="col-sm-9 padding-right">
 					<div id="product-container" class="features_items"></div>
-
 					<div class="features_items" id="feature">
 						<!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
 						<% for(const pro of product){ %>
-
-                        <!-- 							
-						<div id="myModal" class="modal">
-							
-							<div class="modal-content">
-								<span class="close" id="closeModalBtn">&times;</span>
-								<div class="modal-style">
-									<div class="modal-pic">
-										<img src="/views/productImages/<%= pro.image[1]%>" alt="" height="200px" width="100px" />
-									</div>
-									<div class="modal-text">
-										<img src="/images//shop/check.png" alt="" style="height: 50px; width:50px">
-										<b><p>Added to cart</p></b>
-										<a href="" btn btn-default add-to-cart >Continue</a>
-										<a href="" btn btn-default add-to-cart >Continue</a>
-
-									</div>
-
-								</div>
-							</div>
-						</div> -->
-
-
                              <div class="col-sm-4" id="data">
                                 <div class="product-image-wrapper">
 								<div class="single-products" id="single-porduct">
-									
-										
 									<div class="productinfo text-center">
 										<img src="/views/productImages/<%= pro.image[1]%>" alt="" height="400px" width="100px" style="object-fit: cover;">
-										
 										<p><%=pro.discription%></p>
 										<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
 										<a href="/addToCart/<%=pro._id%>" class="btn btn-default add-to-cart buy-now-btn" data-product-id="<%=pro._id%>"  data-image="/views/productImages/<%=pro.image[1]%>">Add to Cart</a>
@@ -286,23 +169,35 @@
 								</div>
 							</div>
 						</div>
-						
 						<%}%>
-						
 					</div><!--features_items-->
+					
+					<div class="pagination">
+						<% if(currentPage > 1){ %>
+						    <a href="?page=<%= currentPage - 1 %>" class="prev">Previous</a>
+						<% } else { %>
+							<a class="prev" disabled>Previous</a>
+						<% } %>
+						<a href="#" class="page">1</a>
+						<a href="#" class="page">2</a>
+						<a href="#" class="page">3</a>
+						<a href="#" class="page">4</a>
+						<!-- Add more pages as needed -->
+						<% if(currentPage < 4){ %>
+							<a href="?page=<%= currentPage + 1 %>" class="next">Next</a>
+						<% } %>
+					</div>
+					
+
 					</div>
 			    </div>
 			</div>
 		</div>
 	</section>
-	
 	<footer id="footer"><!--Footer-->
-		
-		
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
-					
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
@@ -313,24 +208,17 @@
 							</form>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>
-		
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
 					<p class="pull-left">Copyright © 2013 BoysWorld Inc. All rights reserved.</p>
-					
 				</div>
 			</div>
 		</div>
-		
 	</footer><!--/Footer-->
-	
-
-  
     <script src="js/jquery.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.scrollUp.min.js"></script>
@@ -347,9 +235,7 @@
 						updateCategoryProduct(categoryId);
 				})
 			})
-
 			function updateCategoryProduct(categoryId){
-				
                 $.ajax({
 					type:'POST',
 					url:'/categoryBasedProduct',
@@ -376,7 +262,6 @@
 											</div>
 										</div>
 									</div>`;
-							    
 								productContainer.innerHTML = productHTML;
 							});
 						} else {
@@ -390,7 +275,5 @@
 			}
 		})
 	</script>
-	
-	
 </body>
 </html>
