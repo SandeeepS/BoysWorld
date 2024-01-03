@@ -488,7 +488,6 @@ exports.getCheckoutPage2 = async(req,res)=>{
     console.log("kjgjgfgjd");
     const {cart,totalAmount} = req.query;
     const userId = req.session.user;
-    console.log(userId);
     const userData = await UserModel.findById(userId).exec();
     const userIdObj =  userData._id;
     const address = userData.address;
@@ -510,6 +509,7 @@ exports.getCheckoutPage2 = async(req,res)=>{
         }
     ]).exec();
     console.log("total:",totalAmount);
+    console.log("cartDetails:",cartDetails);
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
   }catch(err){
       console.log("error in getcheckout2 ",err);
@@ -792,6 +792,7 @@ exports.placeOrder = async (req, res) => {
       const randomId = 10000+Math.floor(Math.random()*90000);
       const total = totalAmount;
       const currentAddress = cartDetail[i].currentAddress[0];
+      const quantity = cartDetail[i].cart.quantity;
 
               const order = new orderModel({
                 "userId":userId,
@@ -807,6 +808,14 @@ exports.placeOrder = async (req, res) => {
                 
             })
             const savedData = await order.save();
+
+            const currentProduct = await productModel.find({"_id":productId});
+            console.log("currentProduct:",currentProduct);
+            const currentStock = currentProduct[0].stock;
+            console.log("currentStock:",currentStock);
+            const newStock = parseInt(currentStock - quantity);
+            console.log("newStock:",newStock);
+            const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
 
     }
     // Respond with a success message
@@ -847,8 +856,15 @@ exports.placeOrder2 = async(req,res)=>{
         "currentStatus":status,
         
 
-    })
+    });
     const savedData = await order.save();
+    const currentProduct = await productModel.find({"_id":productId});
+    console.log("currentProduct:",currentProduct);
+    const currentStock = currentProduct[0].stock;
+    console.log("currentStock:",currentStock);
+    const newStock = parseInt(currentStock - quantity);
+    console.log("newStock:",newStock);
+    const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
     res.status(200).json({ success: true, message: 'Order placed successfully.' });
 
 
