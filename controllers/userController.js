@@ -790,7 +790,7 @@ exports.placeOrder = async (req, res) => {
       const date = new Date();
       const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
       const randomId = 10000+Math.floor(Math.random()*90000);
-      const total = totalAmount;
+      const total = cartDetail[i].cart.total;
       const currentAddress = cartDetail[i].currentAddress[0];
       const quantity = cartDetail[i].cart.quantity;
 
