@@ -3,6 +3,7 @@ const adModel = require('../models/adminModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const orderModel = require('../models/ordersModel');
+const { default: mongoose } = require('mongoose');
 
 
 
@@ -105,22 +106,20 @@ exports.deleteProductImage = async (req, res) => {
     try {
         const productId = req.query.productId;
         console.log(productId);
-        const imageId = req.query.imageId;
+        const imageName = req.query.imageName;
+        console.log("image:",imageName);
         const product = await productModel.findById(productId);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        const imageIndex = product.image.find(image => image === imageId);
-
+        const imageIndex = product.image.findIndex(image => image ===imageName);
+        console.log("imageindex:",imageIndex);
         if (imageIndex === -1) {
             return res.status(404).json({ message: 'Image not found for this product' });
         }
-
-        
         product.image.splice(imageIndex, 1);
          await product.save();
          res.status(200).json({ message: 'Image deleted successfully' });
-
     } catch (err) {
         console.error('Error while deleting the image', err);
         res.status(500).json({ message: 'Internal server error' });
@@ -222,10 +221,23 @@ exports.addProduct = async(req,res)=>{
 exports.getUpdateProductPage = async(req,res)=>{
     try{
          const productId = req.params.id;
-         console.log(productId);
+         const productId2 = new mongoose.Types.ObjectId(productId);
+         console.log("productId:",productId);
          const categoryData = await categoryModel.find({isDelete:false}).exec();
-      
-         const  productToUpdate = await productModel.findById(productId).exec();  
+         const  productToUpdate = await productModel.aggregate([
+               {
+                 $match:{"_id":productId2}
+               },
+               {
+                   $lookup:{
+                        from:'categories',
+                        localField:'category',
+                        foreignField:'_id',
+                        as:"catDetail"
+                   }
+               }
+         ]).exec();  
+         console.log("poroduct:",productToUpdate);
           res.render('adminpanel/updateProduct',{productToUpdate,category:categoryData});
     }catch(err){
         console.error("error in updation",err);
@@ -237,13 +249,16 @@ exports.getUpdateProductPage = async(req,res)=>{
 exports.productUpdated = async(req,res)=>{
     try{
         const productId = req.params.id;
+        const productId2 = new mongoose.Types.ObjectId(productId);
         const {productName,price,stock,discription,category} = req.body;
-        const existingProduct = await productModel.findById(productId).exec();
+        console.log("category:",category);
+        const existingProduct = await productModel.findById({"_id":productId2}).exec();
+        console.log("existing product:",existingProduct);
         const productImages = req.files ? req.files.map((file) => file.filename) : [];
         const updatedImages = existingProduct.image.concat(productImages);
         console.log(productImages);
         console.log(updatedImages);
-        await productModel.findByIdAndUpdate(productId,{productName,price,stock,image:updatedImages,discription,category}).exec();
+        await productModel.findByIdAndUpdate({"_id":productId2},{productName,price,stock,image:updatedImages,discription,category}).exec();
         res.redirect('/admin/products');
     }catch(err){
         console.error("error updating product",err);

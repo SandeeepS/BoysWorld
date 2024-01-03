@@ -40,6 +40,14 @@
         color: red;
         display: none;
     }
+    .existing-images{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .delete-link-container {
+      text-align: center; /* Center the "Delete" link */
+    }
 </style>
   
 </head>
@@ -225,11 +233,14 @@
                                        <br>
                                        <div class="error-message" id="error-message"></div>
                                        <br>
-                                       <form action="/admin/productUpdated/<%= productToUpdate._id%>" method="post" enctype="multipart/form-data" onsubmit="return validate()">
+                                       <form action="/admin/productUpdated/<%= productToUpdate[0]._id%>" method="post" enctype="multipart/form-data" onsubmit="return validate()">
 
                                         <p>
                                           <label for="add-category">Category:</label>
                                           <select  id="category" name="category">
+                                              <% if(productToUpdate[0].catDetail) { %>
+                                                <option value="<%=productToUpdate[0].catDetail[0]._id%>" ><%= productToUpdate[0].catDetail[0].categoryName%></option>
+                                              <% } %>
                                               <% for (cat of category) { %>
                                               <option value="<%= cat._id %>"><%= cat.categoryName %></option>
                                               <% } %>
@@ -242,28 +253,28 @@
 
                                            <p>
                                             <label for="productName">Product Name</label>      
-                                            <input type="text" class="form-control" name="productName" value="<%=productToUpdate.productName %>" id="productName" >
+                                            <input type="text" class="form-control" name="productName" value="<%=productToUpdate[0].productName %>" id="productName" >
                                            </p>
                                           
                                            
 
                                            <p>
                                              <label for="price">Price</label>
-                                             <input type="number" class="form-control" name="price" value="<%=productToUpdate.price %>" id="price">
+                                             <input type="number" class="form-control" name="price" value="<%=productToUpdate[0].price %>" id="price">
                                            </p>
                                            
                                                   
                                              
                                             <p>
                                             <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock" value="<%=productToUpdate.stock %>" id="stock">
+                                            <input type="text" class="form-control" name="stock" value="<%=productToUpdate[0].stock %>" id="stock">
                                             </p>  
                                               
 
                                           
 
                                             <label for="discription">discription</label>
-                                            <input type="text" class="form-control" name="discription" value="<%=productToUpdate.discription %>" id="dis">
+                                            <input type="text" class="form-control" name="discription" value="<%=productToUpdate[0].discription %>" id="dis">
                                            </p>
 
                                            <p>
@@ -271,29 +282,24 @@
                                             <input type="file" class="form-control" name="image" multiple id="img">
                                           </p>
                                           
-                                         <p>
-                                         
+                                        
+                                          <div>
                                           <div class="existing-images">
-                                            <% for (let i=0 ; i < productToUpdate.image.length ; i++) { %>
+                                            <% for (let i = 0; i < productToUpdate[0].image.length; i++) { %>
                                               <div class="existing-image image-container">
-                                                <img src="/views/productImages/<%= productToUpdate.image[i] %>" >
-                                               
+                                                <img src="/views/productImages/<%= productToUpdate[0].image[i] %>">
                                               </div>
-                                           
-                                              <a href="/admin/deleteProductImage?productId=<%= productToUpdate._id %>&imageName=<%= productToUpdate.image[i] %>">Delete</a>
-                                             
+                                              <a href="/admin/deleteProductImage?productId=<%= productToUpdate[0]._id %>&imageName=<%= productToUpdate[0].image[i] %>">Delete</a>
+
                                             <% } %>
                                           </div>
-                                         
-                                        </p>
-
+                                        </div>
+                                          <br>
+                                          <br>
+                                          <br>
                                            <input type="submit" name="" id="" value="Update">
                                        </form>
                                     </div>
-
-
-                                   
-                                   
                                   </div>
                               </div>
                             </div>
