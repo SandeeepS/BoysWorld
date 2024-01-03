@@ -143,7 +143,8 @@ exports.userEntry = async(req,res)=>{
                 res.render('login',{message});
             }
         }else{
-            res.redirect('/login');
+            const message = "User is blocked by the admin";
+            res.render('login',{message});
         }
     }catch(error){
         console.error("error during login",error);
