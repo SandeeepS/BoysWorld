@@ -163,16 +163,17 @@ exports.getOrders = async(req,res)=>{
                 }
             },
             {
+                $sort:{
+                    _id:-1
+                }
+            },
+            {
                 $skip:skip
             },
             {
                 $limit:itemsPerPage
             },
-            {
-                $sort:{
-                    date:-1
-                }
-            }
+          
         ]).exec();
         res.render('adminpanel/orders',{oders,products,orderStatus,totalPages,currentPage,totalCount});
     }catch(err){

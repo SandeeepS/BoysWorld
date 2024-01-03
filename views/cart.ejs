@@ -293,6 +293,7 @@
 			const checkout = document.getElementById("checkoutBtn");
             const cart = <%-JSON.stringify(cart)%>;
 			const totalAmount  = <%-JSON.stringify(cartTotal) %>;
+			console.log("totalamount:",totalAmount);
 			window.location.href = "/getCheckout2?cart=" + cart + "&totalAmount="+totalAmount ;
 		}
 	</script>

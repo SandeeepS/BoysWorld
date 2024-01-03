@@ -431,6 +431,7 @@
 		// Get references to the modal and the button to open/close it
 		var modal = document.getElementById("myModal");
 		var openModalBtn = document.getElementById("openModalBtn");
+		var closeSelectModal = document.getElementById("selectPaymentModalClose");
 		var closeModalBtn = document.getElementById("closeModalBtn");
 		// Event listener to open the modal
 		openModalBtn.onclick = function() {
@@ -438,6 +439,10 @@
 		}
 		// Event listener to close the modal
 		closeModalBtn.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		closeSelectModal.onclick = function() {
 			modal.style.display = "none";
 		}
 		// Close the modal if the user clicks outside of it
@@ -475,6 +480,7 @@
 			// Get product details from the cookie or your preferred method
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
+			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
 			const modal2 = document.getElementById("paymentSuccessModal");
 			const productId= <%-JSON.stringify(product[0]._id)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
@@ -575,9 +581,14 @@
 
 			}else{
                selectPaymentModal.style.display = "block";
+			   selectPaymentModalClose.onclick = function(){
+				selectPaymentModal.style.display = "none";
+			}
 			}
 		
+		
 		}
+	
 		
 	</script>
 	<script>
