@@ -1,10 +1,6 @@
 
-
-
-
 const UserModel = require('../models/userModel');
 const orderModel = require('../models/ordersModel');
-
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
@@ -12,7 +8,6 @@ const moment =  require('moment');
 const Razorpay = require('razorpay');
 const { v4: uuidv4 } = require('uuid');
 const { format } = require('date-fns');
-
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
   auth: {
@@ -21,7 +16,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 const {user} = require('../models/userModel');
 const {otp}  = require('../models/otp');
 const categoryModel = require('../models/categoryModel');
@@ -29,7 +23,6 @@ const { default: mongoose } = require('mongoose');
 const productModel = require('../models/productModel');
 const { render } = require('../routes/userRoute');
 const {ObjectId} = mongoose.Types;
-
 const { log } = require('console');
 const crypto = require('crypto');
 const { name } = require('ejs');
@@ -76,15 +69,11 @@ exports.shopPage = async(req,res)=>{
         const Currentuser = await UserModel.findOne({"_id":userId})
         console.log("currentUser:",Currentuser);
         res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
-   
     }catch(error){
         console.error("error while fetching products",error);
         res.redirect('/');
     }
-   
 }
-
-
 
 //get product by category
 exports.categoryBasedProduct = async(req,res)=>{
@@ -106,35 +95,26 @@ exports.categoryBasedProduct = async(req,res)=>{
 
     console.log("products:",productData);
     res.status(200).json({success:true,product:productData,category:categoryData});
-
-
-
   }catch(err){
     console.error("error getting the product in the category",err);
   }
 }
 
 //selected product
-
 exports.selectedProduct = async(req,res)=>{
     try{
         const prodId = req.params.id;
         const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
         res.render('selectedProduct',{productData});
-
-     
     }catch(error){
         console.error("error while fetching products",error);
         res.redirect('/shop');
     }
-   
 }
-
 
 exports.contactPage = async(req,res)=>{
     res.render('contact');
 }
-
 
 //sportsWear
 exports.sportsWear = async(req,res)=>{
@@ -146,12 +126,10 @@ exports.getOtpPage = async(req,res)=>{
     res.render('otp',{message});
 }
 
-
 exports.userEntry = async(req,res)=>{
     const {Email,Password} = req.body;
     console.log(Email);
     console.log(Password);
-
     try{
         const user = await UserModel.findOne({email:Email}).exec();
         if(user && user.status === true){
@@ -164,19 +142,14 @@ exports.userEntry = async(req,res)=>{
                 const message = "incorrect email or password";
                 res.render('login',{message});
             }
-          
         }else{
             res.redirect('/login');
         }
     }catch(error){
-        
-
         console.error("error during login",error);
         res.redirect('/');
     }
-     
 };
-
 
 exports.signup = async(req,res)=>{
     try{
@@ -196,7 +169,6 @@ exports.signup = async(req,res)=>{
     "password":hashedpassword,
    }
    console.log(req.session.otpStorage);
-  
     // Create a Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -226,19 +198,16 @@ exports.signup = async(req,res)=>{
       }
     });
     
-    
     }catch(error){
         console.error("Error during signup:",error);
         res.redirect("/");
     }
 };
 
-
 //resendOTP when signUp
 exports.resendOTP = async(req,res)=>{
     try{
       const extime = moment().add(30,'seconds').toISOString();
-
       const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
       req.session.otpStorage = {
         otp,
@@ -276,7 +245,6 @@ exports.resendOTP = async(req,res)=>{
       console.error("Error resending OTP:", error);
       res.status(500).json({ message: 'error!!!!' });
     }
-    
 }
 
 //resent otp for resetPassword in login
@@ -284,7 +252,6 @@ exports.reSendotpResetPassword = async(req,res)=>{
   try{ 
     console.log("hello");
     const extime = moment().add(30,'seconds').toISOString();
-
     const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
     req.session.otpStorage = {
       otp,
@@ -325,11 +292,8 @@ exports.reSendotpResetPassword = async(req,res)=>{
   }
 }
 
-
 //varify otp for signup
 exports.verifyOtp = async (req, res) => {
- 
-  
     try {
     const {userotp} = req.body;
     const otpStorage = req.session.otpStorage.otp;
@@ -337,10 +301,8 @@ exports.verifyOtp = async (req, res) => {
     const exTime = req.session.otpStorage.expirationTime;
     const exTimeMoment = moment(exTime);
     const userData = req.session.userData;
-
-   
-   console.log(currentTimeStamp);
-   console.log(exTime);
+    console.log(currentTimeStamp);
+    console.log(exTime);
     if(userotp === otpStorage){
       const data = new UserModel({
         "name":userData.username,
@@ -351,7 +313,6 @@ exports.verifyOtp = async (req, res) => {
         
     });
     if(currentTimeStamp.isBefore(exTimeMoment)){
-
             const {name} = data;
             console.log(name);
             const savedData = await data.save();
@@ -359,11 +320,7 @@ exports.verifyOtp = async (req, res) => {
             console.log(req.session.user);
             if(savedData){
                 console.log("Record inserted successfully");
-              
                 res.redirect('/shop');
-                    
-
-
             }else{
                 console.log("failed to insert record");
                 res.redirect("/");
@@ -392,24 +349,18 @@ exports.verifyOtp = async (req, res) => {
       const productId2 =new mongoose.Types.ObjectId(productId);
       console.log(productId2);
       console.log(userId);
-
       const productData = await productModel.findById(productId,{isDeleted:false}).exec();
-
       if(!productData){
         return res.status(404).send("Product not found");
       }
-
       const productPrice = productData.price;   
       const user = await UserModel.findById(userId).exec();
-
       if(!user){
         return res.status(404).send("user not found");
       }
-     
       const existingCartItem = user.cart.findIndex(
         (item) => item.productId === productId
       );
-
       if(existingCartItem ===-1){
         const newCartItem = {
           productId:productId2,
@@ -422,25 +373,20 @@ exports.verifyOtp = async (req, res) => {
       }else{
         console.log("product already exist!!");
         res.redirect('/getCart')
-
       }
-
       const updateUser = await UserModel.findById(userId)
       .populate("cart.productId")
       .exec();
-      
       const userWithCart = await UserModel.findById(userId);
       const productIdArray = [];
       productsInCart = userWithCart.cart;
       for(const pro of productsInCart){
            productIdArray.push(pro.productId);
       }
-
       const productIds = productIdArray;
       const products = await productModel.find({_id:{$in:productIds}}).exec();
       console.log(products);
       res.redirect('/getCart?products='+JSON.stringify(products));
-
     }catch(err){
         console.log("error while geting cart",err);
         res.status(500).send("internal server error");
@@ -457,37 +403,28 @@ exports.cartItemDelete = async(req,res)=>{
     console.log(productId);
     const currentUser = await UserModel.findById(userId).exec();
     console.log(currentUser);
-
-   
     if (currentUser) {
       // Find the index of the product with the given productId in the cart
       const productIndex = currentUser.cart.findIndex(product => product.productId.toString() === productId);
-
       if (productIndex !== -1) {
         // Remove the product from the cart array
         currentUser.cart.splice(productIndex, 1);
-
         // Save the updated user object
         await currentUser.save();
-
         // Render the cart with the updated products
         res.redirect('/getCart');
       }else{
         console.log("product not found in the cart");
       }
-  
     }else{
       console.log("item not deleted");
       res.redirect('/getCart');
     }
-    
-        
   }catch(err){
    console.error("error while deleting the cart");
    res.redirect('/getCart');
   }
 }
-
 
 exports.logout = (req,res)=>{
     req.session.destroy((err)=>{
@@ -499,10 +436,7 @@ exports.logout = (req,res)=>{
     });
 }
 
-
 /****** get from navbar***********/
-
-
 exports.getAccount = async(req,res)=>{
   try{
        const userId = req.session.user;
@@ -513,7 +447,6 @@ exports.getAccount = async(req,res)=>{
   }catch(err){
     console.error("error while ")
   }
-    
 }
 
 exports.getWishlist = async(req,res)=>{
@@ -522,7 +455,6 @@ exports.getWishlist = async(req,res)=>{
 
 exports.getCheckoutPage = async(req,res)=>{
   try{
-   
       const userId = req.session.user;
       const userData = await UserModel.findById(userId).exec();
       const address = userData.address;
@@ -543,7 +475,6 @@ exports.getCheckoutPage = async(req,res)=>{
       ])
       console.log("productdetails:", product);
       res.render('checkout',{address,currentAddress, product,quantity,totalPrice});
-
   }catch(err){
     console.error("error while getting checkout",err);
     res.redirect('/selectedProduct');
@@ -579,13 +510,10 @@ exports.getCheckoutPage2 = async(req,res)=>{
     ]).exec();
     console.log("total:",totalAmount);
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
-
   }catch(err){
       console.log("error in getcheckout2 ",err);
   }
 }
-
-
 
 exports.getCart = async(req,res)=>{
   try{
@@ -609,7 +537,6 @@ exports.getCart = async(req,res)=>{
           }
         }
        ]);
-       
        for(let i = 0; i < cart.length; i++){
            cartTotal = cartTotal + cart[i].cart.total;
        }
@@ -617,16 +544,12 @@ exports.getCart = async(req,res)=>{
       
       console.log("cart:",cart);
       console.log("firstproduct:",cart[0].product);
-      
   res.render('cart', {cart,cartTotal}); 
   }catch(err){
     console.error("error while getting produts ",err);
     res.redirect('/shop');
   }
-
 }
-
-
 
 //updateQuantity
 exports.updateQuantity = async (req, res) => {
@@ -658,7 +581,6 @@ exports.updateQuantity = async (req, res) => {
   }
 };
 
-
 //add address
 exports.addAddressPage = async(req,res)=>{
   try{
@@ -667,7 +589,6 @@ exports.addAddressPage = async(req,res)=>{
     console.error("error while loading add Address page",err);
   }
 }
-
 
 //adresss
 exports.address = async(req,res)=>{
@@ -703,7 +624,6 @@ exports.address = async(req,res)=>{
         }
        },{new:true});
 
-       
        if(userData){
         console.log("Address inserted susscessfully");
         res.redirect('/getAccount');
@@ -711,13 +631,10 @@ exports.address = async(req,res)=>{
         console.log("record not inserted");
         res.redirect('/getAccount');
        }
-
-    
   }catch(err){
     console.error("error while adding address",err);
   }
 }
-
 
 //save userAddress
 exports.saveAddress = async(req,res)=>{
@@ -751,8 +668,6 @@ exports.saveAddress = async(req,res)=>{
         }
       }
      },{new:true});
-
-     
      if(userData){
       console.log("Address saved susscessfully");
       res.redirect('/getAccount');
@@ -760,7 +675,6 @@ exports.saveAddress = async(req,res)=>{
       console.log("record not inserted");
       res.redirect('/getAccount');
      }
-
 
   }catch(err){
     console.log("error in saving address",err);
@@ -772,19 +686,16 @@ exports.showAddress = async(req,res)=>{
   try{
     const userId = req.session.user;
     const userData = await UserModel.findById(userId).exec();
- 
     const address = userData.address;
     const currentAddress = userData.currentAddress;
     console.log(address);
     res.render('showAddress',{address,currentAddress});
-
   }catch(err){
     console.error("error while getting show address page",err);
   }
 }
 
 //address delete
-
 exports.addressDelete = async(req,res)=>{
   try{
     const userId = req.session.user;
@@ -792,10 +703,8 @@ exports.addressDelete = async(req,res)=>{
     const addressObjectId = new ObjectId(addressId).toString();
     console.log(addressObjectId);
     const user = await UserModel.findById(userId).exec();
-  
     if(user){
       const addressIndex = user.address.findIndex((add) => add.id === addressObjectId);
-      
       if(addressIndex !== -1){
         user.address.splice(addressIndex,1);
         await user.save();
@@ -804,12 +713,10 @@ exports.addressDelete = async(req,res)=>{
         console.log("address not found in the database");
       }
     }
-
   }catch(err){
     console.error("error while deleting the address",err);
   }
 }
-
 
 exports.setDefaultAddress = async (req, res) => {
   try {
@@ -817,13 +724,11 @@ exports.setDefaultAddress = async (req, res) => {
     const addressId = req.params.id;
     const addressObjectId = new ObjectId(addressId).toString();
     const user = await UserModel.findById(userId).exec();
-
     if (user) {
       let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
       console.log(currentAddressIndex);
       if (currentAddressIndex !== -1) { // Check if the index is valid
         console.log("helooooooooo");
-
         const currentAddress = user.address[currentAddressIndex]; // Fetch the current address from user.address
         user.currentAddress.splice(0, 1, currentAddress); // Replace the existing current address with the new one
         await user.save();
@@ -831,7 +736,6 @@ exports.setDefaultAddress = async (req, res) => {
         console.log("Address not found.");
       }
     }
-
     res.redirect('/showAddress');
   } catch (err) {
     console.error("Error while updating the default address", err);
@@ -840,7 +744,6 @@ exports.setDefaultAddress = async (req, res) => {
 }
 
 //setaddressFrom checkout
-
 exports.setDefaultAddressFromCheckouts = async (req, res) => {
   try {
     const userId = req.session.user;
@@ -850,7 +753,6 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     console.log(productId,quantity);
     const addressObjectId = new ObjectId(addressId).toString();
         const user = await UserModel.findById(userId).exec();
-   
     if (user) {
       let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
       console.log(currentAddressIndex);
@@ -864,7 +766,6 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
       }
     }
 
-
     res.redirect('/getCheckout2',productId,quantity);
   } catch (err) {
     console.error("Error while updating the default address", err);
@@ -872,17 +773,12 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
   }
 }
 
-
 //place order 
-
 //place order 
 exports.placeOrder = async (req, res) => {
   try {
     const { cartDetail,totalAmount} = req.body;
     console.log(cartDetail);
-
-
-
     for(let i=0;i<cartDetail.length;i++){
       const cashOnDelivery = "cashOnDelivery";
       const status = "Conformed";
@@ -896,7 +792,6 @@ exports.placeOrder = async (req, res) => {
       const total = totalAmount;
       const currentAddress = cartDetail[i].currentAddress[0];
 
-      
               const order = new orderModel({
                 "userId":userId,
                 "productId":productId,
@@ -909,7 +804,6 @@ exports.placeOrder = async (req, res) => {
                 "paymentMethod":cashOnDelivery,
                 "currentStatus":status,
                 
-
             })
             const savedData = await order.save();
 

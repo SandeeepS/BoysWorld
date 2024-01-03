@@ -5,11 +5,6 @@ const categoryModel = require('../models/categoryModel');
 const orderModel = require('../models/ordersModel');
 const { default: mongoose } = require('mongoose');
 
-
-
-
-
-
 exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
         res.redirect('/admin/dashboard');
@@ -18,7 +13,6 @@ exports.adminlogin = async(req,res)=>{
         res.render('adminpanel/login',{message});
     }
 }
-
 exports.getHomePage = async(req,res)=>{
     res.render('adminpanel/index');
 }
@@ -27,7 +21,6 @@ exports.getDashboard = async(req,res)=>{
     const {email,adPassword} = req.body;
     console.log(email);
     console.log(adPassword);
-
     try{
         const admin = await adModel.findOne({email:email,pass:adPassword}).exec();
         console.log("admin found in the database :",admin);
@@ -44,7 +37,6 @@ exports.getDashboard = async(req,res)=>{
         console.error("error during login:",error);
         res.redirect('/');
     }
-  
 }
 
 exports.getCustomer = async(req,res)=>{
@@ -69,7 +61,6 @@ exports.getCustomer = async(req,res)=>{
     }
 }
 
-
 exports.getProduct = async(req,res)=>{
     try{
         const page = req.query.page || 1;
@@ -89,19 +80,15 @@ exports.getProduct = async(req,res)=>{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const categoriesDict = {};
         categoryData.forEach((category) => {
-              categoriesDict[category._id.toString()] = category.categoryName;
+        categoriesDict[category._id.toString()] = category.categoryName;
         });
         res.render('adminpanel/product',{product:productData,categories:categoriesDict,totalPages,currentPage,totalCount});
-
-     
     }catch(error){
         console.error("error while fetching products",error);
     }
 } 
 
 //deleting product images
-
-
 exports.deleteProductImage = async (req, res) => {
     try {
         const productId = req.query.productId;
@@ -125,7 +112,6 @@ exports.deleteProductImage = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 
 exports.getCategories = async (req, res) => {
     try {
@@ -188,23 +174,17 @@ exports.getOrders = async(req,res)=>{
                 }
             }
         ]).exec();
-
-      
         res.render('adminpanel/orders',{oders,products,orderStatus,totalPages,currentPage,totalCount});
     }catch(err){
         console.error("error while getting the orders list  page",err);
     }
-  
 }
 
 exports.getBanner = async(req,res)=>{
     res.render('adminpanel/banner');
 }
 
-
-
-
-
+//add product
 exports.addProduct = async(req,res)=>{
     try{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
@@ -217,7 +197,6 @@ exports.addProduct = async(req,res)=>{
 
 
 //updateproduct page
-
 exports.getUpdateProductPage = async(req,res)=>{
     try{
          const productId = req.params.id;
@@ -226,7 +205,7 @@ exports.getUpdateProductPage = async(req,res)=>{
          const categoryData = await categoryModel.find({isDelete:false}).exec();
          const  productToUpdate = await productModel.aggregate([
                {
-                 $match:{"_id":productId2}
+                   $match:{"_id":productId2}
                },
                {
                    $lookup:{
@@ -236,7 +215,8 @@ exports.getUpdateProductPage = async(req,res)=>{
                         as:"catDetail"
                    }
                }
-         ]).exec();  
+         ]).exec(); 
+
          console.log("poroduct:",productToUpdate);
           res.render('adminpanel/updateProduct',{productToUpdate,category:categoryData});
     }catch(err){
@@ -269,7 +249,6 @@ exports.productUpdated = async(req,res)=>{
 exports.deleteProduct = async(req,res)=>{
     try{
         const productId = req.params.id;
-        
         await productModel.findByIdAndUpdate(productId,{isDeleted:true}).exec();
         res.redirect('/admin/products');
     }catch(err){
@@ -278,6 +257,7 @@ exports.deleteProduct = async(req,res)=>{
     }
 }
 
+//adding category page
 exports.addcategoryPage = async(req,res)=>{
     res.render('adminpanel/addCategory');
 }
@@ -307,6 +287,7 @@ exports.addingCategory = async(req,res)=>{
         res.redirect('/admin/categories');
     }
 }
+
 //deleting categories
 exports.deleteCategory = async(req,res)=>{
     try{
@@ -319,7 +300,6 @@ exports.deleteCategory = async(req,res)=>{
     }
 }
 
-
 //updateCategoryPage
 exports.getUpdateCategoryPage = async(req,res)=>{
     try{
@@ -328,8 +308,7 @@ exports.getUpdateCategoryPage = async(req,res)=>{
         res.render('adminpanel/updatecategory',{cataToUpdate});
     }catch(err){
         console.error("error while updating catogery",err)
-            res.redirect('/admin/catogeries');
-        
+        res.redirect('/admin/catogeries');
     }
 }
 
@@ -351,13 +330,11 @@ exports.addingProduct = async(req,res)=>{
     try{
         const{productName,price,stock,image,discription,category} = req.body;
         const productImages = req.files.map((file)=>file.filename);
-        
         console.log(productImages);
         const newData = new productModel({productName,price,stock,image:productImages,discription,category});
         await newData.save();
         console.log(`${productName} is inserted Successfully`);
         res.redirect('/admin/products');
-
     }catch(err){
         console.error("error adding products :",err);
         res.redirect('/admin/addingProduct');
@@ -365,19 +342,15 @@ exports.addingProduct = async(req,res)=>{
 }
 
 //updateStatus
-
 exports.updateStatus = async (req, res) => {
     try {
         const { userId, isBlocked } = req.body;
-
-        
         const user = await userModel.findById(userId).exec();
        console.log(user.name);
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
         console.log(user.name);
-        
         user.status = isBlocked;
         await user.save(); 
          // Invalidate the user's session
@@ -391,31 +364,24 @@ exports.updateStatus = async (req, res) => {
             res.json({ success: true, message: `User status updated to ${isBlocked ? "Blocked" : "Active"}` });
             }
         });
-       
     } catch (err) {
         console.error("Error updating status:", err);
         res.redirect('/admin/customers');
     }
 }
 
-
+//update order status
 exports.updateOrderStatus = async (req, res) => {
     try {
         const { newStatus, orderId } = req.body;
         const userId = req.session.user;
-    
-         const orderToUpdate = await orderModel.updateOne({_id:orderId},{$set:{"currentStatus":newStatus}}).exec();
+        const orderToUpdate = await orderModel.updateOne({_id:orderId},{$set:{"currentStatus":newStatus}}).exec();
         res.status(200).json({success:true,message:"status updated succesfully",newStatus,orderId});
-       
-
     } catch (err) {
         console.error("Error while updating the status on the server side ", err);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
-
-
-
 
 //logout
 exports.logout = async(req,res)=>{
