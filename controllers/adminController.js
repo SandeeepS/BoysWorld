@@ -216,9 +216,18 @@ exports.getUpdateProductPage = async(req,res)=>{
                    }
                }
          ]).exec(); 
+         const currentCategory = productToUpdate[0].catDetail[0]._id;
+         const category = await categoryModel.aggregate([
+            {
+                $match:{
+                    "_id":{ $ne:currentCategory}
+                }
+            }
+         ])
 
+         console.log("currentCategorys:",category);
          console.log("poroduct:",productToUpdate);
-          res.render('adminpanel/updateProduct',{productToUpdate,category:categoryData});
+          res.render('adminpanel/updateProduct',{productToUpdate,category});
     }catch(err){
         console.error("error in updation",err);
         res.redirect('/admin/products');

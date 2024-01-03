@@ -931,10 +931,6 @@ exports.verifyPayment = async(req,res)=>{
     console.log("current order:",current_Order);
     console.log(payment);
     const current_orderId = current_Order._id;
-    
-   
-   
-
     let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
     hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
     hmac = hmac.digest('hex');
@@ -955,13 +951,10 @@ exports.verifyPayment = async(req,res)=>{
       catch(err){
         console.log("error while updating the order ",err);
       }
-      
-
     }else{
-
        const status = "Failed";
-      const filter = {_id:current_orderId};
-      const updateDocument = {
+       const filter = {_id:current_orderId};
+       const updateDocument = {
         $set:{
           "status":status
         }
@@ -969,10 +962,6 @@ exports.verifyPayment = async(req,res)=>{
       const result = await orderModel.updateOne(filter,updateDocument);
       res.status(400).json({success:false,message:"failed to payment"});
     }
-    
-
-  
-
   }catch(err){
     console.error("error while varifying the payment form server!",err)
     res.status(500).json({success:false, message:"internal server error"});
@@ -1046,14 +1035,12 @@ exports.cancelOrder = async(req,res)=>{
 }
 
 //update userprofile
-
 exports.updateProfileDetails = async(req,res)=>{
   try{
       const userId = req.session.user;
       const name = req.body.name;
       const email = req.body.email;
       const number = req.body.number;
-
       if (!name || !email || !number) {   
       return res.status(400).json({ success: false, message: 'Name, email, and number are required.' });
     }
@@ -1074,18 +1061,15 @@ exports.changePassword = async(req,res)=>{
        const {currentPassword,newPassword,conformPassword} = req.body;
        const hashedNewPassword = crypto.createHash('md5').update(newPassword).digest('hex');
        const hashedConformPassword = crypto.createHash('md5').update(conformPassword).digest('hex');
-
        const user = await UserModel.findById(userId).exec();
        const password = user.pass;
        const isPasswordMatch = await bcrypt.compare(currentPassword,password);
        console.log(isPasswordMatch);
-
        if(!isPasswordMatch){
           console.log("current password is incorrecnt");
           let count = 1 ;
          return res.status(200).json({success:true,message:"Current Password is incorrect",count});
        }      
-       
        if(isPasswordMatch == true && (hashedNewPassword == hashedConformPassword) ){
              let count = 2 ;
              user.pass = await bcrypt.hash(newPassword,saltRouds);
@@ -1095,16 +1079,12 @@ exports.changePassword = async(req,res)=>{
              let count = 3 ;
              res.status(200).json({success:true, message: 'Something went Wrong!!', count});
        }
-       
-       
     }
-    
   catch(err){
     console.error("error while changing password",err);
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 }
-
 
 //sendResetOtpmail loginform reset password
 exports.sendResetOtpmail = async(req,res)=>{
@@ -1119,13 +1099,11 @@ exports.sendResetOtpmail = async(req,res)=>{
     };
     req.session.tempEmail = email;
     const user = await UserModel.findOne({ email: email});
-
     if (!user) {
       // Email not found in the database
       console.log("this email is not in the database");
       const count = 1;
      res.status(200).json({ success: true, message: 'Email not registered. Please sign up.',count });
-      
     }else{
 
             // Create a Nodemailer transporter
@@ -1165,7 +1143,6 @@ exports.sendResetOtpmail = async(req,res)=>{
   }
 }
 
-
 //conform otp while restting the password
 exports.conformOTPResetPassword = async(req,res)=>{
   try{
@@ -1189,7 +1166,6 @@ exports.conformOTPResetPassword = async(req,res)=>{
   }
 }
 
-
 ///resetPasswordLogin
 exports.resetPasswordLogin = async(req,res)=>{
   try{
@@ -1206,9 +1182,6 @@ exports.resetPasswordLogin = async(req,res)=>{
       }else{
         res.status(200).json({success:true,message:"something went wrong !! password updation failed "});
       }
-    
-
-
   }catch(err){
     console.error("error while updating the password ",err);
     res.status(500).json({ success: false, message: 'Internal server error.' });
