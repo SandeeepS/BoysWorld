@@ -153,7 +153,6 @@
 
 	<section id="cart_items">
 		<div class="container">
-			
 			<div class="table-responsive cart_info">
 				<table class="table table-condensed">
 					<thead>
@@ -162,29 +161,30 @@
 						</tr>
 					</thead>
 					<tbody>
-						<% for(let i = 0 ;i< currentAddress.length;i++) {%>
-
-                        
-                    <tr>
-							<td class="cart_product">
-								
-								<h5><%= currentAddress[i].name%>,</h5>
-								<h5> <%=  currentAddress[i].number %>,</h5>
-								<h5><%= currentAddress[i].houseName%>,</h5>
-								<h5><%= currentAddress[i].houseNumber%></h5>
-								<h5> <%= currentAddress[i].state%>,</h5>
-								<h5><%= currentAddress[i].city%>,</h5>
-								<h5><%= currentAddress[i].street%>,</h5>
-								<h5><%= currentAddress[i].landMark%></h5>
-								<h5><%= currentAddress[i].pin%>,</h5>
-									
-									
-							</td>
-                                    
-						
-						</tr>
-                   <% } %>
-					</tbody>
+						<% if(currentAddress){ %>
+								<% for(let i = 0 ;i< currentAddress.length;i++) {%>
+								<tr>
+									<td class="cart_product">
+										<h5><%= currentAddress[i].name%>,</h5>
+										<h5> <%=  currentAddress[i].number %>,</h5>
+										<h5><%= currentAddress[i].houseName%>,</h5>
+										<h5><%= currentAddress[i].houseNumber%></h5>
+										<h5> <%= currentAddress[i].state%>,</h5>
+										<h5><%= currentAddress[i].city%>,</h5>
+										<h5><%= currentAddress[i].street%>,</h5>
+										<h5><%= currentAddress[i].landMark%></h5>
+										<h5><%= currentAddress[i].pin%>,</h5>
+									</td>
+								</tr>
+								<% } %>
+						<% }  else {%>
+							<tr>
+								<td>
+									<h5>No Current Address</h5>
+								</td>
+							</tr>
+						<% } %>
+				</tbody>
 				</table>
 
 				<table class="table table-condensed">
@@ -194,57 +194,55 @@
 						</tr>
 					</thead>
 					<tbody>
-						<% for(let i = 0 ;i< address.length;i++) {%>
 
-					    
-                        <tr class="table-row">
-							
-							
-							
-							<td class="cart_product">
-								
-								<h5><%= address[i].name%>,</h5>
-								<h5> <%= address[i].number %>,</h5>
-								<h5><%= address[i].houseName%>,</h5>
-								<h5><%= address[i].houseNumber%></h5>
-								<h5> <%= address[i].state%>,</h5>
-								<h5><%= address[i].city%>,</h5>
-								<h5><%= address[i].street%>,</h5>
-								<h5><%= address[i].landMark%></h5>
-								<h5><%= address[i].pin%>,</h5>
-									
-							</td>
-                                    
-						
-							</td>
-							<td class="cart_description">
-								<h4><a href=""></a></h4>
-								<a href="#" id="openModalbtn2" AddressId="<%= address[i]._id%>" class="selected"><p>Edit</p></a>
-							</td>
-							
-							<td class="cart_quantity">
-								<div >
-									<a href="/setDefaultAddress/<%=address[i]._id %>" ><h5>Set as Default</h5></a>
-								</div>
-							</td>
-							<td class="cart_total">
-								<p class="cart_total_price"></p>
-							</td>
-							<td class="cart_delete">
-								<a class="cart_quantity_delete" href="/addressDelete/<%= address[i]._id %>"><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
-						
-                   <% } %>
+						<%  if(address) { %>
+
+							<% for(let i = 0 ;i< address.length;i++) {%>
+								<tr class="table-row">
+									<td class="cart_product">
+										<h5><%= address[i].name%>,</h5>
+										<h5> <%= address[i].number %>,</h5>
+										<h5><%= address[i].houseName%>,</h5>
+										<h5><%= address[i].houseNumber%></h5>
+										<h5> <%= address[i].state%>,</h5>
+										<h5><%= address[i].city%>,</h5>
+										<h5><%= address[i].street%>,</h5>
+										<h5><%= address[i].landMark%></h5>
+										<h5><%= address[i].pin%>,</h5>
+									</td>
+									</td>
+									<td class="cart_description">
+										<h4><a href=""></a></h4>
+										<a href="#" id="openModalbtn2" AddressId="<%= address[i]._id%>" class="selected"><p>Edit</p></a>
+									</td>
+									<td class="cart_quantity">
+										<div >
+											<a href="/setDefaultAddress/<%=address[i]._id %>" ><h5>Set as Default</h5></a>
+										</div>
+									</td>
+									<td class="cart_total">
+										<p class="cart_total_price"></p>
+									</td>
+									<td class="cart_delete">
+										<a class="cart_quantity_delete" href="/addressDelete/<%= address[i]._id %>"><i class="fa fa-times"></i></a>
+									</td>
+								</tr>
+							<% } %>
+
+						<% } else { %>
+                                 <tr class="table-row">
+									<td class="cart_product">
+										<h5>No Address Please Add</h5>
+									</td>
+								 </tr>
+						<% } %>
+
 					</tbody>
 				</table>
-				
-
 			</div>
 			<a href="/addAddress" class="btn btn-default add-to-cart">Add Address</a>
 		</div>
       
-		
 		<div id="myModal" class="modal">
 			<div class="modal-content">
 				 <span class="close" id="closeModalBtn">&times;</span>
@@ -266,26 +264,21 @@
 								 <input type="text" placeholder="street" name="street" id="street">
 								 <input type="text" placeholder="Landmark" name="landmark" id="landmark">
 								 <input type="text" placeholder="Pin Code" name="pin" id="pin">
-								 
 								 <button type="submit" class="btn btn-default update"  >Save</button>
 								 <br>
 								 <br>
 							 </form>
 						 </div>
-						 
 					 </div>
 				 </div>
 			</div>
 		 </div>
-
 	</section> <!--/#cart_items-->
 
-	
 	<footer id="footer"><!--Footer-->
 		<div class="footer-top">
 			<div class="container">
 				<div class="row">
-					
 				</div>
 			</div>
 		</div>
@@ -293,7 +286,6 @@
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
-					
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
@@ -304,7 +296,6 @@
 							</form>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>

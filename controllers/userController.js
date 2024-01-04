@@ -51,6 +51,7 @@ exports.shopPage = async(req,res)=>{
     try{
         const user = req.session.user;
         const userId = new mongoose.Types.ObjectId(user);
+        console.log("userId:",userId);
         const page = req.query.page || 1;
         const currentPage = parseInt(page);
         console.log("current page:",currentPage);
@@ -142,8 +143,11 @@ exports.userEntry = async(req,res)=>{
                 const message = "incorrect email or password";
                 res.render('login',{message});
             }
-        }else{
+        }else if(user && user.status === false){
             const message = "User is blocked by the admin";
+            res.render('login',{message});
+        }else{
+            const message = "User not found Please Sign Up!";
             res.render('login',{message});
         }
     }catch(error){
@@ -595,6 +599,7 @@ exports.addAddressPage = async(req,res)=>{
 exports.address = async(req,res)=>{
   try{
       const user = req.session.user;
+      console.log("userId:",user);
       // const userData = await UserModel.findById(user).exec();
       const address = {
         "formName": req.body.name,
@@ -686,10 +691,14 @@ exports.saveAddress = async(req,res)=>{
 exports.showAddress = async(req,res)=>{
   try{
     const userId = req.session.user;
+    const userId2 = new mongoose.Types.ObjectId(userId);
     const userData = await UserModel.findById(userId).exec();
     const address = userData.address;
-    const currentAddress = userData.currentAddress;
+    const currentAddressId = userData.currentAddress;
+    console.log("currentAddressId:",currentAddressId);
+    const currentAddress = address.filter(add => add._id.equals(currentAddressId));
     console.log(address);
+    console.log("currentAddress:",currentAddress);
     res.render('showAddress',{address,currentAddress});
   }catch(err){
     console.error("error while getting show address page",err);
@@ -722,22 +731,14 @@ exports.addressDelete = async(req,res)=>{
 exports.setDefaultAddress = async (req, res) => {
   try {
     const userId = req.session.user;
+    const userId2 = new mongoose.Types.ObjectId(userId);
     const addressId = req.params.id;
-    const addressObjectId = new ObjectId(addressId).toString();
-    const user = await UserModel.findById(userId).exec();
-    if (user) {
-      let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
-      console.log(currentAddressIndex);
-      if (currentAddressIndex !== -1) { // Check if the index is valid
-        console.log("helooooooooo");
-        const currentAddress = user.address[currentAddressIndex]; // Fetch the current address from user.address
-        user.currentAddress.splice(0, 1, currentAddress); // Replace the existing current address with the new one
-        await user.save();
-      } else {
-        console.log("Address not found.");
-      }
-    }
+    const addId = new mongoose.Types.ObjectId(addressId);
+    console.log("addressId:",addId);
+    const user = await UserModel.findOneAndUpdate(userId2,{$set:{"currentAddress":addId}});
+    console.log("useris:",user);
     res.redirect('/showAddress');
+ 
   } catch (err) {
     console.error("Error while updating the default address", err);
     res.redirect('/showAddress');

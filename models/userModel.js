@@ -36,7 +36,9 @@ const sch = {
     },
     cart:[cartItemSchema],
     address:[addressSchema],
-    currentAddress:[addressSchema],
+    currentAddress:{
+        type:mongoose.Schema.ObjectId
+    },
     
      
 }

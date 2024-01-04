@@ -29,6 +29,43 @@
         }
 	</style>
 	<style>
+
+		.modal {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		.modal-content {
+			width: 80%;
+			max-width: 800px;
+		}
+		
+		.address-box {
+			border: 1px solid #ccc;
+			margin-bottom: 10px;
+			padding: 10px;
+			display: flex;
+			justify-content: space-between;
+		}
+		
+		.address-info {
+			width: 70%;
+		}
+		
+		.actions {
+			display: flex;
+			flex-direction: column;
+		}
+		
+		.actions a {
+			margin-top: 5px;
+		}
+		
+		.delete {
+			color: red; /* Customize delete link color */
+		}
+		
 		.form-one {
 			display: flex;
 			flex-direction: column;
@@ -200,14 +237,10 @@
 	</style>
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-
 </head><!--/head-->
-
 <body>
 	<header id="header"><!--header-->
 
-		
 		<div class="header-middle"><!--header-middle-->
 			<div class="container">
 				<div class="row">
@@ -215,16 +248,13 @@
 						<div class="logo pull-left">
 							<a href="index.html"><img src="images/home/logo.png" alt="" /></a>
 						</div>
-						
 					</div>
-					
 				</div>
 			</div>
 		</div><!--/header-middle-->
 	    <div class="title text-center">
                <h2>Checkout</h2>
 		</div>
-	
 	</header><!--/header-->
 
 <section>
@@ -245,51 +275,11 @@
 				<td>
 					<button class="btn btn-default"  id="openModalBtn" style="background-color: rgb(238, 203, 5);">Change</button>
 					<button class="btn btn-default"  id="addAddressBtn" style="background-color: rgb(238, 203, 5);">Add Address</button>
-
 				</td>
 			</tr>
 		   </thead>
 		   <tbody>
 
-			<!-- modal -->
-			<div id="myModal" class="modal">
-				<div class="modal-content">
-					<span class="close" id="closeModalBtn">&times;</span>
-					<div class="modal-style">
-						<div class="container">
-							<% for(let i = 0 ;i< address.length;i++) {%>
-							<a href="/setDefaultAddressFromCheckout/<%= address[i]._id%>" data-index="<%= i %>">
-                            <div class="row">
-								<div class="box-sub">
-									<div>
-										
-
-											<input type="radio" name="checkout" >
-									
-										
-									</div>
-									<div>
-										<h5><%= address[i].name%>,</h5>
-										<h5> <%= address[i].number %>,</h5>
-										<h5><%= address[i].houseName%>,</h5>
-										<h5><%= address[i].houseNumber%></h5>
-										<h5> <%= address[i].state%>,</h5>
-										<h5><%= address[i].city%>,</h5>
-										<h5><%= address[i].street%>,</h5>
-										<h5><%= address[i].landMark%></h5>
-										<h5><%= address[i].pin%>,</h5>
-									</div>
-							
-								</div>	
-						 	</div>
-						    </a>
-							<% } %>
-						</div>
-					
-					</div>
-				</div>
-			</div>
-           
 
 			<div id="addressModal" class="modal">
 				<div class="modal-content">
@@ -301,7 +291,7 @@
 							 <div class="error-message" id="error-message"></div>
 							<br>
 							 <div class="form-one" style="width: 100%;">
-								<form action="/address" method="post">
+								<form action="" method="post" >
 									<input type="text" placeholder="Name" name="name" id="name">
 									 <input type="text" placeholder="Number" name="number" id="number">
 									 <input type="text" placeholder="Email" name="email" id="email">
@@ -312,31 +302,22 @@
 									 <input type="text" placeholder="street" name="street" id="street">
 									 <input type="text" placeholder="Landmark" name="landmark" id="landmark">
 									 <input type="text" placeholder="Pin Code" name="pin" id="pin">
-									 
-									 <button type="submit" class="btn btn-default update"   onclick="return  validate()" >Add</button>
-									 <br>
-									 <br>
+									 <button type="submit" class="btn btn-default update" onclick=" validate()">Add</button>
+									
 								 </form>
 							 </div>
-							 
 						 </div>
 					 </div>
 				</div>
 			 </div>
-
-		   
-			   
 			<% for(let i = 0 ;i< currentAddress.length;i++) {%>
 
 				<tr>
 					<td>
-
 					</td>
 					<td>
-
 					</td>
 					<td >
-						
 						<h4 id="selectedAddressName"><%= currentAddress[0].name %></h4>
 						<h5 id="selectedAddressNumber">Mobile number: <%= currentAddress[0].number %></h5>
 						<h5 id="selectedAddressHouseName">House Name: <%= currentAddress[0].houseName %></h5>
@@ -350,7 +331,6 @@
 			        </td>
 				</tr>
 				<% } %>
-
 				<thead>
 					<tr>
 						<td>
@@ -360,22 +340,15 @@
 							<h4 class="title ">Select a payment method</h4>
 						</td>
 						<td>
-
 						</td>
 						<td>
-
 						</td>
-					
 					</tr>
 				   </thead>
-
-
 		   </tbody>
-
 	    </table>
 	    
 		<div class="a-box">
-			
 
 			<div class="row">
 				<div class="box-sub">
@@ -385,7 +358,6 @@
 					<div class="cash">
 						<p>Online Payment</p>
 					</div>
-				
 				</div>
 			</div>
 
@@ -397,7 +369,6 @@
 					<div class="cash">
 						<p>Cash on Deleivery</p>
 					</div>
-				
 				</div>
 			</div>
 			   
@@ -412,12 +383,9 @@
 					<h4 class="title ">Rivew item and Delevery</h4>
 				</td>
 				<td>
-
 				</td>
 				<td>
-
 				</td>
-			
 			</tr>
 		   </thead>
 
@@ -427,8 +395,6 @@
 
 	<% if(cartDetails){%>
 		<% for(let i=0;i<cartDetails.length;i++){ %>
-
-	
 		<div class="a-box">
 		   <div class="content">
 				   <div class="photo">
@@ -443,19 +409,13 @@
 				   </div>
 		   </div>
 		</div>
-
 	    <% } %>
 		<% } %>
 	
-
-	
-
-
 		<div class="a-box text-center" >
 			<div>
                 <ul>
                     <li>Cart Sub Total <span id="cartTotalAmount" totalAmount="<%=totalAmount%>"> ₹<%=totalAmount%></span></li>
-                    
                 </ul>
 				<Button class="btn btn-default place-order" onclick="placeOrder()">Place your order</Button>
 			</div>
@@ -468,7 +428,6 @@
 			<div class="modal-style">
 				<div class="modal-text">
 					<p>Order Successful!</p>
-				
 				</div>
 			</div>
 		</div>
@@ -488,12 +447,9 @@
 	</div>
 </section>
 	<footer id="footer">
-		
-		
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
-					
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
@@ -519,7 +475,38 @@
 		</div>
 		
 	</footer>
-	
+
+
+	<!-- modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalBtn">&times;</span>
+        <div class="modal-style">
+            <div class="container">
+                <% for(let i = 0; i < address.length; i++) { %>
+                <div class="address-box">
+                    <div class="address-info">
+                        <h5><%= address[i].name %>,</h5>
+                        <h5><%= address[i].number %>,</h5>
+                        <h5><%= address[i].houseName %>,</h5>
+                        <h5><%= address[i].houseNumber %></h5>
+                        <h5><%= address[i].state %>,</h5>
+                        <h5><%= address[i].city %>,</h5>
+                        <h5><%= address[i].street %>,</h5>
+                        <h5><%= address[i].landMark %></h5>
+                        <h5><%= address[i].pin %>,</h5>
+                    </div>
+                    <div class="actions">
+                        <a href="#" id="openModalbtn2" AddressId="<%= address[i]._id %>" class="selected">Edit</a>
+                        <a href="/setDefaultAddress/<%= address[i]._id %>">Set as Default</a>
+                        <a href="/addressDelete/<%= address[i]._id %>" class="delete">Delete</a>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <script src="js/jquery.js"></script>
@@ -529,253 +516,6 @@
     <script src="js/main.js"></script>
 
 	<script>
-        // Add a JavaScript function to handle the radio button click event
-        document.addEventListener("DOMContentLoaded", function () {
-            const radioButtons = document.querySelectorAll("input[type='radio']");
-            const boxSubs = document.querySelectorAll(".box-sub");
-
-            for (let i = 0; i < radioButtons.length; i++) {
-                radioButtons[i].addEventListener("click", function () {
-                    // Remove the 'highlighted' class from all box-subs
-                    for (let j = 0; j < boxSubs.length; j++) {
-                        boxSubs[j].classList.remove("highlighted");
-                    }
-
-                    // Add the 'highlighted' class to the selected box-sub
-                    boxSubs[i].classList.add("highlighted");
-                });
-            }
-        });
-    </script>
-
-	<script>
-		// Get references to the modal and the button to open/close it
-		var modal = document.getElementById("myModal");
-		var addressModal = document.getElementById("addressModal")
-		var addressModalBtn = document.getElementById("addAddressBtn");
-		var openModalBtn = document.getElementById("openModalBtn");
-		var closeModalBtn = document.getElementById("closeModalBtn");
-		var addressCloseModalBtn = document.getElementById("addressCloseModalBtn");
-	
-		// Event listener to open the modal
-		openModalBtn.onclick = function(event) {
-			event.preventDefault();
-			modal.style.display = "block";
-		}
-	    
-		//event listner to open address modal
-		addressModalBtn .onclick = function(event){
-			event.preventDefault();
-			addressModal.style.display = "block";
-		}
-
-		// Event listener to close the modal
-		closeModalBtn.onclick = function() {
-			modal.style.display = "none";
-		}
-	
-		// Event listener to close the addressModal
-		addressCloseModalBtn.onclick = function() {
-			addressModal.style.display = "none";
-		}
-	
-	
-	</script>
-
-	<script>
-		// Function to get product details from the cookie
-		function getProductDetailsFromCookie() {
-			const cookieValue = document.cookie
-				.split('; ')
-				.find(row => row.startsWith('productDetails='))
-				?.split('=')[1];
-	
-			return cookieValue ? JSON.parse(decodeURIComponent(cookieValue)) : null;
-		}
-	
-		// Example usage
-		document.addEventListener('DOMContentLoaded', function () {
-			// Call the function to get product details from the cookie
-			const productDetails = getProductDetailsFromCookie();
-	
-			// Check if product details are available
-			if (productDetails) {
-				console.log("Product ID:", productDetails.id);
-				console.log("Quantity:", productDetails.quantity);
-	
-				
-			}
-		});
-	</script>
-
-	
-
-
-  
-	<script>
-		// Function to send AJAX request
-		function placeOrder() {
-			// Get product details from the cookie or your preferred method
-			const closeBtn = document.getElementById("paymentSuccessModalClose");
-			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
-			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
-			const cartTotal = document.querySelector("#cartTotalAmount");
-			const modal2 = document.getElementById("paymentSuccessModal");
-			const cartDetail= <%-JSON.stringify(cartDetails)%>;
-            const totalAmount = cartTotal.getAttribute("totalAmount");
-			console.log("totalAmount:",totalAmount);
-
-			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
-			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
-
-	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
-				// Make AJAX request
-				$.ajax({
-					type: 'POST',
-					url: '/placeOrder', 
-					data: {
-						cartDetail:cartDetail,
-                        totalAmount:totalAmount
-					
-					},
-					success: function (response) {
-						console.log("hello world");
-						// Display payment successful modal
-					
-						modal2.style.display = "block";
-						setTimeout(function() {
-							window.location.href = "/shop"; 
-						}, 3000);
-					},
-					error: function (error) {
-						console.error("Error placing order:", error);
-						// Handle error if needed
-					}
-				});
-	
-			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
-				
-				$.ajax({
-					type:'POST',
-					url:'/generateRazorpay',
-					data:{
-						productId: productId,
-						quantity: quantity,
-						total: totalPrice,
-						currentAddress:currentAddress,
-					},
-					success:function(response){
-						
-						rezorpayPayment(response.order);
-					},
-					error:function(error){
-						console.error("error while online payment",error);
-					}
-				});
-
-
-
-
-				function rezorpayPayment(order){
-				
-					var options = {
-						"key": "rzp_test_t03CSatWp5XBXp", // Enter the Key ID generated from the Dashboard
-						"amount": order.amount_due, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-						"currency": "INR",
-						"name": "BoysWorld",
-						"description": "Test Transaction",
-						"image": "https://example.com/your_logo",
-						"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-						"handler": function (response){
-							alert(response.razorpay_payment_id);
-							alert(response.razorpay_order_id);
-							alert(response.razorpay_signature);
-
-							verifyPayment(response);
-						},
-						"prefill": {
-							"name": "Gaurav Kumar",
-							"email": "gaurav.kumar@example.com",
-							"contact": "9000090000"
-						},
-						"notes": {
-							"address": "Razorpay Corporate Office"
-						},
-						"theme": {
-							"color": "#3399cc"
-						}
-					};
-					var rzp1 = new Razorpay(options);
-                     rzp1.open();
-				}
-           
-				 
-				 function verifyPayment(payment){
-                       $.ajax({
-						method:'POST',
-						url:'/verify-payment',
-                        data:{
-							payment,
-							productId: productId,
-							quantity: quantity,
-							total: totalPrice,
-							currentAddress:currentAddress,
-
-						},
-
-					   })
-				 }
-
-
-
-			}else{
-				
-				selectPaymentModal.style.display = "block";
-
-				selectPaymentModalClose.onclick = function(){
-				 selectPaymentModal.style.display = "none";
-			}
-		}
-		
-			
-		}
-		
-	</script>
-
-	
-	
-	<script>
-		// Get references to the modal and the button to open/close it
-		var modal2 = document.getElementById("paymentSuccessModal");
-		var closeModalBtn2 = document.getElementById("paymentSuccessModalClose");
-		const selectPaymentModal = document.getElementById('selectPaymentWarnning');
-        const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
-
-		// Event listener to close the modal
-		closeModalBtn2.onclick = function () {
-			modal2.style.display = "none";
-		}
-	
-		// Close the modal if the user clicks outside of it
-		window.onclick = function (event) {
-			if (event.target == modal2) {
-				modal2.style.display = "none";
-			}
-		}
-     
-		selectPaymentModalClose.onclick = function(){
-			selectPaymentModal.style.display = "none";
-
-		}
-
-		window.onclick = function(event){
-			if(event.target == selectPaymentModal){
-				selectPaymentModal.style.display = "none";
-			}
-		}
-
-	</script>
-		<script>
 		function validate(){
 			const name = document.getElementById("name").value;
 			const number = document.getElementById("number").value;
@@ -1034,12 +774,251 @@
 				}, 3000);
 				return false;
 			  }
-
-			return true;
+            
+			  $.ajax({
+				type:'POST',
+				url:'/address',
+				data:{
+				    name,
+					number,
+					email,
+					houseName,
+					houseNumber,
+					state,
+					city,
+					street,
+					landmark,
+					pin,
+					
+				},
+				success:function(response){
+					console.log("address added successfully");
+				},
+				error:function(error){
+					console.error("error while online payment",error);
+				}
+			});
 
 		}
 	</script>
+	<script>
+        // Add a JavaScript function to handle the radio button click event
+        document.addEventListener("DOMContentLoaded", function () {
+            const radioButtons = document.querySelectorAll("input[type='radio']");
+            const boxSubs = document.querySelectorAll(".box-sub");
+
+            for (let i = 0; i < radioButtons.length; i++) {
+                radioButtons[i].addEventListener("click", function () {
+                    // Remove the 'highlighted' class from all box-subs
+                    for (let j = 0; j < boxSubs.length; j++) {
+                        boxSubs[j].classList.remove("highlighted");
+                    }
+
+                    // Add the 'highlighted' class to the selected box-sub
+                    boxSubs[i].classList.add("highlighted");
+                });
+            }
+        });
+    </script>
+	<script>
+		// Get references to the modal and the button to open/close it
+		var modal = document.getElementById("myModal");
+		var addressModal = document.getElementById("addressModal")
+		var addressModalBtn = document.getElementById("addAddressBtn");
+		var openModalBtn = document.getElementById("openModalBtn");
+		var closeModalBtn = document.getElementById("closeModalBtn");
+		var addressCloseModalBtn = document.getElementById("addressCloseModalBtn");
 	
+		// Event listener to open the modal
+		openModalBtn.onclick = function(event) {
+			event.preventDefault();
+			modal.style.display = "block";
+		}
+	    
+		//event listner to open address modal
+		addressModalBtn .onclick = function(event){
+			event.preventDefault();
+			addressModal.style.display = "block";
+		}
+
+		// Event listener to close the modal
+		closeModalBtn.onclick = function() {
+			modal.style.display = "none";
+		}
+	
+		// Event listener to close the addressModal
+		addressCloseModalBtn.onclick = function() {
+			addressModal.style.display = "none";
+		}
+	</script>
+
+	<script>
+		// Function to get product details from the cookie
+		function getProductDetailsFromCookie() {
+			const cookieValue = document.cookie
+				.split('; ')
+				.find(row => row.startsWith('productDetails='))
+				?.split('=')[1];
+	
+			return cookieValue ? JSON.parse(decodeURIComponent(cookieValue)) : null;
+		}
+	
+		// Example usage
+		document.addEventListener('DOMContentLoaded', function () {
+			// Call the function to get product details from the cookie
+			const productDetails = getProductDetailsFromCookie();
+	
+			// Check if product details are available
+			if (productDetails) {
+				console.log("Product ID:", productDetails.id);
+				console.log("Quantity:", productDetails.quantity);
+			}
+		});
+	</script>
+	<script>
+		// Function to send AJAX request
+		function placeOrder() {
+			// Get product details from the cookie or your preferred method
+			const closeBtn = document.getElementById("paymentSuccessModalClose");
+			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
+			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
+			const cartTotal = document.querySelector("#cartTotalAmount");
+			const modal2 = document.getElementById("paymentSuccessModal");
+			const cartDetail= <%-JSON.stringify(cartDetails)%>;
+            const totalAmount = cartTotal.getAttribute("totalAmount");
+			console.log("totalAmount:",totalAmount);
+
+			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
+			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
+
+	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
+				// Make AJAX request
+				$.ajax({
+					type: 'POST',
+					url: '/placeOrder', 
+					data: {
+						cartDetail:cartDetail,
+                        totalAmount:totalAmount
+					
+					},
+					success: function (response) {
+						console.log("hello world");
+						// Display payment successful modal
+					
+						modal2.style.display = "block";
+						setTimeout(function() {
+							window.location.href = "/shop"; 
+						}, 3000);
+					},
+					error: function (error) {
+						console.error("Error placing order:", error);
+						// Handle error if needed
+					}
+				});
+	
+			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
+				$.ajax({
+					type:'POST',
+					url:'/generateRazorpay',
+					data:{
+						productId: productId,
+						quantity: quantity,
+						total: totalPrice,
+						currentAddress:currentAddress,
+					},
+					success:function(response){
+						
+						rezorpayPayment(response.order);
+					},
+					error:function(error){
+						console.error("error while online payment",error);
+					}
+				});
+
+				function rezorpayPayment(order){
+					var options = {
+						"key": "rzp_test_t03CSatWp5XBXp", // Enter the Key ID generated from the Dashboard
+						"amount": order.amount_due, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+						"currency": "INR",
+						"name": "BoysWorld",
+						"description": "Test Transaction",
+						"image": "https://example.com/your_logo",
+						"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+						"handler": function (response){
+							alert(response.razorpay_payment_id);
+							alert(response.razorpay_order_id);
+							alert(response.razorpay_signature);
+
+							verifyPayment(response);
+						},
+						"prefill": {
+							"name": "Gaurav Kumar",
+							"email": "gaurav.kumar@example.com",
+							"contact": "9000090000"
+						},
+						"notes": {
+							"address": "Razorpay Corporate Office"
+						},
+						"theme": {
+							"color": "#3399cc"
+						}
+					};
+					var rzp1 = new Razorpay(options);
+                     rzp1.open();
+				}
+				 function verifyPayment(payment){
+                       $.ajax({
+						method:'POST',
+						url:'/verify-payment',
+                        data:{
+							payment,
+							productId: productId,
+							quantity: quantity,
+							total: totalPrice,
+							currentAddress:currentAddress,
+						},
+					   })
+				 }
+
+			}else{
+				selectPaymentModal.style.display = "block";
+				selectPaymentModalClose.onclick = function(){
+				 selectPaymentModal.style.display = "none";
+			}
+		}
+			
+		}
+		
+	</script>
+	<script>
+		// Get references to the modal and the button to open/close it
+		var modal2 = document.getElementById("paymentSuccessModal");
+		var closeModalBtn2 = document.getElementById("paymentSuccessModalClose");
+		const selectPaymentModal = document.getElementById('selectPaymentWarnning');
+        const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
+
+		
+	
+		// Close the modal if the user clicks outside of it
+		window.onclick = function (event) {
+			if (event.target == modal2) {
+				modal2.style.display = "none";
+			}
+		}
+     
+		selectPaymentModalClose.onclick = function(){
+			selectPaymentModal.style.display = "none";
+
+		}
+
+		window.onclick = function(event){
+			if(event.target == selectPaymentModal){
+				selectPaymentModal.style.display = "none";
+			}
+		}
+
+	</script>
+
 
 </body>
 </html>
