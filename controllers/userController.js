@@ -495,7 +495,9 @@ exports.getCheckoutPage2 = async(req,res)=>{
     const userData = await UserModel.findById(userId).exec();
     const userIdObj =  userData._id;
     const address = userData.address;
-    const currentAddress = userData.currentAddress;
+    const currentAddressId = userData.currentAddress;
+    const currentAddress = address.filter(add => add._id.equals(currentAddressId));
+
     const cartDetails = await UserModel.aggregate([
         {
           $match:{_id:userIdObj}
