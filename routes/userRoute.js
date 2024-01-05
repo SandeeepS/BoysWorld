@@ -62,7 +62,7 @@ route.post('/address',userController.address);
 route.get('/showAddress',userController.showAddress);
 route.get('/addressDelete/:id',userController.addressDelete);
 route.get('/setDefaultAddress/:id',userController.setDefaultAddress);
-route.get('/setDefaultAddressFromCheckout/:id',userController.setDefaultAddressFromCheckouts);
+route.get('/setDefaultAddressFromCheckout',userController.setDefaultAddressFromCheckouts);
 route.get('/orders',userController.oders);
 route.post('/cancelOrder',userController.cancelOrder);
 

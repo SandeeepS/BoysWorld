@@ -694,7 +694,7 @@ exports.showAddress = async(req,res)=>{
   try{
     const userId = req.session.user;
     const userId2 = new mongoose.Types.ObjectId(userId);
-    const userData = await UserModel.findById(userId).exec();
+    const userData = await UserModel.findById(userId2).exec();
     const address = userData.address;
     const currentAddressId = userData.currentAddress;
     console.log("currentAddressId:",currentAddressId);
@@ -751,26 +751,20 @@ exports.setDefaultAddress = async (req, res) => {
 exports.setDefaultAddressFromCheckouts = async (req, res) => {
   try {
     const userId = req.session.user;
-    const addressId = req.params.id;
-    const productId = req.params.id;
-    const quantity = req.params.id;
-    console.log(productId,quantity);
-    const addressObjectId = new ObjectId(addressId).toString();
-        const user = await UserModel.findById(userId).exec();
-    if (user) {
-      let currentAddressIndex = user.address.findIndex((add) => add.id === addressObjectId);
-      console.log(currentAddressIndex);
-      if (currentAddressIndex !== -1) { 
-        const currentAddress = user.address[currentAddressIndex]; 
-        user.currentAddress.splice(0, 1, currentAddress);
-        await user.save();
-        console.log("address saved successfuly");
-      } else {
-        console.log("Address not found.");
-      }
-    }
-
-    res.redirect('/getCheckout2',productId,quantity);
+    const address = JSON.parse(decodeURIComponent(req.query.address))
+    const cartDetails =JSON.parse(decodeURIComponent(req.query.cartDetail));
+    const totalAmount = JSON.parse(decodeURIComponent(req.query.totalAmount)); 
+    const addressId = (decodeURIComponent(req.query.addressId));
+    const userId2 = new mongoose.Types.ObjectId(userId);
+    const addId = new mongoose.Types.ObjectId(addressId);
+    console.log("addressId:",addId);
+    const user = await UserModel.findOneAndUpdate({"_id":userId2},{$set:{"currentAddress":addId}});
+    user.save();
+    console.log("currentaddressId :",addId);
+    const currentAddress = user.address.filter(add => add._id.equals(addId));
+    console.log("useris:",user);
+    console.log("currentAddress",currentAddress);
+    res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
   } catch (err) {
     console.error("Error while updating the default address", err);
     res.redirect('/getCheckout');
