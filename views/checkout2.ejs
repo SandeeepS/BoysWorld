@@ -893,28 +893,34 @@
 
 	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
 				// Make AJAX request
-				$.ajax({
-					type: 'POST',
-					url: '/placeOrder', 
-					data: {
-						cartDetail:cartDetail,
-                        totalAmount:totalAmount
-					
-					},
-					success: function (response) {
-						console.log("hello world");
-						// Display payment successful modal
-					
-						modal2.style.display = "block";
-						setTimeout(function() {
-							window.location.href = "/shop"; 
-						}, 3000);
-					},
-					error: function (error) {
-						console.error("Error placing order:", error);
-						// Handle error if needed
-					}
-				});
+				$('form').on('submit',function(e){
+					e.preventDefault();
+
+					$.ajax({
+						type: 'POST',
+						url: '/placeOrder', 
+						data: {
+							cartDetail:cartDetail,
+							totalAmount:totalAmount
+						
+						},
+						success: function (response) {
+							console.log("hello world");
+							// Display payment successful modal
+						
+							modal2.style.display = "block";
+							setTimeout(function() {
+								window.location.href = "/shop"; 
+							}, 3000);
+						},
+						error: function (error) {
+							console.error("Error placing order:", error);
+							// Handle error if needed
+						}
+					});
+
+				})
+			
 	
 			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
 				$.ajax({
@@ -982,6 +988,7 @@
 
 			}else{
 				selectPaymentModal.style.display = "block";
+				event.preventDefault();
 				selectPaymentModalClose.onclick = function(){
 				 selectPaymentModal.style.display = "none";
 			}
