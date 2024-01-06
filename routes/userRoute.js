@@ -58,6 +58,7 @@ route.get('/addToCart/:id',userController.addToCart);
 route.get('/cartItemDelete/:id',userController.cartItemDelete);
 route.get('/addAddress',auth.user,userController.addAddressPage);
 route.post('/saveAddress',userController.saveAddress);
+route.post('/addAddressFromCheckout',userController.addAddressFromCheckout)
 route.post('/address',userController.address);
 route.get('/showAddress',userController.showAddress);
 route.get('/addressDelete/:id',userController.addressDelete);

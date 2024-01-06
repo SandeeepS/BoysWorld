@@ -299,7 +299,7 @@
 							 <div class="error-message" id="error-message"></div>
 							<br>
 							 <div class="form-one" style="width: 100%;">
-								<form action="" method="post" >
+								<form id="addressForm" action=""  >
 									<input type="text" placeholder="Name" name="name" id="name">
 									 <input type="text" placeholder="Number" name="number" id="number">
 									 <input type="text" placeholder="Email" name="email" id="email">
@@ -310,7 +310,7 @@
 									 <input type="text" placeholder="street" name="street" id="street">
 									 <input type="text" placeholder="Landmark" name="landmark" id="landmark">
 									 <input type="text" placeholder="Pin Code" name="pin" id="pin">
-									 <button type="submit" class="btn btn-default update" onclick=" validate()">Add</button>
+									 <button type="submit" class="btn btn-default update" id="addressSubmit" >Add</button>
 									
 								 </form>
 							 </div>
@@ -528,6 +528,302 @@
     </script>
 
 	<script>
+         		
+	   document.addEventListener("DOMContentLoaded",function(){
+            const submitBtn = document.getElementById("addressSubmit");
+			
+			const errorMessage = document.getElementById("error-message");
+			const phonePattern = /^(?=.*[1-9])\d{10}$/;
+
+			submitBtn.addEventListener("click",function(event){
+				event.preventDefault();
+
+					const name = document.getElementById("name").value;
+					const number = document.getElementById("number").value;
+					const email= document.getElementById("email").value;
+					const houseName = document.getElementById("houseName").value;
+					const houseNumber = document.getElementById("houseNumber").value;
+					const state = document.getElementById("state").value;
+					const city = document.getElementById("city").value;
+					const street = document.getElementById("street").value;
+					const landmark = document.getElementById("landmark").value;
+					const pin= document.getElementById("pin").value;
+
+					const address = <%- JSON.stringify(address)%>;
+					const product = <%- JSON.stringify(product)%>;
+					const quantity = <%-JSON.stringify(quantity)%>;
+					const totalPrice = <%- JSON.stringify(totalPrice)%>;
+					const productId = toString(product[0]._id);
+					console.log("product:",product);
+
+
+
+					function isValidEmail(email) {
+						// Regular expression for a simple email validation
+						const emailRegex = /^[^\s@]+@gmail\.com$/;
+						return emailRegex.test(email);
+					}
+					function checkWhiteSpace(s){
+						return s.trim() === "";
+					}
+
+						if (name==='' && number===""  && email===""  && houseName===""  && state===""  && city==="" && street===""  && landmark==="" && pin==="" ) {
+							errorMessage.innerText = "Please fill in all the fields.";
+							errorMessage.style.display = "block";
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(name === ""){
+							errorMessage.innerText = "Please enter Name";
+							errorMessage.style.display = "block";
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(checkWhiteSpace(name)){
+							errorMessage.innerText ="please enter your name";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(number === ""){
+							errorMessage.innerText = "Please enter your number";
+							errorMessage.style.display = "block";
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(number <= 0){
+							errorMessage.innerText = "Please enter valid Phone Number";
+							errorMessage.style.display = "block";
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(checkWhiteSpace(number)){
+							errorMessage.innerText ="please enter your number";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(!phonePattern.test(number)){
+							errorMessage.innerText = "please enter a valid phone  number.";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(email === ""){
+							errorMessage.innerText = "please your email address";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+
+							return false;
+						}
+
+						if (!isValidEmail(email)) {
+							errorMessage.innerText = "Please enter a valid email address";
+							errorMessage.style.display = "block";
+					
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+			
+						if(houseName === ""){
+							errorMessage.innerText = "Please enter your House Name";
+							errorMessage.style.display = "block";
+
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(checkWhiteSpace(houseName)){
+							errorMessage.innerText ="please enter your House Name";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if( houseNumber === ""){
+							errorMessage.innerText = "Please enter your house number";
+							errorMessage.style.display = "block";
+
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+						if(checkWhiteSpace(houseNumber)){
+							errorMessage.innerText ="please enter your House Number";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(state === ""){
+							errorMessage.innerText = "Please enter your State";
+							errorMessage.style.display = "block";
+
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(checkWhiteSpace(state)){
+							errorMessage.innerText ="please enter your state";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(city === ""){
+							errorMessage.innerText = "Please enter your city";
+							errorMessage.style.display = "block";
+
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(checkWhiteSpace(city)){
+							errorMessage.innerText ="please enter your city";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(street === ""){
+							errorMessage.innerText = "Please enter your street";
+							errorMessage.style.display = "block";
+
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(checkWhiteSpace(street)){
+							errorMessage.innerText ="please enter your street";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(landmark === ""){
+							errorMessage.innerText = "Please enter your Land Mark";
+							errorMessage.style.display = "block";
+
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+						if(checkWhiteSpace(landmark)){
+							errorMessage.innerText ="please enter your landmark";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(pin === ""){
+							errorMessage.innerText = "Please enter your pincode";
+							errorMessage.style.display = "block";
+
+							// Hide the error message after 3 seconds
+							setTimeout(function () {
+								errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+
+						if(checkWhiteSpace(pin)){
+							errorMessage.innerText ="please enter your pin";
+							errorMessage.style.display = "block";
+							setTimeout(function () {
+							errorMessage.style.display = "none";
+							}, 3000);
+							return false;
+						}
+						
+
+
+						$.ajax({
+							 type: 'POST',
+							 url:'/addAddressFromCheckout',
+							 data:{
+								name,number,email,houseName,houseNumber,state,city,street,landmark,pin,address,product,quantity,totalPrice, productId 
+							 },
+							 success: function(response){
+								if(response){
+									console.log("message reached in frontend");
+									const address = response.address;
+									const quantity = response.quantity;
+									const currentAddress = response.currentAddress;
+									const totalPrice = response.totalPrice;
+									const product = response.product;
+									const productId = response.productId;
+
+									window.location.href = "/getCheckout?address="+address+"&product="+product+"&quantity="+quantity+"&currentAddress="+currentAddress+"&productId="+productId+"&totalPrice="+totalPrice ;
+								}
+							 },
+							 error:function(error){
+								console.error("error while getting the data from addAddressFromCheckout:",error);
+
+							 }
+						});
+					
+			})
+	   })
+	</script>
+
+	<script>
 		// Get references to the modal and the button to open/close it
 		var modal = document.getElementById("myModal");
 		var addressModal = document.getElementById("addressModal")
@@ -544,8 +840,9 @@
 	    
 		//event listner to open address modal
 		addressModalBtn .onclick = function(event){
-			event.preventDefault();
+			
 			addressModal.style.display = "block";
+			event.preventDefault();
 		}
 
 		// Event listener to close the modal
@@ -611,7 +908,7 @@
 						},
 						success: function (response) {
 							if(response){
-								// Display payment successful modal
+								// Display payment succe ssful modal
 								modal2.style.display = "block";
 								setTimeout(function() {
 									window.location.href = "/shop"; 
@@ -623,8 +920,6 @@
 							// Handle error if needed
 						}
 					});
-		
-
 				})
 			
 			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
@@ -689,12 +984,9 @@
 						},
 					   })
 				 }
-
 			}else{
                selectPaymentModal.style.display = "block";
 			   event.preventDefault();
-			
-			
 			}
 		}
 
@@ -718,13 +1010,10 @@
 		}
 		// Close the modal if the user clicks outside of it
 		window.onclick = function (event) {
-			if (event.target == modal2) {
 				modal2.style.display = "none";
-			}
 		}
 		selectPaymentModalClose.onclick = function(){
 			selectPaymentModal.style.display = "none";
-
 		}
 		window.onclick = function(event){
 			if(event.target == selectPaymentModal){
@@ -732,5 +1021,7 @@
 			}
 		}
 	</script>
+	
+	
 </body>
 </html>

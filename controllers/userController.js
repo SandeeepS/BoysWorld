@@ -460,18 +460,19 @@ exports.getWishlist = async(req,res)=>{
 
 exports.getCheckoutPage = async(req,res)=>{
   try{
+      
     
       const userId = req.session.user;
       const userData = await UserModel.findById(userId).exec();
       const address = userData.address;
       const currentAddressId = userData.currentAddress;
-      const productId = req.query.productId;
+      const productId = req.query.productId   ;
       console.log("productId:",productId);
       const productId2 = new mongoose.Types.ObjectId(productId);
       const quantity = req.query.quantity;
       const product2 = await productModel.findById(productId).exec();
       console.log("product2",product2);
-      const totalPrice = product2.price * quantity;
+      const totalPrice = product2.price * quantity || req.query.quantity;
       const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
       const product = await productModel.aggregate([
         {
@@ -691,6 +692,54 @@ exports.saveAddress = async(req,res)=>{
   }
 }
 
+//save or add address form the checkout 
+exports.addAddressFromCheckout = async(req,res)=>{
+    try{
+      
+       const {address,product,quantity,totalPrice,productId} = req.body;
+     
+      const user = req.session.user;
+      console.log("userId:",user);
+      const newAddress = {
+        "formName": req.body.name,
+        "formNumber":req.body.number,
+        "formemail":req.body.email,
+        "formhouseName":req.body.houseName,
+        "formhouseNumber":req.body.houseNumber,
+        "formstate":req.body.state,
+        "formcity":req.body.city,
+        "formstreet":req.body.street,
+        "formlandmark":req.body.landmark,
+        "formpin":req.body.pin,
+      };
+       const userData = await UserModel.findByIdAndUpdate(user,{
+        $push:{
+          address:{
+            "name":newAddress.formName,
+            "number":newAddress.formNumber,
+            "email":newAddress.formemail,
+            "houseName":newAddress.formhouseName,
+            "houseNumber":newAddress.formhouseNumber,
+            "state":newAddress.formstate,
+            "city":newAddress.formcity,
+            "street":newAddress.formlandmark,
+            "landMark":newAddress.formlandmark,
+            "pin":newAddress.formpin
+          }
+        }
+       },{new:true});
+       const len = userData.address.length;
+       const currentAddressId = userData.address[len-1]._id;
+       userData.CurrentAddress = currentAddressId;
+       const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
+       res.status(200).json({success:true,message:"address inserted successfully",address,product,quantity,totalPrice,currentAddress,productId});
+
+    }catch(err){
+      console.log("error while adding the address from checkout",err);
+      res.status(500).json({success:false,message:"error occured in adding address"});
+    }
+}
+
 //show address page
 exports.showAddress = async(req,res)=>{
   try{
@@ -894,7 +943,6 @@ exports.placeOrder2 = async(req,res)=>{
     console.log("order inserted successfully");
     res.status(200).json({ success: true, message: 'Order placed successfully.'});
 
-
   }catch(err){
     console.error("error in place order 2 ",err);
     res.status(500).json({success:false,message:"order placing has some issues"});
@@ -915,7 +963,6 @@ exports.generateRazorpay = async(req,res)=>{
         const date = new Date();
         const randomId = 10000+Math.floor(Math.random()*90000);
       
-        
         const orders = new orderModel({
           "userId":userId,
           "productId":productId,
