@@ -23,6 +23,83 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
 	<style>
+		.error-message {
+            color: red;
+            display: none;
+        }
+	</style>
+	<style>
+
+		.modal {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		.modal-content {
+			width: 80%;
+			max-width: 800px;
+		}
+		
+		.address-box {
+			border: 1px solid #ccc;
+			margin-bottom: 10px;
+			padding: 10px;
+			display: flex;
+			justify-content: space-between;
+		}
+		
+		.address-info {
+			width: 70%;
+		}
+		
+		.actions {
+			display: flex;
+			flex-direction: column;
+		}
+		
+		.actions a {
+			margin-top: 5px;
+		}
+		
+		.delete {
+			color: red; /* Customize delete link color */
+		}
+
+
+			
+		.form-one {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			width: 100%;
+			padding: 20px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+		 }
+		 
+		 .form-one input {
+			padding: 10px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+		 }
+		 
+		 .form-one button {
+			padding: 10px 20px;
+			background-color: #007BFF;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		 }
+		 
+		 .form-one button:hover {
+			background-color: #0056b3;
+		 }
+		 
+
+		/*address modal end */
 		.a-box {
 			display: block;
 			border-radius: 8px;
@@ -206,46 +283,41 @@
 					<h4>adddress</h4>
 				</td>
 				<td>
-					<a class="title" href="#" id="openModalBtn"><h5>Change</h5></a>
+					<button class="btn btn-default"  id="openModalBtn" style="background-color: rgb(238, 203, 5);">Change</button>
+					<button class="btn btn-default"  id="addAddressBtn" style="background-color: rgb(238, 203, 5);">Add Address</button>
 				</td>
 			</tr>
 		   </thead>
 		   <tbody>
-
-			<!-- modal -->
-			<div id="myModal" class="modal">
+			<div id="addressModal" class="modal">
 				<div class="modal-content">
-					<span class="close" id="closeModalBtn">&times;</span>
-					<div class="modal-style">
-						<div class="container">
-							<% for(let i = 0 ;i< address.length;i++) {%>
-							<a href="/setDefaultAddressFromCheckout/<%= address[i]._id%>?productId=<%=product[0]._id%>&quantity=<%=quantity%>" data-index="<%= i %>" >
-                            <div class="row">
-								<div class="box-sub">
-									<div>
-											<input type="radio" name="checkout" >
-									</div>
-									<div>
-										<h5><%= address[i].name%>,</h5>
-										<h5> <%= address[i].number %>,</h5>
-										<h5><%= address[i].houseName%>,</h5>
-										<h5><%= address[i].houseNumber%></h5>
-										<h5> <%= address[i].state%>,</h5>
-										<h5><%= address[i].city%>,</h5>
-										<h5><%= address[i].street%>,</h5>
-										<h5><%= address[i].landMark%></h5>
-										<h5><%= address[i].pin%>,</h5>
-									</div>
-							
-								</div>	
-						 	</div>
-						    </a>
-							<% } %>
-						</div>
-					
-					</div>
+					 <span class="close" id="addressCloseModalBtn">&times;</span>
+					 <div class="modal-style">
+						 <div class="container" >
+							 <h4 class="text text-center">Add Address</h4>
+							 <br>
+							 <div class="error-message" id="error-message"></div>
+							<br>
+							 <div class="form-one" style="width: 100%;">
+								<form action="" method="post" >
+									<input type="text" placeholder="Name" name="name" id="name">
+									 <input type="text" placeholder="Number" name="number" id="number">
+									 <input type="text" placeholder="Email" name="email" id="email">
+									 <input type="text" placeholder="House Name" name="houseName" id="houseName">
+									 <input type="text" placeholder="House Number" name="houseNumber" id="houseNumber">
+									 <input type="text" placeholder="State" name="state" id="state">
+									 <input type="text" placeholder="city" name="city" id="city">
+									 <input type="text" placeholder="street" name="street" id="street">
+									 <input type="text" placeholder="Landmark" name="landmark" id="landmark">
+									 <input type="text" placeholder="Pin Code" name="pin" id="pin">
+									 <button type="submit" class="btn btn-default update" onclick=" validate()">Add</button>
+									
+								 </form>
+							 </div>
+						 </div>
+					 </div>
 				</div>
-			</div>
+			 </div>
 			<% for(let i = 0 ;i< currentAddress.length;i++) {%>
 				<tr>
 					<td>
@@ -372,7 +444,6 @@
 </section>
 	<footer id="footer">
 		
-		
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
@@ -397,10 +468,39 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- modal -->
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				<span class="close" id="closeModalBtn">&times;</span>
+				<div class="modal-style">
+					<div class="container">
+						<% for(let i = 0; i < address.length; i++) { %>
+						<div class="address-box">
+							<div class="address-info">
+								<h5><%= address[i].name %>,</h5>
+								<h5><%= address[i].number %>,</h5>
+								<h5><%= address[i].houseName %>,</h5>
+								<h5><%= address[i].houseNumber %></h5>
+								<h5><%= address[i].state %>,</h5>
+								<h5><%= address[i].city %>,</h5>
+								<h5><%= address[i].street %>,</h5>
+								<h5><%= address[i].landMark %></h5>
+								<h5><%= address[i].pin %>,</h5>
+							</div>
+							<div class="actions">
+								<a href="#" id="openModalbtn2" AddressId="<%= address[i]._id %>" class="selected">Edit</a>
+								<a href="/setDefaultAddressFromCheckout?addressId=<%= encodeURIComponent(address[i]._id) %>&address=<%= encodeURIComponent(JSON.stringify(address)) %>&currentAddress=<%= encodeURIComponent(JSON.stringify(currentAddress)) %>&productDetails=<%= encodeURIComponent(JSON.stringify(product)) %>&totalPrice=<%= encodeURIComponent(totalPrice)%>&quantity=<%=encodeURIComponent(quantity) %>">Set as Default</a>
+								<a href="/addressDelete/<%= address[i]._id %>" class="delete">Delete</a>
+							</div>
+						</div>
+						<% } %>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 	</footer>
-	
-
 
     <script src="js/jquery.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -430,26 +530,32 @@
 	<script>
 		// Get references to the modal and the button to open/close it
 		var modal = document.getElementById("myModal");
+		var addressModal = document.getElementById("addressModal")
+		var addressModalBtn = document.getElementById("addAddressBtn");
 		var openModalBtn = document.getElementById("openModalBtn");
-		var closeSelectModal = document.getElementById("selectPaymentModalClose");
 		var closeModalBtn = document.getElementById("closeModalBtn");
+		var addressCloseModalBtn = document.getElementById("addressCloseModalBtn");
+	
 		// Event listener to open the modal
-		openModalBtn.onclick = function() {
+		openModalBtn.onclick = function(event) {
+			event.preventDefault();
 			modal.style.display = "block";
 		}
+	    
+		//event listner to open address modal
+		addressModalBtn .onclick = function(event){
+			event.preventDefault();
+			addressModal.style.display = "block";
+		}
+
 		// Event listener to close the modal
 		closeModalBtn.onclick = function() {
 			modal.style.display = "none";
 		}
-
-		closeSelectModal.onclick = function() {
-			modal.style.display = "none";
-		}
-		// Close the modal if the user clicks outside of it
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
-			}
+	
+		// Event listener to close the addressModal
+		addressCloseModalBtn.onclick = function() {
+			addressModal.style.display = "none";
 		}
 	</script>
 
@@ -491,30 +597,36 @@
 
 	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
 				// Make AJAX request
-				$.ajax({
-					type: 'POST',
-					url: '/placeOrder2', 
-					data: {
-						productId: productId,
-						quantity: quantity,
-						total: totalPrice,
-						currentAddress:currentAddress,
-					},
-					success: function (response) {
-						console.log("hello world");
-						// Display payment successful modal
-					
-						modal2.style.display = "block";
-						setTimeout(function() {
-							window.location.href = "/shop"; 
-						}, 3000);
-					},
-					error: function (error) {
-						console.error("Error placing order:", error);
-						// Handle error if needed
-					}
-				});
-	
+				$('form').on('submit',function(e){
+					e.preventDefault();
+
+					$.ajax({
+						type: 'POST',
+						url: '/placeOrder2', 
+						data: {
+							productId: productId,
+							quantity: quantity,
+							total: totalPrice,
+							currentAddress:currentAddress,
+						},
+						success: function (response) {
+							if(response){
+								// Display payment successful modal
+								modal2.style.display = "block";
+								setTimeout(function() {
+									window.location.href = "/shop"; 
+								}, 3000);
+							}
+						},
+						error: function (error) {
+							console.error("Error placing order:", error);
+							// Handle error if needed
+						}
+					});
+		
+
+				})
+			
 			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
 				
 				$.ajax({
@@ -564,7 +676,6 @@
 					var rzp1 = new Razorpay(options);
                      rzp1.open();
 				}
-           
 				 function verifyPayment(payment){
                        $.ajax({
 						method:'POST',
@@ -581,15 +692,18 @@
 
 			}else{
                selectPaymentModal.style.display = "block";
-			   selectPaymentModalClose.onclick = function(){
-				selectPaymentModal.style.display = "none";
+			   event.preventDefault();
+			
+			
 			}
-			}
-		
-		
 		}
-	
-		
+
+		selectPaymentModalClose.onclick = function() {
+			selectPaymentModal.style.display = "none";
+		}
+		closeBtn.onclick = function(){
+			modal2.style.display = "none";
+		}
 	</script>
 	<script>
 		// Get references to the modal and the button to open/close it

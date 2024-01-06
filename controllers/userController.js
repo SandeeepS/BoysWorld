@@ -460,10 +460,11 @@ exports.getWishlist = async(req,res)=>{
 
 exports.getCheckoutPage = async(req,res)=>{
   try{
+    
       const userId = req.session.user;
       const userData = await UserModel.findById(userId).exec();
       const address = userData.address;
-      const currentAddress = userData.currentAddress;
+      const currentAddressId = userData.currentAddress;
       const productId = req.query.productId;
       console.log("productId:",productId);
       const productId2 = new mongoose.Types.ObjectId(productId);
@@ -471,6 +472,7 @@ exports.getCheckoutPage = async(req,res)=>{
       const product2 = await productModel.findById(productId).exec();
       console.log("product2",product2);
       const totalPrice = product2.price * quantity;
+      const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
       const product = await productModel.aggregate([
         {
           $match:{
@@ -752,6 +754,32 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
   try {
     const userId = req.session.user;
     const address = JSON.parse(decodeURIComponent(req.query.address))
+    const product =JSON.parse(decodeURIComponent(req.query.productDetails));
+    const totalPrice = (decodeURIComponent(req.query.totalPrice)); 
+    const addressId = (decodeURIComponent(req.query.addressId));
+    const quantity =  (decodeURIComponent(req.query.quantity));
+    const userId2 = new mongoose.Types.ObjectId(userId);
+    const addId = new mongoose.Types.ObjectId(addressId);
+    console.log("addressId:",addId);
+    const user = await UserModel.findOneAndUpdate({"_id":userId2},{$set:{"currentAddress":addId}});
+    user.save();
+    console.log("currentaddressId :",addId);
+    const currentAddress = user.address.filter(add => add._id.equals(addId));
+    console.log("useris:",user);
+    console.log("currentAddress",currentAddress);
+    console.log("currentProduct",product[0]);
+    res.render('checkout',{address,currentAddress,product,totalPrice,quantity});
+  } catch (err) {
+    console.error("Error while updating the default address", err);
+    res.redirect('/getCheckout');
+  }
+}
+
+//setaddressFrom checkout 2
+exports.setDefaultAddressFromCheckouts2 = async (req, res) => {
+  try {
+    const userId = req.session.user;
+    const address = JSON.parse(decodeURIComponent(req.query.address))
     const cartDetails =JSON.parse(decodeURIComponent(req.query.cartDetail));
     const totalAmount = JSON.parse(decodeURIComponent(req.query.totalAmount)); 
     const addressId = (decodeURIComponent(req.query.addressId));
@@ -767,6 +795,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
   } catch (err) {
     console.error("Error while updating the default address", err);
+    console.log("testing te bugs2222222222222222222222222222222222222222222222222222")
     res.redirect('/getCheckout');
   }
 }
@@ -862,11 +891,13 @@ exports.placeOrder2 = async(req,res)=>{
     const newStock = parseInt(currentStock - quantity);
     console.log("newStock:",newStock);
     const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
-    res.status(200).json({ success: true, message: 'Order placed successfully.' });
+    console.log("order inserted successfully");
+    res.status(200).json({ success: true, message: 'Order placed successfully.'});
 
 
   }catch(err){
-    console.log(err);
+    console.error("error in place order 2 ",err);
+    res.status(500).json({success:false,message:"order placing has some issues"});
   }
 }
 
