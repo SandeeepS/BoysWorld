@@ -460,8 +460,6 @@ exports.getWishlist = async(req,res)=>{
 
 exports.getCheckoutPage = async(req,res)=>{
   try{
-      
-    
       const userId = req.session.user;
       const userData = await UserModel.findById(userId).exec();
       const address = userData.address;
@@ -482,7 +480,7 @@ exports.getCheckoutPage = async(req,res)=>{
         }
       ])
       console.log("productdetails:", product);
-      res.render('checkout',{address,currentAddress, product,quantity,totalPrice});
+      res.render('checkout',{address,currentAddress, product,quantity,totalPrice,productId});
   }catch(err){
     console.error("error while getting checkout",err);
     res.redirect('/selectedProduct');
@@ -730,8 +728,10 @@ exports.addAddressFromCheckout = async(req,res)=>{
        },{new:true});
        const len = userData.address.length;
        const currentAddressId = userData.address[len-1]._id;
-       userData.CurrentAddress = currentAddressId;
+       const updateedUserData = await UserModel.findByIdAndUpdate(user,{$set:{"currentAddress":currentAddressId}});
+       console.log("currentAddressId:",currentAddressId);
        const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
+       console.log("productId from server:",productId);
        res.status(200).json({success:true,message:"address inserted successfully",address,product,quantity,totalPrice,currentAddress,productId});
 
     }catch(err){
@@ -802,11 +802,12 @@ exports.setDefaultAddress = async (req, res) => {
 exports.setDefaultAddressFromCheckouts = async (req, res) => {
   try {
     const userId = req.session.user;
-    const address = JSON.parse(decodeURIComponent(req.query.address))
+    const address = (decodeURIComponent(req.query.address));
     const product =JSON.parse(decodeURIComponent(req.query.productDetails));
     const totalPrice = (decodeURIComponent(req.query.totalPrice)); 
     const addressId = (decodeURIComponent(req.query.addressId));
     const quantity =  (decodeURIComponent(req.query.quantity));
+    const productId = product._id;
     const userId2 = new mongoose.Types.ObjectId(userId);
     const addId = new mongoose.Types.ObjectId(addressId);
     console.log("addressId:",addId);
@@ -817,7 +818,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     console.log("useris:",user);
     console.log("currentAddress",currentAddress);
     console.log("currentProduct",product[0]);
-    res.render('checkout',{address,currentAddress,product,totalPrice,quantity});
+    res.render('checkout',{address,currentAddress,product,totalPrice,quantity,productId});
   } catch (err) {
     console.error("Error while updating the default address", err);
     res.redirect('/getCheckout');
