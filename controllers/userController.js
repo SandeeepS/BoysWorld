@@ -471,7 +471,7 @@ exports.getCheckoutPage = async(req,res)=>{
       const quantity = req.query.quantity;
       const product2 = await productModel.findById(productId).exec();
       console.log("product2",product2);
-      const totalPrice = product2.price * quantity || req.query.quantity;
+      const totalPrice = product2.price * quantity ;
       const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
       const product = await productModel.aggregate([
         {
@@ -484,7 +484,7 @@ exports.getCheckoutPage = async(req,res)=>{
       res.render('checkout',{address,currentAddress, product,quantity,totalPrice,productId});
   }catch(err){
     console.error("error while getting checkout",err);
-    res.redirect('/selectedProduct');
+    res.redirect('/shop');
   }
   
 }
@@ -1009,6 +1009,7 @@ exports.generateRazorpay = async(req,res)=>{
         const status = "pending";
         const userId = req.session.user;
         const user = await UserModel.findById(userId);
+        console.log("user....:",user);
         const product = await productModel.findById(productId).exec();
         const productName = product.productName;
         const userName = user.name;
@@ -1029,24 +1030,23 @@ exports.generateRazorpay = async(req,res)=>{
     
       })
        const savedData = await orders.save();
-     
        const order = await orderModel.findOne({productId:productId});
        console.log("heloo world");
-       console.log(order);
-       console.log("hihihih");
+       console.log("order:",order);
        const orderId = order._id;
+        console.log("orderId:",orderId);
 
-
-     
-        console.log(orderId);
         var options = {
           amount: total,  // amount in the smallest currency unit
           currency: "INR",
           receipt: orderId
         };
-       
-        const razorpayOrder = await new Promise((resolve,reject)=>{
+
+       console.log("hello worldddddddddddddd");
+       const razorpayOrder = await new Promise((resolve,reject)=>{
+        console.log("inside .........")
           instance.orders.create(options,(err,order)=>{
+            console.log("again inside..........");
             if(err){
               console.error("error creating razorpay order:",err);
               reject(err);
@@ -1056,7 +1056,6 @@ exports.generateRazorpay = async(req,res)=>{
           });
         });
         console.log("Razorpay order:",razorpayOrder);
-
         res.status(200).json({success:true,order:razorpayOrder});
 
      }catch(err){
@@ -1094,6 +1093,7 @@ exports.verifyPayment = async(req,res)=>{
       }
       catch(err){
         console.log("error while updating the order ",err);
+        res.status(400).json({success:false,message:"order placing has some issues "});
       }
     }else{
        const status = "Failed";

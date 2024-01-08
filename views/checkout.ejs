@@ -359,7 +359,7 @@
 			<div class="row">
 				<div class="box-sub">
 					<div>
-						<input type="radio" name="checkout" value="online-payment" disabled>
+						<input type="radio" name="checkout" value="online-payment" >
 					</div>
 					<div class="cash">
 						<p>Online Payment</p>
@@ -882,6 +882,9 @@
 	<script>
 		// Function to send AJAX request
 		function placeOrderBtn() {
+
+		$('form').on('submit',function(e){
+				e.preventDefault();
 			// Get product details from the cookie or your preferred method
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
@@ -896,8 +899,7 @@
 
 	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
 				// Make AJAX request
-				$('form').on('submit',function(e){
-					e.preventDefault();
+			
 
 					$.ajax({
 						type: 'POST',
@@ -922,7 +924,8 @@
 							// Handle error if needed
 						}
 					});
-				})
+				
+			
 			
 			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
 				
@@ -936,7 +939,10 @@
 						currentAddress:currentAddress,
 					},
 					success:function(response){
-						rezorpayPayment(response.order);
+						if(response){
+							console.log("in fronend");
+							rezorpayPayment(response.order);
+						}
 					},
 					error:function(error){
 						console.error("error while online payment",error);
@@ -972,6 +978,7 @@
 					};
 					var rzp1 = new Razorpay(options);
                      rzp1.open();
+					
 				}
 				 function verifyPayment(payment){
                        $.ajax({
@@ -990,14 +997,17 @@
                selectPaymentModal.style.display = "block";
 			   event.preventDefault();
 			}
-		}
+		
+	    });
 
 		selectPaymentModalClose.onclick = function() {
 			selectPaymentModal.style.display = "none";
 		}
+	
 		closeBtn.onclick = function(){
 			modal2.style.display = "none";
 		}
+	}
 	</script>
 	<script>
 		// Get references to the modal and the button to open/close it
