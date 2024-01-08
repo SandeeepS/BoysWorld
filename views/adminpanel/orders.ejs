@@ -284,8 +284,11 @@
                                                    
                                                       <% if(product) { %>
                                                       <tr>
+                                                       
                                                           <td><%=oders[i].orderId%></td>
-                                                          <td><%=oders[i].userDetails[0].name %></td>
+                                                          <td> <% if (oders[i].userDetails && oders[i].userDetails.length > 0) { %>
+                                                            <%= oders[i].userDetails[0].name %>
+                                                          <% } %></td>
                                                           <td><%=oders[i].productName %></td>
                                                           <td>₹<%=oders[i].totalAmount  %></td>
                                                           <td><%= oders[i].date %></td>    

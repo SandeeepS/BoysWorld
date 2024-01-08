@@ -174,7 +174,9 @@ exports.getOrders = async(req,res)=>{
                 $limit:itemsPerPage
             },
           
-        ]).exec();
+        ]);
+       
+        console.log("oders:",oders);
         res.render('adminpanel/orders',{oders,products,orderStatus,totalPages,currentPage,totalCount});
     }catch(err){
         console.error("error while getting the orders list  page",err);
