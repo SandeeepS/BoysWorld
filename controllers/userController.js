@@ -26,6 +26,7 @@ const {ObjectId} = mongoose.Types;
 const { log } = require('console');
 const crypto = require('crypto');
 const { name } = require('ejs');
+const { parse } = require('path');
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
 var instance = new Razorpay({
@@ -495,7 +496,7 @@ exports.getCheckoutPage2 = async(req,res)=>{
     const userId = req.session.user;
     const userData = await UserModel.findById(userId).exec();
     const userIdObj =  userData._id;
-    const address = userData.address;
+    const address = userData.address || req.query.address;
     const currentAddressId = userData.currentAddress;
     const currentAddress = address.filter(add => add._id.equals(currentAddressId));
 
@@ -514,7 +515,7 @@ exports.getCheckoutPage2 = async(req,res)=>{
             as:"productDetail"
           }
         }
-    ]).exec();
+    ]).exec() || req.query.cartDetails
     console.log("total:",totalAmount);
     console.log("cartDetails:",cartDetails);
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
@@ -693,9 +694,7 @@ exports.saveAddress = async(req,res)=>{
 //save or add address form the checkout 
 exports.addAddressFromCheckout = async(req,res)=>{
     try{
-      
-       const {address,product,quantity,totalPrice,productId} = req.body;
-     
+      const {address,product,quantity,totalPrice,productId} = req.body;
       const user = req.session.user;
       console.log("userId:",user);
       const newAddress = {
@@ -738,6 +737,58 @@ exports.addAddressFromCheckout = async(req,res)=>{
       console.log("error while adding the address from checkout",err);
       res.status(500).json({success:false,message:"error occured in adding address"});
     }
+}
+
+//add addressfrom checkout 2 
+exports.addAddressFromCheckout2 = async(req,res) =>{
+  try{
+    const {address,cartDetails,totalAmount} = req.body;
+    const user = req.session.user;
+    console.log("userId:",user);
+    const newAddress = {
+      "formName": req.body.name,
+      "formNumber":req.body.number,
+      "formemail":req.body.email,
+      "formhouseName":req.body.houseName,
+      "formhouseNumber":req.body.houseNumber,
+      "formstate":req.body.state,
+      "formcity":req.body.city,
+      "formstreet":req.body.street,
+      "formlandmark":req.body.landmark,
+      "formpin":req.body.pin,
+    };
+     const userData = await UserModel.findByIdAndUpdate(user,{
+      $push:{
+        address:{
+          "name":newAddress.formName,
+          "number":newAddress.formNumber,
+          "email":newAddress.formemail,
+          "houseName":newAddress.formhouseName,
+          "houseNumber":newAddress.formhouseNumber,
+          "state":newAddress.formstate,
+          "city":newAddress.formcity,
+          "street":newAddress.formlandmark,
+          "landMark":newAddress.formlandmark,
+          "pin":newAddress.formpin
+        }
+      }
+     },{new:true});
+     const userId = new mongoose.Types.ObjectId(user);
+     const userData2 = await UserModel.find({"_id":userId});
+     const len = userData2[0].address.length;
+     const latestAddress  = userData2[0].address[len-1];
+     const currentAddressIdStr = latestAddress._id ;
+     const currentAddressId = new mongoose.Types.ObjectId(currentAddressIdStr);
+     console.log("currentAddressId:",currentAddressId);
+     const currentAddress = userData2.find(add => add._id.equals(currentAddressId));
+     const updatedData = await UserModel.findByIdAndUpdate(user,{$set:{"currentAddress":currentAddressId}})
+     console.log("cartDetails:",cartDetails);
+     res.status(200).json({success:true,message:"address ading all successfull",currentAddress,address,cartDetails,totalAmount});
+
+  }catch(error){
+    console.error("error while updating the address from the serverside",error);
+    res.status(500).json({success:false,message:"adding address is failed"});
+  }
 }
 
 //show address page
@@ -803,7 +854,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
   try {
     const userId = req.session.user;
     const address = (decodeURIComponent(req.query.address));
-    const product =JSON.parse(decodeURIComponent(req.query.productDetails));
+    const product = JSON.parse(decodeURIComponent(req.query.productDetails));
     const totalPrice = (decodeURIComponent(req.query.totalPrice)); 
     const addressId = (decodeURIComponent(req.query.addressId));
     const quantity =  (decodeURIComponent(req.query.quantity));
@@ -816,8 +867,8 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     console.log("currentaddressId :",addId);
     const currentAddress = user.address.filter(add => add._id.equals(addId));
     console.log("useris:",user);
-    console.log("currentAddress",currentAddress);
-    console.log("currentProduct",product[0]);
+   
+  
     res.render('checkout',{address,currentAddress,product,totalPrice,quantity,productId});
   } catch (err) {
     console.error("Error while updating the default address", err);

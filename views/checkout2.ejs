@@ -302,7 +302,7 @@
 									 <input type="text" placeholder="street" name="street" id="street">
 									 <input type="text" placeholder="Landmark" name="landmark" id="landmark">
 									 <input type="text" placeholder="Pin Code" name="pin" id="pin">
-									 <button type="submit" class="btn btn-default update" onclick=" validate()">Add</button>
+									 <button type="submit" class="btn btn-default update"  id="addressSubmit">Add</button>
 									
 								 </form>
 							 </div>
@@ -515,292 +515,297 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
 
+	
 	<script>
-		function validate(){
-			const name = document.getElementById("name").value;
-			const number = document.getElementById("number").value;
-			const email= document.getElementById("email").value;
-			const houseName = document.getElementById("houseName").value;
-			const houseNumber = document.getElementById("houseNumber").value;
-			const state = document.getElementById("state").value;
-			const city = document.getElementById("city").value;
-			const street = document.getElementById("street").value;
-			const landmark = document.getElementById("landmark").value;
-			const pin= document.getElementById("pin").value;
-			const errorMessage = document.getElementById("error-message");
-			const phonePattern = /^(?=.*[1-9])\d{10}$/;
-			
-			
-			function isValidEmail(email) {
-				// Regular expression for a simple email validation
-				const emailRegex = /^[^\s@]+@gmail\.com$/;
-				return emailRegex.test(email);
-			}
-
-			
-
-			function checkWhiteSpace(s){
-				return s.trim() === "";
-			}
-
-			if (name==='' && number===""  && email===""  && houseName===""  && state===""  && city==="" && street===""  && landmark==="" && pin==="" ) {
-				errorMessage.innerText = "Please fill in all the fields.";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(name === ""){
-				errorMessage.innerText = "Please enter Name";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(checkWhiteSpace(name)){
-				errorMessage.innerText ="please enter your name";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if(number === ""){
-				errorMessage.innerText = "Please enter your number";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(number <= 0){
-				errorMessage.innerText = "Please enter valid Phone Number";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(checkWhiteSpace(number)){
-				errorMessage.innerText ="please enter your number";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if(!phonePattern.test(number)){
-				errorMessage.innerText = "please enter a valid phone  number.";
-                errorMessage.style.display = "block";
-				
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-
-				return false;
-			}
-
-			if(email === ""){
-				errorMessage.innerText = "please your email address";
-                errorMessage.style.display = "block";
-				
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-
-				return false;
-			}
-
-			if (!isValidEmail(email)) {
-				errorMessage.innerText = "Please enter a valid email address";
-				errorMessage.style.display = "block";
-		
-				setTimeout(function () {
-					errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			}
+         		
+		document.addEventListener("DOMContentLoaded",function(){
+			 const submitBtn = document.getElementById("addressSubmit");
+			 
+			 const errorMessage = document.getElementById("error-message");
+			 const phonePattern = /^(?=.*[1-9])\d{10}$/;
  
-			if(houseName === ""){
-				errorMessage.innerText = "Please enter your House Name";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(checkWhiteSpace(houseName)){
-				errorMessage.innerText ="please enter your House Name";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if( houseNumber === ""){
-				errorMessage.innerText = "Please enter your house number";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-			if(checkWhiteSpace(houseNumber)){
-				errorMessage.innerText ="please enter your House Number";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if(state === ""){
-				errorMessage.innerText = "Please enter your State";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(checkWhiteSpace(state)){
-				errorMessage.innerText ="please enter your state";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if(city === ""){
-				errorMessage.innerText = "Please enter your city";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(checkWhiteSpace(city)){
-				errorMessage.innerText ="please enter your city";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if(street === ""){
-				errorMessage.innerText = "Please enter your street";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(checkWhiteSpace(street)){
-				errorMessage.innerText ="please enter your street";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if(landmark === ""){
-				errorMessage.innerText = "Please enter your Land Mark";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-			if(checkWhiteSpace(landmark)){
-				errorMessage.innerText ="please enter your landmark";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-
-			if(pin === ""){
-				errorMessage.innerText = "Please enter your pincode";
-                errorMessage.style.display = "block";
-
-                // Hide the error message after 3 seconds
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-				return false;
-			}
-
-			if(checkWhiteSpace(pin)){
-				errorMessage.innerText ="please enter your pin";
-				errorMessage.style.display = "block";
-				setTimeout(function () {
-				  errorMessage.style.display = "none";
-				}, 3000);
-				return false;
-			  }
-            
-			  $.ajax({
-				type:'POST',
-				url:'/address',
-				data:{
-				    name,
-					number,
-					email,
-					houseName,
-					houseNumber,
-					state,
-					city,
-					street,
-					landmark,
-					pin,
-					
-				},
-				success:function(response){
-					console.log("address added successfully");
-				},
-				error:function(error){
-					console.error("error while online payment",error);
-				}
-			});
-
-		}
-	</script>
+			 submitBtn.addEventListener("click",function(event){
+				 event.preventDefault();
+ 
+					 const name = document.getElementById("name").value;
+					 const number = document.getElementById("number").value;
+					 const email= document.getElementById("email").value;
+					 const houseName = document.getElementById("houseName").value;
+					 const houseNumber = document.getElementById("houseNumber").value;
+					 const state = document.getElementById("state").value;
+					 const city = document.getElementById("city").value;
+					 const street = document.getElementById("street").value;
+					 const landmark = document.getElementById("landmark").value;
+					 const pin= document.getElementById("pin").value;
+ 
+					 const address = <%- JSON.stringify(address)%>;
+					 const currentAddress = <%- JSON.stringify(currentAddress)%>;
+					 const cartDetails = <%-JSON.stringify(cartDetails)%>;
+					 const totalAmount = <%- JSON.stringify(totalAmount)%>;
+ 
+ 
+ 
+					 function isValidEmail(email) {
+						 // Regular expression for a simple email validation
+						 const emailRegex = /^[^\s@]+@gmail\.com$/;
+						 return emailRegex.test(email);
+					 }
+					 function checkWhiteSpace(s){
+						 return s.trim() === "";
+					 }
+ 
+						 if (name==='' && number===""  && email===""  && houseName===""  && state===""  && city==="" && street===""  && landmark==="" && pin==="" ) {
+							 errorMessage.innerText = "Please fill in all the fields.";
+							 errorMessage.style.display = "block";
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(name === ""){
+							 errorMessage.innerText = "Please enter Name";
+							 errorMessage.style.display = "block";
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(checkWhiteSpace(name)){
+							 errorMessage.innerText ="please enter your name";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(number === ""){
+							 errorMessage.innerText = "Please enter your number";
+							 errorMessage.style.display = "block";
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(number <= 0){
+							 errorMessage.innerText = "Please enter valid Phone Number";
+							 errorMessage.style.display = "block";
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(checkWhiteSpace(number)){
+							 errorMessage.innerText ="please enter your number";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(!phonePattern.test(number)){
+							 errorMessage.innerText = "please enter a valid phone  number.";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(email === ""){
+							 errorMessage.innerText = "please your email address";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+ 
+							 return false;
+						 }
+ 
+						 if (!isValidEmail(email)) {
+							 errorMessage.innerText = "Please enter a valid email address";
+							 errorMessage.style.display = "block";
+					 
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+			 
+						 if(houseName === ""){
+							 errorMessage.innerText = "Please enter your House Name";
+							 errorMessage.style.display = "block";
+ 
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(checkWhiteSpace(houseName)){
+							 errorMessage.innerText ="please enter your House Name";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if( houseNumber === ""){
+							 errorMessage.innerText = "Please enter your house number";
+							 errorMessage.style.display = "block";
+ 
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+						 if(checkWhiteSpace(houseNumber)){
+							 errorMessage.innerText ="please enter your House Number";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(state === ""){
+							 errorMessage.innerText = "Please enter your State";
+							 errorMessage.style.display = "block";
+ 
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(checkWhiteSpace(state)){
+							 errorMessage.innerText ="please enter your state";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(city === ""){
+							 errorMessage.innerText = "Please enter your city";
+							 errorMessage.style.display = "block";
+ 
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(checkWhiteSpace(city)){
+							 errorMessage.innerText ="please enter your city";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(street === ""){
+							 errorMessage.innerText = "Please enter your street";
+							 errorMessage.style.display = "block";
+ 
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(checkWhiteSpace(street)){
+							 errorMessage.innerText ="please enter your street";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(landmark === ""){
+							 errorMessage.innerText = "Please enter your Land Mark";
+							 errorMessage.style.display = "block";
+ 
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+						 if(checkWhiteSpace(landmark)){
+							 errorMessage.innerText ="please enter your landmark";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(pin === ""){
+							 errorMessage.innerText = "Please enter your pincode";
+							 errorMessage.style.display = "block";
+ 
+							 // Hide the error message after 3 seconds
+							 setTimeout(function () {
+								 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+ 
+						 if(checkWhiteSpace(pin)){
+							 errorMessage.innerText ="please enter your pin";
+							 errorMessage.style.display = "block";
+							 setTimeout(function () {
+							 errorMessage.style.display = "none";
+							 }, 3000);
+							 return false;
+						 }
+						 
+ 
+ 
+						 $.ajax({
+							  type: 'POST',
+							  url:'/addAddressFromCheckout2',
+							  data:{
+								 name,number,email,houseName,houseNumber,state,city,street,landmark,pin,address,cartDetails,currentAddress,totalAmount, 
+							  },
+							  success: function(response){
+								 if(response){
+									 console.log("message reached in frontend");
+									 const address = JSON.stringify(response.address);
+									 const currentAddress = JSON.stringify(response.currentAddress);
+									 const totalAmount = response.totalAmount;
+									 const cartDetails= JSON.stringify(response.cartDetails);
+									 window.location.href = "/getCheckout2?address="+address+"&cartDetails="+cartDetails+"&currentAddress="+currentAddress+"&totalAmount="+totalAmount ;
+								 }
+							  },
+							  error:function(error){
+								 console.error("error while getting the data from addAddressFromCheckout:",error);
+ 
+							  }
+						 });
+					 
+			 })
+		})
+	 </script>
 	<script>
         // Add a JavaScript function to handle the radio button click event
         document.addEventListener("DOMContentLoaded", function () {
