@@ -1010,13 +1010,17 @@ exports.generateRazorpay = async(req,res)=>{
         const userId = user._id;
         console.log("user....id:",userId);
         const product = await productModel.findById(productId).exec();
-        const productId2 = product._id;
+        const productId2 = {
+          "productId":product._id,
+          "quantity":quantity,
+          "price":total
+        }
         const date = new Date();
         const randomId = 10000+Math.floor(Math.random()*90000);
       
         const orders = new orderModel({
           "userId":userId,
-          "productId":productId,
+          "products":productId2,
           "orderId":randomId,
           "totalAmount":total,
           "currentAddress":currentAddressId,
