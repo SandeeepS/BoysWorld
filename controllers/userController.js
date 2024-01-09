@@ -1094,10 +1094,11 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
     const productId = [];
         for(let i = 0; i < cartDetails.length; i ++){
 
-            const proId = cartDetails[i].cart.productId;
+            const pro= cartDetails[i].cart;
+            const proId = pro.productId
             console.log("productId:",proId);
-            productId.push(proId);
-            const quantity = cartDetails[i].cart.quantity;
+            productId.push(pro);
+            const quantity = pro.quantity;
             const currentProduct = await productModel.find({"_id":proId});
             console.log("currentProduct:",currentProduct);
             const currentStock = currentProduct[0].stock;
@@ -1108,7 +1109,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
         }
       const neworder = new orderModel({
         "userId":userId,
-        "productId":productId,
+        "products":productId,
         "totalAmount":totalAmount,
         "currentAddress":currentAddress,
         "date": formattedDate,
