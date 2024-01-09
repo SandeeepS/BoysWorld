@@ -554,6 +554,8 @@
 					const quantity = <%-JSON.stringify(quantity)%>;
 					const totalPrice = <%- JSON.stringify(totalPrice)%>;
 					const productId = <%- JSON.stringify(productId)%>;
+					const currentAddressId = <%- JSON.stringify(currentAddressId) %>;
+					console.log("currentAddressId:",currentAddressId);
 					console.log("productId:",productId);
 
 
@@ -894,6 +896,8 @@
 			const quantity = <%-JSON.stringify(quantity)%>;
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
 			const currentAddress =  <%-JSON.stringify(currentAddress)%>;
+			const currentAddressId =  <%-JSON.stringify(currentAddressId)%>;
+
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
 
@@ -909,6 +913,7 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
+							currentAddressId
 						},
 						success: function (response) {
 							if(response){

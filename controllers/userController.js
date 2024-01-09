@@ -481,7 +481,7 @@ exports.getCheckoutPage = async(req,res)=>{
         }
       ])
       console.log("productdetails:", product);
-      res.render('checkout',{address,currentAddress, product,quantity,totalPrice,productId});
+      res.render('checkout',{address,currentAddress,currentAddressId, product,quantity,totalPrice,productId});
   }catch(err){
     console.error("error while getting checkout",err);
     res.redirect('/shop');
@@ -905,46 +905,42 @@ exports.setDefaultAddressFromCheckouts2 = async (req, res) => {
 //place order 
 exports.placeOrder = async (req, res) => {
   try {
-    const { cartDetail,totalAmount} = req.body;
-    console.log(cartDetail);
-    for(let i=0;i<cartDetail.length;i++){
-      const cashOnDelivery = "cashOnDelivery";
-      const status = "Conformed";
-      const userId = cartDetail[i]._id;
-      const productId = cartDetail[i].productDetail[0]._id;
-      const productName = cartDetail[i].productDetail[0].productName;
-      const userName = cartDetail[i].name;
-      const date = new Date();
-      const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-      const randomId = 10000+Math.floor(Math.random()*90000);
-      const total = cartDetail[i].cart.total;
-      const currentAddress = cartDetail[i].currentAddress[0];
-      const quantity = cartDetail[i].cart.quantity;
+    const { cartDetails,totalAmount} = req.body;
+    console.log(cartDetails);
+    const cashOnDelivery = "cashOnDelivery";
+    const status = "Conformed";
+    const userId = cartDetails[0]._id;
+    const date = new Date();
+    const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+    const randomId = 10000+Math.floor(Math.random()*90000);
+    const currentAddress = cartDetails[0].currentAddress;
+    const total = cartDetails[0].cart.total;//need to fix it again
+    const productId = [];
+    for(let i = 0; i < cartDetails.length; i ++){
 
-              const order = new orderModel({
-                "userId":userId,
-                "productId":productId,
-                "orderId":randomId,
-                "userName":userName,
-                "productName":productName,
-                "totalAmount":total,
-                "currentAddress":currentAddress,
-                "date": formattedDate,
-                "paymentMethod":cashOnDelivery,
-                "currentStatus":status,
-                
-            })
-            const savedData = await order.save();
-
-            const currentProduct = await productModel.find({"_id":productId});
-            console.log("currentProduct:",currentProduct);
-            const currentStock = currentProduct[0].stock;
-            console.log("currentStock:",currentStock);
-            const newStock = parseInt(currentStock - quantity);
-            console.log("newStock:",newStock);
-            const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
-
+        const proId = cartDetails[i].cart.productId;
+        console.log("productId:",proId);
+        productId.push(proId);
+        const quantity = cartDetails[i].cart.quantity;
+        const currentProduct = await productModel.find({"_id":proId});
+        console.log("currentProduct:",currentProduct);
+        const currentStock = currentProduct[0].stock;
+        console.log("currentStock:",currentStock);
+        const newStock = parseInt(currentStock - quantity);
+        console.log("newStock:",newStock);
+        const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{"stock":newStock}}).exec();
     }
+        const order = new orderModel({
+          "userId":userId,
+          "productId":productId,
+          "totalAmount":totalAmount,
+          "currentAddress":currentAddress,
+          "date": formattedDate,
+          "paymentMethod":cashOnDelivery,
+          "currentStatus":status,
+      })
+      const savedData = await order.save();
+
     // Respond with a success message
     res.status(200).json({ success: true, message: 'Order placed successfully.' });
   } catch (error) {
@@ -956,7 +952,7 @@ exports.placeOrder = async (req, res) => {
 
 exports.placeOrder2 = async(req,res)=>{
   try{
-    const {productId,quantity,total,currentAddress} = req.body;
+    const {productId,quantity,total,currentAddress,currentAddressId} = req.body;
     const userId2 = req.session.user;
     const user = await UserModel.findById(userId2).exec();
     const product = await productModel.findById(productId).exec();
@@ -972,12 +968,10 @@ exports.placeOrder2 = async(req,res)=>{
       
       const order = new orderModel({
         "userId":userId,
-        "productId":productId,
+        "productId":productId2,
         "orderId":randomId,
-        "userName":userName,
-        "productName":productName,
+        "currentAddress":currentAddressId,
         "totalAmount":total,
-        "currentAddress":currentAddress,
         "date": formattedDate,
         "paymentMethod":cashOnDelivery,
         "currentStatus":status,
@@ -1062,6 +1056,18 @@ exports.generateRazorpay = async(req,res)=>{
       console.error("error while online payment from serverside :",err);
       res.status(500).json({success:false,error:err.message});
      }
+}
+
+//razorpay payment from checkout2 page
+exports.generateRazorpayFromCheckout2 = async(req,res)=>{
+  try{
+
+
+
+  }catch(error){
+    console.error("error in the razorpay implimentaion route from checkout2",error);
+    res.status(500).json({success:false,message:"internal server error"});
+  }
 }
 
 

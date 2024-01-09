@@ -3,19 +3,19 @@ const sch ={
     userId:{
         type:mongoose.Schema.ObjectId,
     },
-    productId:{
+    productId:[{
+        type:mongoose.Schema.ObjectId,
+    }],
+    paymentId:{
         type:mongoose.Schema.ObjectId,
     },
-    orderId:String,
-    userName:String,
-    productName:String,
-    totalAmount:String,
-    currentAddress:Object,
+    currentAddress:{
+        type:mongoose.Schema.ObjectId,
+    },
+    totalAmount:Number,
     date:String,
     paymentMethod:String,
     currentStatus:String,
-    
 }
-
 const orderModel = mongoose.model("orders",sch);
 module.exports = orderModel;

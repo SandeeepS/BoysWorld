@@ -881,15 +881,19 @@
 		});
 	</script>
 	<script>
-		// Function to send AJAX request
-		function placeOrder() {
+	// Function to send AJAX request
+	function placeOrder() {
+           
+		$('form').on('submit',function(e){
+			e.preventDefault();
+
 			// Get product details from the cookie or your preferred method
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
 			const cartTotal = document.querySelector("#cartTotalAmount");
 			const modal2 = document.getElementById("paymentSuccessModal");
-			const cartDetail= <%-JSON.stringify(cartDetails)%>;
+			const cartDetails= <%-JSON.stringify(cartDetails)%>;
             const totalAmount = cartTotal.getAttribute("totalAmount");
 			console.log("totalAmount:",totalAmount);
 
@@ -905,14 +909,12 @@
 						type: 'POST',
 						url: '/placeOrder', 
 						data: {
-							cartDetail:cartDetail,
+							cartDetails:cartDetails,
 							totalAmount:totalAmount
-						
 						},
 						success: function (response) {
 							console.log("hello world");
 							// Display payment successful modal
-						
 							modal2.style.display = "block";
 							setTimeout(function() {
 								window.location.href = "/shop"; 
@@ -923,23 +925,19 @@
 							// Handle error if needed
 						}
 					});
-
 				})
-			
 	
 			}else if(onlinePaymentRadioButton && onlinePaymentRadioButton.checked){
 				$.ajax({
 					type:'POST',
-					url:'/generateRazorpay',
+					url:'/generateRazorpayFromCheckout2',
 					data:{
-						productId: productId,
-						quantity: quantity,
-						total: totalPrice,
-						currentAddress:currentAddress,
+						cartDetails,totalAmount
 					},
 					success:function(response){
-						
-						rezorpayPayment(response.order);
+						if(response){
+							rezorpayPayment(response.order);
+						}
 					},
 					error:function(error){
 						console.error("error while online payment",error);
@@ -998,8 +996,9 @@
 				 selectPaymentModal.style.display = "none";
 			}
 		}
+	})
 			
-		}
+	}
 		
 	</script>
 	<script>
