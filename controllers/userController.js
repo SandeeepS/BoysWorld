@@ -998,15 +998,15 @@ exports.placeOrder2 = async(req,res)=>{
 //online payment through razorpay
 exports.generateRazorpay = async(req,res)=>{
      try{
-        const {productId, quantity, total,currentAddress} = req.body;
+        const {productId, quantity, total,currentAddress,currentAddressId} = req.body;
         const onlinePayment = "Online Payment";
         const status = "pending";
-        const userId = req.session.user;
-        const user = await UserModel.findById(userId);
-        console.log("user....:",user);
+        const userid = req.session.user;
+        const user = await UserModel.findById(userid);
+        const userId = user._id;
+        console.log("user....id:",userId);
         const product = await productModel.findById(productId).exec();
-        const productName = product.productName;
-        const userName = user.name;
+        const productId2 = product._id;
         const date = new Date();
         const randomId = 10000+Math.floor(Math.random()*90000);
       
@@ -1014,17 +1014,28 @@ exports.generateRazorpay = async(req,res)=>{
           "userId":userId,
           "productId":productId,
           "orderId":randomId,
-          "userName":userName,
-          "productName":productName,
           "totalAmount":total,
-          "currentAddress":currentAddress,
+          "currentAddress":currentAddressId,
           "date":date,
           "paymentMethod":onlinePayment,
           "currentStatus":status,
     
       })
        const savedData = await orders.save();
-       const order = await orderModel.findOne({productId:productId});
+       //updating the quantity
+       const currentProduct = await productModel.find({"_id":productId});
+       console.log("currentProduct:",currentProduct);
+       const currentStock = currentProduct[0].stock;
+       console.log("currentStock:",currentStock);
+       const newStock = parseInt(currentStock - quantity);
+       console.log("newStock:",newStock);
+       const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
+       console.log("order inserted successfully");
+
+       //gettig orderId
+       const totalOrders = await orderModel.find({});
+       const totalOrderLength = totalOrders.length;
+       const order = totalOrders[totalOrderLength-1];
        console.log("heloo world");
        console.log("order:",order);
        const orderId = order._id;
@@ -1076,7 +1087,9 @@ exports.verifyPayment = async(req,res)=>{
   try{ 
     const {payment,productId} = req.body;
     const userId = req.session.user;
-    const current_Order = await orderModel.findOne({productId:productId}).exec();
+    const totalOrders = await orderModel.find({});
+    const totalOrderLength = totalOrders.length;
+    const current_Order  = totalOrders[totalOrderLength-1];
     console.log("current order:",current_Order);
     console.log(payment);
     const current_orderId = current_Order._id;
@@ -1085,8 +1098,8 @@ exports.verifyPayment = async(req,res)=>{
     hmac = hmac.digest('hex');
     if(hmac == payment.razorpay_signature){
       try{
-        const status = "Placed";
-        const filter = {_id:current_orderId};
+        const status = "Conformed";
+        const filter = {_id:current_orderId._id};
         const updateDocument = {
           $set:{
             "currentStatus":status
