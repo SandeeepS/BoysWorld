@@ -518,7 +518,7 @@ exports.getCheckoutPage2 = async(req,res)=>{
     ]).exec() || req.query.cartDetails
     console.log("total:",totalAmount);
     console.log("cartDetails:",cartDetails);
-    res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
+    res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
   }catch(err){
       console.log("error in getcheckout2 ",err);
   }
@@ -916,30 +916,30 @@ exports.placeOrder = async (req, res) => {
     const currentAddress = cartDetails[0].currentAddress;
     const total = cartDetails[0].cart.total;//need to fix it again
     const productId = [];
-    for(let i = 0; i < cartDetails.length; i ++){
+        for(let i = 0; i < cartDetails.length; i ++){
 
-        const proId = cartDetails[i].cart.productId;
-        console.log("productId:",proId);
-        productId.push(proId);
-        const quantity = cartDetails[i].cart.quantity;
-        const currentProduct = await productModel.find({"_id":proId});
-        console.log("currentProduct:",currentProduct);
-        const currentStock = currentProduct[0].stock;
-        console.log("currentStock:",currentStock);
-        const newStock = parseInt(currentStock - quantity);
-        console.log("newStock:",newStock);
-        const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{"stock":newStock}}).exec();
-    }
-        const order = new orderModel({
-          "userId":userId,
-          "productId":productId,
-          "totalAmount":totalAmount,
-          "currentAddress":currentAddress,
-          "date": formattedDate,
-          "paymentMethod":cashOnDelivery,
-          "currentStatus":status,
-      })
-      const savedData = await order.save();
+            const proId = cartDetails[i].cart.productId;
+            console.log("productId:",proId);
+            productId.push(proId);
+            const quantity = cartDetails[i].cart.quantity;
+            const currentProduct = await productModel.find({"_id":proId});
+            console.log("currentProduct:",currentProduct);
+            const currentStock = currentProduct[0].stock;
+            console.log("currentStock:",currentStock);
+            const newStock = parseInt(currentStock - quantity);
+            console.log("newStock:",newStock);
+            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{"stock":newStock}}).exec();
+        }
+      const order = new orderModel({
+        "userId":userId,
+        "productId":productId,
+        "totalAmount":totalAmount,
+        "currentAddress":currentAddress,
+        "date": formattedDate,
+        "paymentMethod":cashOnDelivery,
+        "currentStatus":status,
+    })
+    const savedData = await order.save();
 
     // Respond with a success message
     res.status(200).json({ success: true, message: 'Order placed successfully.' });
@@ -1072,8 +1072,72 @@ exports.generateRazorpay = async(req,res)=>{
 //razorpay payment from checkout2 page
 exports.generateRazorpayFromCheckout2 = async(req,res)=>{
   try{
+      
+    const { cartDetails,totalAmount,currentAddressId} = req.body;
+    console.log(cartDetails);
+    const cashOnDelivery = "cashOnDelivery";
+    const status = "Conformed";
+    const userId = cartDetails[0]._id;
+    const date = new Date();
+    const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+    const randomId = 10000+Math.floor(Math.random()*90000);
+    const currentAddress = cartDetails[0].currentAddress;
+    const total = totalAmount;//need to fix it again
+    const productId = [];
+        for(let i = 0; i < cartDetails.length; i ++){
 
-
+            const proId = cartDetails[i].cart.productId;
+            console.log("productId:",proId);
+            productId.push(proId);
+            const quantity = cartDetails[i].cart.quantity;
+            const currentProduct = await productModel.find({"_id":proId});
+            console.log("currentProduct:",currentProduct);
+            const currentStock = currentProduct[0].stock;
+            console.log("currentStock:",currentStock);
+            const newStock = parseInt(currentStock - quantity);
+            console.log("newStock:",newStock);
+            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{"stock":newStock}}).exec();
+        }
+      const neworder = new orderModel({
+        "userId":userId,
+        "productId":productId,
+        "totalAmount":totalAmount,
+        "currentAddress":currentAddress,
+        "date": formattedDate,
+        "paymentMethod":cashOnDelivery,
+        "currentStatus":status,
+    })
+    const savedData = await neworder.save();
+          //gettig orderId
+          const totalOrders = await orderModel.find({});
+          const totalOrderLength = totalOrders.length;
+          const order = totalOrders[totalOrderLength-1];
+          console.log("heloo world");
+          console.log("order:",order);
+          const orderId = order._id;
+           console.log("orderId:",orderId);
+   
+           var options = {
+             amount: total,  // amount in the smallest currency unit
+             currency: "INR",
+             receipt: orderId
+           };
+   
+          console.log("hello worldddddddddddddd");
+          const razorpayOrder = await new Promise((resolve,reject)=>{
+           console.log("inside .........")
+             instance.orders.create(options,(err,order)=>{
+               console.log("again inside..........");
+               if(err){
+                 console.error("error creating razorpay order:",err);
+                 reject(err);
+               }else{
+                 resolve(order);
+               }
+             });
+           });
+           console.log("Razorpay order:",razorpayOrder);
+           res.status(200).json({success:true,order:razorpayOrder});
 
   }catch(error){
     console.error("error in the razorpay implimentaion route from checkout2",error);

@@ -894,6 +894,7 @@
 			const cartTotal = document.querySelector("#cartTotalAmount");
 			const modal2 = document.getElementById("paymentSuccessModal");
 			const cartDetails= <%-JSON.stringify(cartDetails)%>;
+			const currentAddressId = <%- JSON.stringify(currentAddressId)%>;
             const totalAmount = cartTotal.getAttribute("totalAmount");
 			console.log("totalAmount:",totalAmount);
 
@@ -932,7 +933,7 @@
 					type:'POST',
 					url:'/generateRazorpayFromCheckout2',
 					data:{
-						cartDetails,totalAmount
+						cartDetails,totalAmount,currentAddressId
 					},
 					success:function(response){
 						if(response){
