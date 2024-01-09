@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
+
+const productSchema = new mongoose.Schema({
+    productId:{
+        type:mongoose.Schema.ObjectId,
+    },
+    quantity:Number,
+    price:Number,
+    total:Number
+});
+
 const sch ={
     userId:{
         type:mongoose.Schema.ObjectId,
     },
-    products:[],
+    products:[productSchema],
+    orderId:Number,
     paymentId:{
         type:mongoose.Schema.ObjectId,
     },

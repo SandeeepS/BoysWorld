@@ -919,8 +919,9 @@ exports.placeOrder = async (req, res) => {
         for(let i = 0; i < cartDetails.length; i ++){
 
             const pro = cartDetails[i].cart;
-            const proId = pro.productId
-            console.log("productId:",proId);
+            console.log("pro:",pro);
+            const proId2 = pro.productId;
+            const proId = new mongoose.Types.ObjectId(proId2);
             productId.push(pro);
             const quantity = pro.quantity;
             const currentProduct = await productModel.find({"_id":proId});
@@ -934,6 +935,7 @@ exports.placeOrder = async (req, res) => {
       const order = new orderModel({
         "userId":userId,
         "products":productId,
+        "orderId":randomId,
         "totalAmount":totalAmount,
         "currentAddress":currentAddress,
         "date": formattedDate,
@@ -960,6 +962,7 @@ exports.placeOrder2 = async(req,res)=>{
     const cashOnDelivery = "cashOnDelivery";
     const status = "Conformed";
     const userId = user._id;
+    
     const productId2 = {
       "productId":product._id,
       "quantity":quantity,
@@ -1016,6 +1019,7 @@ exports.generateRazorpay = async(req,res)=>{
           "price":total
         }
         const date = new Date();
+        const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
         const randomId = 10000+Math.floor(Math.random()*90000);
       
         const orders = new orderModel({
@@ -1083,7 +1087,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
       
     const { cartDetails,totalAmount,currentAddressId} = req.body;
     console.log(cartDetails);
-    const cashOnDelivery = "cashOnDelivery";
+    const cashOnDelivery = "Online Payment";
     const status = "Conformed";
     const userId = cartDetails[0]._id;
     const date = new Date();
@@ -1110,6 +1114,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
       const neworder = new orderModel({
         "userId":userId,
         "products":productId,
+        "orderId":randomId,
         "totalAmount":totalAmount,
         "currentAddress":currentAddress,
         "date": formattedDate,
@@ -1225,11 +1230,22 @@ exports.oders = async(req,res)=>{
         $match:{userId:userIdObj}
       },
       {
+         $unwind : "$products"
+      },
+      {
         $lookup:{
           from:'products',
-          localField:'productId',
+          localField:'products.productId',
           foreignField:'_id',
           as:"productDetail"
+        }
+      },
+      {
+        $lookup:{
+            from:'users',
+            localField:'currentAddress',
+            foreignField:'address._id',
+            as:"currentAddress"
         }
       },
       

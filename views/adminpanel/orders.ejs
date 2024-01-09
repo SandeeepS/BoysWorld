@@ -281,7 +281,6 @@
                                     <% for(let i = 0;i< oders.length;i++){ %>
                                                       <% const productId = oders[i].productId %>
                                                       <% let product = {} %>
-                                                   
                                                       <% if(product) { %>
                                                       <tr>
                                                        
@@ -289,7 +288,7 @@
                                                           <td> <% if (oders[i].userDetails && oders[i].userDetails.length > 0) { %>
                                                             <%= oders[i].userDetails[0].name %>
                                                           <% } %></td>
-                                                          <td><%=oders[i].productName %></td>
+                                                          <td><%=oders[i].productDetails[0].productName %></td>
                                                           <td>₹<%=oders[i].totalAmount  %></td>
                                                           <td><%= oders[i].date %></td>    
                                                           <td><%= oders[i].paymentMethod%></td>     

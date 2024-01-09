@@ -155,12 +155,23 @@ exports.getOrders = async(req,res)=>{
         const products = await productModel.find().exec();
         const oders = await orderModel.aggregate([
             {
+                $unwind: "$products" 
+            },
+            {
                 $lookup:{
                     from:'users',
                     localField: 'userId',
                     foreignField:'_id',
                     as:"userDetails"
                 }
+            },
+            {
+               $lookup:{
+                from:'products',
+                localField:'products.productId',
+                foreignField:'_id',
+                as:"productDetails"
+               }
             },
             {
                 $sort:{
@@ -177,6 +188,7 @@ exports.getOrders = async(req,res)=>{
         ]);
        
         console.log("oders:",oders);
+        console.log("productdetails :",oders.productDetails);
         res.render('adminpanel/orders',{oders,products,orderStatus,totalPages,currentPage,totalCount});
     }catch(err){
         console.error("error while getting the orders list  page",err);
