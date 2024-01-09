@@ -3,9 +3,7 @@ const sch ={
     userId:{
         type:mongoose.Schema.ObjectId,
     },
-    productId:[{
-        type:mongoose.Schema.ObjectId,
-    }],
+    products:[],
     paymentId:{
         type:mongoose.Schema.ObjectId,
     },

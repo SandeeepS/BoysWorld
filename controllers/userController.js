@@ -918,10 +918,11 @@ exports.placeOrder = async (req, res) => {
     const productId = [];
         for(let i = 0; i < cartDetails.length; i ++){
 
-            const proId = cartDetails[i].cart.productId;
+            const pro = cartDetails[i].cart;
+            const proId = pro.productId
             console.log("productId:",proId);
-            productId.push(proId);
-            const quantity = cartDetails[i].cart.quantity;
+            productId.push(pro);
+            const quantity = pro.quantity;
             const currentProduct = await productModel.find({"_id":proId});
             console.log("currentProduct:",currentProduct);
             const currentStock = currentProduct[0].stock;
@@ -932,7 +933,7 @@ exports.placeOrder = async (req, res) => {
         }
       const order = new orderModel({
         "userId":userId,
-        "productId":productId,
+        "products":productId,
         "totalAmount":totalAmount,
         "currentAddress":currentAddress,
         "date": formattedDate,
@@ -959,16 +960,19 @@ exports.placeOrder2 = async(req,res)=>{
     const cashOnDelivery = "cashOnDelivery";
     const status = "Conformed";
     const userId = user._id;
-    const productId2 = product._id;
-    const productName = product.productName;
-    const userName = user.name;
+    const productId2 = {
+      "productId":product._id,
+      "quantity":quantity,
+      "price":total
+    }
+   
     const date = new Date();
       const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
       const randomId = 10000+Math.floor(Math.random()*90000);
       
       const order = new orderModel({
         "userId":userId,
-        "productId":productId2,
+        "products":productId2,
         "orderId":randomId,
         "currentAddress":currentAddressId,
         "totalAmount":total,
