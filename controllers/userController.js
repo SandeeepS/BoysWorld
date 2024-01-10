@@ -62,7 +62,7 @@ exports.shopPage = async(req,res)=>{
         const itemsPerPage = 3;
         let skip = (page - 1) * itemsPerPage;
         if(skip <= 0 ){
-          skip = 1 ;
+          skip = 0 ;
         }
         const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
         console.log("totalcount:",totalCount);
@@ -1025,8 +1025,8 @@ exports.generateRazorpay = async(req,res)=>{
           "price":total
         }
         const date = new Date();
-        const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-        const randomId = 10000+Math.floor(Math.random()*90000);
+    const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+    const randomId = 10000+Math.floor(Math.random()*90000);
       
         const orders = new orderModel({
           "userId":userId,
@@ -1034,7 +1034,7 @@ exports.generateRazorpay = async(req,res)=>{
           "orderId":randomId,
           "totalAmount":total,
           "currentAddress":currentAddressId,
-          "date":date,
+          "date":formattedDate,
           "paymentMethod":onlinePayment,
           "currentStatus":status,
     
