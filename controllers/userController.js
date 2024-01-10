@@ -1221,11 +1221,22 @@ exports.oders = async(req,res)=>{
     const userId = req.session.user;
     const userData = await UserModel.findById(userId).exec();
     const page = req.query.page || 1;
-    const currentPage = parseInt(page);
+    let currentPage = parseInt(page);
+    if(currentPage <= 0  ){
+      currentPage = 1;
+    }
     console.log("currnet page:",currentPage);
     const itemsPerPage = 3;
-    const skip = (page-1)*itemsPerPage;
-    const totalCount = await orderModel.countDocuments({}).exec();
+    let skip = (page-1)*itemsPerPage;
+    if(skip <= 0 ){
+      skip = 0 ;
+    }
+    const totalOrders = await orderModel.aggregate([
+      {
+        $unwind:"$products"
+      }
+    ])
+    const totalCount = totalOrders.length;
     console.log("total count:",totalCount);
     const totalPages = Math.ceil(totalCount/itemsPerPage);
     console.log("total pages:",totalPages);

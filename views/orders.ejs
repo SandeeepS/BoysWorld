@@ -431,6 +431,7 @@
 			const cancelOrder = document.querySelectorAll(".conformCancelOrder");
 			const cancelBtn = document.querySelectorAll(".cancelOrder");
             const order = <%- JSON.stringify(orderDetails)%>;
+			
            
             cancelBtn.forEach((btn,i)=>{
 				if(order[i].currentStatus === "Cancelled" || order[i].currentStatus === "Deliverd" ){
@@ -486,6 +487,25 @@
 	</script>
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
+
+			const page1 = document.getElementById("page-1");
+			const page2 = document.getElementById("page-2");
+			const page3 = document.getElementById("page-3");
+			const page4 = document.getElementById("page-4");
+
+			const totalPages = <%- JSON.stringify(totalPages) %>;
+			console.log("totalpages:",totalPages);
+			if( totalPages <= 2 ){
+			
+				page3.style.display = "none";
+				page4.style.display = "none";
+			}
+			if(totalPages <= 3){
+			
+				page4.style.display = "none";
+			}
+			
+
 			const prevew = document.querySelectorAll(".page");
 			const prevPage = document.getElementById("prevPage");
 			const nextPage = document.getElementById("nextPage");
@@ -503,7 +523,9 @@
 
 			nextPage.addEventListener("click",function(event){
 				event.preventDefault();
-				const pageNumber = this.getAttribute("page")
+			
+				const pageNumber2 = this.getAttribute("page");
+				const pageNumber = parseInt(pageNumber2)+1;
 				console.log("pageNumber:",pageNumber);
 				const newUrl = `/orders?page=${pageNumber}`;
 				window.location.href = newUrl
