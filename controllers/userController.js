@@ -54,10 +54,16 @@ exports.shopPage = async(req,res)=>{
         const userId = new mongoose.Types.ObjectId(user);
         console.log("userId:",userId);
         const page = req.query.page || 1;
-        const currentPage = parseInt(page);
+        let currentPage = parseInt(page);
+        if(currentPage <= 0  ){
+          currentPage = 1;
+        }
         console.log("current page:",currentPage);
         const itemsPerPage = 3;
-        const skip = (page - 1) * itemsPerPage;
+        let skip = (page - 1) * itemsPerPage;
+        if(skip <= 0 ){
+          skip = 1 ;
+        }
         const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
         console.log("totalcount:",totalCount);
         const totalPages = Math.floor(totalCount/itemsPerPage);

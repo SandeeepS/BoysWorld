@@ -335,7 +335,6 @@
 					event.preventDefault();
 					const pageNumber = this.getAttribute("page");
 					console.log(pageNumber);
-                
 					const newUrl = `/shop?page=${pageNumber}`;
 					window.location.href = newUrl
 
@@ -344,7 +343,8 @@
 
 			nextPage.addEventListener("click",function(event){
 				event.preventDefault();
-				const pageNumber = this.getAttribute("page")
+				const pageNumber2 = this.getAttribute("page")
+				const pageNumber = parseInt(pageNumber2) + 1;
 				console.log("pageNumber:",pageNumber);
 				const newUrl = `/shop?page=${pageNumber}`;
 				window.location.href = newUrl

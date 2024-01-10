@@ -39,7 +39,7 @@
         .modal {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
+        z-index: 10; /* Sit on top */
         left: 0;
         top: 0;
         width: 100%; /* Full width */
@@ -49,11 +49,12 @@
 
       /* Style for the modal content */
       .modal-content {
+       
         background-color: #fefefe;
         margin: 15% auto; /* 15% from the top and centered */
         padding: 20px;
         border: 1px solid #888;
-        width: 50%; /* Could be more or less, depending on screen size */
+        width: 100%; /* Could be more or less, depending on screen size */
       }
 
       /* Style for the close button */
@@ -84,9 +85,31 @@
 </style>
 </head>
 <body>
+
+     <!--open modal  -->
+     <div id="myModal" class="modal">
+      <div class="modal-content">
+         <span class="close" id="closeModalBtn">&times;</span>
+           <div class="modal-style">
+             <div class="container">
+               <div id="cropped-result">
+
+               </div>
+               <div id="cropping">
+
+               </div>
+               <div>
+                <button id="setCropedImage" onclick="setCroppedImage()">Set</button>
+              </div>
+             </div>
+           </div>
+        </div>
+     </div>
+    <!-- close modal  -->
+
   <div class="container-scroller"> 
     <!-- partial:partials/_navbar.html -->
-    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row" style="z-index: 1;">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
         <div class="me-3">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
@@ -183,7 +206,7 @@
       </div>
       <!-- partial -->
       <!-- partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <nav class="sidebar sidebar-offcanvas" id="sidebar" style="z-index: 1;">
         <ul class="nav">
           <li class="nav-item">
             <a class="nav-link" href="/admin/dashboard">
@@ -321,21 +344,7 @@
 
         <input type="hidden" id="currentImgIndex">
 
-        <!--open modal  -->
-        <div id="myModal" class="modal">
-          <div class="modal-content">
-             <span class="close" id="closeModalBtn">&times;</span>
-               <div class="modal-style">
-                 <div class="container">
-                   <div id="cropped-result"></div>
-                   <div>
-                    <button id="setCropedImage" onclick="setCroppedImage()">Set</button>
-                  </div>
-                 </div>
-               </div>
-            </div>
-         </div>
-        <!-- close modal  -->
+     
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -350,6 +359,7 @@
     </div>
     <!-- page-body-wrapper ends -->
   </div>
+
   <!-- container-scroller -->
   <!-- plugins:js -->
   <script src="vendors/js/vendor.bundle.base.js"></script>
@@ -554,43 +564,39 @@
 <script>
   var cropper;
    function openModal(event){
+    console.log("modal openddee");
+    const cropping = document.getElementById("croppeding");
+    var modal = document.getElementById("myModal");
     var closeModalBtn = document.getElementById("closeModalBtn");
     var clickedImg = event.target;
     var imgIndex = parseInt(clickedImg.getAttribute("data-index"),10);
-    
     document.getElementById("currentImgIndex").value = imgIndex;
-    document.getElementById("myModal").style.display = "block";
+    modal.appendChild(clickedImg);
 
     if (typeof cropper !== 'undefined') {                // Destroy the previous Cropper instance if it exists
       cropper.destroy();
     }
 
-    var reader = new FileReader();                         // Create a new FileReader instance
-    reader.onload = function(e) {                          // Set the onload event handler for the FileReader
-    var img = new Image();                                 // Create a new image element
-
-    img.src = e.target.result;                             // Set the source of the image element to the result of the FileReader
-    img.onload = function(){
-
     cropper = new Cropper(clickedImg, {
       aspectRatio: 1,
       viewMode: 2,
       crop: function (cropEvent) {
-        // Update the preview of the cropped image in the modal
+    
         var croppedCanvas = cropper.getCroppedCanvas();
         var croppedDataUrl = croppedCanvas.toDataURL();
-        document.getElementById("cropped-result").innerHTML = '<img src="' + croppedDataUrl + '" />' ;
+        document.getElementById("cropping").innerHTML = '<img src="' + croppedDataUrl +  '" />' ;
+        modal.style.display = "block";
       },
     });
     }
-   }
-   
    closeModalBtn.onclick = function(){
    document.getElementById("myModal") .style.display = "none";
-   cropper.destroy();
   }
-}
-       
+
+  // Attach the openModal function to the click event of all images inside the #preview div
+  document.querySelectorAll('#preview img').forEach(function(img) {
+    img.addEventListener('click', openModal);
+  });
 
 </script>
 <script>
