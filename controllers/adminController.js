@@ -4,6 +4,7 @@ const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const orderModel = require('../models/ordersModel');
 const { default: mongoose } = require('mongoose');
+const XLSX = require('xlsx');
 
 exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
@@ -212,7 +213,6 @@ exports.getSalesReport = async(req,res) => {
             const newDate = remainingDatePart.concat(year);
             const reformattedDate = newDate.join("/");
             console.log("reformattedDate",reformattedDate);
-
             console.log(typeof(inputDate));
             console.log("date from server:",reformattedDate );
             const orders = await orderModel.aggregate([
@@ -251,33 +251,32 @@ exports.getSalesReport = async(req,res) => {
             console.log("orders from get sales report:",orders);
             res.render('adminpanel/salesReport',{orders});
         }else{
-            const orders = await orderModel.aggregate([
-                {
-                    $unwind:"$products"
-                },
-                {
-                    $lookup:{
-                        from:'users',
-                        localField: 'userId',
-                        foreignField:'_id',
-                        as:"userDetails"
-                    }
-                },{
-                    $lookup:{
-                        from:'products',
-                        localField:'products.productId',
-                        foreignField:'_id',
-                        as:"productDetails"
-                       }
-                }
-            ]);
-            console.log("orders from get sales report:",orders);
+            const orders = "";
             res.render('adminpanel/salesReport',{orders});
         }
      
 
     }catch(error){
          console.error("error while getting sales report!",error);
+    }
+}
+
+//download sales report
+exports.downloadSalesReport = async(req,res)=>{
+    try{
+
+        const {orders} = req.body;
+        const ws = XLSX.utils.json_to_sheet(orders);
+        console.log("xl file is:",ws);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb,ws,"sheet1");
+        XLSX.writeFile(wb,"salesReport.xlsx");
+        res.download('salesReport.xlsx');
+
+
+    }catch(error){
+        console.error("error while downloading the sales report",error);
+
     }
 }
 

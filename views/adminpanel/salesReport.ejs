@@ -51,7 +51,8 @@
         padding: 20px;
         box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
        }
-       
+        
+      
        
        
   </style>
@@ -224,9 +225,14 @@
                                          <br>
                                          <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByYearly">Get Report</button>
                                    </div>
-                                
+                                   
+                                   <br>
+                                   <br>
                                   <div class="chartjs-bar-wrapper mt-3">
                                     <table class="sales-report table table-condensed">
+                                    <% if(orders){ %>
+                                        <button class="btn  btn-success btn-sm" id="donBtn">DOWNLOAD</button>
+                                  
                                         <thead>
                                           <tr>
                                             <th>Item ID</th>
@@ -251,6 +257,9 @@
                                               <% } %>
                                          </tbody>
                                        </table>
+                                    <% }  else {%>
+                                        <h4>No sales selected</h4>
+                                    <% } %>
                                   </div>
                                 </div>
                               </div>
@@ -327,6 +336,29 @@
           const newUrl = `/admin/salesReport?date=${date}`;
 		  window.location.href = newUrl
        })
+  </script>
+
+  <script>
+        const downloadBtn = document.getElementById("donBtn");
+        downloadBtn.addEventListener("click",function(event){
+            event.preventDefault();
+            const ordersForDownload = <%- JSON.stringify(orders) %>;
+            $.ajax({
+                type: 'POST',
+                url:'/admin/downloadSalesReport',
+                data:{
+                    orders:ordersForDownload
+                },
+                success:function(response){
+                    if(response){
+                        console.log("response reached frontend");
+                    }
+                },
+                error:function(err){
+                    console.error("error getting data in the frntend ",err);
+                }
+            })
+        })
   </script>
 </body>
 
