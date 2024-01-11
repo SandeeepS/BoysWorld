@@ -201,29 +201,80 @@ exports.getBanner = async(req,res)=>{
 
 //getting sales report
 exports.getSalesReport = async(req,res) => {
+
     try{
-        const orders = await orderModel.aggregate([
-            {
-                $unwind:"$products"
-            },
-            {
-                $lookup:{
-                    from:'users',
-                    localField: 'userId',
-                    foreignField:'_id',
-                    as:"userDetails"
+        if(req.query.date){
+            const inputDate = req.query.date;
+            const dateParts = inputDate.split("/");
+            const reversedDatePart = dateParts.reverse();
+            const year = reversedDatePart[0];
+            const remainingDatePart = reversedDatePart.splice(1,2);
+            const newDate = remainingDatePart.concat(year);
+            const reformattedDate = newDate.join("/");
+            console.log("reformattedDate",reformattedDate);
+
+            console.log(typeof(inputDate));
+            console.log("date from server:",reformattedDate );
+            const orders = await orderModel.aggregate([
+                {
+                    $addFields: {
+                        convertedDate: {
+                           $substr: ["$date", 0, 10]
+                        }
+                     }
+                },
+                {
+                    $match:{
+                        convertedDate:reformattedDate
+
+                    }
+                },
+                {
+                    $unwind:"$products"
+                },
+                {
+                    $lookup:{
+                        from:'users',
+                        localField: 'userId',
+                        foreignField:'_id',
+                        as:"userDetails"
+                    }
+                },{
+                    $lookup:{
+                        from:'products',
+                        localField:'products.productId',
+                        foreignField:'_id',
+                        as:"productDetails"
+                       }
                 }
-            },{
-                $lookup:{
-                    from:'products',
-                    localField:'products.productId',
-                    foreignField:'_id',
-                    as:"productDetails"
-                   }
-            }
-        ]);
-        console.log("orders from get sales report:",orders);
-        res.render('adminpanel/salesReport',{orders});
+            ]);
+            console.log("orders from get sales report:",orders);
+            res.render('adminpanel/salesReport',{orders});
+        }else{
+            const orders = await orderModel.aggregate([
+                {
+                    $unwind:"$products"
+                },
+                {
+                    $lookup:{
+                        from:'users',
+                        localField: 'userId',
+                        foreignField:'_id',
+                        as:"userDetails"
+                    }
+                },{
+                    $lookup:{
+                        from:'products',
+                        localField:'products.productId',
+                        foreignField:'_id',
+                        as:"productDetails"
+                       }
+                }
+            ]);
+            console.log("orders from get sales report:",orders);
+            res.render('adminpanel/salesReport',{orders});
+        }
+     
 
     }catch(error){
          console.error("error while getting sales report!",error);

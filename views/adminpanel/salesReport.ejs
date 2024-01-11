@@ -193,13 +193,10 @@
                                         <label for="">Select Date</label>
                                         <input type="text" id="datepicker">
                                         <br>
-                                        <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%">Get Report</button>
-                                      
+                                        <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByDate">Get Report</button>
                                     </div>
                                     <div class="card">
-                                      
                                             <h3> Monthly</h3>
-                                            
                                             <select name="year2" id="year2">
                                                 <option value="0">Select Month:</option>
                                                 <option value="1">January</option>
@@ -216,19 +213,16 @@
                                                 <option value="12">December</option>
                                             </select>
                                             <br>
-                                            <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%">Get Report</button>
-                                        
+                                            <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByMonth">Get Report</button>
                                     </div>
                                    </div>
                                    <div class="card">
                                          <h3>Yearly</h3>
                                          <label for="">Select Year</label>
                                          <select name="year3" id="year3">
-
                                          </select>
                                          <br>
-                                         <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%">Get Report</button>
-
+                                         <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByYearly">Get Report</button>
                                    </div>
                                 
                                   <div class="chartjs-bar-wrapper mt-3">
@@ -241,7 +235,6 @@
                                             <th>Price</th>
                                             <th>Quantity</th>
                                             <th>Tax</th>
-                                           
                                             <!-- Add other columns as needed -->
                                           </tr>
                                         </thead>
@@ -259,8 +252,6 @@
                                          </tbody>
                                        </table>
                                   </div>
-                                 
-                                 
                                 </div>
                               </div>
                             </div>
@@ -325,6 +316,16 @@
             dates.appendChild(opt);
          }
    
+       })
+  </script>
+  <script>
+       const reportByDate =  document.getElementById("SalesReportByDate");
+       reportByDate.addEventListener("click",function(event){
+          event.preventDefault();
+          const date = document.getElementById("datepicker").value;
+          console.log("date:",date);
+          const newUrl = `/admin/salesReport?date=${date}`;
+		  window.location.href = newUrl
        })
   </script>
 </body>

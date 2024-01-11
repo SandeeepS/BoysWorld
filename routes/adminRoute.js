@@ -15,7 +15,7 @@ adminRoute.get('/categories',auth.isAdmin,adminController.getCategories);
 adminRoute.get('/orders',auth.isAdmin,adminController.getOrders);
 adminRoute.get('/banner',auth.isAdmin,adminController.getBanner);
 adminRoute.get('/addProductPage',auth.isAdmin,adminController.addProduct);
-adminRoute.get('/salesReport',adminController.getSalesReport)
+adminRoute.get('/salesReport',auth.isAdmin,adminController.getSalesReport)
 
 
 //controlproduct
