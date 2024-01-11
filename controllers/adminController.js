@@ -199,6 +199,37 @@ exports.getBanner = async(req,res)=>{
     res.render('adminpanel/banner');
 }
 
+//getting sales report
+exports.getSalesReport = async(req,res) => {
+    try{
+        const orders = await orderModel.aggregate([
+            {
+                $unwind:"$products"
+            },
+            {
+                $lookup:{
+                    from:'users',
+                    localField: 'userId',
+                    foreignField:'_id',
+                    as:"userDetails"
+                }
+            },{
+                $lookup:{
+                    from:'products',
+                    localField:'products.productId',
+                    foreignField:'_id',
+                    as:"productDetails"
+                   }
+            }
+        ]);
+        console.log("orders from get sales report:",orders);
+        res.render('adminpanel/salesReport',{orders});
+
+    }catch(error){
+         console.error("error while getting sales report!",error);
+    }
+}
+
 //add product
 exports.addProduct = async(req,res)=>{
     try{
