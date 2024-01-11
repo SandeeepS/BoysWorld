@@ -26,6 +26,8 @@
     .sales-report {
         width: 100%;
         border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
        }
        
        .sales-report th, .sales-report td {
@@ -35,6 +37,22 @@
        }
        
        .sales-report tr:hover {background-color: #f5f5f5;}
+
+       /* card style */
+       .card-container {
+        display: flex;
+        justify-content: space-between;
+       }
+       
+       .card {
+        justify-content: center;
+        flex: 1;
+        margin: 10px;
+        padding: 20px;
+        box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+       }
+       
+       
        
   </style>
 </head>
@@ -166,10 +184,52 @@
                           <div class="col-12 grid-margin stretch-card">
                             <div class="card card-rounded">
                               <div class="card-body">
-                                <div class="d-sm-flex justify-content-between align-items-start">
                                   <div>
                                     <h1 class="card-title ">Sales Report</h1>
                                   </div>
+                                  <div class="card-container">
+                                    <div class="card">
+                                        <h3> Date</h3>
+                                        <label for="">Select Date</label>
+                                        <input type="text" id="datepicker">
+                                        <br>
+                                        <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%">Get Report</button>
+                                      
+                                    </div>
+                                    <div class="card">
+                                      
+                                            <h3> Monthly</h3>
+                                            
+                                            <select name="year2" id="year2">
+                                                <option value="0">Select Month:</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">Septemper</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                            <br>
+                                            <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%">Get Report</button>
+                                        
+                                    </div>
+                                   </div>
+                                   <div class="card">
+                                         <h3>Yearly</h3>
+                                         <label for="">Select Year</label>
+                                         <select name="year3" id="year3">
+
+                                         </select>
+                                         <br>
+                                         <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%">Get Report</button>
+
+                                   </div>
                                 
                                   <div class="chartjs-bar-wrapper mt-3">
                                     <table class="sales-report table table-condensed">
@@ -216,12 +276,7 @@
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
-        <footer class="footer">
-          <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Fashion King<a href="/admin/dashboard" target="_blank">BoysWorld</a></span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
-          </div>
-        </footer>
+     
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
@@ -237,6 +292,11 @@
   <script src="vendors/chart.js/Chart.min.js"></script>
   <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
   <script src="vendors/progressbar.js/progressbar.min.js"></script>
+  <!-- date picker ui  -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
@@ -250,6 +310,23 @@
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
+
+  <script> 
+       document.addEventListener("DOMContentLoaded",function(){
+         //date selection 
+         $( "#datepicker" ).datepicker();
+
+         //loading the years 
+         var dates = document.getElementById("year3");
+         for( var i = 2015; i <= 2024; i++){
+            var opt = document.createElement("option");
+            opt.value = i;
+            opt.innerHTML = i ;
+            dates.appendChild(opt);
+         }
+   
+       })
+  </script>
 </body>
 
 </html>
