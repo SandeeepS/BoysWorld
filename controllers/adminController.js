@@ -668,8 +668,10 @@ exports.updateOrderStatus = async (req, res) => {
 exports.cancelOrder = async(req,res)=>{
     try{
         const orderId = req.body.orderId;
+        const orderId2 = new mongoose.Types.ObjectId(orderId);
+        const updatedOrder = await orderModel.findOneAndUpdate({"_id":orderId2},{$set:{"currentStatus":"Cancelled"}});
         console.log("orderId:",orderId);
-       
+        res.status(200).json({success:true,message:"orderStatus updated successfully"})
     }catch(error){
         console.log("error occured while cancellig the order from the admin side",error);
     }
