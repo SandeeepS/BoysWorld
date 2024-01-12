@@ -113,7 +113,15 @@ exports.selectedProduct = async(req,res)=>{
     try{
         const prodId = req.params.id;
         const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
-        res.render('selectedProduct',{productData});
+        const stock = productData.stock;
+        console.log("stock:",stock);
+        if(stock === 0){
+          message = "Out Of Stock!!";
+        }else{
+          message = "Only "+ stock+" item left";
+        }
+        console.log("message:",message)
+        res.render('selectedProduct',{productData,message,stock});
     }catch(error){
         console.error("error while fetching products",error);
         res.redirect('/shop');

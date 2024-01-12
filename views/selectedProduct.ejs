@@ -44,6 +44,10 @@
 			.pro-row{
 				display: flex;
 			}
+			.error-message {
+				color: red;
+				display: none;
+			}
 		</style>
          <!-- for removing the arrow in the input field -->
 		<style>
@@ -162,6 +166,7 @@
 					<div class="col-sm-4" >
 						<p><%=productData.discription%></p>
 						<h4>₹<%=productData.price%></h4>
+					    <p><%= message %></p>
 						<div>
 							<label for="quantity">Quantity</label>
 							<div>
@@ -171,7 +176,7 @@
 							</div>
 						</div>
 						<a href="/addToCart/<%=productData._id%>" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
-						<a href="#" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData._id%>')" >Buy Now</a>
+						<button id="buyNow" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData._id%>')" >Buy Now</button>
 					</div>
 				</div>
 			</div>
@@ -297,6 +302,16 @@
 			};
 			document.cookie = `productDetails=${JSON.stringify(productDetails)}; path=/`;
 		}
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const stock = <%- JSON.stringify(stock) %>;
+			const buyNowBtn = document.getElementById("buyNow");
+
+			if(stock === 0){
+               buyNowBtn.disabled = true;
+			}
+		})
 	</script>
 	
    
