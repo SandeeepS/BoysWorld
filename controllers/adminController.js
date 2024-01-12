@@ -314,8 +314,55 @@ exports.getSalesReport = async(req,res) => {
                 }
             ]);
 
-            console.log("orders from get sales report:",orders);
+            console.log("orders from get sales report according to dates:",orders);
             res.render('adminpanel/salesReport',{orders});
+        }else if(req.query.year){
+              const year  = req.query.year;
+
+              const orders = await orderModel.aggregate([
+                {
+                    $addFields: {
+                        convertedDate: {
+                           $substr: ["$date", 0, 10]
+                        }
+                     }
+                },
+                {
+                    $addFields: {
+                        convertedDateYear: {
+                          $substr: ["$convertedDate", -4, 4]
+                        }
+                    }
+                },
+            
+                {
+                    $match: {
+                        convertedDate: year
+                      }
+                },
+                {
+                    $unwind:"$products"
+                },
+                {
+                    $lookup:{
+                        from:'users',
+                        localField: 'userId',
+                        foreignField:'_id',
+                        as:"userDetails"
+                    }
+                },{
+                    $lookup:{
+                        from:'products',
+                        localField:'products.productId',
+                        foreignField:'_id',
+                        as:"productDetails"
+                       }
+                }
+            ]);
+
+            console.log("orders from get sales report according to year:",orders);
+            res.render('adminpanel/salesReport',{orders});
+              
         }
         else{
             const orders = "";

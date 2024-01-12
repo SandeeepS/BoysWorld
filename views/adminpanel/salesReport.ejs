@@ -343,11 +343,11 @@
               window.location.href = newUrl
               })
 
-            reportByDate.addEventListener("click",function(event){
+              reportByYearly.addEventListener("click",function(event){
               event.preventDefault();
-              const date = document.getElementById("datepicker").value;
-              console.log("date:",date);
-              const newUrl = `/admin/salesReport?date=${date}`;
+              const year = document.getElementById("year3").value;
+              console.log("year:",year);
+              const newUrl = `/admin/salesReport?year=${year}`;
             window.location.href = newUrl
             })
   </script>
