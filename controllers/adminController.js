@@ -16,6 +16,7 @@ exports.adminlogin = async(req,res)=>{
         res.render('adminpanel/login',{message});
     }
 }
+
 exports.getHomePage = async(req,res)=>{
     try{
         const currentDate = new Date();
@@ -60,6 +61,11 @@ exports.getHomePage = async(req,res)=>{
                    }
             }
         ])
+        const products = await productModel.find({});
+        let uniqueProductIds = new Set(products.map(product => product._id));
+        let uniqueProductIdsArray = [...uniqueProductIds];
+        const uniqueProducts = await productModel.find({_id:{$in:uniqueProductIdsArray}});
+        console.log("uniqueProducts:",uniqueProducts);
         const shirtsOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'Shirt')
         const pantsOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'Pant')
         const tShirtOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'T-shirt');
@@ -68,10 +74,7 @@ exports.getHomePage = async(req,res)=>{
         const pantsOrdersCount = pantsOrders.length;
         const tShirtOrdersCount = tShirtOrders.length;
 
-        console.log("currentOrders:",currentOrders);
-        console.log(" pantsOrders:",  pantsOrders);
-        console.log(" tShirtOrders:",  tShirtOrders);
-        res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount});
+        res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount,uniqueProducts});
     }catch(error){
         console.error("error while getting the admin dashboard !!",error);
     }
@@ -660,6 +663,17 @@ exports.updateOrderStatus = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+//cancel order
+exports.cancelOrder = async(req,res)=>{
+    try{
+        const orderId = req.body.orderId;
+        console.log("orderId:",orderId);
+       
+    }catch(error){
+        console.log("error occured while cancellig the order from the admin side",error);
+    }
+}
 
 //logout
 exports.logout = async(req,res)=>{

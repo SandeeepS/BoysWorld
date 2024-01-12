@@ -43,3 +43,5 @@ adminRoute.post('/checkStatus',adminController.updateStatus)
 
 //update order status
 adminRoute.post('/updateStatus',adminController.updateOrderStatus)
+//cancel order
+adminRoute.post('/cancelOrder',adminController.cancelOrder)

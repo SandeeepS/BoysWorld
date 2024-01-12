@@ -44,6 +44,10 @@
    .deliverd {
     background-color: green;
    }
+   .cancelBtn{
+    height: 25px;
+    width: 75px;
+   }
 </style>
 <style>
       .pagination {
@@ -274,6 +278,7 @@
                                         <th>paymentMethod</th>
                                         <th>Current Status</th>
                                         <th>New status</th>
+                                        <th></th>
                                         
                                     </tr>
                                     <% for(let i = 0;i< oders.length;i++){ %>
@@ -297,6 +302,9 @@
 
                                                           <button id="updateOrderStatusBtn" class="order-status-button  status-button  " orderId="<%=oders[i]._id%>"><%= oders[i].currentStatus%></button>
 
+                                                         </td>
+                                                         <td>
+                                                          <button id="cancelBtn" class="cancelBtn btn-danger" orderId="<%=oders[i]._id%>" >Cancel</button>
                                                          </td>
                                                         
                                                         </td>
@@ -507,6 +515,42 @@
     })
   </script>
 
+  <!-- cancelling the order  -->
+  <script>
+     const cancelBtn = document.querySelectorAll(".cancelBtn");
+     var oders = <%- JSON.stringify(oders) %>;
+     var orderStatus = <%- JSON.stringify(orderStatus)%>
+
+     cancelBtn.forEach((cancelBtn,i)=>{
+         cancelBtn.addEventListener("click",function(event){
+            event.preventDefault();
+            const orderId = this.getAttribute("orderId"); 
+            console.log("orderid :",orderId)       ;
+            updateCancelOrder(orderId);
+         })
+
+         function updateCancelOrder(orderId){
+
+             $ajax({
+                 type:'POST',
+                 url:'/admin/cancelOrder',
+                 data:{
+                  orderId
+                 },
+                 success:function(response){
+                  if(response){
+                    console.log("data enterd in the front end ");
+                  }
+                 },
+                 error:function(error){
+                  console.error("error while cancelling the order",error);
+                 }
+             })
+         }
+
+     })
+
+  </script>
 </body>
 
 </html>
