@@ -230,6 +230,10 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <!-- for pie chart  -->
   <script>
+    const shirtOrderCount = <%-JSON.stringify(shirtOrderCount)%>;
+    const pantsOrdersCount = <%- JSON.stringify(pantsOrdersCount)%>;
+    const tShirtOrdersCount = <%-JSON.stringify(tShirtOrdersCount) %>;
+
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
@@ -237,15 +241,15 @@
 
       var data = google.visualization.arrayToDataTable([
         ['Task', 'Hours per Day'],
-        ['Work',     11],
-        ['Eat',      2],
-        ['Commute',  2],
-        ['Watch TV', 2],
-        ['Sleep',    7]
+        ['Shirts',     shirtOrderCount],
+        ['Pants',      pantsOrdersCount],
+        ['T-shirts', tShirtOrdersCount],
+        ['Jeans', 0],
+       
       ]);
 
       var options = {
-        title: 'My Daily Activities'
+        title: 'Daily Orders'
       };
 
       var chart = new google.visualization.PieChart(document.getElementById('piechart'));

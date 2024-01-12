@@ -6,6 +6,7 @@ const orderModel = require('../models/ordersModel');
 const { default: mongoose } = require('mongoose');
 const XLSX = require('xlsx');
 const moment = require('moment');
+const { format } = require('date-fns');
 
 exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
@@ -16,7 +17,65 @@ exports.adminlogin = async(req,res)=>{
     }
 }
 exports.getHomePage = async(req,res)=>{
-    res.render('adminpanel/index');
+    try{
+        const currentDate = new Date();
+        const formattedDate = format(currentDate, 'dd/MM/yyyy'); 
+        console.log("formattedDate :",formattedDate);
+        const currentOrders = await orderModel.aggregate([
+            {
+                $addFields: {
+                    convertedDate: {
+                        $substr: ["$date", 0, 10]
+                    }
+                }
+            },
+            {
+                $match:{
+                    convertedDate:{$eq:formattedDate}
+                }
+            },
+            {
+                $unwind:"$products"
+
+            },{
+                $lookup:{
+                    from:'users',
+                    localField: 'userId',
+                    foreignField:'_id',
+                    as:"userDetails"
+                }
+            },{
+                $lookup:{
+                    from:'products',
+                    localField:'products.productId',
+                    foreignField:'_id',
+                    as:"productDetails"
+                   }
+            },{
+                $lookup:{
+                    from:'categories',
+                    localField:'productDetails.category',
+                    foreignField:'_id',
+                    as:"productCategory",
+                   }
+            }
+        ])
+        const shirtsOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'Shirt')
+        const pantsOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'Pant')
+        const tShirtOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'T-shirt');
+
+        const shirtOrderCount = shirtsOrders.length;
+        const pantsOrdersCount = pantsOrders.length;
+        const tShirtOrdersCount = tShirtOrders.length;
+
+        console.log("currentOrders:",currentOrders);
+        console.log(" pantsOrders:",  pantsOrders);
+        console.log(" tShirtOrders:",  tShirtOrders);
+        res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount});
+    }catch(error){
+        console.error("error while getting the admin dashboard !!",error);
+    }
+   
 }
 
 exports.getDashboard = async(req,res)=>{
