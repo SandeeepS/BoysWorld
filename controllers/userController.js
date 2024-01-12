@@ -1018,6 +1018,7 @@ exports.generateRazorpay = async(req,res)=>{
         const user = await UserModel.findById(userid);
         const userId = user._id;
         console.log("user....id:",userId);
+        console.log("total:",total);
         const product = await productModel.findById(productId).exec();
         const productId2 = {
           "productId":product._id,
@@ -1042,11 +1043,8 @@ exports.generateRazorpay = async(req,res)=>{
        const savedData = await orders.save();
        //updating the quantity
        const currentProduct = await productModel.find({"_id":productId});
-       console.log("currentProduct:",currentProduct);
        const currentStock = currentProduct[0].stock;
-       console.log("currentStock:",currentStock);
        const newStock = parseInt(currentStock - quantity);
-       console.log("newStock:",newStock);
        const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
        console.log("order inserted successfully");
 
@@ -1058,18 +1056,17 @@ exports.generateRazorpay = async(req,res)=>{
        console.log("order:",order);
        const orderId = order._id;
         console.log("orderId:",orderId);
+        const total2 = parseInt(total) * 100;
 
         var options = {
-          amount: total,  // amount in the smallest currency unit
+          amount: total2,  
           currency: "INR",
           receipt: orderId
         };
 
        console.log("hello worldddddddddddddd");
        const razorpayOrder = await new Promise((resolve,reject)=>{
-        console.log("inside .........")
           instance.orders.create(options,(err,order)=>{
-            console.log("again inside..........");
             if(err){
               console.error("error creating razorpay order:",err);
               reject(err);
@@ -1079,7 +1076,7 @@ exports.generateRazorpay = async(req,res)=>{
           });
         });
         console.log("Razorpay order:",razorpayOrder);
-        res.status(200).json({success:true,order:razorpayOrder});
+        res.status(200).json({success:true,order:razorpayOrder,total2});
 
      }catch(err){
       console.error("error while online payment from serverside :",err);
@@ -1100,7 +1097,8 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
     const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
     const randomId = 10000+Math.floor(Math.random()*90000);
     const currentAddress = cartDetails[0].currentAddress;
-    const total = totalAmount;//need to fix it again
+    const total = totalAmount;
+    console.log("total amount from checkout2 ",total);
     const productId = [];
         for(let i = 0; i < cartDetails.length; i ++){
 
@@ -1136,18 +1134,17 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
           console.log("order:",order);
           const orderId = order._id;
            console.log("orderId:",orderId);
+           const total2 = parseInt(total) * 100;
    
            var options = {
-             amount: total,  // amount in the smallest currency unit
+             amount:  total2,  // amount in the smallest currency unit
              currency: "INR",
              receipt: orderId
            };
    
           console.log("hello worldddddddddddddd");
           const razorpayOrder = await new Promise((resolve,reject)=>{
-           console.log("inside .........")
              instance.orders.create(options,(err,order)=>{
-               console.log("again inside..........");
                if(err){
                  console.error("error creating razorpay order:",err);
                  reject(err);
@@ -1157,7 +1154,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
              });
            });
            console.log("Razorpay order:",razorpayOrder);
-           res.status(200).json({success:true,order:razorpayOrder});
+           res.status(200).json({success:true,order:razorpayOrder, total2});
 
   }catch(error){
     console.error("error in the razorpay implimentaion route from checkout2",error);

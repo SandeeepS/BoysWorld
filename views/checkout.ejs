@@ -947,7 +947,7 @@
 					success:function(response){
 						if(response){
 							console.log("in fronend");
-							rezorpayPayment(response.order);
+							rezorpayPayment(response.order,response.total2);
 						}
 					},
 					error:function(error){
@@ -955,10 +955,12 @@
 					}
 				});
 
-				function rezorpayPayment(order){
+				function rezorpayPayment(order,total){
+				 
+					
 					var options = {
 						"key": "rzp_test_t03CSatWp5XBXp", // Enter the Key ID generated from the Dashboard
-						"amount": order.amount_due, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+						"amount":total , // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
 						"currency": "INR",
 						"name": "BoysWorld",
 						"description": "Test Transaction",
