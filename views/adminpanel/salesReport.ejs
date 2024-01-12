@@ -197,24 +197,15 @@
                                         <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByDate">Get Report</button>
                                     </div>
                                     <div class="card">
-                                            <h3> Monthly</h3>
-                                            <select name="year2" id="year2">
-                                                <option value="0">Select Month:</option>
-                                                <option value="1">January</option>
-                                                <option value="2">February</option>
-                                                <option value="3">March</option>
-                                                <option value="4">April</option>
-                                                <option value="5">May</option>
-                                                <option value="6">June</option>
-                                                <option value="7">July</option>
-                                                <option value="8">August</option>
-                                                <option value="9">Septemper</option>
-                                                <option value="10">October</option>
-                                                <option value="11">November</option>
-                                                <option value="12">December</option>
-                                            </select>
+                                            <h3>Select from a range</h3>
+                                            <label for="">Select Starting Date</label>
+                                            <input type="text" id="datepicker2">
                                             <br>
-                                            <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByMonth">Get Report</button>
+                                            <label for="">Select Ending Date</label>
+                                            <input type="text" id="datepicker3">
+                                            <br>
+                                            <br>
+                                            <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByRange">Get Report</button>
                                     </div>
                                    </div>
                                    <div class="card">
@@ -315,6 +306,9 @@
        document.addEventListener("DOMContentLoaded",function(){
          //date selection 
          $( "#datepicker" ).datepicker();
+         $( "#datepicker2" ).datepicker();
+         $( "#datepicker3" ).datepicker();
+      
 
          //loading the years 
          var dates = document.getElementById("year3");
@@ -329,13 +323,33 @@
   </script>
   <script>
        const reportByDate =  document.getElementById("SalesReportByDate");
-       reportByDate.addEventListener("click",function(event){
-          event.preventDefault();
-          const date = document.getElementById("datepicker").value;
-          console.log("date:",date);
-          const newUrl = `/admin/salesReport?date=${date}`;
-		  window.location.href = newUrl
-       })
+       const reportByRange = document.getElementById("SalesReportByRange");
+       const reportByYearly = document.getElementById("SalesReportByYearly");
+
+            reportByDate.addEventListener("click",function(event){
+                event.preventDefault();
+                const date = document.getElementById("datepicker").value;
+                console.log("date:",date);
+                const newUrl = `/admin/salesReport?date=${date}`;
+              window.location.href = newUrl
+              })
+
+              reportByRange.addEventListener("click",function(event){
+                event.preventDefault();
+                const firstDate = document.getElementById("datepicker2").value;
+                const secondDate = document.getElementById("datepicker3").value;
+                console.log("date:",firstDate,secondDate);
+                const newUrl = `/admin/salesReport?firstDate=${firstDate}&secondDate=${secondDate}`;
+              window.location.href = newUrl
+              })
+
+            reportByDate.addEventListener("click",function(event){
+              event.preventDefault();
+              const date = document.getElementById("datepicker").value;
+              console.log("date:",date);
+              const newUrl = `/admin/salesReport?date=${date}`;
+            window.location.href = newUrl
+            })
   </script>
 
   <script>

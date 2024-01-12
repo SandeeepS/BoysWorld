@@ -5,6 +5,7 @@ const categoryModel = require('../models/categoryModel');
 const orderModel = require('../models/ordersModel');
 const { default: mongoose } = require('mongoose');
 const XLSX = require('xlsx');
+const moment = require('moment');
 
 exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
@@ -250,7 +251,73 @@ exports.getSalesReport = async(req,res) => {
             ]);
             console.log("orders from get sales report:",orders);
             res.render('adminpanel/salesReport',{orders});
-        }else{
+        } else if(req.query.firstDate && req.query.secondDate){
+
+            const firstInputDate = req.query.firstDate;
+            const secondInputDate = req.query.secondDate;
+
+            const firstInputDateParts = firstInputDate.split("/");
+            const secondInputDateParts = secondInputDate.split("/");
+
+            const reversedFirstDate = firstInputDateParts.reverse();
+            const reversedSecondDate = secondInputDateParts.reverse();
+
+            const yearFromFrist = reversedFirstDate[0];
+            const yearFromSecond = reversedSecondDate[0];
+
+            const remainingDatePartFrist = reversedFirstDate.splice(1,2);
+            const remainingDatePartSecond = reversedSecondDate.splice(1,2);
+
+            const newFirstDate = remainingDatePartFrist.concat(yearFromFrist);
+            const newSecondDate = remainingDatePartSecond.concat(yearFromSecond);
+
+            const reformattedDateFirst = newFirstDate.join("/");
+            const reformattedDateSecond = newSecondDate.join("/");
+
+            const isoDateFirst = moment(reformattedDateFirst, 'DD-MM-YYYY').format();
+            const isoDateSecond = moment(reformattedDateSecond, 'DD-MM-YYYY').format();
+
+            const orders = await orderModel.aggregate([
+                {
+                    $addFields: {
+                        convertedDate: {
+                           $substr: ["$date", 0, 10]
+                        }
+                     }
+                },
+            
+                {
+                    $match: {
+                        convertedDate: {
+                          $gte: isoDateFirst,
+                          $lte: isoDateSecond
+                        }
+                      }
+                },
+                {
+                    $unwind:"$products"
+                },
+                {
+                    $lookup:{
+                        from:'users',
+                        localField: 'userId',
+                        foreignField:'_id',
+                        as:"userDetails"
+                    }
+                },{
+                    $lookup:{
+                        from:'products',
+                        localField:'products.productId',
+                        foreignField:'_id',
+                        as:"productDetails"
+                       }
+                }
+            ]);
+
+            console.log("orders from get sales report:",orders);
+            res.render('adminpanel/salesReport',{orders});
+        }
+        else{
             const orders = "";
             res.render('adminpanel/salesReport',{orders});
         }
