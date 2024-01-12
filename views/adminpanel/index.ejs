@@ -22,6 +22,18 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
+  <style>
+    .chart-div{
+      display: flex;
+    }
+    .btn {
+      position: absolute;
+      top: 50%; /* Adjust as needed */
+      right: 0;
+      transform: translateY(-40%);
+      margin-right: 30px;
+    }
+  </style>
 </head>
 <body>
   <div class="container-scroller"> 
@@ -44,16 +56,11 @@
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-top"> 
         <ul class="navbar-nav">
-          <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
             <h1 class="welcome-text"><span class="text-black fw-bold">Admin</span>Panel</h1>
-           
-          </li>
+            <form action="/admin/logout" method="post">
+              <button type="submit" name="logout" value="Logout" class="btn btn-danger">Log Out</button>
+            </form>
         </ul>
-        <div class="navbar-menu-wrapper d-flex align-items-top"> 
-          <form action="/admin/logout" method="post">
-            <input type="submit" name="logout" value="Logout">
-          </form>
-          </div>
       </div>
      
     </nav>
@@ -164,9 +171,12 @@
                                   <div class="d-sm-flex align-items-center mt-4 justify-content-between"><h2 class="me-2 fw-bold">$36,2531.00</h2><h4 class="me-2">USD</h4><h4 class="text-success">(+1.37%)</h4></div>
                                   <div class="me-3"><div id="marketing-overview-legend"></div></div>
                                 </div>
-                                <div class="chartjs-bar-wrapper mt-3">
-                                  <canvas id="marketingOverview"></canvas>
-                                </div>
+                           
+                                  <div class="chart-div">
+                                      <div id="piechart" style="width: 900px; height: 500px;"></div>
+                                      <div id="curve_chart" style="width: 900px; height: 500px"></div>
+                                  </div>
+                               
                               </div>
                             </div>
                           </div>
@@ -215,6 +225,60 @@
   <!-- Custom js for this page-->
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
+
+  <!-- charts and graphs  -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <!-- for pie chart  -->
+  <script>
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var data = google.visualization.arrayToDataTable([
+        ['Task', 'Hours per Day'],
+        ['Work',     11],
+        ['Eat',      2],
+        ['Commute',  2],
+        ['Watch TV', 2],
+        ['Sleep',    7]
+      ]);
+
+      var options = {
+        title: 'My Daily Activities'
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+      chart.draw(data, options);
+    }
+  </script>
+
+  <!-- for line chart  -->
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Year', 'Sales', 'Expenses'],
+        ['2004',  1000,      400],
+        ['2005',  1170,      460],
+        ['2006',  660,       1120],
+        ['2007',  1030,      540]
+      ]);
+
+      var options = {
+        title: 'Company Performance',
+        curveType: 'function',
+        legend: { position: 'bottom' }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+      chart.draw(data, options);
+    }
+  </script>
   <!-- End custom js for this page-->
 </body>
 
