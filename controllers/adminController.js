@@ -62,6 +62,8 @@ exports.getHomePage = async(req,res)=>{
             }
         ])
         const products = await productModel.find({});
+        const category = await categoryModel.find({});
+        const users = await userModel.find({});
         let uniqueProductIds = new Set(products.map(product => product._id));
         let uniqueProductIdsArray = [...uniqueProductIds];
         const uniqueProducts = await productModel.find({_id:{$in:uniqueProductIdsArray}});
@@ -74,7 +76,7 @@ exports.getHomePage = async(req,res)=>{
         const pantsOrdersCount = pantsOrders.length;
         const tShirtOrdersCount = tShirtOrders.length;
 
-        res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount,uniqueProducts});
+        res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount,uniqueProducts,products,category,users});
     }catch(error){
         console.error("error while getting the admin dashboard !!",error);
     }

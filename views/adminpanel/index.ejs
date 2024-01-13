@@ -33,6 +33,14 @@
       transform: translateY(-40%);
       margin-right: 30px;
     }
+    .card {
+      background-color: rgba(255, 255, 255, 0.5);
+     }
+     
+     .counter {
+      font-size: 2em;
+      transition: all 1s ease-in-out;
+     }
   </style>
 </head>
 <body>
@@ -172,6 +180,37 @@
                                   <div class="d-sm-flex align-items-center mt-4 justify-content-between"><h2 class="me-2 fw-bold">$36,2531.00</h2><h4 class="me-2">USD</h4><h4 class="text-success">(+1.37%)</h4></div>
                                   <div class="me-3"><div id="marketing-overview-legend"></div></div>
                                 </div>
+                                <!-- div for getting user count , product count, category count  -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="card">
+                                      <div class="card-body">
+                                        <h5 class="card-title">Users</h5>
+                                        <div id="usersCount" class="counter"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="card">
+                                      <div class="card-body">
+                                        <h5 class="card-title">Products</h5>
+                                        <div id="productsCount" class="counter"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="card">
+                                      <div class="card-body">
+                                        <h5 class="card-title">Categories</h5>
+                                        <div id="categoriesCount" class="counter"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <br>
+                                <br>
+
+                                 <!--  -->
                            
                                   <div class="chart-div">
                                       <div id="piechart" style="width: 900px; height: 500px;"></div>
@@ -312,6 +351,40 @@
     }
   </script>
   <!-- End custom js for this page-->
+  <script>
+    window.onload = function() {
+      const products = <%- JSON.stringify(products) %>;
+      const category = <%- JSON.stringify(category) %>;
+      const users = <%- JSON.stringify(users) %>;
+      var usersCount = document.getElementById('usersCount');
+      var productsCount = document.getElementById('productsCount');
+      var categoriesCount = document.getElementById('categoriesCount');
+     
+      // Replace these numbers with the actual counts
+      var usersTotal = users.length;
+      var productsTotal = products.length;
+      var categoriesTotal = category.length;
+     
+      var usersCurrent = 0;
+      var productsCurrent = 0;
+      var categoriesCurrent = 0;
+     
+      var interval = setInterval(function() {
+        if (usersCurrent < usersTotal) {
+          usersCurrent++;
+          usersCount.innerHTML = usersCurrent;
+        } else if (productsCurrent < productsTotal) {
+          productsCurrent++;
+          productsCount.innerHTML = productsCurrent;
+        } else if (categoriesCurrent < categoriesTotal) {
+          categoriesCurrent++;
+          categoriesCount.innerHTML = categoriesCurrent;
+        } else {
+          clearInterval(interval);
+        }
+      }, 100);
+     };
+  </script>
 </body>
 
 </html>
