@@ -240,8 +240,8 @@
                                                 <tr>
                                                   <td><%= orders[i].orderId %></td>
                                                   <td><%= orders[i].userDetails[0].name %></td>
-                                                  <td><%= orders[i].productDetails[0].productName %></td>
-                                                  <td><%= orders[i].productDetails[0].price %></td>
+                                                  <td><%= orders[i].productDetails.productName %></td>
+                                                  <td><%= orders[i].productDetails.price %></td>
                                                   <td><%= orders[i].products.quantity %></td>
                                                   <!-- Render other order details here -->
                                                 </tr>

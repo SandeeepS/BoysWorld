@@ -338,6 +338,9 @@ exports.getSalesReport = async(req,res) => {
             const reformattedDateFirst = newFirstDate.join("/");
             const reformattedDateSecond = newSecondDate.join("/");
 
+            console.log("d1:",reformattedDateFirst);
+            console.log("d2:",reformattedDateSecond);
+
             const isoDateFirst = moment(reformattedDateFirst, 'DD-MM-YYYY').format();
             const isoDateSecond = moment(reformattedDateSecond, 'DD-MM-YYYY').format();
 
@@ -353,8 +356,8 @@ exports.getSalesReport = async(req,res) => {
                 {
                     $match: {
                         convertedDate: {
-                          $gte: isoDateFirst,
-                          $lte: isoDateSecond
+                          $gte: reformattedDateFirst,
+                          $lte: reformattedDateSecond
                         }
                       }
                 },
@@ -382,23 +385,15 @@ exports.getSalesReport = async(req,res) => {
             res.render('adminpanel/salesReport',{orders});
         }else if(req.query.year){
               const year  = req.query.year;
-
+              console.log("year:",year);
               const orders = await orderModel.aggregate([
                 {
                     $addFields: {
                         convertedDate: {
-                           $substr: ["$date", 0, 10]
+                           $substr: ["$date", 6, 4]
                         }
                      }
                 },
-                {
-                    $addFields: {
-                        convertedDateYear: {
-                          $substr: ["$convertedDate", -4, 4]
-                        }
-                    }
-                },
-            
                 {
                     $match: {
                         convertedDate: year
