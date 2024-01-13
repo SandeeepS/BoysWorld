@@ -136,12 +136,15 @@
                            
 						   <!-- hdghghdkjgh -->
 						    <% for(let i = 0 ; i< cart.length ; i++){ %>
-							<tr>
+							<tr class="cartBox">
 							<td class="cart_product">
 									<a href=""><img src="views/productImages/<%= cart[i].product[0].image[0]%>" alt="" height="100px" width="100px"></a>
 							</td>
 							<td class="cart_description">
 								<h4><a href=""><%=cart[i].product[0].productName%></a></h4>
+								<% if(cart[i].product[0].stock == 0){ %>
+                                    <h5 style="color: red;">Out of stock !!</h5>
+								<% } %>
 								<p>Web ID: 1089772</p>
 							</td>
 							<td class="cart_price">
@@ -296,6 +299,24 @@
 			console.log("totalamount:",totalAmount);
 			window.location.href = "/getCheckout2?cart=" + cart + "&totalAmount="+totalAmount ;
 		}
+	</script>
+
+	<!-- disable the cart when the stock is 0  -->
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const cartBody = document.querySelectorAll(".cartBox");
+			const cart = <%-JSON.stringify(cart)%>;
+			cartBody.forEach((cartBody,i)=>{
+				if(cart[i].product[0].stock == 0){
+					console.log("yesssss");
+					cartBody.style.pointerEvents = "none";
+					cartBody.style.opacity = "0.5";
+					cartBody.setAttribute('tabindex', '-1');
+				}
+			 })
+			 
+		})
+		
 	</script>
 </body>
 </html>

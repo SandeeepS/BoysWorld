@@ -166,7 +166,12 @@
 					<div class="col-sm-4" >
 						<p><%=productData.discription%></p>
 						<h4>₹<%=productData.price%></h4>
-					    <p><%= message %></p>
+						<% if(message == "Out Of Stock"){ %>
+							    <h6 style="color: red;"> <%= message %></h6>
+						<% }else{ %>
+						        <h6><%= message %></h6>
+					    <% } %>
+					  
 						<div>
 							<label for="quantity">Quantity</label>
 							<div>

@@ -560,13 +560,16 @@ exports.getCart = async(req,res)=>{
           }
         }
        ]);
+
+
+
        for(let i = 0; i < cart.length; i++){
-           cartTotal = cartTotal + cart[i].cart.total;
+           if(cart[i].product[0].stock > 0){
+            cartTotal = cartTotal + cart[i].cart.total;
+           }
        }
-      console.log("total:",cartTotal);
-      
-      console.log("cart:",cart);
-      console.log("firstproduct:",cart[0].product);
+       console.log("cart:",cart);
+   
   res.render('cart', {cart,cartTotal}); 
   }catch(err){
     console.error("error while getting produts ",err);
