@@ -528,6 +528,10 @@ exports.getCheckoutPage2 = async(req,res)=>{
             foreignField:'_id',
             as:"productDetail"
           }
+        },{
+          $match:{
+            "productDetail.stock":{$ne:0}
+          }
         }
     ]).exec() || req.query.cartDetails
     console.log("total:",totalAmount);

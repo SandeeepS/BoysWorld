@@ -89,7 +89,7 @@
 									</a>								</li>
 								<li>
 									<form action="/logout" method="post">
-										<button type="submit" class="btn btn-default">Logout</button>
+										<button type="submit" class="btn btn-danger">Logout</button>
 								    </form>
 								</li>
 							</ul>
@@ -156,15 +156,18 @@
 						<!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
 						<% for(const pro of product){ %>
-                             <div class="col-sm-4" id="data">
+                             <div class="productDiv col-sm-4" id="data">
                                 <div class="product-image-wrapper">
 								<div class="single-products" id="single-porduct">
 									<div class="productinfo text-center">
 										<img src="/views/productImages/<%= pro.image[0]%>" alt="" height="400px" width="100px" style="object-fit: cover;">
 										<h5 style="color: #e69927;"><%= pro.productName %></h5>
+										<% if(pro.stock == 0){ %>
+											<h6 style="color: red;">Out Of Stock!!</h6>
+										<% } %>
 										<p><%=pro.discription%></p>
 										<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
-										<a href="/addToCart/<%=pro._id%>" class="btn btn-default add-to-cart buy-now-btn" data-product-id="<%=pro._id%>"  data-image="/views/productImages/<%=pro.image[1]%>">Add to Cart</a>
+										<a href="/addToCart/<%=pro._id%>" class="addToCart btn btn-default add-to-cart buy-now-btn" data-product-id="<%=pro._id%>"  data-image="/views/productImages/<%=pro.image[1]%>" id="addToCart">Add to Cart</a>
 									</div>
 								</div>
 								<div class="choose">
@@ -372,6 +375,22 @@
 				console.log(pageNumber);
 				const newUrl = `/shop?page=${pageNumber}`;
 				window.location.href = newUrl
+			})
+		})
+	</script>
+
+	<!-- disable the out of stock product  -->
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			
+			const addToCart = document.querySelectorAll(".addToCart");
+			const product = <%- JSON.stringify(product) %>;
+			addToCart.forEach((addToCart,i)=>{
+				if( product[i].stock == 0){
+					addToCart.style.pointerEvents = "none";
+					addToCart.style.opacity = "0.5";
+					addToCart.setAttribute('tabindex','-1');
+				}
 			})
 		})
 	</script>

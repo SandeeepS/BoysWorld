@@ -175,12 +175,12 @@
 						<div>
 							<label for="quantity">Quantity</label>
 							<div>
-								<button onclick="decreaseQuantity()">-</button>
+								<button id="incBtn" onclick="decreaseQuantity()">-</button>
 								<input type="number" id="quantity" style="width: 50px;" value="1">
-								<button onclick="increaseQuantity()">+</button>
+								<button id="decBtn" onclick="increaseQuantity()">+</button>
 							</div>
 						</div>
-						<a href="/addToCart/<%=productData._id%>" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
+						<a href="/addToCart/<%=productData._id%>" id="addCartBtn" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
 						<button id="buyNow" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData._id%>')" >Buy Now</button>
 					</div>
 				</div>
@@ -312,16 +312,26 @@
 		document.addEventListener("DOMContentLoaded",function(){
 			const stock = <%- JSON.stringify(stock) %>;
 			const buyNowBtn = document.getElementById("buyNow");
+            const incBtn = document.getElementById("incBtn");
+			const decBtn = document.getElementById("decBtn");
+			const addCartBtn = document.getElementById("addCartBtn");
+			const quantity = document.getElementById("quantity");
 
 			if(stock === 0){
                buyNowBtn.disabled = true;
+			   incBtn.disabled = true;
+			   decBtn.disabled = true;
+			   addCartBtn.style.pointerEvents = "none";
+			   addCartBtn.style.opacity = "0.5";
+			   addCartBtn.setAttribute('tabindex','-1');
+
+			   quantity.style.pointerEvents = "none";
+			   quantity.style.opacity = "0.5";
+			   quantity.setAttribute('tabindex','-1');
+
+
 			}
 		})
 	</script>
-	
-   
-	
-
-
 </body>
 </html>
