@@ -49,11 +49,12 @@
 
       /* Style for the modal content */
       .modal-content {
-       
+        display: flex;
         background-color: #fefefe;
         margin: 15% auto; /* 15% from the top and centered */
         padding: 20px;
         border: 1px solid #888;
+        height: 50%;
         width: 100%; /* Could be more or less, depending on screen size */
       }
 
@@ -82,6 +83,9 @@
         height: 100%;
         padding-top: 20%;
       }
+      .img-container{
+        display: flex;
+      }
 </style>
 </head>
 <body>
@@ -92,12 +96,14 @@
          <span class="close" id="closeModalBtn">&times;</span>
            <div class="modal-style">
              <div class="container">
-               <div id="cropped-result">
+                <div class="img-container">
+                    <div id="cropped-result">
 
-               </div>
-               <div id="cropping">
-
-               </div>
+                    </div>
+                    <div id="cropping">
+    
+                    </div>
+                </div>
                <div>
                 <button id="setCropedImage" onclick="setCroppedImage()">Set</button>
               </div>
@@ -534,6 +540,7 @@
 </script>
 
 <script>
+      var totalImages = 0;
 
       function previewImages(input){
           var preview = document.querySelector("#preview");
@@ -553,7 +560,7 @@
               var img = document.createElement("img");
               img.src = e.target.result;
               img.classList.add("obj");
-              img.setAttribute("data-index", i);       //setting attribute to the image
+              img.setAttribute("data-index", totalImages++);       //setting attribute to the image
               img.addEventListener("click",openModal); //addd a click event lister to each modal
               preview.appendChild(img);
             }
@@ -565,27 +572,33 @@
   var cropper;
    function openModal(event){
     console.log("modal openddee");
-    const cropping = document.getElementById("croppeding");
+    const cropping = document.getElementById("cropped-result");
     var modal = document.getElementById("myModal");
     var closeModalBtn = document.getElementById("closeModalBtn");
     var clickedImg = event.target;
-    var imgIndex = parseInt(clickedImg.getAttribute("data-index"),10);
+    var clonedImg = clickedImg.cloneNode(true);
+
+    var imgIndex = parseInt(clonedImg.getAttribute("data-index"),10);
     document.getElementById("currentImgIndex").value = imgIndex;
-    modal.appendChild(clickedImg);
+   
+    var croppingDiv = document.getElementById("cropping");
+    croppingDiv.innerHTML = "";
+    croppingDiv.appendChild(clonedImg);
 
     if (typeof cropper !== 'undefined') {                // Destroy the previous Cropper instance if it exists
-      cropper.destroy();
+      cropper.destroy(); 
     }
 
-    cropper = new Cropper(clickedImg, {
+    cropper = new Cropper(clonedImg, {
       aspectRatio: 1,
       viewMode: 2,
       crop: function (cropEvent) {
     
         var croppedCanvas = cropper.getCroppedCanvas();
         var croppedDataUrl = croppedCanvas.toDataURL();
-        document.getElementById("cropping").innerHTML = '<img src="' + croppedDataUrl +  '" />' ;
+        document.getElementById("cropped-result").innerHTML = '<img src="' + croppedDataUrl +  '" />' ;
         modal.style.display = "block";
+
       },
     });
     }
@@ -598,16 +611,28 @@
     img.addEventListener('click', openModal);
   });
 
+
+  function setCroppedImage(){
+    var imgIndex = parseInt(document.getElementById("currentImgIndex").value,10); 
+    var originalImg = document.querySelector(`#preview img[data-index="${imgIndex}"]`); 
+   
+    // Get the cropped image URL
+    var croppedImgElement = document.querySelector("#cropped-result img");
+    var croppedDataUrl = croppedImgElement.src;
+    originalImg.src = croppedDataUrl;
+  
+   
+    var croppingDiv = document.getElementById("cropping");
+    var clonedImgInCropping = document.querySelector(`#cropping img[data-index="${imgIndex}"]`);
+    croppingDiv.removeChild(clonedImgInCropping);
+   
+    document.getElementById("myModal").style.display = "none";                
+    cropper.destroy();    
+    croppingDiv.destroy();
+   }
+
 </script>
-<script>
-    function setCropedImage(){
-       var imgIndex = parseInt(document.getElementById("currentImgIndex").value,10);  //get the current imagw index from the hidden input
-       var originalImg = document.querySelector(`img[data-index="${imgIndex}"]`);     //replace the original with croped one
-       originalImg.src = cropper.getCroppedCanvas().toDataURL();
-       document.getElementById("myModal").style.display = "none";                     // close the modal      
-       cropper.destroy();                                                             // destroy the copper instance to free up resources
-    }
-</script>
+
 
   <!-- End custom js for this page-->
 </body>
