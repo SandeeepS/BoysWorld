@@ -62,6 +62,14 @@
 			color: white;
 			/* Add any additional styling for the highlighted state */
 		}
+		.dropdown-container {
+			display: none;
+		 }
+		 .search-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		 }
     </style>
 </head>
 <body>
@@ -118,13 +126,31 @@
 							</ul>
 						</div>
 					</div>
+				
 					<div class="col-sm-3">
 						<div class="search_box pull-right">
-							<input type="text" placeholder="Search"/>
+							<div class="search-container">
+								<input type="text" placeholder="Search"/>
+								<button id="filterButton" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+								 Filter with Price
+								 <i class="fa fa-filter"></i>
+								 <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="filterButton">
+								 <li role="presentation"><a role="menuitem" tabindex="-1" href="/getShopWithPriceRange?price1=500&price2=1000">₹500 - ₹1000</a></li>
+								 <li role="presentation"><a role="menuitem" tabindex="-1" href="/getShopWithPriceRange?price1=1000&price2=1500">₹1000 - ₹1500</a></li>
+								 <li role="presentation"><a role="menuitem" tabindex="-1" href="/getShopWithPriceRange?price1=1500&price2=2000">₹1500 - ₹2000</a></li>
+								 <li role="presentation"><a role="menuitem" tabindex="-1" href="/getShopWithPriceRange?price1=2000&price2=2500">₹2000 - ₹2500</a></li>
+								 <!-- Add more price ranges as needed -->
+								</ul>
+							 </div>
 						</div>
 					</div>
 				</div>
 			</div>
+
+		
+		
 		</div><!--/header-bottom-->
 	</header><!--/header-->
 	
@@ -155,32 +181,37 @@
 					<div class="features_items" id="feature">
 						<!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
-						<% for(const pro of product){ %>
-                             <div class="productDiv col-sm-4" id="data">
-                                <div class="product-image-wrapper">
-								<div class="single-products" id="single-porduct">
-									<div class="productinfo text-center">
-										<img src="/views/productImages/<%= pro.image[0]%>" alt="" height="400px" width="100px" style="object-fit: cover;">
-										<h5 style="color: #e69927;"><%= pro.productName %></h5>
-										<% if(pro.stock == 0){ %>
-											<h6 style="color: red;">Out Of Stock!!</h6>
-										<% } %>
-										<p><%=pro.discription%></p>
-										<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
-										<a href="/addToCart/<%=pro._id%>" class="addToCart btn btn-default add-to-cart buy-now-btn" data-product-id="<%=pro._id%>"  data-image="/views/productImages/<%=pro.image[1]%>" id="addToCart">Add to Cart</a>
+						<% if(product.length != 0) {%>
+								<% for(const pro of product){ %>
+									<div class="productDiv col-sm-4" id="data">
+										<div class="product-image-wrapper">
+										<div class="single-products" id="single-porduct">
+											<div class="productinfo text-center">
+												<img src="/views/productImages/<%= pro.image[0]%>" alt="" height="400px" width="100px" style="object-fit: cover;">
+												<h5 style="color: #e69927;"><%= pro.productName %></h5>
+												<% if(pro.stock == 0){ %>
+													<h6 style="color: red;">Out Of Stock!!</h6>
+												<% } %>
+												<h5>₹<%= pro.price %></h5>
+												<p><%=pro.discription%></p>
+												<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
+												<a href="/addToCart/<%=pro._id%>" class="addToCart btn btn-default add-to-cart buy-now-btn" data-product-id="<%=pro._id%>"  data-image="/views/productImages/<%=pro.image[1]%>" id="addToCart">Add to Cart</a>
+											</div>
+										</div>
+										<div class="choose">
+											<ul class="nav nav-pills nav-justified">
+												<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+												<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+											</ul>
+										</div>
 									</div>
 								</div>
-								<div class="choose">
-									<ul class="nav nav-pills nav-justified">
-										<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-										<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<%}%>
+								<%}%>
+							<% }  else {%>
+								<h5>No Products Found !!</h5>
+							<% } %>
 					</div><!--features_items-->
-					<div class="pagination">
+					<div class="pagination" id="paginationDiv">
 
 						<!-- previous  -->
 						<% if(currentPage > 1){ %>
@@ -302,6 +333,7 @@
 											<div class="single-products">
 												<div class="productinfo text-center">
 													<img src="/views/productImages/${pro.image[0]}" alt="" height="400px" width="100px" style="object-fit: cover;">
+													<h5>₹${ pro.price }</h5>
 													<p>${pro.discription}</p>
 													<a href="/selectedProduct/${pro._id}" class="btn btn-default add-to-cart">Buy Now</a>
 													<a href="/addToCart/${pro._id}" class="btn btn-default add-to-cart buy-now-btn" data-product-id="${pro._id}"  data-image="/views/productImages/${pro.image[1]}">Add to Cart</a>
@@ -325,6 +357,11 @@
 
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
+            const productDiv = document.getElementById("paginationDiv");
+			const product = <%-JSON.stringify(product) %>;
+			if(product.length == 0){
+                productDiv.style.display = "none";
+			}
 
             const page1 = document.getElementById("page-1");
 			const page2 = document.getElementById("page-2");
@@ -393,6 +430,14 @@
 				}
 			})
 		})
+	</script>
+	<!-- open the dropdown modal  -->
+	<script>
+		 $(document).ready(function(){
+			$("#filterButton").click(function(){
+			  $(".dropdown-menu").toggle();
+			});
+		   });
 	</script>
 </body>
 </html>

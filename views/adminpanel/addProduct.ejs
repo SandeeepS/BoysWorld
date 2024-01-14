@@ -613,36 +613,38 @@
     img.addEventListener('click', openModal);
   });
 function setCroppedImage(){
- var imgIndex = parseInt(document.getElementById("currentImgIndex").value,10); 
- var originalImg = document.querySelector(`#preview img[data-index="${imgIndex}"]`); 
+      
+    var imgIndex = parseInt(document.getElementById("currentImgIndex").value,10); 
+    var originalImg = document.querySelector(`#preview img[data-index="${imgIndex}"]`); 
 
- // Get the cropped image URL
- var croppedImgElement = document.querySelector("#cropped-result img");
- var croppedCanvas = cropper.getCroppedCanvas();
- var croppedDataUrl = croppedCanvas.toDataURL('image/jpeg');
- originalImg.src = croppedDataUrl;
+    // Get the cropped image URL
+    var croppedImgElement = document.querySelector("#cropped-result img");
+    var croppedCanvas = cropper.getCroppedCanvas();
+    var croppedDataUrl = croppedCanvas.toDataURL('image/jpeg');
+    originalImg.src = croppedDataUrl;
 
- // Create a new File object from the cropped image URL
- var base64String = croppedDataUrl.split(',')[1];
- var blob = base64ToBlob(base64String); 
- var file = new File([blob], 'croppedImage.jpg', {type: 'image/jpeg'});
+    // Create a new File object from the cropped image URL
+    var base64String = croppedDataUrl.split(',')[1];
+    var blob = base64ToBlob(base64String); 
+    var file = new File([blob], 'croppedImage.jpg', {type: 'image/jpeg'});
 
- // Convert the FileList to an array
- var fileInput = document.querySelector('#img');
- var oldFiles = Array.from(fileInput.files);
+    // Store the cropped image file in the array
+     window.croppedImageFiles[imgIndex] = file;
 
- // Replace the original image file with the cropped image file at the correct index
- oldFiles[imgIndex] = file;
 
- // Reassign the modified array back to the FileList
- Object.defineProperty(fileInput, 'files', {value: new FileList(...oldFiles)});
+    var croppingDiv = document.getElementById("cropping");
+    var clonedImgInCropping = document.querySelector(`#cropping img[data-index="${imgIndex}"]`);
+    croppingDiv.removeChild(clonedImgInCropping);
 
- var croppingDiv = document.getElementById("cropping");
- var clonedImgInCropping = document.querySelector(`#cropping img[data-index="${imgIndex}"]`);
- croppingDiv.removeChild(clonedImgInCropping);
+      // Create a new DataTransfer object
+      var dt = new DataTransfer();
+      // Add the cropped image file to the DataTransfer object
+      dt.items.add(file);
+      // Simulate dragging and dropping the cropped image file onto the file input
+      document.getElementById('img').files = dt.files;
 
- document.getElementById("myModal").style.display = "none";              
- cropper.destroy();  
+    document.getElementById("myModal").style.display = "none";              
+    cropper.destroy();  
 }
     // Function to convert a Base64 string to a Blob
     function base64ToBlob(base64) {

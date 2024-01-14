@@ -440,6 +440,33 @@
   <!-- End custom js for this page-->
   <script>
    document.addEventListener("DOMContentLoaded",function(){
+ 
+        const page1 = document.getElementById("page-1");
+        const page2 = document.getElementById("page-2");
+        const page3 = document.getElementById("page-3");
+        const page4 = document.getElementById("page-4");
+        const next = document.getElementById("nextPage");
+
+
+        const totalPages = <%- JSON.stringify(totalPages) %>;
+        console.log("totalpages:",totalPages);
+        
+        if(totalPages == 0){
+          next.style.pointerEvents = "none";
+          page2.style.display = "none";
+          page3.style.display = "none";
+          page4.style.display = "none";
+        }
+        if( totalPages <= 2 ){
+          
+          page3.style.display = "none";
+          page4.style.display = "none";
+        }
+        if(totalPages <= 3){
+        
+          page4.style.display = "none";
+        }
+
       const updateButton = document.querySelectorAll(".order-status-button");
       const cancelBtn = document.querySelectorAll(".cancelBtn");
 

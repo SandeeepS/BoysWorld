@@ -10,6 +10,7 @@ route.get('/',userController.home);
 route.get('/login',auth.isUser,userController.loginPage);
 route.get('/signup',auth.isUser,userController.signupPage);
 route.get('/shop',auth.user,userController.shopPage); 
+route.get('/getShopWithPriceRange',auth.user,userController.getShopWithPriceRange);
 route.post('/categoryBasedProduct',userController.categoryBasedProduct);
 
 route.get('/contact',auth.user,userController.contactPage);

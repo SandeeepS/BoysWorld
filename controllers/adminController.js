@@ -215,7 +215,7 @@ exports.getOrders = async(req,res)=>{
         console.log("current page:",currentPage);
         const itemsPerPage = 8;
         const skip = (page - 1) * itemsPerPage;
-        const totalCount = await orderModel.countDocuments({isDeleted:false}).exec();
+        const totalCount = await orderModel.countDocuments({}).exec();
         console.log("totalcount:",totalCount);
         const totalPages = Math.floor(totalCount/itemsPerPage);
         console.log("totalpages:",totalPages);
