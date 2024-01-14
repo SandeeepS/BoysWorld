@@ -69,8 +69,33 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+
 		 }
+
+		 /*for search */
+		 .search-container form {
+			display: flex;
+			border: 1px solid grey;
+			padding: 1px;
+			margin-right: 8px;
+		   }
+		   
+		   .search-container input {
+			flex-grow: 2;
+			border: none;
+		   }
+		   
+		   .search-container input:focus {
+			outline: none;
+		   }
+		   
+		   .search-container button {
+			border: 1px solid rgb(228, 125, 35);
+			background: rgb(228, 125, 35);
+			color: white;
+		   }
     </style>
+
 </head>
 <body>
 	<header id="header"><!--header-->
@@ -128,9 +153,18 @@
 					</div>
 				
 					<div class="col-sm-3">
-						<div class="search_box pull-right">
+						<div class=" pull-right">
 							<div class="search-container">
-								<input type="text" placeholder="Search"/>
+								<!-- search  -->
+								<div class="search-container">
+									<form action="/getShopBySearch" method="GET">
+										<input type="search" id="searchInput" name="searchProduct" placeholder="Search"/>
+										<button id="searchButton" type="submit">
+										<i class="fa fa-search"></i>
+										</button>
+									</form>
+								</div>
+								 <!--  -->
 								<button id="filterButton" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
 								 Filter with Price
 								 <i class="fa fa-filter"></i>

@@ -122,6 +122,47 @@ exports.getShopWithPriceRange = async(req,res)=>{
   }
 }
 
+//get shop with search
+exports.getShopBySearch = async(req,res) =>{
+       try{
+
+        if(req.query){
+          const searchProduct = req.query.searchProduct;
+          console.log("searched product:",searchProduct);
+          const user = req.session.user;
+          const userId = new mongoose.Types.ObjectId(user);
+          console.log("userId:",userId);
+          const page = req.query.page || 1;
+          let currentPage = parseInt(page);
+          if(currentPage <= 0  ){
+            currentPage = 1;
+          }
+          console.log("current page:",currentPage);
+          const itemsPerPage = 3;
+          let skip = (page - 1) * itemsPerPage;
+          if(skip <= 0 ){
+            skip = 0 ;
+          }
+          const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
+          console.log("totalcount:",totalCount);
+          const totalPages = Math.floor(totalCount/itemsPerPage);
+          console.log("totalpages:",totalPages);
+          const productData = await productModel
+                  .find({isDeleted:false, productName: {$regex: searchProduct, $options: 'i'}})
+                  .skip(skip)
+                  .limit(itemsPerPage)
+                  .exec();
+          const categoryData = await categoryModel.find({isDelete:false}).exec();
+          const Currentuser = await UserModel.findOne({"_id":userId})
+          console.log("currentUser:",Currentuser);
+          res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
+    }
+
+       }catch(error){
+          console.error("error while getting shop according to search",error);
+       }
+}
+
 //get product by category
 exports.categoryBasedProduct = async(req,res)=>{
   try{

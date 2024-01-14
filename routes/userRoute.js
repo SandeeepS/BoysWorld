@@ -11,6 +11,7 @@ route.get('/login',auth.isUser,userController.loginPage);
 route.get('/signup',auth.isUser,userController.signupPage);
 route.get('/shop',auth.user,userController.shopPage); 
 route.get('/getShopWithPriceRange',auth.user,userController.getShopWithPriceRange);
+route.get('/getShopBySearch',auth.user,userController.getShopBySearch);
 route.post('/categoryBasedProduct',userController.categoryBasedProduct);
 
 route.get('/contact',auth.user,userController.contactPage);
