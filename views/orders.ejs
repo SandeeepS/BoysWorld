@@ -219,16 +219,16 @@
 												<h5>Delivery Address</h5>
 												<div>
 													<% if (orderDetails[i].currentAddress[0]){ %>
-													<h5><%= orderDetails[i].currentAddress[0].name%>,</h5>
-													<h5> <%= orderDetails[i].currentAddress[0].number %>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].email %>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].houseName%></h5>
-													<h5><%= orderDetails[i].currentAddress[0].houseNumber%></h5>
-													<h5> <%= orderDetails[i].currentAddress[0].state%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].city%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].street%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].landMark%></h5>
-													<h5><%= orderDetails[i].currentAddress[0].pin%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.name%>,</h5>
+													<h5> <%= orderDetails[i].currentAddress[0].currentAddress.number %>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.email %>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.houseName%></h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.houseNumber%></h5>
+													<h5> <%= orderDetails[i].currentAddress[0].currentAddress.state%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.city%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.street%>,</h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.landMark%></h5>
+													<h5><%= orderDetails[i].currentAddress[0].currentAddress.pin%>,</h5>
 
 													<% } else { %>
 														<h5><%= orderDetails[i].currentAddress.name%>,</h5>
@@ -249,7 +249,7 @@
 											</div>
 
 										<div class="cancel-order">
-											<button class="cancelOrder" data-orderId="<%= orderDetails[i]._id %>" >Cancel order</button>
+											<button class="cancelOrder btn-danger" data-orderId="<%= orderDetails[i]._id %>" >Cancel order</button>
 										</div>
 									</div>
 									</div>

@@ -1271,10 +1271,38 @@ exports.oders = async(req,res)=>{
       },
       {
         $lookup:{
-            from:'users',
-            localField:'currentAddress',
-            foreignField:'address._id',
-            as:"currentAddress"
+          from:'users',
+          let: { userId: '$userId' },
+          pipeline: [
+            {
+              "$match": {
+                $expr: {
+                  $eq: ['$$userId', '$_id']
+                }
+              }
+            },
+            {
+              "$unwind": "$address"
+            },
+            {
+              "$addFields": {
+                "currentAddressMatched": {
+                  "$eq": ["$currentAddress", "$address._id"]
+                }
+              }
+            },
+            {
+              "$match": {
+                "currentAddressMatched": true
+              }
+            },
+            {
+              "$project": {
+                "currentAddress": "$address"
+              }
+            }
+          ],
+          as:"currentAddress"
         }
       },
       
@@ -1292,7 +1320,7 @@ exports.oders = async(req,res)=>{
      
   ]).exec();
   console.log("corderDetails :",orderDetails )
-  console.log("pro:",orderDetails [0].productDetail);
+  console.log("pro:",orderDetails [0].currentAddress[0].currentAddress.name);
   res.render('orders',{orderDetails,totalPages,currentPage});
 
   }catch(err){

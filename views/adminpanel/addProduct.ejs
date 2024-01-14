@@ -324,13 +324,15 @@
                                             <label for="image">Image</label>
                                             <input type="file" class="form-control" id="img" name="productImages" multiple id="img" onchange="previewImages(this)">
                                             </p>
-
-                                            <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;">
-                                           
-                                       </form>
                                             <div id="preview" >
                                               
                                             </div>
+
+                                            <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;">
+
+                                       </form>
+                                          
+
                                            
                                     </div>
                                   </div>
@@ -610,26 +612,47 @@
   document.querySelectorAll('#preview img').forEach(function(img) {
     img.addEventListener('click', openModal);
   });
+function setCroppedImage(){
+ var imgIndex = parseInt(document.getElementById("currentImgIndex").value,10); 
+ var originalImg = document.querySelector(`#preview img[data-index="${imgIndex}"]`); 
 
+ // Get the cropped image URL
+ var croppedImgElement = document.querySelector("#cropped-result img");
+ var croppedCanvas = cropper.getCroppedCanvas();
+ var croppedDataUrl = croppedCanvas.toDataURL('image/jpeg');
+ originalImg.src = croppedDataUrl;
 
-  function setCroppedImage(){
-    var imgIndex = parseInt(document.getElementById("currentImgIndex").value,10); 
-    var originalImg = document.querySelector(`#preview img[data-index="${imgIndex}"]`); 
-   
-    // Get the cropped image URL
-    var croppedImgElement = document.querySelector("#cropped-result img");
-    var croppedDataUrl = croppedImgElement.src;
-    originalImg.src = croppedDataUrl;
-  
-   
-    var croppingDiv = document.getElementById("cropping");
-    var clonedImgInCropping = document.querySelector(`#cropping img[data-index="${imgIndex}"]`);
-    croppingDiv.removeChild(clonedImgInCropping);
-   
-    document.getElementById("myModal").style.display = "none";                
-    cropper.destroy();    
-    croppingDiv.destroy();
-   }
+ // Create a new File object from the cropped image URL
+ var base64String = croppedDataUrl.split(',')[1];
+ var blob = base64ToBlob(base64String); 
+ var file = new File([blob], 'croppedImage.jpg', {type: 'image/jpeg'});
+
+ // Convert the FileList to an array
+ var fileInput = document.querySelector('#img');
+ var oldFiles = Array.from(fileInput.files);
+
+ // Replace the original image file with the cropped image file at the correct index
+ oldFiles[imgIndex] = file;
+
+ // Reassign the modified array back to the FileList
+ Object.defineProperty(fileInput, 'files', {value: new FileList(...oldFiles)});
+
+ var croppingDiv = document.getElementById("cropping");
+ var clonedImgInCropping = document.querySelector(`#cropping img[data-index="${imgIndex}"]`);
+ croppingDiv.removeChild(clonedImgInCropping);
+
+ document.getElementById("myModal").style.display = "none";              
+ cropper.destroy();  
+}
+    // Function to convert a Base64 string to a Blob
+    function base64ToBlob(base64) {
+      var binary = atob(base64.split(',')[1]);
+      var array = [];
+      for(var i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+      }
+      return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+    }
 
 </script>
 
