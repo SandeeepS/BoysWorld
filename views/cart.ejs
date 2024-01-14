@@ -133,7 +133,7 @@
 						</tr>
 					</thead>
 					<tbody>
-                           
+                        <% if(cart.length > 0) { %> 
 						   <!-- hdghghdkjgh -->
 						    <% for(let i = 0 ; i< cart.length ; i++){ %>
 							<tr class="cartBox">
@@ -164,7 +164,10 @@
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
-					<% } %>
+					     <% } %>
+						<% } else { %>
+                              <h4>No item in the Cart</h4>
+						<% } %>
 					</tbody>
 				</table>
 			</div>
@@ -309,9 +312,14 @@
 			cartBody.forEach((cartBody,i)=>{
 				if(cart[i].product[0].stock == 0){
 					console.log("yesssss");
-					cartBody.style.pointerEvents = "none";
 					cartBody.style.opacity = "0.5";
-					cartBody.setAttribute('tabindex', '-1');
+					const quantityButtons = cartBody.querySelectorAll(".cart-quantity-button1, .cart-quantity-button2");
+					quantityButtons.forEach((button) => {
+						button.disabled = true;
+					});
+
+					const deleteButton = cartBody.querySelector(".cart_quantity_delete");
+					deleteButton.disabled = false;
 				}
 			 })
 			 
