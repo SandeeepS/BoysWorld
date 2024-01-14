@@ -7,6 +7,7 @@ const { default: mongoose } = require('mongoose');
 const XLSX = require('xlsx');
 const moment = require('moment');
 const { format } = require('date-fns');
+const fs = require('fs');
 
 exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
@@ -440,12 +441,12 @@ exports.downloadSalesReport = async(req,res)=>{
 
         const {orders} = req.body;
         const ws = XLSX.utils.json_to_sheet(orders);
-        console.log("xl file is:",ws);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb,ws,"sheet1");
         XLSX.writeFile(wb,"salesReport.xlsx");
-        res.download('salesReport.xlsx');
-
+        const fileData = fs.readFileSync('salesReport.xlsx');
+        const base64String = fileData.toString('base64');
+        res.status(200).json({success:true,message:"successfull",file:base64String});
 
     }catch(error){
         console.error("error while downloading the sales report",error);

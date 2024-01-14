@@ -83,11 +83,7 @@
            
           </li>
         </ul>
-        <div class="navbar-menu-wrapper d-flex align-items-top"> 
-          <form action="/admin/logout" method="post">
-            <input type="submit" name="logout" value="Logout">
-          </form>
-          </div>
+      
       </div>
      
     </nav>
@@ -364,9 +360,15 @@
                     orders:ordersForDownload
                 },
                 success:function(response){
-                    if(response){
-                        console.log("response reached frontend");
-                    }
+                  if (response && response.file) {
+                  
+                    let fileData = atob(response.file);
+                    let blob = new Blob([fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    let link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'salesReport.xlsx';
+                    link.click();
+                }
                 },
                 error:function(err){
                     console.error("error getting data in the frntend ",err);

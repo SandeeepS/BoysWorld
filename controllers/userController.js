@@ -1106,7 +1106,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
     const { cartDetails,totalAmount,currentAddressId} = req.body;
     console.log(cartDetails);
     const cashOnDelivery = "Online Payment";
-    const status = "Conformed";
+    const status = "Pending";
     const userId = cartDetails[0]._id;
     const date = new Date();
     const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
@@ -1181,6 +1181,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
 //verify payment
 exports.verifyPayment = async(req,res)=>{
   try{ 
+    console.log("hellow");
     const {payment,productId} = req.body;
     const userId = req.session.user;
     const totalOrders = await orderModel.find({});
@@ -1189,6 +1190,57 @@ exports.verifyPayment = async(req,res)=>{
     console.log("current order:",current_Order);
     console.log(payment);
     const current_orderId = current_Order._id;
+    let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
+    hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
+    hmac = hmac.digest('hex');
+    if(hmac == payment.razorpay_signature){
+      try{
+        const status = "Conformed";
+        const filter = {_id:current_orderId._id};
+        const updateDocument = {
+          $set:{
+            "currentStatus":status
+          }
+        };
+        const result = await orderModel.updateOne(filter,updateDocument);
+        console.log("kdjhkdfjgkjdfgdfgdfghhg");
+        console.log(result);
+        res.status(200).json({success:true,message:"order placed successfully"});
+      }
+      catch(err){
+        console.log("error while updating the order ",err);
+        res.status(400).json({success:false,message:"order placing has some issues "});
+      }
+    }else{
+       const status = "Failed";
+       const filter = {_id:current_orderId._id};
+       const updateDocument = {
+        $set:{
+          "status":status
+        }
+      };
+      const result = await orderModel.updateOne(filter,updateDocument);
+      res.status(400).json({success:false,message:"failed to payment"});
+    }
+  }catch(err){
+    console.error("error while varifying the payment form server!",err)
+    res.status(500).json({success:false, message:"internal server error"});
+  }
+}
+
+
+//varify payment 2 
+exports.verifyPayment2 = async(req,res)=>{
+  try{
+    const { payment} = req.body;
+    const userId = req.session.user;
+    const totalOrders = await orderModel.find({});
+    const totalOrderLength = totalOrders.length;
+    const current_Order  = totalOrders[totalOrderLength-1];
+    console.log("current order:",current_Order);
+    console.log(payment);
+    const current_orderId = current_Order._id;
+
     let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
     hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
     hmac = hmac.digest('hex');
@@ -1221,9 +1273,8 @@ exports.verifyPayment = async(req,res)=>{
       const result = await orderModel.updateOne(filter,updateDocument);
       res.status(400).json({success:false,message:"failed to payment"});
     }
-  }catch(err){
-    console.error("error while varifying the payment form server!",err)
-    res.status(500).json({success:false, message:"internal server error"});
+  }catch(error){
+    console.error("error while varifying payment 2 ",error);
   }
 }
 
