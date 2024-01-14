@@ -41,6 +41,23 @@
       font-size: 2em;
       transition: all 1s ease-in-out;
      }
+
+     /* table */
+     #table_div {
+      margin: 0;
+      padding: 0;
+     }
+     
+     #table_div table {
+      border-collapse: collapse;
+      width: 100%;
+     }
+     
+     #table_div th, #table_div td {
+      border: 1px solid black;
+      text-align: left;
+      padding: 8px;
+     }
   </style>
 </head>
 <body>
@@ -328,6 +345,11 @@
   <!-- table for products  -->
   <script>
     const products = <%- JSON.stringify(uniqueProducts) %>;
+    const name = products.productName;
+    const price = products.price;
+    const stock = products.stock;
+
+
     google.charts.load('current', {'packages':['table']});
     google.charts.setOnLoadCallback(drawTable);
 
@@ -335,16 +357,11 @@
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'Name');
       data.addColumn('number', 'Quantity');
-      data.addColumn('boolean', 'Stock Left');
-      data.addRows([
-       
+      data.addColumn('number', 'Stock Left');
+      for (var i = 0; i < products.length; i++) {
+        data.addRow([products[i].productName, products[i].price, products[i].stock]);
+      }
      
-        ['Mike',  {v: 10000, f: '$10,000'}, true],
-        ['Jim',   {v:8000,   f: '$8,000'},  false],
-        ['Alice', {v: 12500, f: '$12,500'}, true],
-        ['Bob',   {v: 7000,  f: '$7,000'},  true]
-     
-      ]);
 
       var table = new google.visualization.Table(document.getElementById('table_div'));
       table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
