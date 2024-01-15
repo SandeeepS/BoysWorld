@@ -117,7 +117,10 @@
 									<a href="/getCart" >
 										<div class="cart-icon-container">
 											<i class="fa fa-shopping-cart"></i>
-											<span id="cartCounter">Cart(<%=Currentuser.cart.length%>)</span>
+											<% if(Currentuser[0].cart ){ %>
+												<span id="cartCounter">Cart(<%=Currentuser[0].cart.length%>)</span>
+
+											<% } %>
 										</div>
 									</a>								</li>
 								<li>

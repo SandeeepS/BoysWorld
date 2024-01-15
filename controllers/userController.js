@@ -74,7 +74,7 @@ exports.shopPage = async(req,res)=>{
                 .limit(itemsPerPage)
                 .exec();
         const categoryData = await categoryModel.find({isDelete:false}).exec();
-        const Currentuser = await UserModel.findOne({"_id":userId})
+        const Currentuser = await UserModel.find({"_id":userId})
         console.log("currentUser:",Currentuser);
         res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
     }catch(error){

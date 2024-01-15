@@ -167,6 +167,13 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
 	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const resendButton = document.getElementById("resendOTP");
+			resendButton.disabled = true;
+		})
+		updateExpiryTime();
+	</script>
+	<script>
 		const resendButton = document.getElementById('resendOTP');
 		const otpExpiryTimeElement = document.getElementById('otpExpiryTime');
 		let otpExpiryTime = 30; // Set the OTP expiry time in seconds (e.g., 300 seconds = 5 minutes)
@@ -177,17 +184,14 @@
 				otpExpiryTime -= 1;
 			} else {
 				otpExpiryTimeElement.textContent = '';
+				resendButton.disabled = false;
 			}
 		}
 		// Update the OTP expiry time every second
 		setInterval(updateExpiryTime, 1000);
 		
 		resendButton.addEventListener('click', () => {
-			// You can implement the logic to resend the OTP here
-			// For example, make an AJAX request to your server to trigger OTP resend
-			// You will need to handle this on your server-side as well.
-			
-			// After resending, reset the OTP expiry time
+			resendButton.disabled = true;
 			otpExpiryTime = 30;
 			updateExpiryTime();
 		});

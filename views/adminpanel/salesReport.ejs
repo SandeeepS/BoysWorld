@@ -135,7 +135,7 @@
            
           </li>
            <li class="nav-item">
-            <a class="nav-link"  href="#" >
+            <a class="nav-link"  href="/admin/salesReport" >
               <i class="menu-icon mdi mdi-layers-outline"></i>
               <span class="menu-title">Sales Report</span>
               <i class="menu-arrow"></i>
@@ -227,7 +227,7 @@
                                             <th>Product Name</th>
                                             <th>Price</th>
                                             <th>Quantity</th>
-                                            <th>Tax</th>
+                                          
                                             <!-- Add other columns as needed -->
                                           </tr>
                                         </thead>
@@ -236,8 +236,8 @@
                                                 <tr>
                                                   <td><%= orders[i].orderId %></td>
                                                   <td><%= orders[i].userDetails[0].name %></td>
-                                                  <td><%= orders[i].productDetails.productName %></td>
-                                                  <td><%= orders[i].productDetails.price %></td>
+                                                  <td><%= orders[i].productDetails[0].productName %></td>
+                                                  <td><%= orders[i].productDetails[0].price %></td>
                                                   <td><%= orders[i].products.quantity %></td>
                                                   <!-- Render other order details here -->
                                                 </tr>
