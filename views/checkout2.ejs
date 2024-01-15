@@ -984,6 +984,14 @@
                         data:{
 							payment
 						},
+						success:function(response){
+							if(response){
+								modal2.style.display = "block";
+								setTimeout(function() {
+									window.location.href = "/shop"; 
+								}, 3000);
+							}
+						}
 					   })
 				 }
 

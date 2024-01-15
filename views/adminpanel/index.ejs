@@ -356,7 +356,7 @@
     function drawTable() {
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'Name');
-      data.addColumn('number', 'Quantity');
+      data.addColumn('number', 'Price');
       data.addColumn('number', 'Stock Left');
       for (var i = 0; i < products.length; i++) {
         data.addRow([products[i].productName, products[i].price, products[i].stock]);
