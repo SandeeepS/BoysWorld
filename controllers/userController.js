@@ -112,7 +112,7 @@ exports.getShopWithPriceRange = async(req,res)=>{
                   .limit(itemsPerPage)
                   .exec();
           const categoryData = await categoryModel.find({isDelete:false}).exec();
-          const Currentuser = await UserModel.findOne({"_id":userId})
+          const Currentuser = await UserModel.find({"_id":userId})
           console.log("currentUser:",Currentuser);
           res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
     }
@@ -153,7 +153,7 @@ exports.getShopBySearch = async(req,res) =>{
                   .limit(itemsPerPage)
                   .exec();
           const categoryData = await categoryModel.find({isDelete:false}).exec();
-          const Currentuser = await UserModel.findOne({"_id":userId})
+          const Currentuser = await UserModel.find({"_id":userId})
           console.log("currentUser:",Currentuser);
           res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
     }
@@ -559,6 +559,7 @@ exports.getCheckoutPage = async(req,res)=>{
       const userData = await UserModel.findById(userId).exec();
       const address = userData.address;
       const currentAddressId = userData.currentAddress;
+      console.log("currentAddressId",currentAddressId);
       const productId = req.query.productId   ;
       console.log("productId:",productId);
       const productId2 = new mongoose.Types.ObjectId(productId);
@@ -967,10 +968,11 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     user.save();
     console.log("currentaddressId :",addId);
     const currentAddress = user.address.filter(add => add._id.equals(addId));
+    const currentAddressId = currentAddress._id;
     console.log("useris:",user);
    
   
-    res.render('checkout',{address,currentAddress,product,totalPrice,quantity,productId});
+    res.render('checkout',{address,currentAddress,product,currentAddressId,totalPrice,quantity,productId});
   } catch (err) {
     console.error("Error while updating the default address", err);
     res.redirect('/getCheckout');
@@ -992,9 +994,10 @@ exports.setDefaultAddressFromCheckouts2 = async (req, res) => {
     user.save();
     console.log("currentaddressId :",addId);
     const currentAddress = user.address.filter(add => add._id.equals(addId));
+    const currentAddressId = currentAddress._id;
     console.log("useris:",user);
     console.log("currentAddress",currentAddress);
-    res.render('checkout2',{address,currentAddress,cartDetails,totalAmount});
+    res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
   } catch (err) {
     console.error("Error while updating the default address", err);
     console.log("testing te bugs2222222222222222222222222222222222222222222222222222")
