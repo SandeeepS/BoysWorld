@@ -37,6 +37,7 @@
 <style>
         /* Style for the modal container */
         .modal {
+        
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 10; /* Sit on top */
@@ -49,6 +50,7 @@
 
       /* Style for the modal content */
       .modal-content {
+        
         display: flex;
         background-color: #fefefe;
         margin: 15% auto; /* 15% from the top and centered */
@@ -289,7 +291,7 @@
                                        <br>
                                        <div class="error-message" id="error-message"></div>
                                        <br>
-                                       <form action="/admin/addingProduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                       <form action="#"  enctype="multipart/form-data" >
                                           <p>
                                           <label for="add-category">Category:</label>
                                           <select id="category" name="category">
@@ -322,18 +324,14 @@
 
                                             <p>
                                             <label for="image">Image</label>
-                                            <input type="file" class="form-control" id="img" name="productImages" multiple id="img" onchange="previewImages(this)">
+                                            <input type="file" class="form-control" id="img" name="productImages" img-validation="img-val" multiple id="img" onchange="previewImages(this)" accept="image/jpeg">
                                             </p>
                                             <div id="preview" >
                                               
                                             </div>
 
-                                            <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;">
-
+                                            <button name="" id="addBtn"  class="btn btn-primary btn-sm" style="color: aliceblue;" onclick="sendData()" >Add</button>
                                        </form>
-                                          
-
-                                           
                                     </div>
                                   </div>
                                 </div>
@@ -405,141 +403,6 @@
     });
 </script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-  function validateForm(){
-            const productName = document.getElementById('productName').value;
-            const price = document.getElementById('price').value;
-            const stock = document.getElementById('stock').value;
-            const dis = document.getElementById('dis').value;
-            const img = document.getElementById('img');
-            const errorMessage = document.getElementById('error-message');
-            
-            function checkWhiteSpace(s){
-              return s.trim() === "";
-            }
-
-            if(productName===""  && price===""  && stock==="" && dis==="" ){
-               errorMessage.innerText ="Please fill in all the fields!!";
-               errorMessage.style.display = "block";
-               setTimeout(function(){
-                    errorMessage.style.display ="none";
-               },3000);
-               return false;
-            } 
-
-            if(productName === ""  ){
-              errorMessage.innerText ="please enter your productName";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                  errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(checkWhiteSpace(productName)){
-              errorMessage.innerText ="please enter your Product Name";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(price === ""  ){
-              errorMessage.innerText ="please enter the price";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                  errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(checkWhiteSpace(price)){
-              errorMessage.innerText ="please enter the Price";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(price <= 0  ){
-              errorMessage.innerText ="please enter the valid price";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                  errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(stock === ""  ){
-              errorMessage.innerText ="please enter Number of Stock";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                  errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(checkWhiteSpace(stock)){
-              errorMessage.innerText ="please enter the number of stock";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(stock <= 0  ){
-              errorMessage.innerText ="please enter the valid Stock Number";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                  errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(dis === ""  ){
-              errorMessage.innerText ="please enter Discription of your product";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                  errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(checkWhiteSpace(dis)){
-              errorMessage.innerText ="please enter your Discriptions about Product";
-              errorMessage.style.display = "block";
-              setTimeout(function () {
-                errorMessage.style.display = "none";
-              }, 3000);
-              return false;
-            }
-
-            if(img.files.length === 0){
-              errorMessage.innerText = "Please upload atleast one image!";
-              errorMessage.style.display= "block";
-              setTimeout(()=>{
-                errorMessage.style.display= "none";
-              },3000);
-              return false;
-            }
-
-            for (let i = 0; i < img.files.length; i++) {
-              const fileType = img.files[i].type;
-              if (fileType !== "image/jpeg") {
-                errorMessage.innerText = "Please upload a JPG image file!";
-                errorMessage.style.display = "block";
-                setTimeout(() => {
-                    errorMessage.style.display = "none";
-                }, 3000);
-                return false;
-              }
-          }
-        return true;
-  }
-</script>
 
 <script>
       var totalImages = 0;
@@ -608,10 +471,7 @@
    document.getElementById("myModal") .style.display = "none";
   }
 
-  // Adding openModal function to the click event of all images inside the #preview div
-  document.querySelectorAll('#preview img').forEach(function(img) {
-    img.addEventListener('click', openModal);
-  });
+
 function setCroppedImage(){
       
     var imgIndex = parseInt(document.getElementById("currentImgIndex").value,10); 
@@ -623,40 +483,162 @@ function setCroppedImage(){
     var croppedDataUrl = croppedCanvas.toDataURL('image/jpeg');
     originalImg.src = croppedDataUrl;
 
-    // Create a new File object from the cropped image URL
-    var base64String = croppedDataUrl.split(',')[1];
-    var blob = base64ToBlob(base64String); 
-    var file = new File([blob], 'croppedImage.jpg', {type: 'image/jpeg'});
-
-    // Store the cropped image file in the array
-     window.croppedImageFiles[imgIndex] = file;
-
-
     var croppingDiv = document.getElementById("cropping");
     var clonedImgInCropping = document.querySelector(`#cropping img[data-index="${imgIndex}"]`);
     croppingDiv.removeChild(clonedImgInCropping);
 
-      // Create a new DataTransfer object
-      var dt = new DataTransfer();
-      // Add the cropped image file to the DataTransfer object
-      dt.items.add(file);
-      // Simulate dragging and dropping the cropped image file onto the file input
-      document.getElementById('img').files = dt.files;
-
     document.getElementById("myModal").style.display = "none";              
     cropper.destroy();  
 }
-    // Function to convert a Base64 string to a Blob
-    function base64ToBlob(base64) {
-      var binary = atob(base64.split(',')[1]);
-      var array = [];
-      for(var i = 0; i < binary.length; i++) {
-      array.push(binary.charCodeAt(i));
-      }
-      return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
-    }
-
 </script>
+<script>
+function sendData(){
+
+    const productName = document.getElementById('productName').value;
+    const price = document.getElementById('price').value;
+    const stock = document.getElementById('stock').value;
+    const dis = document.getElementById('dis').value;
+    const img = document.getElementById('img');
+    const errorMessage = document.getElementById('error-message');
+    const previewDiv = document.getElementById("preview");
+    const previewImages = previewDiv.getElementsByTagName('img') ;
+    let images = [];
+            
+              for(let i = 0 ; i < previewImages.length; i ++){
+                let src = previewImages[i].getAttribute('src');
+                images.push(src);
+              }
+              console.log("images:",images);
+
+              function checkWhiteSpace(s){
+                return s.trim() === "";
+              }
+
+              if(productName===""  && price===""  && stock==="" && dis==="" ){
+                errorMessage.innerText ="Please fill in all the fields!!";
+                errorMessage.style.display = "block";
+                setTimeout(function(){
+                      errorMessage.style.display ="none";
+                },3000);
+                return false;
+              } 
+
+              if(productName === ""  ){
+                errorMessage.innerText ="please enter your productName";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(checkWhiteSpace(productName)){
+                errorMessage.innerText ="please enter your Product Name";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                  errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(price === ""  ){
+                errorMessage.innerText ="please enter the price";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(checkWhiteSpace(price)){
+                errorMessage.innerText ="please enter the Price";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                  errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(price <= 0  ){
+                errorMessage.innerText ="please enter the valid price";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(stock === ""  ){
+                errorMessage.innerText ="please enter Number of Stock";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(checkWhiteSpace(stock)){
+                errorMessage.innerText ="please enter the number of stock";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                  errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(stock <= 0  ){
+                errorMessage.innerText ="please enter the valid Stock Number";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(dis === ""  ){
+                errorMessage.innerText ="please enter Discription of your product";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(checkWhiteSpace(dis)){
+                errorMessage.innerText ="please enter your Discriptions about Product";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                  errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              if(img.files.length === 0){
+                errorMessage.innerText = "Please upload atleast one image!";
+                errorMessage.style.display= "block";
+                setTimeout(()=>{
+                  errorMessage.style.display= "none";
+                },3000);
+                return false;
+              }
+              console.log("ajaxxxxxxxxxxxxxxxxxxxx");
+              $.ajax({
+                  url:'/admin/addingProduct',
+                  type:'POST',
+                  data:{
+                        productName,
+                        price,
+                        stock,
+                        dis,
+                        img,
+                        images
+                  }
+              })
+              console.log("enddddd");
+            }
+</script>
+
+
   <!-- End custom js for this page-->
 </body>
 </html>
