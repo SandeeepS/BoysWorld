@@ -60,6 +60,10 @@
 			input[type="number"] {
 				-moz-appearance: textfield;
 			}
+			.error-message {
+				color: red;
+				display: none;
+			}
 		</style>
 		
 		
@@ -166,12 +170,12 @@
 					<div class="col-sm-4" >
 						<p><%=productData.discription%></p>
 						<h4>₹<%=productData.price%></h4>
+						<h5 id="error-messsage" style="color: red;"></h5>
 						<% if(message == "Out Of Stock"){ %>
 							    <h6 style="color: red;"> <%= message %></h6>
 						<% }else{ %>
 						        <h6><%= message %></h6>
 					    <% } %>
-					  
 						<div>
 							<label for="quantity">Quantity</label>
 							<div>
@@ -180,6 +184,7 @@
 								<button id="decBtn" onclick="increaseQuantity()">+</button>
 							</div>
 						</div>
+
 						<a href="/addToCart/<%=productData._id%>" id="addCartBtn" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
 						<button id="buyNow" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData._id%>')" >Buy Now</button>
 					</div>
@@ -265,12 +270,13 @@
 		});
 	</script>
     <!-- updating the quantity -->
+
 	<script>
 		function decreaseQuantity() {
 			var quantityInput = document.getElementById('quantity');
 			var currentQuantity = parseInt(quantityInput.value, 10);
 	
-			if (currentQuantity > 1) {
+			if (currentQuantity > 1 ) {
 				quantityInput.value = currentQuantity - 1;
 			}
 		}
@@ -278,8 +284,20 @@
 		function increaseQuantity() {
 			var quantityInput = document.getElementById('quantity');
 			var currentQuantity = parseInt(quantityInput.value, 10);
-	
-			quantityInput.value = currentQuantity + 1;
+			const errorMessage = document.getElementById('error-messsage');
+			const stock = <%- JSON.stringify(stock) %>;
+
+			console.log("currentQuantity:",currentQuantity);
+	        if(currentQuantity < stock ){
+				quantityInput.value = currentQuantity + 1;
+			}else{
+				errorMessage.innerText = "Stock Limit exceed !!";
+				errorMessage.style.display ="block";
+				setTimeout(function(){
+					errorMessage.style.display = "none";
+				},3000);
+				
+			}
 		}
 	</script>
 
