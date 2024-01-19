@@ -195,11 +195,11 @@
 						<p><%=productData.discription%></p>
 						<h4>₹<%=productData.price%></h4>
 						<div class="size-selection">
-							<input type="radio" id="small" name="size" value="S" hidden>
+							<input type="radio" id="small" name="size" value="sizeSmall" hidden>
 							<label for="small">S</label>
-							<input type="radio" id="medium" name="size" value="M" hidden>
+							<input type="radio" id="medium" name="size" value="sizeMedium" hidden>
 							<label for="medium">M</label>
-							<input type="radio" id="large" name="size" value="L" hidden>
+							<input type="radio" id="large" name="size" value="sizeLarge" hidden>
 							<label for="large">L</label>
 						  </div>
 						  <h5 id="error-messsage" style="color: red;"></h5>
@@ -207,9 +207,9 @@
 						<div>
 							<label for="quantity">Quantity</label>
 							<div>
-								<button id="incBtn" onclick="decreaseQuantity()">-</button>
+								<button id="decBtn">-</button>
 								<input type="number" id="quantity" style="width: 50px;" value="1">
-								<button id="decBtn" onclick="increaseQuantity()">+</button>
+								<button id="incBtn" >+</button>
 							</div>
 						</div>
 
@@ -300,38 +300,13 @@
     <!-- updating the quantity -->
 
 	<script>
-		function decreaseQuantity() {
-			var quantityInput = document.getElementById('quantity');
-			var currentQuantity = parseInt(quantityInput.value, 10);
-	
-			if (currentQuantity > 1 ) {
-				quantityInput.value = currentQuantity - 1;
-			}
-		}
-	
-		function increaseQuantity() {
-			var quantityInput = document.getElementById('quantity');
-			var currentQuantity = parseInt(quantityInput.value, 10);
-			const errorMessage = document.getElementById('error-messsage');
-			const stock = <%- JSON.stringify(stock) %>;
 
-			console.log("currentQuantity:",currentQuantity);
-	        if(currentQuantity < stock ){
-				quantityInput.value = currentQuantity + 1;
-			}else{
-				errorMessage.innerText = "Stock Limit exceed !!";
-				errorMessage.style.display ="block";
-				setTimeout(function(){
-					errorMessage.style.display = "none";
-				},3000);
-				
-			}
-		}
 	</script>
 
 	<script>
 		function buyNow(productId) {
 			// Get the quantity from the input field
+		    const size = document.querySelector('input[name="size"]:checked').value;
 			var quantity = document.getElementById('quantity').value;
 			if(quantity ==='' || quantity <= 0){
 				quantity = 1;
@@ -342,7 +317,7 @@
 			storeProductInCookie(productId, quantity);
 	
 			// Redirect to the checkout page
-			window.location.href = "/getCheckout?productId=" + productId + "&quantity=" + quantity;
+			window.location.href = "/getCheckout?productId=" + productId + "&quantity=" + quantity + "&size="+size;
 
 		}
 	
@@ -371,15 +346,15 @@
 				stockDetails.innerText = "";
 				errorMessage.innerHTML = "";
 				
-				let currentStock;
+				var currentStock;
 				switch (value) {
-					case "S":
+					case "sizeSmall":
 						currentStock = stock.sizeSmall.stock;
 						break;
-					case "M":
+					case "sizeMedium":
 						currentStock = stock.sizeMedium.stock;
 						break;
-					case "L":
+					case "sizeLarge":
 						currentStock = stock.sizeLarge.stock;
 						break;
 				}
@@ -406,10 +381,83 @@
 					quantity.style.pointerEvents = "auto";
 					quantity.style.opacity = "1";
 					quantity.removeAttribute('tabindex');
+
 				}
+
+				$("#incBtn").click(function(){
+			
+
+					var selectedSize = $("input[name='size']:checked").val();
+					var currentStock;
+				 
+					switch (selectedSize) {
+						case "sizeSmall":
+							currentStock = stock.sizeSmall.stock;
+							break;
+						case "sizeMedium":
+							currentStock = stock.sizeMedium.stock;
+							break;
+						case "sizeLarge":
+							currentStock = stock.sizeLarge.stock;
+							break;
+					}
+				 
+					increaseQuantity(currentStock);
+				 });
+				 
+				 $("#decBtn").click(function(){
+					var selectedSize = $("input[name='size']:checked").val();
+					var currentStock;
+				 
+					switch (selectedSize) {
+						case "sizeSmall":
+							currentStock = stock.sizeSmall.stock;
+							break;
+						case "sizeMedium":
+							currentStock = stock.sizeMedium.stock;
+							break;
+						case "sizeLarge":
+							currentStock = stock.sizeLarge.stock;
+							break;
+					}
+				 
+					decreaseQuantity(currentStock);
+				 });
+
 			 });
-			  
+
 		})
+
+		
+		function decreaseQuantity(currentStock) {
+			var quantityInput = document.getElementById('quantity');
+			var currentQuantity = parseInt(quantityInput.value, 10);
+	
+			if (currentQuantity > 1 ) {
+				quantityInput.value = currentQuantity - 1;
+			}
+		}
+	
+		function increaseQuantity(currentStock) {
+			console.log("currentStock:",currentStock);
+			var quantityInput = document.getElementById('quantity');
+			var currentQuantity = parseInt(quantityInput.value, 10);
+			const errorMessage = document.getElementById('error-messsage');
+			
+
+			console.log("currentQuantity:",currentQuantity);
+			if(currentQuantity < currentStock ){
+				quantityInput.value = currentQuantity + 1;
+			}else{
+				errorMessage.innerText = "Stock Limit exceed !!";
+				errorMessage.style.display ="block";
+				setTimeout(function(){
+					errorMessage.style.display = "none";
+				},3000);
+				
+			}
+		}
+		
 	</script>
 </body>
 </html>

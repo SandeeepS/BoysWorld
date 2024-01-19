@@ -404,6 +404,15 @@
                       <h5><%=product[0].name%></h5>
 					  <h5><%=product[0].discription%></h5>
 					  <h5>₹<%=product[0].price%></h5>
+
+					 <% if(size == "sizeSmall"){ %>
+						<h5>Size : S</h5>
+					 <% }else if(size == "sizeMedium"){ %>
+						<h5>Size : M</h5>
+					 <% }else if(size == "sizeLarge"){ %>
+						<h5>Size : L</h5>
+					  <% } %>
+
 					  <h5>Qty:<%=quantity%></h5>
 					  <h5>Order Total :₹<%=totalPrice%></h5>
 				   </div>
@@ -897,6 +906,7 @@
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
 			const currentAddress =  <%-JSON.stringify(currentAddress)%>;
 			const currentAddressId =  <%-JSON.stringify(currentAddressId)%>;
+			const size = <%-JSON.stringify(size) %>;
 
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
@@ -913,7 +923,8 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
-							currentAddressId
+							currentAddressId,
+							size
 						},
 						success: function (response) {
 							if(response){
@@ -942,7 +953,8 @@
 						quantity: quantity,
 						total: totalPrice,
 						currentAddress:currentAddress,
-						currentAddressId
+						currentAddressId,
+						size
 					},
 					success:function(response){
 						if(response){
@@ -998,6 +1010,7 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
+							size
 						},
 						success:function(response){
 							if(response){

@@ -564,6 +564,8 @@ exports.getCheckoutPage = async(req,res)=>{
       console.log("productId:",productId);
       const productId2 = new mongoose.Types.ObjectId(productId);
       const quantity = req.query.quantity;
+      const size = req.query.size;
+      console.log("size:",size);
       const product2 = await productModel.findById(productId).exec();
       console.log("product2",product2);
       const totalPrice = product2.price * quantity ;
@@ -576,7 +578,7 @@ exports.getCheckoutPage = async(req,res)=>{
         }
       ])
       console.log("productdetails:", product);
-      res.render('checkout',{address,currentAddress,currentAddressId, product,quantity,totalPrice,productId});
+      res.render('checkout',{address,currentAddress,currentAddressId, product,quantity,totalPrice,productId,size});
   }catch(err){
     console.error("error while getting checkout",err);
     res.redirect('/shop');
@@ -1059,7 +1061,7 @@ exports.placeOrder = async (req, res) => {
 
 exports.placeOrder2 = async(req,res)=>{
   try{
-    const {productId,quantity,total,currentAddress,currentAddressId} = req.body;
+    const {productId,quantity,total,currentAddress,currentAddressId,size} = req.body;
     const userId2 = req.session.user;
     const user = await UserModel.findById(userId2).exec();
     const product = await productModel.findById(productId).exec();
@@ -1092,11 +1094,13 @@ exports.placeOrder2 = async(req,res)=>{
     const savedData = await order.save();
     const currentProduct = await productModel.find({"_id":productId});
     console.log("currentProduct:",currentProduct);
-    const currentStock = currentProduct[0].stock;
+    const currentStock = currentProduct[0].stock[size].stock;
     console.log("currentStock:",currentStock);
     const newStock = parseInt(currentStock - quantity);
     console.log("newStock:",newStock);
-    const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
+    const updatedStock = await productModel.findByIdAndUpdate(
+      {"_id":productId},
+      {$set:{[`stock.${size}.stock`]:newStock}}).exec();
     console.log("order inserted successfully");
     res.status(200).json({ success: true, message: 'Order placed successfully.'});
 

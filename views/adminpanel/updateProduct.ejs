@@ -48,6 +48,39 @@
     .delete-link-container {
       text-align: center; /* Center the "Delete" link */
     }
+
+          /*for size */
+          .sizeAndQty {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+         }
+    
+           .sizeAndQty div {
+            border: 0px solid #ccc;
+            padding: 10px;
+           }
+           .size-input {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+         }
+         .size-input input {
+          width: 100%;
+         }
+         .inp{
+          display: flex;
+          flex-direction: row;
+         }
+    
+         /*removing the arrow in the input field */
+         input::-webkit-outer-spin-button,
+         input::-webkit-inner-spin-button {
+         -webkit-appearance: none;
+         margin: 0;
+        }
 </style>
   
 </head>
@@ -263,16 +296,32 @@
                                              <input type="number" class="form-control" name="price" value="<%=productToUpdate[0].price %>" id="price">
                                            </p>
                                            
-                                                  
-                                             
-                                            <p>
-                                            <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock" value="<%=productToUpdate[0].stock %>" id="stock">
-                                            </p>  
-                                              
 
-                                          
+                                           <p>
+                                            <label for="size">Enter the size and its quantity</label>
+                                                    
+                                                      <div class="sizeAndQty">
+                                                        <div class="inp" >
+                                                            <h4>S :</h4>
+                                                            <input class="size-input" type="number" name="small" id="S" value="<%=productToUpdate[0].stock.sizeSmall.stock %>">
+                                                        </div>
 
+                                                        <div class="inp" >
+                                                          <h4>M :</h4>                                                
+                                                          <input class="size-input" type="number" name="medium" id="M" value="<%=productToUpdate[0].stock.sizeMedium.stock %>" >  
+                                                        </div>
+
+                                                        <div class="inp">
+                                                          <h4>L :</h4>
+                                                          <input class="size-input" type="number" name="large" id="L"  value="<%=productToUpdate[0].stock.sizeLarge.stock %>" >  
+                                                        </div>
+
+                                                      
+                                                        
+                                                      </div> 
+                                         
+                                          </p>
+                                          <p>
                                             <label for="discription">discription</label>
                                             <input type="text" class="form-control" name="discription" value="<%=productToUpdate[0].discription %>" id="dis">
                                            </p>

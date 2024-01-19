@@ -509,7 +509,7 @@ exports.productUpdated = async(req,res)=>{
     try{
         const productId = req.params.id;
         const productId2 = new mongoose.Types.ObjectId(productId);
-        const {productName,price,stock,discription,category} = req.body;
+        const {productName,price,small,medium,large,discription,category} = req.body;
         console.log("category:",category);
         const existingProduct = await productModel.findById({"_id":productId2}).exec();
         console.log("existing product:",existingProduct);
@@ -517,7 +517,28 @@ exports.productUpdated = async(req,res)=>{
         const updatedImages = existingProduct.image.concat(productImages);
         console.log(productImages);
         console.log(updatedImages);
-        await productModel.findByIdAndUpdate({"_id":productId2},{productName,price,stock,image:updatedImages,discription,category}).exec();
+        await productModel.findByIdAndUpdate(
+            {"_id":productId2},
+            { 
+                productName,
+                price,
+                stock:{
+                    sizeSmall:{
+                        stock:small
+                    },
+                    
+                    sizeMedium:{
+                        stock:medium
+                    },
+
+                    sizeLarge:{
+                        stock:large
+                    }
+                },
+                image:updatedImages,
+                discription,
+                category
+            }).exec();
         res.redirect('/admin/products');
     }catch(err){
         console.error("error updating product",err);
@@ -641,13 +662,13 @@ exports.addingProduct = async(req,res)=>{
                 sizeSmall:{
                     stock:stockSmall
                 },
+                
+                sizeMedium:{
+                    stock:stockMedium
+                },
 
                 sizeLarge:{
                     stock:stockLarge,
-                },
-
-                sizeMedium:{
-                    stock:stockMedium
                 },
 
               },

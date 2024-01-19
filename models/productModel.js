@@ -10,18 +10,17 @@ const sch = {
              }
         },
 
-        sizeLarge:{
-            stock:{
-               type:Number
-            }
-        },
-
         sizeMedium:{
             stock:{
             type:Number
             },
         },
 
+        sizeLarge:{
+            stock:{
+               type:Number
+            }
+        },
      
     },
     image:[String],
