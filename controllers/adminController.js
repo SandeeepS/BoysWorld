@@ -633,20 +633,6 @@ exports.addingProduct = async(req,res)=>{
             stockMedium = medium;
         }
 
-        //setting the stock for extraLarge size
-        if(extraLarge == ""){
-            stockExtraLarge = 0;
-        }else{
-            stockExtraLarge = extraLarge;
-        }
-
-        //setting the stock for doubleExtralarge size
-        if(doubleExtraLarge == ""){
-            stockDoubleExtraLarge = 0;
-        }else{
-            stockDoubleExtraLarge = doubleExtraLarge;
-        }
-
 
         const product = new productModel ({
               productName,
@@ -664,16 +650,9 @@ exports.addingProduct = async(req,res)=>{
                     stock:stockMedium
                 },
 
-                sizeExtraLarge:{
-                    stock:stockExtraLarge
-                },
-
-                sizeDoubleExtraLarge:{
-                    stock:stockDoubleExtraLarge
-                }
               },
               image:productImages,
-              dis,
+              discription: dis,
               isDeleted:false,
               category,
         })

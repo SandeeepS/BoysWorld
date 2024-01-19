@@ -66,7 +66,31 @@
 			}
 		</style>
 		
-		
+		 <!-- for style the size box  -->
+		<style>
+			.size-selection {
+				display: flex;
+				margin-top: 20px;
+				
+			  }
+			  
+			  .size-selection label {
+				padding: 8px;
+				border: 1px solid #ddd;
+				cursor: pointer;
+				height: 35px;
+				margin-left: 5px;
+				
+			  }
+			  
+			  .size-selection input[type="radio"]:checked + label {
+				background-color: #FFA500; /* Orange */
+				color: white;
+				
+			  }
+			  
+			 
+		</style>
 
 
     </head><!--/head-->
@@ -170,6 +194,14 @@
 					<div class="col-sm-4" >
 						<p><%=productData.discription%></p>
 						<h4>₹<%=productData.price%></h4>
+						<div class="size-selection">
+							<input type="radio" id="small" name="size" value="S" hidden>
+							<label for="small">S</label>
+							<input type="radio" id="medium" name="size" value="M" hidden>
+							<label for="medium">M</label>
+							<input type="radio" id="large" name="size" value="L" hidden>
+							<label for="large">L</label>
+						  </div>
 						<h5 id="error-messsage" style="color: red;"></h5>
 						<% if(message == "Out Of Stock"){ %>
 							    <h6 style="color: red;"> <%= message %></h6>

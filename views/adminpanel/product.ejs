@@ -64,6 +64,14 @@
 			color: white;
 			/* Add any additional styling for the highlighted state */
 		}
+    
+    .stockDiv select {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 0px;
+   }
+   
     </style>
 </head>
 <body>
@@ -280,7 +288,15 @@
                                              <% } %>
                                         </td>
                                         <td><%= pro.price %></td>
-                                        <td><%= pro.stock %></td>
+                                        <td class="stockDiv">
+                                          <select id="stockSelect">
+                                              <option value="">View Stocks</option>
+                                              <option value="S">S: <%= pro.stock.sizeSmall.stock %></option>
+                                              <option value="M">M: <%= pro.stock.sizeMedium.stock %></option>
+                                              <option value="L">L: <%= pro.stock.sizeLarge.stock %></option>
+                                             
+                                          </select>
+                                       </td>
                                         <td><%= pro.discription %></td>
                                                 
                                           <td>

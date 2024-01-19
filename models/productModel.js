@@ -22,17 +22,7 @@ const sch = {
             },
         },
 
-        sizeExtraLarge:{
-            stock:{
-               type:Number
-            }
-        },
-
-       sizeDoubleExtraLarge:{
-            stock:{
-            type:Number
-            }
-       },
+     
     },
     image:[String],
     discription:String,
