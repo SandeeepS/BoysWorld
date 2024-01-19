@@ -444,7 +444,8 @@ exports.verifyOtp = async (req, res) => {
   //adding  cart
   exports.addToCart = async(req,res)=>{
     try{
-      const productId = req.params.id;
+      const {productId,size} = req.body;
+      console.log("size:",size);
       const userId = req.session.user
       const productId2 =new mongoose.Types.ObjectId(productId);
       console.log(productId2);

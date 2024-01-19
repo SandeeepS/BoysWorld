@@ -213,7 +213,7 @@
 							</div>
 						</div>
 
-						<a href="/addToCart/<%=productData._id%>" id="addCartBtn" class="btn btn-default add-to-cart" ><i class="fa fa-shopping-cart"></i>Add to cart</a>
+						<button id="addCartBtn" class="btn btn-default add-to-cart" class="fa fa-shopping-cart" onclick="addToCart('<%=productData._id%>')">Add to cart</button>
 						<button id="buyNow" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData._id%>')" >Buy Now</button>
 					</div>
 				</div>
@@ -329,6 +329,29 @@
 			document.cookie = `productDetails=${JSON.stringify(productDetails)}; path=/`;
 		}
 	</script>
+
+	<script>
+		function addToCart(productId){
+            const  size = $("input[name='size']:checked").val();
+            
+			$.ajax({
+				method:'POST',
+				url:'/addToCart',
+				data:{
+					size,
+					productId
+				},
+				success:function(response){
+					if(response){
+						alert("Item added to cart");
+					}
+				},
+				error:function(err){
+					console.log("error occured",err);
+				}
+			})
+		}
+	</script>
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
             const stockDetails = document.getElementById("stockDetails");
@@ -373,6 +396,7 @@
 				} else {
 					stockDetails.innerText = currentStock +" Quantity left";
 					buyNowBtn.disabled = false;
+					buyNowBtn.style.pointerEvents = "auto"
 					incBtn.disabled = false;
 					decBtn.disabled = false;
 					addCartBtn.style.pointerEvents = "auto";
@@ -459,5 +483,17 @@
 		}
 		
 	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const addCartBtn = document.getElementById("addCartBtn");
+			const buyNowBtn = document.getElementById("buyNow");
+
+			addCartBtn.style.pointerEvents = "none";
+			buyNowBtn.style.pointerEvents  = "none";
+
+		})
+	</script>
+
+
 </body>
 </html>

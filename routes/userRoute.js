@@ -56,7 +56,7 @@ route.get('/getAccount',auth.user,userController.getAccount);
 route.get('/getWishlist',auth.user,userController.getWishlist);
 route.get('/getCart',auth.user,userController.getCart);
 route.post('/update-quantity',userController.updateQuantity);
-route.get('/addToCart/:id',userController.addToCart);
+route.post('/addToCart',userController.addToCart);
 route.get('/cartItemDelete/:id',userController.cartItemDelete);
 route.get('/addAddress',auth.user,userController.addAddressPage);
 route.post('/saveAddress',userController.saveAddress);
