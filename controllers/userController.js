@@ -1113,7 +1113,7 @@ exports.placeOrder2 = async(req,res)=>{
 //online payment through razorpay
 exports.generateRazorpay = async(req,res)=>{
      try{
-        const {productId, quantity, total,currentAddress,currentAddressId} = req.body;
+        const {productId, quantity, total,currentAddress,currentAddressId,size} = req.body;
         const onlinePayment = "Online Payment";
         const status = "pending";
         const userid = req.session.user;
@@ -1145,9 +1145,11 @@ exports.generateRazorpay = async(req,res)=>{
        const savedData = await orders.save();
        //updating the quantity
        const currentProduct = await productModel.find({"_id":productId});
-       const currentStock = currentProduct[0].stock;
+       const currentStock = currentProduct[0].stock[size].stock;
        const newStock = parseInt(currentStock - quantity);
-       const updatedStock = await productModel.findByIdAndUpdate({"_id":productId},{$set:{"stock":newStock}}).exec();
+       const updatedStock = await productModel.findByIdAndUpdate(
+        {"_id":productId},
+        {$set:{[`stock.${size}.stock`]:newStock}}).exec();
        console.log("order inserted successfully");
 
        //gettig orderId
