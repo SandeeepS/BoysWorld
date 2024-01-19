@@ -360,65 +360,55 @@
 			const errorMessage = document.getElementById("error-messsage");
 			const stock = <%- JSON.stringify(stock) %>;
 
-			
-
-			$("input[name=size]").click(function(){
-			    const value = this.getAttribute("value");
-				stockDetails.innerText = "";
-			    errorMessage.innerHTML = "";
-			    
-				if(value === "S"){
-                    let currentStock = stock.sizeSmall.stock;
-					if(currentStock === 0){
-						errorMessage.innerHTML = "Out of Stock !!";
-				    }else{
-					  stockDetails.innerText = currentStock +" Quantity left";	
-
-				  }				}
-
-				if(value === "M"){
-					let currentStock = stock.sizeMedium.stock;
-					if(currentStock === 0){
-                          errorMessage.innerHTML = "Out of Stock !!";
-					}else{
-						stockDetails.innerText = currentStock +" Quantity left";	
-
-					}
-				}
-
-				if(value === "L"){
-					let currentStock = stock.sizeLarge.stock;
-					if(currentStock === 0){
-						errorMessage.innerHTML = "Out of Stock !!";
-				    }else{
-					  stockDetails.innerText = currentStock +" Quantity left";	
-
-				   }				
-				}
-			}); 
-
-
-			
 			const buyNowBtn = document.getElementById("buyNow");
             const incBtn = document.getElementById("incBtn");
 			const decBtn = document.getElementById("decBtn");
 			const addCartBtn = document.getElementById("addCartBtn");
 			const quantity = document.getElementById("quantity");
 
-			if(stock === 0){
-               buyNowBtn.disabled = true;
-			   incBtn.disabled = true;
-			   decBtn.disabled = true;
-			   addCartBtn.style.pointerEvents = "none";
-			   addCartBtn.style.opacity = "0.5";
-			   addCartBtn.setAttribute('tabindex','-1');
-
-			   quantity.style.pointerEvents = "none";
-			   quantity.style.opacity = "0.5";
-			   quantity.setAttribute('tabindex','-1');
-
-
-			}
+			$("input[name=size]").click(function(){
+				const value = this.getAttribute("value");
+				stockDetails.innerText = "";
+				errorMessage.innerHTML = "";
+				
+				let currentStock;
+				switch (value) {
+					case "S":
+						currentStock = stock.sizeSmall.stock;
+						break;
+					case "M":
+						currentStock = stock.sizeMedium.stock;
+						break;
+					case "L":
+						currentStock = stock.sizeLarge.stock;
+						break;
+				}
+			 
+				if(currentStock === 0){
+					errorMessage.innerHTML = "Out of Stock !!";
+					buyNowBtn.disabled = true;
+					incBtn.disabled = true;
+					decBtn.disabled = true;
+					addCartBtn.style.pointerEvents = "none";
+					addCartBtn.style.opacity = "0.5";
+					addCartBtn.setAttribute('tabindex','-1');
+					quantity.style.pointerEvents = "none";
+					quantity.style.opacity = "0.5";
+					quantity.setAttribute('tabindex','-1');
+				} else {
+					stockDetails.innerText = currentStock +" Quantity left";
+					buyNowBtn.disabled = false;
+					incBtn.disabled = false;
+					decBtn.disabled = false;
+					addCartBtn.style.pointerEvents = "auto";
+					addCartBtn.style.opacity = "1";
+					addCartBtn.removeAttribute('tabindex');
+					quantity.style.pointerEvents = "auto";
+					quantity.style.opacity = "1";
+					quantity.removeAttribute('tabindex');
+				}
+			 });
+			  
 		})
 	</script>
 </body>
