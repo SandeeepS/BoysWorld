@@ -202,12 +202,8 @@
 							<input type="radio" id="large" name="size" value="L" hidden>
 							<label for="large">L</label>
 						  </div>
-						<h5 id="error-messsage" style="color: red;"></h5>
-						<% if(message == "Out Of Stock"){ %>
-							    <h6 style="color: red;"> <%= message %></h6>
-						<% }else{ %>
-						        <h6><%= message %></h6>
-					    <% } %>
+						  <h5 id="error-messsage" style="color: red;"></h5>
+						  <h6 id="stockDetails"></h6>
 						<div>
 							<label for="quantity">Quantity</label>
 							<div>
@@ -360,7 +356,49 @@
 	</script>
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
+            const stockDetails = document.getElementById("stockDetails");
+			const errorMessage = document.getElementById("error-messsage");
 			const stock = <%- JSON.stringify(stock) %>;
+
+			
+
+			$("input[name=size]").click(function(){
+			    const value = this.getAttribute("value");
+				stockDetails.innerText = "";
+			    errorMessage.innerHTML = "";
+			    
+				if(value === "S"){
+                    let currentStock = stock.sizeSmall.stock;
+					if(currentStock === 0){
+						errorMessage.innerHTML = "Out of Stock !!";
+				    }else{
+					  stockDetails.innerText = currentStock +" Quantity left";	
+
+				  }				}
+
+				if(value === "M"){
+					let currentStock = stock.sizeMedium.stock;
+					if(currentStock === 0){
+                          errorMessage.innerHTML = "Out of Stock !!";
+					}else{
+						stockDetails.innerText = currentStock +" Quantity left";	
+
+					}
+				}
+
+				if(value === "L"){
+					let currentStock = stock.sizeLarge.stock;
+					if(currentStock === 0){
+						errorMessage.innerHTML = "Out of Stock !!";
+				    }else{
+					  stockDetails.innerText = currentStock +" Quantity left";	
+
+				   }				
+				}
+			}); 
+
+
+			
 			const buyNowBtn = document.getElementById("buyNow");
             const incBtn = document.getElementById("incBtn");
 			const decBtn = document.getElementById("decBtn");
