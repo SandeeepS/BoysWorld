@@ -88,6 +88,42 @@
       .img-container{
         display: flex;
       }
+      /*for size */
+      .sizeAndQty {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+     }
+
+       .sizeAndQty div {
+        border: 0px solid #ccc;
+        padding: 10px;
+       }
+       .size-input {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+     }
+     .size-input input {
+      width: 100%;
+     }
+     .inp{
+      display: flex;
+      flex-direction: row;
+     }
+
+     /*removing the arrow in the input field */
+     input::-webkit-outer-spin-button,
+     input::-webkit-inner-spin-button {
+     -webkit-appearance: none;
+     margin: 0;
+    }
+       
+
+     
+     
 </style>
 </head>
 <body>
@@ -291,7 +327,7 @@
                                        <br>
                                        <div class="error-message" id="error-message"></div>
                                        <br>
-                                       <form action="#"  enctype="multipart/form-data" >
+                                       <form action="/admin/addingProduct" method="post" enctype="multipart/form-data" onsubmit="return validate()" >
                                           <p>
                                           <label for="add-category">Category:</label>
                                           <select id="category" name="category">
@@ -312,14 +348,42 @@
                                              <label for="price">Price</label>
                                              <input type="number" class="form-control" name="price" id="price">
                                             </p>
-                                           
+
                                             <p>
-                                            <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock" id="stock">
-                                            </p>  
-                                              
+                                              <label for="size">Enter the size and its quantity</label>
+                                                      
+                                                        <div class="sizeAndQty">
+                                                          <div class="inp" >
+                                                              <h4>S :</h4>
+                                                              <input class="size-input" type="number" name="small" id="S" placeholder="Enter Quantity">
+                                                          </div>
+
+                                                          <div class="inp">
+                                                            <h4>L :</h4>
+                                                            <input class="size-input" type="number" name="large" id="L"  placeholder="Enter Quantity" >  
+                                                          </div>
+
+                                                          <div class="inp" >
+                                                            <h4>M :</h4>                                                
+                                                            <input class="size-input" type="number" name="medium" id="M"  placeholder="Enter Quantity" >  
+                                                          </div>
+
+                                                          <div class="inp">
+                                                            <h4>XL :</h4>                                                
+                                                            <input class="size-input" type="number" name="extraLarge" id="XL"  placeholder="Enter Quantity" >  
+                                                          </div>
+
+                                                          <div class="inp">
+                                                            <h4>XXL :</h4>                                                
+                                                            <input class="size-input" type="number" name="doubleExtraLarge" id="XXL"  placeholder="Enter Quantity" >  
+                                                          </div>
+                                                          
+                                                        </div> 
+                                           
+                                            </p>
+                                             <p>
                                             <label for="discription">discription</label>
-                                            <input type="text" class="form-control" name="discription" id="dis">
+                                            <input type="text" class="form-control" name="dis" id="dis">
                                             </p>
 
                                             <p>
@@ -330,7 +394,7 @@
                                               
                                             </div>
 
-                                            <button name="" id="addBtn"  class="btn btn-primary btn-sm" style="color: aliceblue;" onclick="sendData()" >Add</button>
+                                            <button type="submit" name=""  class="btn btn-primary btn-sm" style="color: aliceblue;" >Add</button>
                                        </form>
                                     </div>
                                   </div>
@@ -492,29 +556,27 @@ function setCroppedImage(){
 }
 </script>
 <script>
-function sendData(){
-
+function validate(){
+    
     const productName = document.getElementById('productName').value;
     const price = document.getElementById('price').value;
-    const stock = document.getElementById('stock').value;
     const dis = document.getElementById('dis').value;
     const img = document.getElementById('img');
     const errorMessage = document.getElementById('error-message');
     const previewDiv = document.getElementById("preview");
     const previewImages = previewDiv.getElementsByTagName('img') ;
-    let images = [];
-            
-              for(let i = 0 ; i < previewImages.length; i ++){
-                let src = previewImages[i].getAttribute('src');
-                images.push(src);
-              }
-              console.log("images:",images);
 
+    const small = document.getElementById("S").value;
+    const large = document.getElementById("L").value;
+    const medium = document.getElementById("M").value;
+    const extraLarge = document.getElementById("XL").value;
+    const doubleExtraLarge = document.getElementById("XXL").value;
+              
               function checkWhiteSpace(s){
                 return s.trim() === "";
               }
-
-              if(productName===""  && price===""  && stock==="" && dis==="" ){
+              
+              if(productName===""  && price==="" && dis=== "" ){
                 errorMessage.innerText ="Please fill in all the fields!!";
                 errorMessage.style.display = "block";
                 setTimeout(function(){
@@ -522,6 +584,15 @@ function sendData(){
                 },3000);
                 return false;
               } 
+
+              if(small === "" &&   large === "" &&   medium === "" &&  extraLarge === "" &&   doubleExtraLarge === ""){
+                errorMessage.innerText ="Please provide the Quantity of the stock (Atleast one size)!!";
+                errorMessage.style.display = "block";
+                setTimeout(function(){
+                      errorMessage.style.display ="none";
+                },3000);
+                return false;
+              }
 
               if(productName === ""  ){
                 errorMessage.innerText ="please enter your productName";
@@ -568,33 +639,6 @@ function sendData(){
                 return false;
               }
 
-              if(stock === ""  ){
-                errorMessage.innerText ="please enter Number of Stock";
-                errorMessage.style.display = "block";
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-                return false;
-              }
-
-              if(checkWhiteSpace(stock)){
-                errorMessage.innerText ="please enter the number of stock";
-                errorMessage.style.display = "block";
-                setTimeout(function () {
-                  errorMessage.style.display = "none";
-                }, 3000);
-                return false;
-              }
-
-              if(stock <= 0  ){
-                errorMessage.innerText ="please enter the valid Stock Number";
-                errorMessage.style.display = "block";
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 3000);
-                return false;
-              }
-
               if(dis === ""  ){
                 errorMessage.innerText ="please enter Discription of your product";
                 errorMessage.style.display = "block";
@@ -621,21 +665,11 @@ function sendData(){
                 },3000);
                 return false;
               }
-              console.log("ajaxxxxxxxxxxxxxxxxxxxx");
-              $.ajax({
-                  url:'/admin/addingProduct',
-                  type:'POST',
-                  data:{
-                        productName,
-                        price,
-                        stock,
-                        dis,
-                        img,
-                        images
-                  }
-              })
-              console.log("enddddd");
-            }
+        return true;
+
+   }
+              
+         
 </script>
 
 

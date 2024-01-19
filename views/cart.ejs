@@ -56,6 +56,10 @@
 		object-fit: contain;
 		
 	}
+	.error-message {
+		color: red;
+		display: none;
+	}
 </style>
 </head><!--/head-->
 <body>
@@ -146,19 +150,21 @@
                                     <h5 style="color: red;">Out of stock !!</h5>
 								<% } %>
 								<p>Web ID: 1089772</p>
+								<h5 class="error-message" style="color: red;"></h5>
+
 							</td>
 							<td class="cart_price">
 								<p  class="single-unit-price"  singleUnitPrice="<%=cart[i].product[0].price %>">₹<%=cart[i].product[0].price%></p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart-quantity">
-									<a class="cart-quantity-button1 "  data-productid="<%= cart[i].product[0]._id %>">+</a>
+									<a class="cart-quantity-button1 "  data-productid="<%= cart[i].product[0]._id %>" stock="<%=cart[i].product[0].stock%>">+</a>
 									<span class="cart-quantity-value" autocomplete="off" size="2"><%= cart[i].cart.quantity %></span>
 									<a class="cart-quantity-button2" data-productid="<%= cart[i].product[0]._id %>">-</a>
 								</div>
 							</td>
 							<td class="cart_total">
-							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>">₹<%= cart[i].cart.total%></p>
+							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].price%> = <%= cart[i].cart.total%> </p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>
@@ -239,12 +245,25 @@
 			const totalPrice  = document.querySelectorAll(".cart_total_price");
 			const singlePrice = document.querySelectorAll(".single-unit-price");
 			const cartTotalAmountElement = document.getElementById("cartTotalAmount");
+			const errorMessage = document.querySelectorAll(".error-message"); 
+
 			incrementButtons.forEach((incrementButton, i) => {
 			  incrementButton.addEventListener("click", function (event) {
 				event.preventDefault();
+				const currentQuantity = parseInt(quantityValues[i].innerText);
+				console.log("currentQuantity value",currentQuantity);
 				const productId = this.getAttribute("data-productid");
+				const stock = this.getAttribute("stock");
 				console.log("productId:",productId);
-				updateQuantity(i, 1,productId);
+				if(currentQuantity < stock){
+					updateQuantity(i, 1,productId);
+				}else{
+                    errorMessage[i].innerText = "Stock limit exceed !!";
+					errorMessage[i].style.display = "block";
+					setTimeout(function(){
+						errorMessage[i].style.display = "none";
+					},3000);
+				}
 			  });
 			});
 		  
@@ -260,7 +279,7 @@
 			  const currentQuantity = parseInt(quantityValues[index].innerText);
 			  const total = parseFloat(totalPrice[index].getAttribute("total-Price"));
 			  const singleUnitPrice = parseFloat(singlePrice[index].getAttribute("singleUnitPrice"));
-			  const newQuantity = currentQuantity + change;
+			  let newQuantity = currentQuantity + change;
 			  console.log("singlkeproductPrice:",singleUnitPrice);
 			  console.log("currenrtQuantity",currentQuantity);
 			  console.log("total",total);

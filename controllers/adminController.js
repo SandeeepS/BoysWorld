@@ -607,12 +607,77 @@ exports.updateCategory = async(req,res)=>{
 //adding product
 exports.addingProduct = async(req,res)=>{
     try{
-        const{productName,price,stock,image,discription,category,images} = req.body;
-        console.log("newImages :",images);
-        const productImages = req.files.map((file)=>file.filename);
-        console.log(productImages);
-        const newData = new productModel({productName,price,stock,image:productImages,discription,category});
-        await newData.save();
+        const{productName,price,small,medium,large,extraLarge,doubleExtraLarge,category,dis} = req.body;
+        productImages =req.files.map((file)=>file.filename);
+        console.log("images:",productImages);
+        let stockSmall,stockLarge,stockMedium,stockExtraLarge,stockDoubleExtraLarge;
+        
+        //setting the stock for small size
+        if(small == ""){
+            stockSmall = 0;
+        }else{
+            stockSmall = small;
+        }
+
+        //setting the stock for large size
+        if(large == ""){
+           stockLarge = 0;
+        }else{
+           stockLarge = large;
+        }
+
+        //setting the stock for medium size
+        if(medium== ""){
+            stockMedium = 0;
+        }else{
+            stockMedium = medium;
+        }
+
+        //setting the stock for extraLarge size
+        if(extraLarge == ""){
+            stockExtraLarge = 0;
+        }else{
+            stockExtraLarge = extraLarge;
+        }
+
+        //setting the stock for doubleExtralarge size
+        if(doubleExtraLarge == ""){
+            stockDoubleExtraLarge = 0;
+        }else{
+            stockDoubleExtraLarge = doubleExtraLarge;
+        }
+
+
+        const product = new productModel ({
+              productName,
+              price,
+              stock:{
+                sizeSmall:{
+                    stock:stockSmall
+                },
+
+                sizeLarge:{
+                    stock:stockLarge,
+                },
+
+                sizeMedium:{
+                    stock:stockMedium
+                },
+
+                sizeExtraLarge:{
+                    stock:stockExtraLarge
+                },
+
+                sizeDoubleExtraLarge:{
+                    stock:stockDoubleExtraLarge
+                }
+              },
+              image:productImages,
+              dis,
+              isDeleted:false,
+              category,
+        })
+        await product.save();
         console.log(`${productName} is inserted Successfully`);
         res.redirect('/admin/products');
     }catch(err){

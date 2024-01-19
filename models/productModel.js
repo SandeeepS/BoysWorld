@@ -3,7 +3,37 @@ const mongoose = require('mongoose');
 const sch = {
     productName:String,
     price:Number,
-    stock:Number,
+    stock:{
+        sizeSmall:{
+             stock:{
+                type:Number
+             }
+        },
+
+        sizeLarge:{
+            stock:{
+               type:Number
+            }
+        },
+
+        sizeMedium:{
+            stock:{
+            type:Number
+            },
+        },
+
+        sizeExtraLarge:{
+            stock:{
+               type:Number
+            }
+        },
+
+       sizeDoubleExtraLarge:{
+            stock:{
+            type:Number
+            }
+       },
+    },
     image:[String],
     discription:String,
     isDeleted:{
