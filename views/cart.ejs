@@ -146,10 +146,15 @@
 							</td>
 							<td class="cart_description">
 								<h4><a href=""><%=cart[i].product[0].productName%></a></h4>
-								<% if(cart[i].product[0].stock == 0){ %>
-                                    <h5 style="color: red;">Out of stock !!</h5>
-								<% } %>
 								<p>Web ID: 1089772</p>
+								<% if (cart[i].cart.size == "sizeSmall"){ %>
+									<p>Size : S</p>
+								<% }else if(cart[i].cart.size == "sizeMedium"){ %>
+									<p>Size : M</p>
+								<%}else if(cart[i].cart.size == "sizeLarge"){ %>
+									<p>Size: L</p>
+								<% } %>
+								<!-- <p id="stockDetails"> <%= cart[i].product[0].stock.sizeSmall.stock%> Stocks left</p> -->
 								<h5 class="error-message" style="color: red;"></h5>
 
 							</td>
@@ -157,10 +162,27 @@
 								<p  class="single-unit-price"  singleUnitPrice="<%=cart[i].product[0].price %>">₹<%=cart[i].product[0].price%></p>
 							</td>
 							<td class="cart_quantity">
+								<% let currentStock = "" %>
+								<% if(cart[i].cart.size){ %>
+								<%	if(cart[i].cart.size === "sizeSmall"){ %>
+
+									<%currentStock = cart[i].product[0].stock.sizeSmall.stock; %>
+
+								<%}else if(cart[i].cart.size === "sizeMedium"){ %>
+
+									<%currentStock = cart[i].prodcut[0].stock.sizeMedium.stock; %>
+
+								<%}else if(cart[i].cart.size === "sizeLarge"){ %>
+
+									<%currentStock = cart[i].prodcut[0].stock.sizeLarge.stock; %>
+
+								<%}%>
+							   <% } %>
 								<div class="cart-quantity">
-									<a class="cart-quantity-button1 "  data-productid="<%= cart[i].product[0]._id %>" stock="<%=cart[i].product[0].stock%>">+</a>
+									<a class="cart-quantity-button2" id="decBtn" data-productid="<%= cart[i].product[0]._id %>">-</a>
 									<span class="cart-quantity-value" autocomplete="off" size="2"><%= cart[i].cart.quantity %></span>
-									<a class="cart-quantity-button2" data-productid="<%= cart[i].product[0]._id %>">-</a>
+									<a class="cart-quantity-button1 " id="incBtn"  data-productid="<%= cart[i].product[0]._id %>" stock="<%=currentStock %>"  size="<%= cart[i].cart.size %>">+</a>
+
 								</div>
 							</td>
 							<td class="cart_total">
@@ -253,7 +275,10 @@
 				const currentQuantity = parseInt(quantityValues[i].innerText);
 				console.log("currentQuantity value",currentQuantity);
 				const productId = this.getAttribute("data-productid");
-				const stock = this.getAttribute("stock");
+				const size = this.getAttribute("size");
+				const stock = this .getAttribute("stock");
+				console.log("stock:",stock);
+				console.log("size:",size);
 				console.log("productId:",productId);
 				if(currentQuantity < stock){
 					updateQuantity(i, 1,productId);
@@ -345,5 +370,6 @@
 		})
 		
 	</script>
+
 </body>
 </html>

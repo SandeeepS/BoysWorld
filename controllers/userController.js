@@ -466,6 +466,7 @@ exports.verifyOtp = async (req, res) => {
         const newCartItem = {
           productId:productId2,
           quantity:1,
+          size:size,
           price:productPrice,
           total:productPrice
         };
@@ -657,6 +658,7 @@ exports.getCart = async(req,res)=>{
            }
        }
        console.log("cart:",cart);
+       console.log("product:",cart[0].product)
    
   res.render('cart', {cart,cartTotal}); 
   }catch(err){
