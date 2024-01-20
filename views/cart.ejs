@@ -149,6 +149,7 @@
 								<p>Web ID: 1089772</p>
 								<% if (cart[i].cart.size == "sizeSmall"){ %>
 									<p>Size : S</p>
+									
 								<% }else if(cart[i].cart.size == "sizeMedium"){ %>
 									<p>Size : M</p>
 								<%}else if(cart[i].cart.size == "sizeLarge"){ %>
@@ -179,7 +180,7 @@
 								<%}%>
 							   <% } %>
 								<div class="cart-quantity">
-									<a class="cart-quantity-button2" id="decBtn" data-productid="<%= cart[i].product[0]._id %>">-</a>
+									<a class="cart-quantity-button2" id="decBtn" data-productid="<%= cart[i].product[0]._id %>"  size="<%= cart[i].cart.size %>">-</a>
 									<span class="cart-quantity-value" autocomplete="off" size="2"><%= cart[i].cart.quantity %></span>
 									<a class="cart-quantity-button1 " id="incBtn"  data-productid="<%= cart[i].product[0]._id %>" stock="<%=currentStock %>"  size="<%= cart[i].cart.size %>">+</a>
 
@@ -281,7 +282,7 @@
 				console.log("size:",size);
 				console.log("productId:",productId);
 				if(currentQuantity < stock){
-					updateQuantity(i, 1,productId);
+					updateQuantity(i, 1,productId,size);
 				}else{
                     errorMessage[i].innerText = "Stock limit exceed !!";
 					errorMessage[i].style.display = "block";
@@ -296,11 +297,12 @@
 			  decrementButton.addEventListener("click", function (event) {
 				event.preventDefault();
 				const productId = this.getAttribute("data-productid");
-				updateQuantity(i, -1,productId);
+				const size = this.getAttribute("size");
+				updateQuantity(i, -1,productId,size);
 			  });
 			});
 		  
-			function updateQuantity(index, change,productId) {
+			function updateQuantity(index, change,productId,size) {
 			  const currentQuantity = parseInt(quantityValues[index].innerText);
 			  const total = parseFloat(totalPrice[index].getAttribute("total-Price"));
 			  const singleUnitPrice = parseFloat(singlePrice[index].getAttribute("singleUnitPrice"));
@@ -319,11 +321,11 @@
 				headers: {
 				  "Content-Type": "application/json",
 				},
-				body: JSON.stringify({ productId, newQuantity,currentQuantity,singleUnitPrice}),
+				body: JSON.stringify({ productId, newQuantity,currentQuantity,singleUnitPrice,size}),
 			  })
 				.then((response) => response.json())
 				.then((data) => {
-					
+				  console.log("cartTotal:",data.cartTotal);
 				  quantityValues[index].innerText = data.newQuantity;
 				  totalPrice[index].innerText = newQuantity + " X " + singleUnitPrice+" = "+  "₹"+ data.newTotal;
                  document.getElementById("totalCartAmount").innerText = "Total Amount: ₹"+data.cartTotal;

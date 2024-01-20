@@ -653,7 +653,9 @@ exports.getCart = async(req,res)=>{
 
 
        for(let i = 0; i < cart.length; i++){
-           if(cart[i].product[0].stock > 0){
+           let currentSize = cart[i].cart.size;
+           
+           if(cart[i].product[0].stock[currentSize].stock > 0){
             cartTotal = cartTotal + cart[i].cart.total;
            }
        }
@@ -670,26 +672,24 @@ exports.getCart = async(req,res)=>{
 //updateQuantity
 exports.updateQuantity = async (req, res) => {
   try {
-    const { productId, newQuantity ,currentQuantity,singleUnitPrice} = req.body;
-    console.log("singleproductprice",singleUnitPrice);
+    const { productId, newQuantity ,currentQuantity,singleUnitPrice,size} = req.body;
+    console.log("size:",size);
     const newTotal = newQuantity*singleUnitPrice;
-    console.log("newtotal:",newTotal);
     const newProductId = new mongoose.Types.ObjectId(productId);
-    console.log("productId",newProductId);
     let cartTotal = 0;
     const userId = req.session.user; 
     const userId2 = new mongoose.Types.ObjectId(userId);
     const cartItem = await UserModel.findOneAndUpdate(
-      {"_id":userId2,"cart.productId":newProductId},
+      {"_id":userId2,"cart":{$elemMatch:{"productId":newProductId,"size":size} } },
       {$set:{"cart.$.quantity":newQuantity,"cart.$.total":newTotal}},
       {new: true}
     );
-    console.log("cartItem:",cartItem);
+    console.log("cartItem :",cartItem);
     for(let i = 0; i < cartItem.cart.length; i++){
           cartTotal = cartTotal+cartItem.cart[i].total;
     }
     
-    res.json({ newQuantity ,newTotal,cartTotal});
+    res.status(200).json({ newQuantity ,newTotal,cartTotal});
    
   } catch (err) {
     console.error("Error while updating the quantity:", err);
