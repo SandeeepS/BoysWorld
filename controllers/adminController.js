@@ -509,7 +509,16 @@ exports.productUpdated = async(req,res)=>{
     try{
         const productId = req.params.id;
         const productId2 = new mongoose.Types.ObjectId(productId);
-        const {productName,price,small,medium,large,discription,category} = req.body;
+        let {productName,price,small,medium,large,discription,category} = req.body;
+        if(small == ""){
+            small = 0;
+        }
+        if(medium == ""){
+            medium = 0;
+        }
+        if(large == ""){
+            large = 0;
+        }
         console.log("category:",category);
         const existingProduct = await productModel.findById({"_id":productId2}).exec();
         console.log("existing product:",existingProduct);

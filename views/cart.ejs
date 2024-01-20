@@ -356,8 +356,11 @@
 		document.addEventListener("DOMContentLoaded",function(){
 			const cartBody = document.querySelectorAll(".cartBox");
 			const cart = <%-JSON.stringify(cart)%>;
+		
 			cartBody.forEach((cartBody,i)=>{
-				if(cart[i].product[0].stock == 0){
+				const currentSize = cart[i].cart.size;
+			
+				if(cart[i].product[0].stock[currentSize].stock == 0){
 					console.log("yesssss");
 					cartBody.style.opacity = "0.5";
 					const quantityButtons = cartBody.querySelectorAll(".cart-quantity-button1, .cart-quantity-button2");
