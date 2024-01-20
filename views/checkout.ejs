@@ -376,6 +376,16 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="box-sub">
+					<div>
+						<input type="radio" name="checkout" value="wallet" >
+					</div>
+					<div class="cash">
+						<p>Wallet</p>
+					</div>
+				</div>
+			</div>
 		</div>
         <table class="table  table-condensed"
 		<thead>
@@ -910,6 +920,7 @@
 
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
+			const walletRadioButton = document.querySelector('input[name="checkout"][value="wallet"]')
 
 	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
 				// Make AJAX request
@@ -1022,7 +1033,31 @@
 						}
 					   })
 				 }
-			}else{
+			}else if(walletRadioButton && walletRadioButton.checked){
+				console.log("iside wallet payment");
+				$.ajax({
+					type:'POST',
+					url:'/wallet1',
+					data:{
+						productId: productId,
+						quantity: quantity,
+						total: totalPrice,
+						currentAddress:currentAddress,
+						currentAddressId,
+						size
+					},
+					success:function(response){
+						if(response){
+							console.log("in fronend");
+						  
+						}
+					},
+					error:function(error){
+						console.error("error while online payment",error);
+					}
+				});
+			}
+			else{
                selectPaymentModal.style.display = "block";
 			   event.preventDefault();
 			}
