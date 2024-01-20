@@ -163,18 +163,18 @@
 							</td>
 							<td class="cart_quantity">
 								<% let currentStock = "" %>
-								<% if(cart[i].cart.size){ %>
-								<%	if(cart[i].cart.size === "sizeSmall"){ %>
+								<% if(cart[i].cart){ %>
+								<%	if(cart[i].cart.size == "sizeSmall"){ %>
 
 									<%currentStock = cart[i].product[0].stock.sizeSmall.stock; %>
 
-								<%}else if(cart[i].cart.size === "sizeMedium"){ %>
+								<%}else if(cart[i].cart.size == "sizeMedium"){ %>
 
-									<%currentStock = cart[i].prodcut[0].stock.sizeMedium.stock; %>
+									<%currentStock = cart[i].product[0].stock.sizeMedium.stock; %>
 
-								<%}else if(cart[i].cart.size === "sizeLarge"){ %>
+								<%}else if(cart[i].cart.size == "sizeLarge"){ %>
 
-									<%currentStock = cart[i].prodcut[0].stock.sizeLarge.stock; %>
+									<%currentStock = cart[i].product[0].stock.sizeLarge.stock; %>
 
 								<%}%>
 							   <% } %>
@@ -186,7 +186,7 @@
 								</div>
 							</td>
 							<td class="cart_total">
-							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].price%> = <%= cart[i].cart.total%> </p>
+							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].price%> = ₹<%= cart[i].cart.total%> </p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>
@@ -323,8 +323,9 @@
 			  })
 				.then((response) => response.json())
 				.then((data) => {
+					
 				  quantityValues[index].innerText = data.newQuantity;
-				  totalPrice[index].innerText ="₹"+ data.newTotal;
+				  totalPrice[index].innerText = newQuantity + " X " + singleUnitPrice+" = "+  "₹"+ data.newTotal;
                  document.getElementById("totalCartAmount").innerText = "Total Amount: ₹"+data.cartTotal;
 				})
 				.catch((error) => {
