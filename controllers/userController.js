@@ -621,6 +621,7 @@ exports.getCheckoutPage2 = async(req,res)=>{
     ]).exec() || req.query.cartDetails
     console.log("total:",totalAmount);
     console.log("cartDetails:",cartDetails);
+    console.log("productDetails:",cartDetails[0].productDetail)
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
   }catch(err){
       console.log("error in getcheckout2 ",err);

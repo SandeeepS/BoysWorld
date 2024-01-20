@@ -395,6 +395,8 @@
 
 	<% if(cartDetails){%>
 		<% for(let i=0;i<cartDetails.length;i++){ %>
+		                                        %>
+
 		<div class="a-box">
 		   <div class="content">
 				   <div class="photo">
@@ -405,6 +407,17 @@
 					  <h5><%=cartDetails[i].productDetail[0].discription%></h5>
 					  <h5>₹<%=cartDetails[i].productDetail[0].price%></h5>
 					  <h5>Qty:<%=cartDetails[i].cart.quantity%></h5>
+					  
+					  <% let currentSize = cartDetails[i].cart.size %>
+					  <% let displaySize = cartDetails[i].cart.size %>
+					  <%  if(currentSize == "sizeSmall"){           %>
+					             <h5>Size : S </h5>           
+					  <%  } else if(currentSize == "sizeMedium"){   %>
+						        <h5>Size : M </h5>                  
+					  <%  } else if(currentSize == "sizeLarge"){    %>
+				                <h5>Size : L </h5>               
+					  <%  }                                         %>
+
 					  <h5>Order Total :₹<%=cartDetails[i].cart.total%></h5>
 				   </div>
 		   </div>
