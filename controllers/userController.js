@@ -51,6 +51,7 @@ exports.signupPage = async(req,res)=>{
 exports.shopPage = async(req,res)=>{
     try{
         const user = req.session.user;
+        console.log("user:",user);
         const userId = new mongoose.Types.ObjectId(user);
         console.log("userId:",userId);
         const page = req.query.page || 1;
@@ -1032,15 +1033,16 @@ exports.placeOrder = async (req, res) => {
             console.log("pro:",pro);
             const proId2 = pro.productId;
             const proId = new mongoose.Types.ObjectId(proId2);
+            const size = pro.size;
             productId.push(pro);
             const quantity = pro.quantity;
             const currentProduct = await productModel.find({"_id":proId});
             console.log("currentProduct:",currentProduct);
-            const currentStock = currentProduct[0].stock;
+            const currentStock = currentProduct[0].stock[size].stock;
             console.log("currentStock:",currentStock);
             const newStock = parseInt(currentStock - quantity);
             console.log("newStock:",newStock);
-            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{"stock":newStock}}).exec();
+            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
         }
       const order = new orderModel({
         "userId":userId,
@@ -1196,7 +1198,7 @@ exports.generateRazorpay = async(req,res)=>{
 exports.generateRazorpayFromCheckout2 = async(req,res)=>{
   try{
       
-    const { cartDetails,totalAmount,currentAddressId} = req.body;
+    const { cartDetails,totalAmount,currentAddressId,size} = req.body;
     console.log(cartDetails);
     const cashOnDelivery = "Online Payment";
     const status = "Pending";
@@ -1215,13 +1217,14 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
             console.log("productId:",proId);
             productId.push(pro);
             const quantity = pro.quantity;
+            const size = pro.size;
             const currentProduct = await productModel.find({"_id":proId});
             console.log("currentProduct:",currentProduct);
-            const currentStock = currentProduct[0].stock;
+            const currentStock = currentProduct[0].stock[size].stock;
             console.log("currentStock:",currentStock);
             const newStock = parseInt(currentStock - quantity);
             console.log("newStock:",newStock);
-            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{"stock":newStock}}).exec();
+            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
         }
       const neworder = new orderModel({
         "userId":userId,
@@ -1476,10 +1479,28 @@ exports.oders = async(req,res)=>{
 //cancel orders by user
 exports.cancelOrder = async(req,res)=>{
   try{
+        const user = req.session.user;
+        const userId = new mongoose.Types.ObjectId(user);
+        let userDetail = await UserModel.findById(userId);
+        console.log("userDetails:",userDetail);
         const {orderId} = req.body;
         const orderId2 = new mongoose.Types.ObjectId(orderId);
         const status = "Cancelled";
+        const orders = await orderModel.findById(orderId2);
+        console.log("orders:",orders);
+        const price = orders.totalAmount;
+        const orderMethod = orders.paymentMethod;
+        console.log("price:",price);
+        console.log("orderMethod:",orderMethod);
         await orderModel.findByIdAndUpdate({"_id":orderId2},{$set:{"currentStatus":status}});
+        if(orderMethod == "Online Payment"){
+             console.log("in this jngggg");
+             let walletAmount = userDetail.wallet;
+             newAmount = walletAmount +  price;
+             await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newAmount}});
+         }
+       
+
         res.status(200).send({message:"order cancelled successfully"});
   }catch(err){
     console.error("error while canceling the order in server",err);

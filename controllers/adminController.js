@@ -62,6 +62,7 @@ exports.getHomePage = async(req,res)=>{
                    }
             }
         ])
+        console.log("currentOrders:",currentOrders);
         const products = await productModel.find({});
         const category = await categoryModel.find({});
         const users = await userModel.find({});

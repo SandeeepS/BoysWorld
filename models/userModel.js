@@ -25,6 +25,8 @@ const addressSchema = new mongoose.Schema({
     pin:Number,
 })
 
+
+
 const sch = {
     name:String,
     email:String,
@@ -40,6 +42,10 @@ const sch = {
     currentAddress:{
         type:mongoose.Schema.ObjectId
     },
+    wallet:{
+        type:Number,
+        default:0
+    }
     
      
 }
