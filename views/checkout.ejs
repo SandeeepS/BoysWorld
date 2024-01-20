@@ -384,6 +384,8 @@
 					<div class="cash">
 						<p>Wallet</p>
 					</div>
+					<div class="error-message" id="error-message2"></div>
+
 				</div>
 			</div>
 		</div>
@@ -911,6 +913,7 @@
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
 			const modal2 = document.getElementById("paymentSuccessModal");
+			const errorMessage2 = document.getElementById("error-message2");
 			const productId= <%-JSON.stringify(product[0]._id)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
@@ -1047,9 +1050,15 @@
 						size
 					},
 					success:function(response){
-						if(response){
-							console.log("in fronend");
-						  
+						console.log("inside the wallet successfull");
+						if(response.pointer){
+							errorMessage2.innerText = response.message;
+							errorMessage2.style.display = "block"
+							setTimeout(function(){
+								errorMessage2.style.display = "none";
+							},3000);
+						}else{
+
 						}
 					},
 					error:function(error){

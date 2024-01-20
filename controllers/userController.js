@@ -1565,7 +1565,8 @@ exports.wallet1 = async(req,res)=>{
 
        }else{
           console.log("wallete amount is not sufficient for this particular order");
-          res.status(200).json({success:"wallet amount is not sufficient"});
+          let pointer ;
+          res.status(200).json({success:true,message:"wallet amount is not sufficient",pointer});
        }
 
    }catch(error){
