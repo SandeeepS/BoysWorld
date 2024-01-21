@@ -71,6 +71,7 @@ route.get('/setDefaultAddressFromCheckout2',userController.setDefaultAddressFrom
 route.get('/orders',userController.oders);
 route.post('/cancelOrder',userController.cancelOrder);
 route.post('/wallet1',userController.wallet1);
+route.post('/wallet2',userController.wallet2);
 
 
 module.exports = route

@@ -155,6 +155,7 @@
 								<%}else if(cart[i].cart.size == "sizeLarge"){ %>
 									<p>Size: L</p>
 								<% } %>
+								<p><h5 style="color: red;" class="out"></h5></p>
 								<!-- <p id="stockDetails"> <%= cart[i].product[0].stock.sizeSmall.stock%> Stocks left</p> -->
 								<h5 class="error-message" style="color: red;"></h5>
 
@@ -367,14 +368,15 @@
 					quantityButtons.forEach((button) => {
 						button.disabled = true;
 					});
-
+                    
 					const deleteButton = cartBody.querySelector(".cart_quantity_delete");
 					deleteButton.disabled = false;
+					const message = cartBody.querySelector(".cartBox .out");
+					message.innerText = "Out Of Stock!!";
+					
 				}
 			 })
-			 
 		})
-		
 	</script>
 
 </body>

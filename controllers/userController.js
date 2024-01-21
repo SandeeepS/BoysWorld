@@ -1575,6 +1575,63 @@ exports.wallet1 = async(req,res)=>{
    }
 }
 
+//wallet2
+exports.wallet2 = async(req,res)=>{
+   try{
+        const { cartDetails,totalAmount} = req.body;
+        console.log(cartDetails);
+        const walletPayment = "Wallet Payment";
+        const status = "Conformed";
+        const userId = cartDetails[0]._id;
+        const userDetails = await UserModel.findById(userId);
+        console.log("userDetails:",userDetails);
+        const walletAmount = userDetails.wallet;
+        if(totalAmount <= walletAmount){
+              const date = new Date();
+              const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+              const randomId = 10000+Math.floor(Math.random()*90000);
+              const currentAddress = cartDetails[0].currentAddress;
+              const total = cartDetails[0].cart.total;//need to fix it again
+              const productId = [];
+                  for(let i = 0; i < cartDetails.length; i ++){
+      
+                      const pro = cartDetails[i].cart;
+                      console.log("pro:",pro);
+                      const proId2 = pro.productId;
+                      const proId = new mongoose.Types.ObjectId(proId2);
+                      const size = pro.size;
+                      productId.push(pro);
+                      const quantity = pro.quantity;
+                      const currentProduct = await productModel.find({"_id":proId});
+                      console.log("currentProduct:",currentProduct);
+                      const currentStock = currentProduct[0].stock[size].stock;
+                      console.log("currentStock:",currentStock);
+                      const newStock = parseInt(currentStock - quantity);
+                      console.log("newStock:",newStock);
+                      const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
+                  }
+                const order = new orderModel({
+                  "userId":userId,
+                  "products":productId,
+                  "orderId":randomId,
+                  "totalAmount":totalAmount,
+                  "currentAddress":currentAddress,
+                  "date": formattedDate,
+                  "paymentMethod":walletPayment,
+                  "currentStatus":status,
+              })
+              const savedData = await order.save();
+              // Respond with a success message
+              res.status(200).json({ success: true, message: 'Order placed successfully.' });
+        }else{
+             res.status(200).json({success:true,message:"Your Wallet amount is insufficient for this Order\n Please try another Payment Method"})
+        }
+   }catch(error){
+     console.log("error occured in the wallet payment in wallet 2!!",error);
+     res.status(500).json({success:false,message:"error occured"})
+   }
+}
+
 //update userprofile
 exports.updateProfileDetails = async(req,res)=>{
   try{

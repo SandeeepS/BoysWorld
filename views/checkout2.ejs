@@ -371,6 +371,18 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="row">
+				<div class="box-sub">
+					<div>
+						<input type="radio" name="checkout" value="wallet" >
+					</div>
+					<div class="cash">
+						<p>Wallet</p>
+					</div>
+
+				</div>
+			</div>
 			   
 		</div>
         <table class="table  table-condensed"
@@ -454,6 +466,18 @@
 				<div class="modal-text">
 					<p>Select a payment method</p>
 				
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- modal last for after wallet payment -->
+	<div id="dynamicModalForWallet" class="modal">
+		<div id="ModalContent" class="modal-content">
+			<span id="walletModalClose" class="close">&times;</span>
+			<div class="modal-style">
+				<div class="modal-text" id="walletModalText">
+					  
 				</div>
 			</div>
 		</div>
@@ -906,6 +930,8 @@
 			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
 			const cartTotal = document.querySelector("#cartTotalAmount");
 			const modal2 = document.getElementById("paymentSuccessModal");
+			const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
+			const walletModalClose = document.getElementById("walletModalClose");
 			const cartDetails= <%-JSON.stringify(cartDetails)%>;
 			const currentAddressId = <%- JSON.stringify(currentAddressId)%>;
             const totalAmount = cartTotal.getAttribute("totalAmount");
@@ -913,6 +939,7 @@
 			
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
+			const walletRadioButton = document.querySelector('input[name="checkout"][value="wallet"]')
 
 	        if(cashOnDeliveryRadioButton && cashOnDeliveryRadioButton.checked){
 				// Make AJAX request
@@ -1008,7 +1035,37 @@
 					   })
 				 }
 
-			}else{
+			}else if(walletRadioButton && walletRadioButton.checked){
+
+				    $.ajax({
+						type:'POST',
+						url:'/wallet2',
+						data:{
+							cartDetails:cartDetails,
+							totalAmount:totalAmount
+						},
+						success:function(response){
+							console.log("inside the wallet successfull");
+							let modalText = document.getElementById("walletModalText");
+							modalText.innerText = response.message;
+							if(response.message == "Order placed successfully."){
+								dynamicModalForWallet.style.display = "block"
+								walletModalClose.style.pointerEvents = "none";
+								setTimeout(function(){
+									window.location.href = "/shop";
+								},3000)
+							}
+							dynamicModalForWallet.style.display = "block"
+							walletModalClose.onclick = function(){
+								dynamicModalForWallet.style.display = "none";
+							}
+						},
+						error:function(error){
+							console.error("error occured in the wallet 2 !!",error);
+						}
+					})
+			}
+			else{
 				selectPaymentModal.style.display = "block";
 				event.preventDefault();
 				selectPaymentModalClose.onclick = function(){
