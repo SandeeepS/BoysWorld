@@ -355,6 +355,7 @@
 				   </thead>
 		   </tbody>
 	    </table>
+		<div class="error-message" id="errorMessage2"></div>
 		<div class="a-box">
 			<div class="row">
 				<div class="box-sub">
@@ -384,7 +385,6 @@
 					<div class="cash">
 						<p>Wallet</p>
 					</div>
-					<div class="error-message" id="error-message2"></div>
 
 				</div>
 			</div>
@@ -458,6 +458,18 @@
 				<div class="modal-text">
 					<p>Select a payment method</p>
 				
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<!-- modal last for after wallet payment -->
+	<div id="dynamicModalForWallet" class="modal">
+		<div id="ModalContent" class="modal-content">
+			<span id="walletModalClose" class="close">&times;</span>
+			<div class="modal-style">
+				<div class="modal-text" id="walletModalText">
+					  
 				</div>
 			</div>
 		</div>
@@ -913,7 +925,9 @@
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
 			const modal2 = document.getElementById("paymentSuccessModal");
-			const errorMessage2 = document.getElementById("error-message2");
+			const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
+			const walletModalClose = document.getElementById("walletModalClose");
+			const errorMessage2 = document.getElementById("errorMessage2");
 			const productId= <%-JSON.stringify(product[0]._id)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
 			const totalPrice = <%-JSON.stringify(totalPrice)%>;
@@ -1051,14 +1065,18 @@
 					},
 					success:function(response){
 						console.log("inside the wallet successfull");
-						if(response.pointer){
-							errorMessage2.innerText = response.message;
-							errorMessage2.style.display = "block"
+						let modalText = document.getElementById("walletModalText");
+						modalText.innerText = response.message;
+						if(response.message == "Order placed successfully."){
+							dynamicModalForWallet.style.display = "block"
+							walletModalClose.style.pointerEvents = "none";
 							setTimeout(function(){
-								errorMessage2.style.display = "none";
-							},3000);
-						}else{
-
+								window.location.href = "/shop";
+							},3000)
+						}
+						dynamicModalForWallet.style.display = "block"
+						walletModalClose.onclick = function(){
+							dynamicModalForWallet.style.display = "none";
 						}
 					},
 					error:function(error){
@@ -1088,6 +1106,8 @@
 		var closeModalBtn2 = document.getElementById("paymentSuccessModalClose");
 		const selectPaymentModal = document.getElementById('selectPaymentWarnning');
         const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
+		const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
+        const walletModalClose = document.getElementById("walletModalClose");
 
 		// Event listener to close the modal
 		closeModalBtn2.onclick = function () {
@@ -1104,6 +1124,10 @@
 			if(event.target == selectPaymentModal){
 				selectPaymentModal.style.display = "none";
 			}
+		}
+
+		walletModalClose.onclick = function(){
+			dynamicModalForWallet.style.display = "none";
 		}
 	</script>
 	
