@@ -638,11 +638,12 @@ exports.updateCategory = async(req,res)=>{
 //adding product
 exports.addingProduct = async(req,res)=>{
     try{
-        const{productName,price,small,medium,large,extraLarge,doubleExtraLarge,category,dis} = req.body;
+        const{productName,price,small,medium,large,category,dis} = req.body;
         productImages =req.files.map((file)=>file.filename);
-        console.log("images:",productImages);
-        let stockSmall,stockLarge,stockMedium,stockExtraLarge,stockDoubleExtraLarge;
-        
+
+        let stockSmall,stockLarge,stockMedium;
+        let croppedImage = req.files['croppedImage'];
+        console.log("croppedImages :",croppedImage);        
         //setting the stock for small size
         if(small == ""){
             stockSmall = 0;

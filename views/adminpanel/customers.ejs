@@ -62,6 +62,37 @@
   color: white;
   /* Add any additional styling for the highlighted state */
 }
+
+
+		   
+			  /* Style for the modal container */
+			  .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          background-color: rgba(0, 0, 0, 0.7); /* Black with a little transparency */
+        }
+    
+        /* Style for the modal content */
+        .modal-content {
+          background-color: #fefefe;
+          margin: 15% auto; /* 15% from the top and centered */
+          padding: 20px;
+          border: 1px solid #888;
+          width: 50%; /* Could be more or less, depending on screen size */
+        }
+    
+        /* Style for the close button */
+        .close {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
 </style>
 </head>
 <body>
@@ -261,10 +292,26 @@
                                         <td>
                                           <span class="user-status">
                                               
-                                              <button class="btn btn-sm btn-<%= users[i].status ? 'danger' : 'success' %> toggle-status-btn" data-user-id="<%= users[i]._id %>">
+                                              <button class="blockUser btn btn-sm btn-<%= users[i].status ? 'danger' : 'success' %> toggle-status-btn" data-user-id="<%= users[i]._id %>" >
                                                   <%= users[i].status ? 'Block' : 'Unblock' %>
                                               </button>
-                                          
+
+                                              <div id="conformModal-<%= users[i]._id %>" class="modal">
+                                                <div class="modal-content">
+                                                  <span id="conformModalClose" class="close">&times;</span>
+                                                  <div class="modal-style">
+                                                    <div class="modal-text" >
+                                                      <p>Are you sure you want to change your Current Status?</p>
+                                                    </div>
+                                                    <div style="display: flex;">
+                                                       <a href="#" class="conformBlockUnblock" data-user-id="<%= users[i]._id %>"><h3>Yes</h3></a>
+                                                       <a href="/admin/customers" style="padding-left: 25px;"><h3>No</h3></a>
+                                                      
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                </div>
+
                                           </span>
                                       </td>
                                       
@@ -356,6 +403,7 @@
             </div>
           </div>
         </div>
+
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -393,16 +441,42 @@
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
   <!-- status button -->
+
+  <script>
+      var cancelOrderModalLinks = document.querySelectorAll(".blockUser");
+      var closeModal = document.getElementById("conformModalClose");
+      var modals = document.querySelectorAll(".modal");
+
+      cancelOrderModalLinks.forEach(function(link){
+        link.onclick = function(){
+          var userId = link.getAttribute("data-user-id");
+          var modal = document.getElementById("conformModal-"+userId);
+          modal.style.display = "block";
+        }
+      });
+
+      closeModal.onclick = function(){
+        modals.forEach(function (modal) {
+          modal.style.display = "none";
+        });
+      }
+
+      window.onclick = function (event) {
+        modals.forEach(function (modal) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        });
+      };
+  </script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const toggleStatusButtons = document.querySelectorAll(".toggle-status-btn");
+      const blockUnlockBtns = document.querySelectorAll(".conformBlockUnblock");
   
-      toggleStatusButtons.forEach(function (button) {
+      blockUnlockBtns.forEach(function (button) {
           button.addEventListener("click", function () {
-            button.disabled = true;
               const userId = this.getAttribute("data-user-id");
-              const isBlocked = !button.classList.contains("btn-danger");
-  
+              console.log("clickedBtn :",clickedToggleBtn);
               // Send an AJAX request to update the user's status
               fetch("/admin/checkStatus", {
                   method: "POST", 
@@ -422,7 +496,7 @@
                           // Handle any error from the server, if needed
                           console.error("Failed to update user status.");
                       }
-                      button.disabled = false;
+                      
                   })
                   .catch((error) => {
                       console.error("Error:", error);

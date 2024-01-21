@@ -21,6 +21,15 @@
   <link rel="stylesheet" href="../adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
+
+  <script type="text/template" id="image-card-template">
+    <div class="image-card">
+        <img src="" alt="Image" class="image">
+        <button class="delete-button">Delete</button>
+    </div>
+  </script>
+
+
   <style>
         .error-message {
             color: red;
@@ -121,6 +130,15 @@
      margin: 0;
     }
        
+    .image-card {
+      display: inline-block;
+      margin: 10px;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 5px rgba(0,0,0,.1);
+      overflow: hidden;
+      height: 30px;
+      width: 30px;
+  }
 
      
      
@@ -327,7 +345,7 @@
                                        <br>
                                        <div class="error-message" id="error-message"></div>
                                        <br>
-                                       <form action="/admin/addingProduct" method="post" enctype="multipart/form-data" onsubmit="return validate()" >
+                                       <form action="/admin/addingProduct" method="post" enctype="multipart/form-data" >
                                           <p>
                                           <label for="add-category">Category:</label>
                                           <select id="category" name="category">
@@ -380,13 +398,13 @@
 
                                             <p>
                                             <label for="image">Image</label>
-                                            <input type="file" class="form-control" id="img" name="productImages" img-validation="img-val" multiple id="img" onchange="previewImages(this)" accept="image/jpeg">
+                                            <input type="file" class="form-control" id="img" name="productImages" img-validation="img-val" multiple id="img" onchange="previewImagesFile(this)" accept="image/jpeg">
                                             </p>
                                             <div id="preview" >
-                                              
+                                                
                                             </div>
 
-                                            <button type="submit" name=""  class="btn btn-primary btn-sm" style="color: aliceblue;" >Add</button>
+                                            <button type="submit" name=""  class="btn btn-primary btn-sm" style="color: aliceblue;"  onclick="return validate(event)">Add</button>
                                        </form>
                                     </div>
                                   </div>
@@ -461,33 +479,46 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-      var totalImages = 0;
+  var totalImages = 0;
 
-      function previewImages(input){
-          var preview = document.querySelector("#preview");
-          
-          //checking any images were selected 
-          if(!input.files || input.files.length === 0){
-            return;
-          }
+  function previewImagesFile(input){
+    var preview = document.querySelector("#preview");
+    // Clear the preview div
+    preview.innerHTML = '';
 
-          var img = document.createElement("img");
-          preview.appendChild(img);
+    // Check if any images were selected
+    if(!input.files || input.files.length === 0){
+        return;
+    }
 
-          //looping through all files and create an object url for each one
-          for( var i = 0; i < input.files.length; i++){
-            var reader = new FileReader();
-            reader.onload = function(e){
-              var img = document.createElement("img");
-              img.src = e.target.result;
-              img.classList.add("obj");
-              img.setAttribute("data-index", totalImages++);       //setting attribute to the image
-              img.addEventListener("click",openModal); //addd a click event lister to each modal
-              preview.appendChild(img);
-            }
-            reader.readAsDataURL(input.files[i]);
-          }
-      }
+    // Loop through all files and create an object URL for each one
+    for( var i = 0; i < input.files.length; i++){
+        var reader = new FileReader();
+        reader.onload = function(e){
+            var imgContainer = document.createElement("div");
+            var img = document.createElement("img");
+            img.src = e.target.result;
+            img.classList.add("obj");
+            img.setAttribute("data-index", totalImages++); // Setting attribute to the image
+            img.addEventListener("click", openModal); // Adding a click event listener to each image
+
+            // Create a delete button and attach a click event listener to it
+            var deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", function() {
+                imgContainer.remove();
+            });
+
+            // Append the image and the delete button to the imgContainer div
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(deleteButton);
+
+            // Append the imgContainer div to the preview div
+            preview.appendChild(imgContainer);
+        }
+        reader.readAsDataURL(input.files[i]);
+    }
+}
 </script>
 <script>
   var cropper;
@@ -539,17 +570,36 @@ function setCroppedImage(){
     var croppedDataUrl = croppedCanvas.toDataURL('image/jpeg');
     originalImg.src = croppedDataUrl;
 
+    var blob = dataURItoBlob(croppedDataUrl); // Convert Data URI to Blob
+    var fileName = 'cropped-image.jpg'; // Define a filename
+    var file = new File([blob], fileName, {type: 'image/jpeg'}); // Create a File object
+
+    var formData = new FormData(); // Get the FormData object
+    formData.append('croppedImage', file); // Append the File object to the FormData object
+
+
     var croppingDiv = document.getElementById("cropping");
     var clonedImgInCropping = document.querySelector(`#cropping img[data-index="${imgIndex}"]`);
     croppingDiv.removeChild(clonedImgInCropping);
 
     document.getElementById("myModal").style.display = "none";              
-    cropper.destroy();  
+    cropper.destroy(); 
+    
+    
+    function dataURItoBlob(dataURI) {
+      var binary = atob(dataURI.split(',')[1]);
+      var array = [];
+      for(var i = 0; i < binary.length; i++) {
+          array.push(binary.charCodeAt(i));
+      }
+      return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+  }
 }
 </script>
 <script>
-function validate(){
-    
+function validate(event){
+   
+    console.log("inside the validation")
     const productName = document.getElementById('productName').value;
     const price = document.getElementById('price').value;
     const dis = document.getElementById('dis').value;
@@ -561,8 +611,7 @@ function validate(){
     const small = document.getElementById("S").value;
     const large = document.getElementById("L").value;
     const medium = document.getElementById("M").value;
-    const extraLarge = document.getElementById("XL").value;
-    const doubleExtraLarge = document.getElementById("XXL").value;
+ 
               
               function checkWhiteSpace(s){
                 return s.trim() === "";
@@ -661,7 +710,6 @@ function validate(){
 
    }
               
-         
 </script>
 
 

@@ -69,6 +69,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			position: relative;
 
 		 }
 
@@ -94,6 +95,13 @@
 			background: rgb(228, 125, 35);
 			color: white;
 		   }
+           .filterButton{
+			  margin-left: 10px;
+		   }
+		   #clear-btn{
+			 margin-right: 8px;
+		   }
+		
     </style>
 
 </head>
@@ -166,6 +174,9 @@
 										<i class="fa fa-search"></i>
 										</button>
 									</form>
+									<button id="clear-btn" type="button">Clear</button>
+
+
 								</div>
 								 <!--  -->
 								<button id="filterButton" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
@@ -339,6 +350,15 @@
 	<script src="js/price-range.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const clearBtn = document.getElementById("clear-btn");
+			clearBtn.addEventListener("click", function() {
+				window.location.href = '/shop';
+			})
+		})
+	</script>
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
 			const selectedCategory = document.querySelectorAll(".categorySelect");
@@ -369,6 +389,7 @@
 											<div class="single-products">
 												<div class="productinfo text-center">
 													<img src="/views/productImages/${pro.image[0]}" alt="" height="400px" width="100px" style="object-fit: cover;">
+													<h5 style="color: #e69927;">${pro.productName}</h5>
 													<h5>₹${ pro.price }</h5>
 													<p>${pro.discription}</p>
 													<a href="/selectedProduct/${pro._id}" class="btn btn-default add-to-cart">Buy Now</a>

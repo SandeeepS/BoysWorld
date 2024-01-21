@@ -1452,6 +1452,11 @@ exports.oders = async(req,res)=>{
           as:"currentAddress"
         }
       },
+      {
+        $sort:{
+              date:-1
+              }
+      },
       
       {
         $skip:skip
@@ -1459,11 +1464,7 @@ exports.oders = async(req,res)=>{
       {
         $limit:itemsPerPage
       },
-      {
-        $sort:{
-              date:-1
-              }
-      },
+     
      
   ]).exec();
   console.log("corderDetails :",orderDetails )
