@@ -8,6 +8,10 @@ const XLSX = require('xlsx');
 const moment = require('moment');
 const { format } = require('date-fns');
 const fs = require('fs');
+const util = require('util');
+const readFileAsync = util.promisify(fs.readFile);
+const json2csv = require('json2csv').parse;
+
 
 exports.adminlogin = async(req,res)=>{
     if(req.session.admin){
@@ -63,6 +67,7 @@ exports.getHomePage = async(req,res)=>{
             }
         ])
         console.log("currentOrders:",currentOrders);
+        const currentOrderCount = currentOrders.length;
         const products = await productModel.find({});
         const category = await categoryModel.find({});
         const users = await userModel.find({});
@@ -78,7 +83,7 @@ exports.getHomePage = async(req,res)=>{
         const pantsOrdersCount = pantsOrders.length;
         const tShirtOrdersCount = tShirtOrders.length;
 
-        res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount,uniqueProducts,products,category,users});
+        res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount,uniqueProducts,products,category,users,currentOrderCount});
     }catch(error){
         console.error("error while getting the admin dashboard !!",error);
     }
@@ -119,7 +124,7 @@ exports.getCustomer = async(req,res)=>{
         const totalPages = Math.floor(totalCount/itemsPerPage);
         console.log("totalpages:",totalPages);
         const usersData = await userModel
-                    .find({status:true})
+                    .find()
                     .skip(skip)
                     .limit(itemsPerPage)
                     .exec();
@@ -439,19 +444,27 @@ exports.getSalesReport = async(req,res) => {
 //download sales report
 exports.downloadSalesReport = async(req,res)=>{
     try{
-
         const {orders} = req.body;
-        const ws = XLSX.utils.json_to_sheet(orders);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb,ws,"sheet1");
-        XLSX.writeFile(wb,"salesReport.xlsx");
-        const fileData = fs.readFileSync('salesReport.xlsx');
+        console.log("orders from download:",orders);
+        // Define the headers
+
+        // Convert JSON to CSV
+        const csv = json2csv(orders);
+
+        // Write the CSV data to a file
+        fs.writeFileSync('salesReport.csv', csv);
+
+        // Read the file data
+        const fileData = fs.readFileSync('salesReport.csv');
+
+        // Convert the file data to Base64
         const base64String = fileData.toString('base64');
-        res.status(200).json({success:true,message:"successfull",file:base64String});
+        res.download('base64String');
+        // Send the file data as a response
+        res.status(200).json({success:true,message:"successful",file:base64String});
 
-    }catch(error){
+    } catch(error) {
         console.error("error while downloading the sales report",error);
-
     }
 }
 
@@ -700,26 +713,24 @@ exports.addingProduct = async(req,res)=>{
 //updateStatus
 exports.updateStatus = async (req, res) => {
     try {
-        const { userId, isBlocked } = req.body;
+        const { userId } = req.body;
         const user = await userModel.findById(userId).exec();
        console.log(user.name);
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
         console.log(user.name);
-        user.status = isBlocked;
+        if(user.status == true){
+            user.status = false;
+        }else{
+            user.status = true;
+        }
+
+       
+
         await user.save(); 
-         // Invalidate the user's session
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error destroying session:', err);
-                res.status(500).send('Internal Server Error');
-            }
-            else 
-            {
-            res.json({ success: true, message: `User status updated to ${isBlocked ? "Blocked" : "Active"}` });
-            }
-        });
+         res.json({ success: true, message: "User status updated and session destroyed" });
+
     } catch (err) {
         console.error("Error updating status:", err);
         res.redirect('/admin/customers');

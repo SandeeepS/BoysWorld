@@ -321,14 +321,21 @@
   <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
+    const currentOrderCount = <%-JSON.stringify(currentOrderCount) %>;
 
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ['Year', 'Sales'],
-        ['2004',  1000],
-        ['2005',  1170],
-        ['2006',  660],
-        ['2007',  1030]
+        ['2015',  0],
+        ['2016',  0],
+        ['2017',  0],
+        ['2018',  0],
+        ['2019',  0],
+        ['2020',  0],
+        ['2021',  0],
+        ['2022',  0],
+        ['2023',  0],
+        ['2024',  currentOrderCount]
       ]);
 
       var options = {
@@ -357,9 +364,9 @@
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'Name');
       data.addColumn('number', 'Price');
-      data.addColumn('number', 'Stock Left');
+     
       for (var i = 0; i < products.length; i++) {
-        data.addRow([products[i].productName, products[i].price, products[i].stock]);
+        data.addRow([products[i].productName, products[i].price]);
       }
      
 

@@ -69,7 +69,7 @@
 			  .modal {
           display: none; /* Hidden by default */
           position: fixed; /* Stay in place */
-          z-index: 1; /* Sit on top */
+          z-index: 10; /* Sit on top */
           left: 0;
           top: 0;
           width: 100%; /* Full width */
@@ -293,7 +293,7 @@
                                           <span class="user-status">
                                               
                                               <button class="blockUser btn btn-sm btn-<%= users[i].status ? 'danger' : 'success' %> toggle-status-btn" data-user-id="<%= users[i]._id %>" >
-                                                  <%= users[i].status ? 'Block' : 'Unblock' %>
+                                                  <%= users[i].status == true ? 'Block' : 'Unblock' %>
                                               </button>
 
                                               <div id="conformModal-<%= users[i]._id %>" class="modal">
@@ -304,8 +304,8 @@
                                                       <p>Are you sure you want to change your Current Status?</p>
                                                     </div>
                                                     <div style="display: flex;">
-                                                       <a href="#" class="conformBlockUnblock" data-user-id="<%= users[i]._id %>"><h3>Yes</h3></a>
-                                                       <a href="/admin/customers" style="padding-left: 25px;"><h3>No</h3></a>
+                                                       <a href="#" class="conformBlockUnblock btn btn-primary" style="color: white;" data-user-id="<%= users[i]._id %>"><h3>Yes</h3></a>
+                                                       <a href="/admin/customers" class="btn btn-primary" style="padding-left: 25px;color:#ddd"><h3>No</h3></a>
                                                       
                                                     </div>
                                                   </div>
@@ -476,22 +476,21 @@
       blockUnlockBtns.forEach(function (button) {
           button.addEventListener("click", function () {
               const userId = this.getAttribute("data-user-id");
-              console.log("clickedBtn :",clickedToggleBtn);
+              
               // Send an AJAX request to update the user's status
               fetch("/admin/checkStatus", {
                   method: "POST", 
                   headers: {
                       "Content-Type": "application/json",
                   },
-                  body: JSON.stringify({ userId: userId, isBlocked: isBlocked }),
+                  body: JSON.stringify({ userId: userId  }),
               })
                   .then((response) => response.json())
                   .then((data) => {
                       // Update the status text and button text based on the server response
                       if (data.success) {
-                          button.textContent = isBlocked ? "Block" : "Unblock";
-                          button.classList.toggle("btn-success");
-                          button.classList.toggle("btn-danger");
+                        
+                          window.location = '/admin/customers';
                       } else {
                           // Handle any error from the server, if needed
                           console.error("Failed to update user status.");

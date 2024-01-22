@@ -1,23 +1,35 @@
 /**middleware for user */
 
 const moment = require('moment');
+const userModel = require('../models/userModel');
 
-function isUser(req,res,next){
-    if(req.session.user){
+async  function isUser(req,res,next){
+    const userId = req.session.user;
+    const userDetails = await userModel.findById(userId);
+    if(req.session.user && userDetails.status == true ){
         res.redirect('/shop');
     }else{
         return next();
     }
 }
 
-function user(req,res,next){
+async function user(req,res,next){
     if(!req.session.user){
         res.redirect('/login');
     }else{
-        return next();
-
-
+        const userId = req.session.user;
+        const userDetails = await userModel.findById(userId);
+        console.log("userdetails from middleware:",userDetails);
+        console.log("user in session is :",req.session.user);
+        console.log("current status :",userDetails.status);
+        if(req.session.user && userDetails.status == true){
+            return next();
+        }else{
+            res.redirect('/login');
+        }
+   
     }
+
 }
 
 function admin(req,res,next){
