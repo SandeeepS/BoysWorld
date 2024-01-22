@@ -139,6 +139,9 @@
       height: 30px;
       width: 30px;
   }
+  .deleteBtn{
+    color: white;
+  }
 
      
      
@@ -505,6 +508,7 @@
             // Create a delete button and attach a click event listener to it
             var deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
+            deleteButton.className = "deleteBtn btn-danger";
             deleteButton.addEventListener("click", function() {
                 imgContainer.remove();
             });
