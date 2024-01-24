@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const sch = {
-    productName:String,
+const schema = {
+    name:String,
     price:Number,
     stock:{
         sizeSmall:{
@@ -35,5 +35,5 @@ const sch = {
 
 }
 
-const productModel = mongoose.model("products",sch);
+const productModel = mongoose.model("products",schema);
 module.exports = productModel;

@@ -75,9 +75,9 @@ exports.getHomePage = async(req,res)=>{
         let uniqueProductIdsArray = [...uniqueProductIds];
         const uniqueProducts = await productModel.find({_id:{$in:uniqueProductIdsArray}});
         console.log("uniqueProducts:",uniqueProducts);
-        const shirtsOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'Shirt')
-        const pantsOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'Pant')
-        const tShirtOrders = currentOrders.filter(cat => cat.productCategory[0].categoryName === 'T-shirt');
+        const shirtsOrders = currentOrders.filter(cat => cat.productCategory[0].name === 'Shirt')
+        const pantsOrders = currentOrders.filter(cat => cat.productCategory[0].name === 'Pant')
+        const tShirtOrders = currentOrders.filter(cat => cat.productCategory[0].name === 'T-shirt');
 
         const shirtOrderCount = shirtsOrders.length;
         const pantsOrdersCount = pantsOrders.length;
@@ -153,7 +153,7 @@ exports.getProduct = async(req,res)=>{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const categoriesDict = {};
         categoryData.forEach((category) => {
-        categoriesDict[category._id.toString()] = category.categoryName;
+        categoriesDict[category._id.toString()] = category.name;
         });
         res.render('adminpanel/product',{product:productData,categories:categoriesDict,totalPages,currentPage,totalCount});
     }catch(error){
@@ -179,7 +179,7 @@ exports.deleteProductImage = async (req, res) => {
         }
         product.image.splice(imageIndex, 1);
          await product.save();
-         res.status(200).json({ message: 'Image deleted successfully' });
+        res.redirect('/admin/products')
     } catch (err) {
         console.error('Error while deleting the image', err);
         res.status(500).json({ message: 'Internal server error' });
@@ -320,8 +320,19 @@ exports.getSalesReport = async(req,res) => {
                        }
                 }
             ]);
+
+            const simplifiedOrders = orders.map(order => ({
+                userId: order.userId,
+                productId: order.products.productId,
+                date: order.convertedDate,
+                orderId: order._id,
+                price: order.products.price,
+                addressId: order.currentAddress,
+                
+            }));
             console.log("orders from get sales report:",orders);
-            res.render('adminpanel/salesReport',{orders});
+            console.log("simplifed orders:",simplifiedOrders);
+            res.render('adminpanel/salesReport',{orders,simplifiedOrders});
         } else if(req.query.firstDate && req.query.secondDate){
 
             const firstInputDate = req.query.firstDate;
@@ -387,9 +398,18 @@ exports.getSalesReport = async(req,res) => {
                        }
                 }
             ]);
+            const simplifiedOrders = orders.map(order => ({
+                userId: order.userId,
+                productId: order.products.productId,
+                date: order.convertedDate,
+                orderId: order._id,
+                price: order.products.price,
+                addressId: order.currentAddress,
+               
+            }));
 
             console.log("orders from get sales report according to dates:",orders);
-            res.render('adminpanel/salesReport',{orders});
+            res.render('adminpanel/salesReport',{orders,simplifiedOrders});
         }else if(req.query.year){
               const year  = req.query.year;
               console.log("year:",year);
@@ -425,14 +445,24 @@ exports.getSalesReport = async(req,res) => {
                        }
                 }
             ]);
+            const simplifiedOrders = orders.map(order => ({
+                userId: order.userId,
+                productId: order.products.productId,
+                date: order.convertedDate,
+                orderId: order._id,
+                price: order.products.price,
+                addressId: order.currentAddress,
+             
+            }));
 
             console.log("orders from get sales report according to year:",orders);
-            res.render('adminpanel/salesReport',{orders});
+            res.render('adminpanel/salesReport',{orders,simplifiedOrders});
               
         }
         else{
+            const simplifiedOrders = "";
             const orders = "";
-            res.render('adminpanel/salesReport',{orders});
+            res.render('adminpanel/salesReport',{orders,simplifiedOrders});
         }
      
 
@@ -588,17 +618,17 @@ exports.addcategoryPage = async(req,res)=>{
 //adding category
 exports.addingCategory = async(req,res)=>{
     try{
-        const {categoryName} = req.body;
-        console.log("catyer",categoryName);
-        const lowercaseCategoryName = typeof categoryName === 'string' ? categoryName.toLowerCase() : categoryName;
-        const existingCategory = await categoryModel.findOne({ "categoryName": { $regex: new RegExp('^' + lowercaseCategoryName + '$', 'i') }})
+        const {name} = req.body;
+        console.log("catyer",name);
+        const lowercasename = typeof name === 'string' ? name.toLowerCase() : name;
+        const existingCategory = await categoryModel.findOne({ "name": { $regex: new RegExp('^' + lowercasename + '$', 'i') }})
         console.log("existing category",existingCategory);
        if(existingCategory){
-           await categoryModel.updateOne({"categoryName":{ $regex: new RegExp('^' + lowercaseCategoryName + '$', 'i') }},{$set:{"isDelete":false}});
+           await categoryModel.updateOne({"name":{ $regex: new RegExp('^' + lowercasename + '$', 'i') }},{$set:{"isDelete":false}});
            console.log("category already exists .updated existing category");
        }else{
          const newCategory = new categoryModel({
-           "categoryName":categoryName,
+           "name":name,
             "isDelete":false
          });
          await newCategory.save();
@@ -639,8 +669,8 @@ exports.getUpdateCategoryPage = async(req,res)=>{
 exports.updateCategory = async(req,res)=>{
     try{
         const catId = req.params.id;
-        const {categoryName} = req.body;
-        await categoryModel.findByIdAndUpdate(catId,{categoryName}).exec();
+        const {name} = req.body;
+        await categoryModel.findByIdAndUpdate(catId,{name}).exec();
         res.redirect('/admin/categories')
     }catch(err){
         console.error("error while updating the category",err);

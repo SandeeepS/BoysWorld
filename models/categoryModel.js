@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Sch = {
-    categoryName:String,
+    name:String,
     isDelete:{
         type:Boolean,
         default:false,

@@ -27,6 +27,14 @@
             color: red;
             display: none;
         }
+		body {
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+		footer {
+			margin-top: auto;
+		}
 
 		
 			  /* Style for the modal container */
@@ -82,6 +90,20 @@
 				justify-content: center;
 				text-align: center;
 			  }
+			  .section{
+				justify-content: center;
+				align-items: center;
+			 }
+			 .row {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			.login-form{
+			   
+				justify-content: center;
+				align-items: center; 
+			}
     </style>
 </head><!--/head-->
 
@@ -128,31 +150,32 @@
 		</div><!--/header-bottom-->
 	</header><!--/header-->
 	
-	<section id="form"><!--form-->
-		<div class="container">
-			<div class="row">
+	<section  ><!--form-->
+		<div class="container ">
+			<div class="row ">
 				<div class="col-sm-6 col-sm-offset-1">
 					<!--login form-->
-					<div class="login-form">
-						
-						<h2>Login to your account</h2>
-						<div class="error-message" id="error-messsage"></div>
-						<br>
-						<br>
-						<% if(message) { %>
-                           <p style="color: black;"><%= message %></p>
-						<% } %>
-						<form action="/loginUser" method="post" onsubmit="return validateform()">
-							<input type="email" id="emailid" name="Email" placeholder="Email Id" />
-							<input type="password" id="password" name="Password" placeholder="Password" />
+					<div class="parent-div">
+						<div class="login-form">
+							<h2>Login to your account</h2>
+							<div class="error-message" id="error-messsage"></div>
 							<br>
-							<h5 id="forgotPassword">Forgot your password?<a href="#">Reset password</a></h5>
-							
-							<h5>New User?<a href="/signup">SignUp</a></h5>
-							<button type="submit" class="btn btn-default">Login</button>
-						</form>
-						
+							<br>
+							<% if(message) { %>
+							   <p style="color: black;"><%= message %></p>
+							<% } %>
+							<form action="/loginUser" method="post" onsubmit="return validateform()">
+								<input type="email" id="emailid" name="Email" placeholder="Email Id" />
+								<input type="password" id="password" name="Password" placeholder="Password" />
+								<br>
+								<h5 id="forgotPassword">Forgot your password?<a href="#">Reset password</a></h5>
+								
+								<h5>New User?<a href="/signup">SignUp</a></h5>
+								<button type="submit" class="btn btn-default">Login</button>
+							</form>
+						</div>
 					</div>
+				
 					<!--/login form-->
 				</div>
 				
@@ -259,27 +282,6 @@
 	
 	
 	<footer id="footer"><!--Footer-->
-		
-		
-		<div class="footer-widget">
-			<div class="container">
-				<div class="row">
-					
-					<div class="col-sm-3 col-sm-offset-1">
-						<div class="single-widget">
-							<h2>About Shopper</h2>
-							<form action="#" class="searchform">
-								<input type="text" placeholder="Your email address" />
-								<button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-								<p>Get the most recent updates from <br />our site and be updated your self...</p>
-							</form>
-						</div>
-					</div>
-					
-				</div>
-			</div>
-		</div>
-		
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
@@ -288,7 +290,6 @@
 				</div>
 			</div>
 		</div>
-		
 	</footer><!--/Footer-->
 	
 

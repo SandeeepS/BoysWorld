@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const {user} = require('../models/userModel');
-const {otp}  = require('../models/otp');
 const categoryModel = require('../models/categoryModel');
 const { default: mongoose } = require('mongoose');
 const productModel = require('../models/productModel');
@@ -149,7 +148,7 @@ exports.getShopBySearch = async(req,res) =>{
           const totalPages = Math.floor(totalCount/itemsPerPage);
           console.log("totalpages:",totalPages);
           const productData = await productModel
-                  .find({isDeleted:false, productName: {$regex: searchProduct, $options: 'i'}})
+                  .find({isDeleted:false,name: {$regex: searchProduct, $options: 'i'}})
                   .skip(skip)
                   .limit(itemsPerPage)
                   .exec();
@@ -192,6 +191,9 @@ exports.categoryBasedProduct = async(req,res)=>{
 //selected product
 exports.selectedProduct = async(req,res)=>{
     try{
+        const user = req.session.user;
+        const userDetail = await UserModel.findById(user);
+
         const prodId = req.params.id;
         const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
         const stock = productData.stock;
@@ -202,7 +204,7 @@ exports.selectedProduct = async(req,res)=>{
           message = "Only "+ stock+" item left";
         }
         console.log("message:",message)
-        res.render('selectedProduct',{productData,message,stock});
+        res.render('selectedProduct',{productData,message,stock,userDetail});
     }catch(error){
         console.error("error while fetching products",error);
         res.redirect('/shop');
@@ -543,10 +545,14 @@ exports.logout = (req,res)=>{
 exports.getAccount = async(req,res)=>{
   try{
        const userId = req.session.user;
+       const userid2 = new mongoose.Types.ObjectId(userId);
+       
        const userData = await UserModel.findById(userId).exec();
+       const wallet = userData.wallet;
+       console.log("walletAmount:",wallet);
        const orders = await orderModel.find({userId:userId}).exec();
        console.log(orders);
-       res.render('account',{orders,userData});
+       res.render('account',{orders,userData,wallet});
   }catch(err){
     console.error("error while ")
   }
@@ -967,6 +973,8 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     const totalPrice = (decodeURIComponent(req.query.totalPrice)); 
     const addressId = (decodeURIComponent(req.query.addressId));
     const quantity =  (decodeURIComponent(req.query.quantity));
+    const size = (decodeURIComponent(req.query.size));
+    console.log("size:",size);
     const productId = product._id;
     const userId2 = new mongoose.Types.ObjectId(userId);
     const addId = new mongoose.Types.ObjectId(addressId);
@@ -979,7 +987,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     console.log("useris:",user);
    
   
-    res.render('checkout',{address,currentAddress,product,currentAddressId,totalPrice,quantity,productId});
+    res.render('checkout',{address,currentAddress,product,currentAddressId,totalPrice,quantity,productId,size});
   } catch (err) {
     console.error("Error while updating the default address", err);
     res.redirect('/getCheckout');

@@ -353,19 +353,21 @@
         downloadBtn.addEventListener("click",function(event){
             event.preventDefault();
             const ordersForDownload = <%- JSON.stringify(orders) %>;
+            const simplifiedOrders = <%-JSON.stringify(simplifiedOrders)%>;
             $.ajax({
                 type: 'POST',
                 url:'/admin/downloadSalesReport',
                 data:{
-                    orders:ordersForDownload
+                    orders:simplifiedOrders
+                    
                 },
                 success:function(response){
                   if (response && response.file) {
-                  
+                    console.log("respone:",response.file);
                     let fileData = atob(response.file);
-                    let blob = new Blob([fileData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    let csvFile = new Blob([fileData], {type: 'text/csv;charset=utf-8;'});
                     let link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
+                    link.href = URL.createObjectURL(csvFile);
                     link.download = 'salesReport.xlsx';
                     link.click();
                 }

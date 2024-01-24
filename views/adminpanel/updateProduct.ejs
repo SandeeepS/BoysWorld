@@ -280,10 +280,10 @@
                                           <label for="add-category">Category:</label>
                                           <select  id="category" name="category">
                                               <% if(productToUpdate[0].catDetail) { %>
-                                                <option value="<%=productToUpdate[0].catDetail[0]._id%>" ><%= productToUpdate[0].catDetail[0].categoryName%></option>
+                                                <option value="<%=productToUpdate[0].catDetail[0]._id%>" ><%= productToUpdate[0].catDetail[0].name%></option>
                                               <% } %>
                                               <% for (cat of category) { %>
-                                              <option value="<%= cat._id %>"><%= cat.categoryName %></option>
+                                              <option value="<%= cat._id %>"><%= cat.name %></option>
                                               <% } %>
                                           </select>
                                           <!-- Hidden input to store the selected category ID -->
@@ -428,7 +428,7 @@
   <script>
     
       function validate(){
-                const productName = document.getElementById('productName').value;
+                constname = document.getElementById('productName').value;
                 const price = document.getElementById('price').value;
                 const stock = document.getElementById('stock').value;
                 const dis = document.getElementById('dis').value;
@@ -453,7 +453,7 @@
                 } 
                  
                 if(productName === ""  ){
-                  errorMessage.innerText ="please enter your productName";
+                  errorMessage.innerText ="please enter yourname";
                           errorMessage.style.display = "block";
                           setTimeout(function () {
                               errorMessage.style.display = "none";

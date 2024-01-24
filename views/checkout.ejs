@@ -523,7 +523,7 @@
 							</div>
 							<div class="actions">
 								<a href="#" id="openModalbtn2" AddressId="<%= address[i]._id %>" class="selected">Edit</a>
-								<a href="/setDefaultAddressFromCheckout?addressId=<%= encodeURIComponent(address[i]._id) %>&address=<%= encodeURIComponent(JSON.stringify(address)) %>&currentAddress=<%= encodeURIComponent(JSON.stringify(currentAddress)) %>&productDetails=<%= encodeURIComponent(JSON.stringify(product)) %>&totalPrice=<%= encodeURIComponent(totalPrice)%>&quantity=<%=encodeURIComponent(quantity)%>&productId=<%=product._id%> %>">Set as Default</a>
+								<a href="/setDefaultAddressFromCheckout?addressId=<%= encodeURIComponent(address[i]._id) %>&address=<%= encodeURIComponent(JSON.stringify(address)) %>&currentAddress=<%= encodeURIComponent(JSON.stringify(currentAddress)) %>&productDetails=<%= encodeURIComponent(JSON.stringify(product)) %>&totalPrice=<%= encodeURIComponent(totalPrice)%>&quantity=<%=encodeURIComponent(quantity)%>&productId=<%=product._id%>&size=encodeURIComponent(size) %>">Set as Default</a>
 								<a href="/addressDelete/<%= address[i]._id %>" class="delete">Delete</a>
 							</div>
 						</div>

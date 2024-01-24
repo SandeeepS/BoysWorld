@@ -6,10 +6,14 @@ const productSchema = new mongoose.Schema({
     },
     quantity:Number,
     price:Number,
-    total:Number
+    total:Number,
+    status:{
+       type:Boolean,
+       default:true,
+    }
 });
 
-const sch ={
+const orderShema ={
     userId:{
         type:mongoose.Schema.ObjectId,
     },
@@ -26,5 +30,5 @@ const sch ={
     paymentMethod:String,
     currentStatus:String,
 }
-const orderModel = mongoose.model("orders",sch);
+const orderModel = mongoose.model("orders",orderShema);
 module.exports = orderModel;

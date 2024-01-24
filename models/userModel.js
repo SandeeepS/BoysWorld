@@ -27,7 +27,7 @@ const addressSchema = new mongoose.Schema({
 
 
 
-const sch = {
+const shcema = {
     name:String,
     email:String,
     number:Number,
@@ -49,5 +49,5 @@ const sch = {
     
      
 }
-const monmodel = mongoose.model("users",sch);
+const monmodel = mongoose.model("users", shcema);
 module.exports = monmodel;
