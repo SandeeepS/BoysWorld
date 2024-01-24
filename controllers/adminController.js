@@ -521,6 +521,18 @@ exports.addProduct = async(req,res)=>{
     
 }
 
+//add coupen page
+exports.addCoupenPage = async(req,res)=>{
+    try{
+
+        res.render('adminpanel/addCoupen');
+
+    }catch(error){
+        console.error("error while getting addcoupen page!!",error);
+
+    }
+}
+
 
 //updateproduct page
 exports.getUpdateProductPage = async(req,res)=>{

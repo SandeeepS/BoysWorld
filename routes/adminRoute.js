@@ -16,6 +16,7 @@ adminRoute.get('/orders',auth.isAdmin,adminController.getOrders);
 adminRoute.get('/coupen',auth.isAdmin,adminController.getCoupen);
 adminRoute.get('/banner',auth.isAdmin,adminController.getBanner);
 adminRoute.get('/addProductPage',auth.isAdmin,adminController.addProduct);
+adminRoute.get('/addCoupenPage',auth.isAdmin,adminController.addCoupenPage);
 adminRoute.get('/salesReport',auth.isAdmin,adminController.getSalesReport)
 adminRoute.post('/downloadSalesReport',auth.isAdmin,adminController.downloadSalesReport)
 
