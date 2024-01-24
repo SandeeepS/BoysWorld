@@ -530,6 +530,8 @@ exports.getUpdateProductPage = async(req,res)=>{
                    }
                }
          ]).exec(); 
+         console.log("productToUpdate:",productToUpdate);
+
          const currentCategory = productToUpdate[0].catDetail[0]._id;
          const category = await categoryModel.aggregate([
             {
@@ -710,7 +712,7 @@ exports.addingProduct = async(req,res)=>{
 
 
         const product = new productModel ({
-              productName,
+              name:productName,
               price,
               stock:{
                 sizeSmall:{
