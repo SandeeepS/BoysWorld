@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const sch = {
+const schema = {
     name:String,
     email:String,
     pass:Number
 }
 
-const adModel = mongoose.model("admins",sch);
+const adModel = mongoose.model("admins",schema);
 module.exports = adModel;

@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
     }
 });
 
-const orderShema ={
+const orderSchema ={
     userId:{
         type:mongoose.Schema.ObjectId,
     },
@@ -30,5 +30,5 @@ const orderShema ={
     paymentMethod:String,
     currentStatus:String,
 }
-const orderModel = mongoose.model("orders",orderShema);
+const orderModel = mongoose.model("orders",orderSchema);
 module.exports = orderModel;

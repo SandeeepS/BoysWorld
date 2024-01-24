@@ -13,6 +13,7 @@ adminRoute.get('/customers',auth.isAdmin,adminController.getCustomer);
 adminRoute.get('/products',auth.isAdmin,adminController.getProduct);
 adminRoute.get('/categories',auth.isAdmin,adminController.getCategories);
 adminRoute.get('/orders',auth.isAdmin,adminController.getOrders);
+adminRoute.get('/coupen',auth.isAdmin,adminController.getCoupen);
 adminRoute.get('/banner',auth.isAdmin,adminController.getBanner);
 adminRoute.get('/addProductPage',auth.isAdmin,adminController.addProduct);
 adminRoute.get('/salesReport',auth.isAdmin,adminController.getSalesReport)

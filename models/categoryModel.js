@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Sch = {
+const schema = {
     name:String,
     isDelete:{
         type:Boolean,
@@ -7,5 +7,5 @@ const Sch = {
     }
    
 }
-const categoryModel = mongoose.model("categories",Sch);
+const categoryModel = mongoose.model("categories",schema );
 module.exports = categoryModel;

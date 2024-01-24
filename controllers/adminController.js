@@ -268,6 +268,18 @@ exports.getOrders = async(req,res)=>{
     }
 }
 
+exports.getCoupen = async(req,res)=>{
+    try{
+
+        console.log("hello isdie the coupen");
+        res.render('adminpanel/coupen')
+
+    }catch(error){
+        console.log("error while getting coupen page!!",error);
+        res.redirect('adminpanel/index');
+    }
+}
+
 exports.getBanner = async(req,res)=>{
     res.render('adminpanel/banner');
 }
