@@ -32,6 +32,12 @@ const schema = {
     category:{
         type:mongoose.Schema.ObjectId,
     },
+    offer:{
+        type:Number,
+        min:0,
+        max:100,
+        default:0,
+    }
 
 }
 

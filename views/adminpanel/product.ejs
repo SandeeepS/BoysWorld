@@ -259,11 +259,12 @@
                                     <table class="table table-condensed">
                                       <tr class="cart_menu">
                                           <th>image</th>
-                                          <th>Product Name</th>
+                                          <th>Name</th>
                                           <th>Category</th>
                                           <th>Price</th>
                                           <th>Stock</th>
                                           <th>Discription</th>
+                                          <th>offer</th>
                                       </tr>
                                       <%
                                       if (product.length > 0) {
@@ -290,7 +291,7 @@
                                         <td><%= pro.price %></td>
                                         <td class="stockDiv">
                                           <select id="stockSelect">
-                                              <option value="">View Stocks</option>
+                                              <option value="">Stocks</option>
                                               <option value="S">S: <%= pro.stock.sizeSmall.stock %></option>
                                               <option value="M">M: <%= pro.stock.sizeMedium.stock %></option>
                                               <option value="L">L: <%= pro.stock.sizeLarge.stock %></option>
@@ -298,18 +299,26 @@
                                           </select>
                                        </td>
                                         <td><%= pro.discription %></td>
+
+                                        <td>
+                                            <% if(pro.offer != 0 ){ %>
+                                              <%= pro.offer %>%
+                                            <% }else{ %> 
+                                              <p>No offer</p>
+                                            <% } %>
+                                         </td>
                                                 
-                                          <td>
-                                            <a href="/admin/updateProduct/<%= pro._id %>" class="btn btn-primary btn-sm">
-                                               Edit
-                                            </a>
-                                          </td>
-                                          
-                                          <td>
-                                            <a href="/admin/deleteProduct/<%= pro._id %>" class="btn btn-danger btn-sm">
-                                               Delete
-                                            </a>                                          
-                                          </td>
+                                        <td>
+                                          <a href="/admin/updateProduct/<%= pro._id %>" class="btn btn-primary btn-sm">
+                                              Edit
+                                          </a>
+                                        </td>
+                                        
+                                        <td>
+                                          <a href="/admin/deleteProduct/<%= pro._id %>" class="btn btn-danger btn-sm">
+                                              Delete
+                                          </a>                                          
+                                        </td>
                                       </tr>
                                       <%
                                           }

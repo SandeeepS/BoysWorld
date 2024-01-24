@@ -400,6 +400,11 @@
                                             </p>
 
                                             <p>
+                                              <label for="discription">Product Offer (optional)</label>
+                                              <input type="number" class="form-control" name="offer" id="offer">
+                                              </p>
+
+                                            <p>
                                             <label for="image">Image</label>
                                             <input type="file" class="form-control" id="img" name="productImages" img-validation="img-val" multiple id="img" onchange="previewImagesFile(this)" accept="image/jpeg">
                                             </p>
@@ -607,6 +612,7 @@ function validate(event){
     const productName = document.getElementById('productName').value;
     const price = document.getElementById('price').value;
     const dis = document.getElementById('dis').value;
+    const offer = document.getElementById("offer").value;
     const img = document.getElementById('img');
     const errorMessage = document.getElementById('error-message');
     const previewDiv = document.getElementById("preview");
@@ -686,6 +692,17 @@ function validate(event){
 
               if(dis === ""  ){
                 errorMessage.innerText ="please enter Discription of your product";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+                return false;
+              }
+
+              
+
+              if(offer < 0 || offer > 100){
+                errorMessage.innerText ="please enter the valid offer";
                 errorMessage.style.display = "block";
                 setTimeout(function () {
                     errorMessage.style.display = "none";

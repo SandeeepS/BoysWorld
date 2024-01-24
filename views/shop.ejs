@@ -244,11 +244,20 @@
 										<div class="single-products" id="single-porduct">
 											<div class="productinfo text-center">
 												<img src="/views/productImages/<%= pro.image[0]%>" alt="" height="400px" width="100px" style="object-fit: cover;">
-												<h5 style="color: #e69927;"><%= pro.productName %></h5>
+												<h5 style="color: #e69927;"><%= pro.name %></h5>
+												
 												<% if(pro.stock == 0){ %>
 													<h6 style="color: red;">Out Of Stock!!</h6>
 												<% } %>
-												<h5>₹<%= pro.price %></h5>
+
+												<% if(pro.offer > 0){ %>
+													<h6>(<%=pro.offer%>% off)</h6>
+													<h5><del>₹<%= pro.price %></del></h5>
+													<h5>₹<%= pro.price %></h5>
+												<% } else{ %>
+													<h5>₹<%= pro.price %></h5>
+												<% } %>
+
 												<p><%=pro.discription%></p>
 												<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
 											</div>

@@ -555,7 +555,7 @@ exports.productUpdated = async(req,res)=>{
     try{
         const productId = req.params.id;
         const productId2 = new mongoose.Types.ObjectId(productId);
-        let {productName,price,small,medium,large,discription,category} = req.body;
+        let {productName,price,small,medium,large,discription,category,offer} = req.body;
         if(small == ""){
             small = 0;
         }
@@ -592,7 +592,8 @@ exports.productUpdated = async(req,res)=>{
                 },
                 image:updatedImages,
                 discription,
-                category
+                category,
+                offer
             }).exec();
         res.redirect('/admin/products');
     }catch(err){
@@ -683,7 +684,7 @@ exports.updateCategory = async(req,res)=>{
 //adding product
 exports.addingProduct = async(req,res)=>{
     try{
-        const{productName,price,small,medium,large,category,dis} = req.body;
+        const{productName,price,small,medium,large,category,dis,offer} = req.body;
         productImages =req.files.map((file)=>file.filename);
 
         let stockSmall,stockLarge,stockMedium;
@@ -732,6 +733,7 @@ exports.addingProduct = async(req,res)=>{
               discription: dis,
               isDeleted:false,
               category,
+              offer
         })
         await product.save();
         console.log(`${productName} is inserted Successfully`);

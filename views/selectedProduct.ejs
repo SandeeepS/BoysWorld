@@ -351,7 +351,7 @@
 				success:function(response){
 					if(response){
 						const products = response.products;
-						window.location = '/getCart?products='+JSON.stringify(products);
+						window.location = '/getCart';
 					}
 				},
 				error:function(err){
