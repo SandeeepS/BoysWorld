@@ -68,11 +68,19 @@ exports.shopPage = async(req,res)=>{
         console.log("totalcount:",totalCount);
         const totalPages = Math.floor(totalCount/itemsPerPage);
         console.log("totalpages:",totalPages);
-        const productData = await productModel
-                .find({isDeleted:false})
-                .skip(skip)
-                .limit(itemsPerPage)
-                .exec();
+        const productData = await productModel.aggregate([
+               {
+                $match:{"isDeleted":false},
+               },
+               {
+                  $skip:skip
+               },
+               {
+                  $limit:itemsPerPage
+               }
+
+        ])
+               
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const Currentuser = await UserModel.find({"_id":userId})
         console.log("currentUser:",Currentuser);
@@ -107,11 +115,21 @@ exports.getShopWithPriceRange = async(req,res)=>{
           console.log("totalcount:",totalCount);
           const totalPages = Math.floor(totalCount/itemsPerPage);
           console.log("totalpages:",totalPages);
-          const productData = await productModel
-                  .find({isDeleted:false, price: {$gte: price1, $lte: price2}})
-                  .skip(skip)
-                  .limit(itemsPerPage)
-                  .exec();
+          const productData = await productModel.aggregate([
+              {
+                $match:{
+                    "isDeleted":false,
+                    "price": {$gte: Number(price1), $lte:Number(price2) }
+                }
+              },
+              {
+                $skip:skip
+              },
+              {
+                $limit:itemsPerPage
+              }
+          ])
+            console.log("productData:",productData)     ;
           const categoryData = await categoryModel.find({isDelete:false}).exec();
           const Currentuser = await UserModel.find({"_id":userId})
           console.log("currentUser:",Currentuser);
@@ -149,11 +167,21 @@ exports.getShopBySearch = async(req,res) =>{
           console.log("totalcount:",totalCount);
           const totalPages = Math.floor(totalCount/itemsPerPage);
           console.log("totalpages:",totalPages);
-          const productData = await productModel
-                  .find({isDeleted:false,name: {$regex: searchProduct, $options: 'i'}})
-                  .skip(skip)
-                  .limit(itemsPerPage)
-                  .exec();
+          const productData = await productModel.aggregate([
+             {
+              $match:{
+                "isDeleted":false,
+                 "name": {$regex: searchProduct, $options: 'i'}
+              }
+             },
+             {
+              $skip:skip,
+             },
+             {
+              $limit:itemsPerPage
+             }
+          ])
+                  
           const categoryData = await categoryModel.find({isDelete:false}).exec();
           const Currentuser = await UserModel.find({"_id":userId})
           console.log("currentUser:",Currentuser);
