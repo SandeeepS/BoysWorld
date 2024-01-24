@@ -19,9 +19,6 @@ async function user(req,res,next){
     }else{
         const userId = req.session.user;
         const userDetails = await userModel.findById(userId);
-        console.log("userdetails from middleware:",userDetails);
-        console.log("user in session is :",req.session.user);
-        console.log("current status :",userDetails.status);
         if(req.session.user && userDetails.status == true){
             return next();
         }else{

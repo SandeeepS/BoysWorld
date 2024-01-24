@@ -195,7 +195,7 @@ exports.selectedProduct = async(req,res)=>{
     try{
         const user = req.session.user;
         const userDetail = await UserModel.findById(user);
-
+        const cart = userDetail.cart;
         const prodId = req.params.id;
         const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
         const stock = productData.stock;
@@ -206,7 +206,7 @@ exports.selectedProduct = async(req,res)=>{
           message = "Only "+ stock+" item left";
         }
         console.log("message:",message)
-        res.render('selectedProduct',{productData,message,stock,userDetail});
+        res.render('selectedProduct',{productData,message,stock,userDetail,cart});
     }catch(error){
         console.error("error while fetching products",error);
         res.redirect('/shop');
@@ -492,8 +492,8 @@ exports.verifyOtp = async (req, res) => {
       }
       const productIds = productIdArray;
       const products = await productModel.find({_id:{$in:productIds}}).exec();
-      console.log(products);
-      res.redirect('/getCart?products='+JSON.stringify(products));
+      console.log("products:",products);
+      res.status(200).json({success:true,message:"item added to the cart ",products});
     }catch(err){
         console.log("error while geting cart",err);
         res.status(500).send("internal server error");
@@ -670,7 +670,7 @@ exports.getCart = async(req,res)=>{
            }
        }
        console.log("cart:",cart);
-       console.log("product:",cart[0].product)
+      
    
   res.render('cart', {cart,cartTotal}); 
   }catch(err){
