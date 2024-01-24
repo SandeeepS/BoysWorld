@@ -575,7 +575,7 @@ exports.productUpdated = async(req,res)=>{
         await productModel.findByIdAndUpdate(
             {"_id":productId2},
             { 
-                productName,
+                name: productName,
                 price,
                 stock:{
                     sizeSmall:{
