@@ -76,7 +76,8 @@ exports.shopPage = async(req,res)=>{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const Currentuser = await UserModel.find({"_id":userId})
         console.log("currentUser:",Currentuser);
-        res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
+        const searchProduct = "";
+        res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
     }catch(error){
         console.error("error while fetching products",error);
         res.redirect('/');
@@ -114,7 +115,8 @@ exports.getShopWithPriceRange = async(req,res)=>{
           const categoryData = await categoryModel.find({isDelete:false}).exec();
           const Currentuser = await UserModel.find({"_id":userId})
           console.log("currentUser:",Currentuser);
-          res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
+          const searchProduct = "";
+          res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
     }
 
   }catch(error){
@@ -155,7 +157,7 @@ exports.getShopBySearch = async(req,res) =>{
           const categoryData = await categoryModel.find({isDelete:false}).exec();
           const Currentuser = await UserModel.find({"_id":userId})
           console.log("currentUser:",Currentuser);
-          res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount});
+          res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
     }
 
        }catch(error){

@@ -285,54 +285,54 @@
                                         <th></th>
                                         
                                     </tr>
-                                    <% for(let i = 0;i< oders.length;i++){ %>
-                                                      <% const productId = oders[i].productId %>
-                                                      <% let product = {} %>
-                                                      <% if(product) { %>
-                                                      <tr>
-                                                       
-                                                          <td><%=oders[i].orderId%></td>
-                                                          <td> <% if (oders[i].userDetails && oders[i].userDetails.length > 0) { %>
-                                                            <%= oders[i].userDetails[0].name %>
-                                                          <% } %></td>
-                                                          <td><%=oders[i].productDetails[0].productName %></td>
-                                                          <td>₹<%=oders[i].totalAmount  %></td>
-                                                          <td><%= oders[i].date %></td>    
-                                                          <td><%= oders[i].paymentMethod%></td>     
-                                                          <td class="current-status" orderId="<%=oders[i]._id%>" ><%=oders[i].currentStatus%></td>  
-                                                            
-                                                       
-                                                         <td>
+                                    <% if (oders.length !=0 ){ %>
+                                          
+                                          <% for(let i = 0;i< oders.length;i++){ %>
+                                            <% const productId = oders[i].productId %>
+                                            <% let product = {} %>
+                                            <% if(product) { %>
+                                            <tr>
+                                            
+                                                <td><%=oders[i].orderId%></td>
+                                                <td> <% if (oders[i].userDetails && oders[i].userDetails.length > 0) { %>
+                                                  <%= oders[i].userDetails[0].name %>
+                                                <% } %></td>
+                                                <td><%=oders[i].productDetails[0].name %></td>
+                                                <td>₹<%=oders[i].totalAmount  %></td>
+                                                <td><%= oders[i].date %></td>    
+                                                <td><%= oders[i].paymentMethod%></td>     
+                                                <td class="current-status" orderId="<%=oders[i]._id%>" ><%=oders[i].currentStatus%></td>  
+                                                  
+                                            
+                                              <td>
 
-                                                          <button id="updateOrderStatusBtn" class="order-status-button  status-button  " orderId="<%=oders[i]._id%>"><%= oders[i].currentStatus%></button>
+                                                <button id="updateOrderStatusBtn" class="order-status-button  status-button  " orderId="<%=oders[i]._id%>"><%= oders[i].currentStatus%></button>
 
-                                                         </td>
-                                                         <td>
-                                                          <button id="cancelBtn" class="cancelBtn btn-danger" orderId="<%=oders[i]._id%>" >Cancel</button>
-                                                         </td>
-                                                        
-                                                        </td>
-                                                        
-                                                      </tr>
-                                                      <% } %>
-                                                      <% function formatDate(dateString) { %>
-                                                        <% const date = new Date(dateString) %>
-                                                        <% return date.toLocaleString() %>
-                                                      <% } %>
-                                      <% } %>
+                                              </td>
+                                              <td>
+                                                <button id="cancelBtn" class="cancelBtn btn-danger" orderId="<%=oders[i]._id%>" >Cancel</button>
+                                              </td>
+                                              
+                                              </td>
+                                              
+                                            </tr>
+                                            <% } %>
+                                            <% function formatDate(dateString) { %>
+                                              <% const date = new Date(dateString) %>
+                                              <% return date.toLocaleString() %>
+                                            <% } %>
+                                          <% } %>
 
-                                  
+                                    <%  } else { %>
+                                            <h5>No Orders Found</h5>
+                                    <% } %>
                                 </table>
-                                
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                     
                     </div>
-                   
-                    	
 					<div class="pagination">
 						<!-- previous  -->
 						<% if(currentPage > 1){ %>

@@ -172,7 +172,11 @@
 								<!-- search  -->
 								<div class="search-container">
 									<form action="/getShopBySearch" method="GET">
-										<input type="search" id="searchInput" name="searchProduct" placeholder="Search"/>
+										<% if(searchProduct != "") { %>
+											<input type="search" id="searchInput" name="searchProduct" value="<%=searchProduct%>" />
+										<% }else{ %>
+											<input type="search" id="searchInput" name="searchProduct" placeholder="Search" />
+										<% } %>
 										<button id="searchButton" type="submit">
 										<i class="fa fa-search"></i>
 										</button>
@@ -392,7 +396,7 @@
 											<div class="single-products">
 												<div class="productinfo text-center">
 													<img src="/views/productImages/${pro.image[0]}" alt="" height="400px" width="100px" style="object-fit: cover;">
-													<h5 style="color: #e69927;">${pro.productName}</h5>
+													<h5 style="color: #e69927;">${pro.name}</h5>
 													<h5>₹${ pro.price }</h5>
 													<p>${pro.discription}</p>
 													<a href="/selectedProduct/${pro._id}" class="btn btn-default add-to-cart">Buy Now</a>
