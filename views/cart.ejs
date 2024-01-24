@@ -145,8 +145,8 @@
 									<a href=""><img src="views/productImages/<%= cart[i].product[0].image[0]%>" alt="" height="100px" width="100px"></a>
 							</td>
 							<td class="cart_description">
-								<h4><a href=""><%=cart[i].product[0].productName%></a></h4>
-								<p>Web ID: 1089772</p>
+								<h4><a href=""><%=cart[i].product[0].name%></a></h4>
+								<p>(with <%=cart[i].product[0].offer%>% off)</p>
 								<% if (cart[i].cart.size == "sizeSmall"){ %>
 									<p>Size : S</p>
 									
@@ -161,7 +161,7 @@
 
 							</td>
 							<td class="cart_price">
-								<p  class="single-unit-price"  singleUnitPrice="<%=cart[i].product[0].price %>">₹<%=cart[i].product[0].price%></p>
+								<p  class="single-unit-price"  singleUnitPrice="<%=cart[i].product[0].offerPrice %>">₹<%=cart[i].product[0].offerPrice%></p>
 							</td>
 							<td class="cart_quantity">
 								<% let currentStock = "" %>
@@ -188,7 +188,7 @@
 								</div>
 							</td>
 							<td class="cart_total">
-							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].price%> = ₹<%= cart[i].cart.total%> </p>
+							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].offerPrice%> = ₹<%= cart[i].cart.total%> </p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>

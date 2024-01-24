@@ -711,6 +711,9 @@ exports.addingProduct = async(req,res)=>{
             stockMedium = medium;
         }
 
+        const  offerP = (offer/100)*price;
+        const offerPrice = price - offerP;
+        console.log("offerPrice:",offerPrice);
 
         const product = new productModel ({
               name:productName,
@@ -733,7 +736,8 @@ exports.addingProduct = async(req,res)=>{
               discription: dis,
               isDeleted:false,
               category,
-              offer
+              offer,
+              offerPrice
         })
         await product.save();
         console.log(`${productName} is inserted Successfully`);

@@ -84,6 +84,7 @@ exports.shopPage = async(req,res)=>{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const Currentuser = await UserModel.find({"_id":userId})
         console.log("currentUser:",Currentuser);
+        console.log("productDetails:",productData);
         const searchProduct = "";
         res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
     }catch(error){
@@ -127,7 +128,17 @@ exports.getShopWithPriceRange = async(req,res)=>{
               },
               {
                 $limit:itemsPerPage
-              }
+              },
+              {
+                $addFields:{
+                  lastAmount:{
+                    $multiply:[
+                      "$price",
+                      {$divide:["$offer",100]}
+                    ]
+                  }
+                }
+               }
           ])
             console.log("productData:",productData)     ;
           const categoryData = await categoryModel.find({isDelete:false}).exec();
@@ -179,6 +190,16 @@ exports.getShopBySearch = async(req,res) =>{
              },
              {
               $limit:itemsPerPage
+             },
+             {
+              $addFields:{
+                lastAmount:{
+                  $multiply:[
+                    "$price",
+                    {$divide:["$offer",100]}
+                  ]
+                }
+              }
              }
           ])
                   
@@ -227,13 +248,12 @@ exports.selectedProduct = async(req,res)=>{
         const prodId = req.params.id;
         const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
         const stock = productData.stock;
-        console.log("stock:",stock);
         if(stock === 0){
           message = "Out Of Stock!!";
         }else{
           message = "Only "+ stock+" item left";
         }
-        console.log("message:",message)
+        console.log("productData:",productData);
         res.render('selectedProduct',{productData,message,stock,userDetail,cart});
     }catch(error){
         console.error("error while fetching products",error);
@@ -607,7 +627,7 @@ exports.getCheckoutPage = async(req,res)=>{
       console.log("size:",size);
       const product2 = await productModel.findById(productId).exec();
       console.log("product2",product2);
-      const totalPrice = product2.price * quantity ;
+      const totalPrice = product2.offerPrice * quantity ;
       const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
       const product = await productModel.aggregate([
         {
@@ -698,7 +718,7 @@ exports.getCart = async(req,res)=>{
            }
        }
        console.log("cart:",cart);
-      
+      console.log("productDetails:",cart[0].product);
    
   res.render('cart', {cart,cartTotal}); 
   }catch(err){

@@ -37,6 +37,10 @@ const schema = {
         min:0,
         max:100,
         default:0,
+    },
+    offerPrice:{
+        type:Number,
+        default:0,
     }
 
 }

@@ -198,7 +198,15 @@
 				</div> 
 					<div class="col-sm-4" >
 						<p><%=productData.discription%></p>
-						<h4>₹<%=productData.price%></h4>
+						
+						<% if(productData.offer > 0){ %>
+							<h6 style="color: #FFA500;">(<%=productData.offer%>% off)</h6>
+							<h5><del>₹<%= productData.price %></del></h5>
+							<h5><b>₹<%= productData.offerPrice %></b></h5>
+						<% } else{ %>
+							<h6>(No Offer Available)</h6>
+							<h5>₹<%= productData.price %></h5>
+						<% } %>
 						<div class="size-selection">
 							<input type="radio" id="small" name="size" value="sizeSmall" hidden>
 							<label for="small">S</label>
