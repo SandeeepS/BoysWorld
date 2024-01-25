@@ -47,3 +47,10 @@ adminRoute.post('/checkStatus',adminController.updateStatus)
 adminRoute.post('/updateStatus',adminController.updateOrderStatus)
 //cancel order
 adminRoute.post('/cancelOrder',adminController.cancelOrder)
+
+//coupen
+adminRoute.post('/addingCoupen',auth.isAdmin,adminController.addingCoupen);
+adminRoute.get('/editCoupen',auth.isAdmin,adminController.editCoupen);
+adminRoute.get('/listUnlist',auth.isAdmin,adminController.listUnlistCoupen);
+adminRoute.post('/updateEditedCoupen',auth.isAdmin,adminController.updateEditedCoupen);
+adminRoute.post('/listUnlist',auth.isAdmin,adminController.listUnlist);

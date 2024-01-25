@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const schema = {
-    code:Number,
+    code:String,
+    offer:Number,
     listed:{
         type:Boolean,
         default:false
@@ -11,5 +12,5 @@ const schema = {
     }
 }
 
-const coupenModel = mongoose.model("coupen",schema );
+const coupenModel = mongoose.model("coupens",schema );
 module.exports = coupenModel;

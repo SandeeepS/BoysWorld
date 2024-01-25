@@ -486,12 +486,11 @@
               })
                   .then((response) => response.json())
                   .then((data) => {
-                      // Update the status text and button text based on the server response
+                    
                       if (data.success) {
                         
                           window.location = '/admin/customers';
                       } else {
-                          // Handle any error from the server, if needed
                           console.error("Failed to update user status.");
                       }
                       

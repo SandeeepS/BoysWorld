@@ -27,6 +27,17 @@
         color: red;
         display: none;
     }
+
+        input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
 </style>
 </head>
 <body>
@@ -195,13 +206,9 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="home-tab">
-                
                 <div class="tab-content tab-content-basic">
                   <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
-                    
-                     
                     <div class="row">
-                   
                             <div class="card card-rounded">
                               <div class="card-body">
                                 <div class=" justify-content-between align-items-start">
@@ -211,49 +218,25 @@
                                        <br>
                                        <div class="error-message" id="error-message"></div>
                                        <br>
-                                       <form action="/admin/addingCoupen" method="post" onsubmit="return validate()">
+                                       <form action="/admin/addingCoupen" method="post" >
+
                                            <p>
-                                            <input type="text" class="form-control" name="name" id="cat" placeholder="Enter the coupen code">
+                                            <input type="text" class="form-control" name="coupen2" id="coupen" placeholder="Enter the coupen code">
                                            </p>
-                                          
-                                           
-<!-- 
+
                                            <p>
-                                             <label for="price">Price</label>
-                                             <input type="number" class="form-control" name="price">
+                                            <input type="number" class="form-control" name="offer" id="coupenOffer" placeholder="Enter the offer amount (%)">
                                            </p>
-                                           
-                                                  
-                                             
-                                            <p>
-                                            <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock">
-                                            </p>  
-                                              
-
-                                            <p>
-                                                <label for="image">Image Url</label>
-                                                <input type="text" class="form-control" name="image">
-                                            </p>
-
-                                            <label for="discription">discription</label>
-                                            <input type="text" class="form-control" name="discription">
-                                           </p> -->
-
-                                           <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;">
+     
+                                           <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;" onclick="return validate()">
                                        </form>
                                     </div>
-
-
-                                   
-                                   
                                   </div>
-                              </div>
-                            </div>
-                          </div>
+                               </div>
+                             </div>
+                           </div>
                         </div>
                       </div>
-                     
                     </div>
                   </div>
                 </div>
@@ -276,7 +259,6 @@
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
-
   <!-- plugins:js -->
   <script src="vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
@@ -284,7 +266,6 @@
   <script src="vendors/chart.js/Chart.min.js"></script>
   <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
   <script src="vendors/progressbar.js/progressbar.min.js"></script>
-
   <!-- End plugin js for this page -->
   <!-- inject:js -->
   <script src="js/off-canvas.js"></script>
@@ -299,23 +280,56 @@
   <!-- End custom js for this page-->
   <script>
     function validate(){
+    
       const errorMessage = document.getElementById('error-message');
-      const cat = document.getElementById("cat").value;
-      
+      const coupen = document.getElementById("coupen").value;
+      const coupenOffer = document.getElementById("coupenOffer").value;
+      console.log("coupenOffer:",coupenOffer);
       function checkWhiteSpace(s){
         return s.trim() === "";
       }
-      if(cat === ""  ){
-        errorMessage.innerText ="please enter a Category";
+
+      if(coupen === ""  ){
+        errorMessage.innerText ="please enter a Coupen Code !";
                 errorMessage.style.display = "block";
                 setTimeout(function () {
                     errorMessage.style.display = "none";
                 }, 3000);
         return false;
       }
+
+      if(coupenOffer === ""){
+        errorMessage.innerText ="please enter the Offer!";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+            errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+      }
    
-      if(checkWhiteSpace(cat)){
-        errorMessage.innerText ="please enter a valid Category";
+      if(coupenOffer < 0 || coupenOffer > 100){
+        errorMessage.innerText ="please enter a valid offer!";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+            errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+      }
+
+
+      if(checkWhiteSpace(coupen)){
+        errorMessage.innerText ="please enter a valid Coupen!";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+          errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+        }
+     
+     
+       console.log("coupen length:", coupen.length);
+      if(coupen.length != 4 ){
+        errorMessage.innerText ="Coupen code strength should be 4 !";
         errorMessage.style.display = "block";
         setTimeout(function () {
           errorMessage.style.display = "none";
@@ -323,13 +337,20 @@
         return false;
         }
 
-        
+        var regex = /^[a-z0-9]+$/i; // RegEx for alphanumeric characters
+        if(!regex.test(coupen)){
+           errorMessage.innerText ="Coupen code should only contain letters and numbers";
+           errorMessage.style.display = "block";
+           setTimeout(function () {
+             errorMessage.style.display = "none";
+           }, 3000);
+           return false;
+        }
 
        return true;
-
     }
+
   </script>
 </body>
-
 </html>
 
