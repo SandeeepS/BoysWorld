@@ -902,9 +902,36 @@ exports.listUnlist = async(req,res)=>{
     try{
         const {coupenId} = req.body;
         console.log("coupenId:",coupenId);
+        const coupenId2 = new mongoose.Types.ObjectId(coupenId);
+        const coupenData = await coupenModel.findById(coupenId);
+        const currentListedStatus = coupenData.listed;
+        console.log("currentListedStatus:",currentListedStatus);
+
+        if(currentListedStatus == true){
+            const updatedCoupen = await coupenModel.findByIdAndUpdate({"_id":coupenId2},{$set:{"listed":false}});
+        }else{
+            const updatedCoupen = await coupenModel.findByIdAndUpdate({"_id":coupenId2},{$set:{"listed":true}});
+        }
+        res.status(200).json({success:true});
 
     }catch(error){
         console.error("error while listing the coupen!!",error);
+        res.redirect('/admin/coupen');
+    }
+}
+
+//coupen delete
+exports.coupenDelete = async(req,res)=>{
+    try{
+
+        const coupenId = req.query.id;
+        const coupenId2 = new mongoose.Types.ObjectId(coupenId);
+        console.log("coupenId2:",coupenId2);
+        const updatedCoupen = await coupenModel.findByIdAndUpdate({"_id":coupenId2},{$set:{"isDelete":true}})
+        res.redirect('/admin/coupen');
+
+    }catch(error){
+        console.error("error while deleting the coupen!!",error);
         res.redirect('/admin/coupen');
     }
 }

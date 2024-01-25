@@ -263,7 +263,7 @@
 
                                       <td>
                                         <a href="#" class="listUnlistBtn btn btn-primary btn-sm right" style="color: white;" class="listCoupen" coupenId="<%=coupenDetails[i]._id%>" >
-                                            List
+                                            <%= coupenDetails[i].listed == true? 'Unlist' : 'List' %>
                                         </a>
 
                                         <div id="conformModal-<%= coupenDetails[i]._id %>" class="modal">
@@ -286,7 +286,7 @@
                                       </td>
                                       
                                       <td>
-                                        <a href="" class="btn btn-danger btn-sm right" class="deleteCoupen">
+                                        <a href="/admin/coupenDelete?id=<%= coupenDetails[i]._id %>" class="btn btn-danger btn-sm right" class="deleteCoupen">
                                             Delete
                                         </a>                                          
                                       </td>
@@ -347,6 +347,7 @@
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
 
+
   <script>
        var listUnlistBtns = document.querySelectorAll(".listUnlistBtn");
        var closeModal = document.getElementById("conformModalClose");
@@ -395,8 +396,9 @@
               })
                   .then((response) => response.json())
                   .then((data) => {
-                    
+
                       if (data.success) {
+                          
                           window.location = '/admin/coupen';
                       } else {
                           console.error("Failed to update user status.");
