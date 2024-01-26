@@ -237,7 +237,28 @@
 			color: black;
 			text-decoration: none;
 		}
+		/* Hide the radio buttons */
+		.accordion {
+			position: absolute;
+			left: -9999px;
+		}
+
+		/* Hide the content divs */
+		.content {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.2s ease-out;
+		}
+
+		/* Show the content div when its preceding radio button is checked */
+		#coupen:checked ~ .content,
+		#referal:checked ~ .content {
+			max-height: 500px; /* Adjust this value according to the expected height of your content */
+		}
+
+	
 	</style>
+
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -388,6 +409,8 @@
 
 				</div>
 			</div>
+
+
 		</div>
         <table class="table  table-condensed"
 		<thead>
@@ -429,15 +452,32 @@
 					  <h5>Order Total :₹<%=totalPrice%></h5>
 				   </div>
 		   </div>
-		</div>
 		<% } %>
-		<div class="a-box text-center" >
-			<div>
-				<Button class="btn btn-default place-order" onclick="placeOrderBtn()">Place your order</Button>
+     </div>
+
+	<div class="a-box">
+		<div class="accordion-section">
+			<input type="checkbox" id="coupen">
+			<label for="section1">Get Discount using coupen code</label>
+			<div class="content">
+				<input type="text" >
 			</div>
 		</div>
-    </div>
+		<div class="accordion-section">
+			<input type="checkbox" id="referal">
+			<label for="section2">Get Discount using coupen code </label>
+			<div class="content">
+				<input type="text">
+			</div>
+		</div>
+		<!-- Add more sections as needed -->
+	</div>
 
+	<div class="a-box text-center" >
+		<div>
+			<Button class="btn btn-default place-order" onclick="placeOrderBtn()">Place your order</Button>
+		</div>
+	</div>
 
     <div id="paymentSuccessModal" class="modal2">
 		<div id="paymentSuccessModalContent" class="modal-content2">
@@ -476,23 +516,6 @@
 	</div>
 </section>
 	<footer id="footer">
-		
-		<div class="footer-widget">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-3 col-sm-offset-1">
-						<div class="single-widget">
-							<h2>About Shopper</h2>
-							<form action="#" class="searchform">
-								<input type="text" placeholder="Your email address" />
-								<button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-								<p>Get the most recent updates from <br />our site and be updated your self...</p>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		
 		<div class="footer-bottom">
 			<div class="container">
@@ -541,6 +564,7 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
 
+	
 	<script>
         // Add a JavaScript function to handle the radio button click event
         document.addEventListener("DOMContentLoaded", function () {
