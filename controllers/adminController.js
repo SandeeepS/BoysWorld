@@ -924,11 +924,11 @@ exports.listUnlist = async(req,res)=>{
 exports.coupenDelete = async(req,res)=>{
     try{
 
-        const coupenId = req.query.id;
+        const coupenId = req.body.coupenId;
         const coupenId2 = new mongoose.Types.ObjectId(coupenId);
         console.log("coupenId2:",coupenId2);
         const updatedCoupen = await coupenModel.findByIdAndUpdate({"_id":coupenId2},{$set:{"isDelete":true}})
-        res.redirect('/admin/coupen');
+        res.status(200).json({success:true});
 
     }catch(error){
         console.error("error while deleting the coupen!!",error);

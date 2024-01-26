@@ -281,14 +281,29 @@
                                             </div>
                                           </div>
                                           </div>
-
-
                                       </td>
                                       
                                       <td>
-                                        <a href="/admin/coupenDelete?id=<%= coupenDetails[i]._id %>" class="btn btn-danger btn-sm right" class="deleteCoupen">
+                                        <a href="#" class="deleteCoupen btn btn-danger btn-sm right"  coupenId="<%=coupenDetails[i]._id%>" >
                                             Delete
-                                        </a>                                          
+                                        </a>  
+                                        
+                                        <div id="deleteModal-<%= coupenDetails[i]._id %>" class="modal">
+                                          <div class="modal-content">
+                                            <span id="deleteModalClose" class="close">&times;</span>
+                                            <div class="modal-style">
+                                              <div class="modal-text" >
+                                                <p>Are you sure you want to delete this coupen?</p>
+                                              </div>
+                                              <div style="display: flex;">
+                                                 <a href="#" class="conformDeleteCoupenBtn btn btn-primary" style="color: white;" coupenId="<%= coupenDetails[i]._id %>"><h3>Yes</h3></a>
+                                                 <a href="/admin/coupen" class="btn btn-primary" style="padding-left: 25px;color:#ddd"><h3>No</h3></a>
+                                                
+                                              </div>
+                                            </div>
+                                          </div>
+                                          </div>
+
                                       </td>
                                     </tr>
                                   <% } %>
@@ -350,8 +365,11 @@
 
   <script>
        var listUnlistBtns = document.querySelectorAll(".listUnlistBtn");
+       var deleteCoupen = document.querySelectorAll(".deleteCoupen");
        var closeModal = document.getElementById("conformModalClose");
        var modals = document.querySelectorAll(".modal");
+       var deleteModalClose = document.getElementById("deleteModalClose");
+
        
        
       listUnlistBtns.forEach(function(link){
@@ -362,6 +380,17 @@
           modal.style.display = "block";
         }
       });
+
+      deleteCoupen.forEach(function(link){
+        link.onclick = function(){
+          var coupenId = link.getAttribute("coupenId");
+          console.log("coupen Id for delete:",coupenId);
+          var modal = document.getElementById("deleteModal-"+coupenId);
+          modal.style.display = "block";
+        }
+      })
+
+
 
       closeModal.onclick = function(){
         modals.forEach(function (modal) {
@@ -382,6 +411,9 @@
   <script>
      document.addEventListener("DOMContentLoaded",function(){
          const conformlistUnlist = document.querySelectorAll(".conformlistUnlist");
+         const conformDeleteCoupenBtn = document.querySelectorAll(".conformDeleteCoupenBtn");
+
+         //for listing or unlisting 
          conformlistUnlist.forEach(function(button){
             button.addEventListener("click",function(){
               const coupenId = this.getAttribute("coupenId");
@@ -410,6 +442,38 @@
                   });
             })
          })
+
+
+         //for delte a  particular coupen
+         conformDeleteCoupenBtn.forEach(function(button){
+          button.addEventListener("click",function(){
+            const coupenId = this.getAttribute("coupenId");
+
+            fetch("/admin/coupenDelete",{
+               method: "POST",
+               headers:{
+                "Content-Type": "application/json",
+
+               },
+               body: JSON.stringify({ coupenId: coupenId }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+
+                    if (data.success) {
+                        
+                        window.location = '/admin/coupen';
+                    } else {
+                        console.error("Failed to delete coupen.");
+                    }
+                    
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+          })
+       })
+
      })
   </script>
 </body>

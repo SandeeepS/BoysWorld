@@ -54,4 +54,4 @@ adminRoute.get('/editCoupen',auth.isAdmin,adminController.editCoupen);
 adminRoute.get('/listUnlist',auth.isAdmin,adminController.listUnlistCoupen);
 adminRoute.post('/updateEditedCoupen',auth.isAdmin,adminController.updateEditedCoupen);
 adminRoute.post('/listUnlist',auth.isAdmin,adminController.listUnlist);
-adminRoute.get('/coupenDelete',adminController.coupenDelete);
+adminRoute.post('/coupenDelete',adminController.coupenDelete);
