@@ -686,6 +686,7 @@ exports.getCheckoutPage2 = async(req,res)=>{
   }
 }
 
+
 exports.getCart = async(req,res)=>{
   try{
        const userId = req.session.user;
@@ -1867,7 +1868,7 @@ exports.applyCoupenCode = async(req,res)=>{
              const newTotalPrice = totalPrice -((coupenOffer/100)*totalPrice ) ;
              console.log("new price with coupen offer is :",newTotalPrice);
 
-             res.status(200).json({success:true,newTotalPrice,address,currentAddress,currentAddressId,product,quantity,productId,size});
+             res.status(200).json({success:true,newTotalPrice,address,currentAddress,currentAddressId,product,quantity,productId,size,totalPrice});
 
          }
         

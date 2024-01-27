@@ -253,6 +253,7 @@
 
 		/* Hide the content divs */
 		.content {
+			display: flex;
 			max-height: 0;
 			overflow: hidden;
 			transition: max-height 0.2s ease-out;
@@ -474,6 +475,7 @@
 			<div class="content">
 				<input type="text" id="applyCoupen" placeholder="Enter the coupen code" >
 				<button id="applyBtn" class="btn-primary" onclick="applyCode(event)">Apply</button>
+				<button id="removeBtn" class="btn-danger" style="display: none;" onclick="removeCode(event)">Remove</button>
 			</div>
 			<br>
 			
@@ -582,6 +584,8 @@
 			event.preventDefault();
 			const applyBtn = document.getElementById("applyBtn");
 			const errorMessage2 = document.getElementById("error-message2");
+			const inputField = document.getElementById("applyCoupen");
+
 			
 			applyBtn.addEventListener("click",function(){
 				const coupen = document.getElementById("applyCoupen").value;
@@ -603,6 +607,8 @@
 				const amount = currentTotalOrder.getAttribute("amount");
 				console.log("amount is :",amount);
 				const newTotalheading = document.getElementById("newtotalOrder");
+				const removeBtn = document.getElementById("removeBtn");
+
 
 	
 				function checkWhiteSpace(s){
@@ -667,6 +673,10 @@
 								const newTotalPrice = response.newTotalPrice;
 								currentTotalOrder.innerHTML = `<del>Order Total :₹<%=totalPrice%></del>` 
 								newTotalheading.innerHTML = `Order Total :₹${newTotalPrice}`;
+								applyBtn.style.display="none";
+                                removeBtn.style.display = "block";
+								inputField.style.pointerEvents = "none";
+								
 
 							}
 						},
@@ -677,6 +687,30 @@
 			})
 		}
 	
+	</script>
+
+	<script>
+		function removeCode(event){
+			event.preventDefault();
+            
+			const currentTotalOrder = document.getElementById("currentTotalOrder");
+			const amount = currentTotalOrder.getAttribute("amount");
+			const applyBtn = document.getElementById("applyBtn");
+			const inputField = document.getElementById("applyCoupen");
+			const removeBtn = document.getElementById("removeBtn");
+
+			console.log("old amount = ",amount);
+			const newtotalOrder = document.getElementById("newtotalOrder");
+            currentTotalOrder.innerText = `Order Total :₹${amount}`;
+			newtotalOrder.innerText = "";
+			inputField.style.pointerEvents = "auto";
+			removeBtn.style.display = "none";
+			applyBtn.style.display = "block";
+			
+
+
+			
+		}
 	</script>
 
 	
