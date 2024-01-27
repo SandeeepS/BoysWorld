@@ -60,6 +60,10 @@
 		color: red;
 		display: none;
 	}
+	.productDetails p {
+		margin: 0;
+
+	}
 </style>
 </head><!--/head-->
 <body>
@@ -144,8 +148,9 @@
 							<td class="cart_product">
 									<a href=""><img src="views/productImages/<%= cart[i].product[0].image[0]%>" alt="" height="100px" width="100px"></a>
 							</td>
-							<td class="cart_description">
+							<td class="productDetails" >
 								<h4><a href=""><%=cart[i].product[0].name%></a></h4>
+								<p>₹ <%=cart[i].product[0].price%></p>
 								<p>(with <%=cart[i].product[0].offer%>% off)</p>
 								<% if (cart[i].cart.size == "sizeSmall"){ %>
 									<p>Size : S</p>
