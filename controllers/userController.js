@@ -1132,47 +1132,53 @@ exports.placeOrder2 = async(req,res)=>{
     ("coupen in serverside :",coupen);
     const userId2 = req.session.user;
     const user = await UserModel.findById(userId2).exec();
-    const product = await productModel.findById(productId).exec();
-    const cashOnDelivery = "cashOnDelivery";
-    const status = "Conformed";
-    const userId = user._id;
-    
-    const productId2 = {
-      "productId":product._id,
-      "quantity":quantity,
-      "price":total
-    }
-   
-    const date = new Date();
-      const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-      const randomId = 10000+Math.floor(Math.random()*90000);
-      
-      const order = new orderModel({
-        "userId":userId,
-        "products":productId2,
-        "orderId":randomId,
-        "currentAddress":currentAddressId,
-        "totalAmount":total,
-        "date": formattedDate,
-        "paymentMethod":cashOnDelivery,
-        "currentStatus":status,
-        
+    const iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
+    if(iscoupenExist != undefined){
+        res.status(200).json({success:true,message:"Coupen code Expired ! Please remove it"});
 
-    });
-    const savedData = await order.save();
-    const currentProduct = await productModel.find({"_id":productId});
-    console.log("currentProduct:",currentProduct);
-    const currentStock = currentProduct[0].stock[size].stock;
-    console.log("currentStock:",currentStock);
-    const newStock = parseInt(currentStock - quantity);
-    console.log("newStock:",newStock);
-    const updatedStock = await productModel.findByIdAndUpdate(
-      {"_id":productId},
-      {$set:{[`stock.${size}.stock`]:newStock}}).exec();
-     
-    const updatedUser = await UserModel.findByIdAndUpdate({"_id":userId2},{$push:{"usedCoupen":coupen}});
-    console.log("order inserted successfully");
-    res.status(200).json({ success: true, message: 'Order placed successfully.'});
+    }else{
+              const product = await productModel.findById(productId).exec();
+              const cashOnDelivery = "cashOnDelivery";
+              const status = "Conformed";
+              const userId = user._id;
+              
+              const productId2 = {
+                "productId":product._id,
+                "quantity":quantity,
+                "price":total
+              }
+            
+              const date = new Date();
+                const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+                const randomId = 10000+Math.floor(Math.random()*90000);
+                
+                const order = new orderModel({
+                  "userId":userId,
+                  "products":productId2,
+                  "orderId":randomId,
+                  "currentAddress":currentAddressId,
+                  "totalAmount":total,
+                  "date": formattedDate,
+                  "paymentMethod":cashOnDelivery,
+                  "currentStatus":status,
+                  
+          
+              });
+              const savedData = await order.save();
+              const currentProduct = await productModel.find({"_id":productId});
+              console.log("currentProduct:",currentProduct);
+              const currentStock = currentProduct[0].stock[size].stock;
+              console.log("currentStock:",currentStock);
+              const newStock = parseInt(currentStock - quantity);
+              console.log("newStock:",newStock);
+              const updatedStock = await productModel.findByIdAndUpdate(
+                {"_id":productId},
+                {$set:{[`stock.${size}.stock`]:newStock}}).exec();
+              
+              const updatedUser = await UserModel.findByIdAndUpdate({"_id":userId2},{$push:{"usedCoupen":coupen}});
+              console.log("order inserted successfully");
+              res.status(200).json({ success: true,});
+    }
 
   }catch(err){
     console.error("error in place order 2 ",err);
@@ -1183,74 +1189,82 @@ exports.placeOrder2 = async(req,res)=>{
 //online payment through razorpay
 exports.generateRazorpay = async(req,res)=>{
      try{
-        const {productId, quantity, total,currentAddress,currentAddressId,size} = req.body;
+        const {productId, quantity, total,currentAddress,currentAddressId,size,coupen} = req.body;
+        console.log("coupen from online payment:",coupen);
         const onlinePayment = "Online Payment";
         const status = "pending";
         const userid = req.session.user;
         const user = await UserModel.findById(userid);
-        const userId = user._id;
-        console.log("user....id:",userId);
-        console.log("total:",total);
-        const product = await productModel.findById(productId).exec();
-        const productId2 = {
-          "productId":product._id,
-          "quantity":quantity,
-          "price":total
-        }
-        const date = new Date();
-    const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-    const randomId = 10000+Math.floor(Math.random()*90000);
-      
-        const orders = new orderModel({
-          "userId":userId,
-          "products":productId2,
-          "orderId":randomId,
-          "totalAmount":total,
-          "currentAddress":currentAddressId,
-          "date":formattedDate,
-          "paymentMethod":onlinePayment,
-          "currentStatus":status,
+        const iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
+        if(iscoupenExist != undefined){
+            res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
     
-      })
-       const savedData = await orders.save();
-       //updating the quantity
-       const currentProduct = await productModel.find({"_id":productId});
-       const currentStock = currentProduct[0].stock[size].stock;
-       const newStock = parseInt(currentStock - quantity);
-       const updatedStock = await productModel.findByIdAndUpdate(
-        {"_id":productId},
-        {$set:{[`stock.${size}.stock`]:newStock}}).exec();
-       console.log("order inserted successfully");
+        }else{
+              const userId = user._id;
+              console.log("user....id:",userId);
+              console.log("total:",total);
+              const product = await productModel.findById(productId).exec();
+              const productId2 = {
+                "productId":product._id,
+                "quantity":quantity,
+                "price":total
+              }
+              const date = new Date();
+          const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+          const randomId = 10000+Math.floor(Math.random()*90000);
+            
+              const orders = new orderModel({
+                "userId":userId,
+                "products":productId2,
+                "orderId":randomId,
+                "totalAmount":total,
+                "currentAddress":currentAddressId,
+                "date":formattedDate,
+                "paymentMethod":onlinePayment,
+                "currentStatus":status,
+          
+            })
+            const savedData = await orders.save();
+            //updating the quantity
+            const currentProduct = await productModel.find({"_id":productId});
+            const currentStock = currentProduct[0].stock[size].stock;
+            const newStock = parseInt(currentStock - quantity);
+            const updatedStock = await productModel.findByIdAndUpdate(
+              {"_id":productId},
+              {$set:{[`stock.${size}.stock`]:newStock}}).exec();
+            console.log("order inserted successfully");
+            const updatedUser = await UserModel.findByIdAndUpdate({"_id":userid},{$push:{"usedCoupen":coupen}});
 
-       //gettig orderId
-       const totalOrders = await orderModel.find({});
-       const totalOrderLength = totalOrders.length;
-       const order = totalOrders[totalOrderLength-1];
-       console.log("heloo world");
-       console.log("order:",order);
-       const orderId = order._id;
-        console.log("orderId:",orderId);
-        const total2 = parseInt(total) * 100;
+            //gettig orderId
+            const totalOrders = await orderModel.find({});
+            const totalOrderLength = totalOrders.length;
+            const order = totalOrders[totalOrderLength-1];
+            console.log("heloo world");
+            console.log("order:",order);
+            const orderId = order._id;
+              console.log("orderId:",orderId);
+              const total2 = parseInt(total) * 100;
 
-        var options = {
-          amount: total2,  
-          currency: "INR",
-          receipt: orderId
-        };
+              var options = {
+                amount: total2,  
+                currency: "INR",
+                receipt: orderId
+              };
 
-       console.log("hello worldddddddddddddd");
-       const razorpayOrder = await new Promise((resolve,reject)=>{
-          instance.orders.create(options,(err,order)=>{
-            if(err){
-              console.error("error creating razorpay order:",err);
-              reject(err);
-            }else{
-              resolve(order);
-            }
-          });
-        });
-        console.log("Razorpay order:",razorpayOrder);
-        res.status(200).json({success:true,order:razorpayOrder,total2});
+            console.log("hello worldddddddddddddd");
+            const razorpayOrder = await new Promise((resolve,reject)=>{
+                instance.orders.create(options,(err,order)=>{
+                  if(err){
+                    console.error("error creating razorpay order:",err);
+                    reject(err);
+                  }else{
+                    resolve(order);
+                  }
+                });
+              });
+              console.log("Razorpay order:",razorpayOrder);
+              res.status(200).json({success:true,order:razorpayOrder,total2});
+        }
 
      }catch(err){
       console.error("error while online payment from serverside :",err);
@@ -1576,63 +1590,73 @@ exports.cancelOrder = async(req,res)=>{
 //wallet1 
 exports.wallet1 = async(req,res)=>{
    try{
-       const {productId,quantity,total,currentAddress,currentAddressId,size} = req.body;
+       const {productId,quantity,total,currentAddress,currentAddressId,size,coupen} = req.body;
+       console.log("coupen get from wallet payment in server:",coupen);
        const user = req.session.user;
        const userId = new mongoose.Types.ObjectId(user);
        const userDetails = await UserModel.findById(userId);
-       const product = await productModel.findById(productId);
-       const walletPayment = "Wallet Payment";
-       const status = "Conformed";
-       console.log("userDetails:",userDetails);
-       let walletAmount = userDetails.wallet;
-       console.log("walletAmount:",walletAmount);
-       console.log("totalPrice:",total);
+       const iscoupenExist = userDetails.usedCoupen.find((ele)=> ele == coupen);
 
-       const productId2 = {
-        "productId":product._id,
-        "quantity":quantity,
-        "price":total
-       }
-
-       const date = new Date();
-       const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-       const randomId = 10000+Math.floor(Math.random()*90000);
-       
-       if(total <= walletAmount){
-            console.log("wallet payment enabled");
-            const order = new orderModel({
-              "userId":userId,
-              "products":productId2,
-              "orderId":randomId,
-              "currentAddress":currentAddressId,
-              "totalAmount":total,
-              "date": formattedDate,
-              "paymentMethod":walletPayment,
-              "currentStatus":status,
-              
-      
-          });
-          const savedData = await order.save();
-          const currentProduct = await productModel.find({"_id":productId});
-          console.log("currentProduct:",currentProduct);
-          const currentStock = currentProduct[0].stock[size].stock;
-          console.log("currentStock:",currentStock);
-          const newStock = parseInt(currentStock - quantity);
-          console.log("newStock:",newStock);
-          const updatedStock = await productModel.findByIdAndUpdate(
-            {"_id":productId},
-            {$set:{[`stock.${size}.stock`]:newStock}}).exec();
-
-          let newWalletAmount = walletAmount - total; 
-          await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newWalletAmount}});
-          console.log("order inserted successfully");
-          res.status(200).json({ success: true, message: 'Order placed successfully.'});
-
+       if( coupen !== undefined && iscoupenExist != undefined){
+           res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
+   
        }else{
-          console.log("wallete amount is not sufficient for this particular order");
-          let pointer ;
-          res.status(200).json({success:true,message:"wallet amount is not sufficient",pointer});
-       }
+              const product = await productModel.findById(productId);
+              const walletPayment = "Wallet Payment";
+              const status = "Conformed";
+              console.log("userDetails:",userDetails);
+              let walletAmount = userDetails.wallet;
+              console.log("walletAmount:",walletAmount);
+              console.log("totalPrice:",total);
+
+              const productId2 = {
+                "productId":product._id,
+                "quantity":quantity,
+                "price":total
+              }
+
+              const date = new Date();
+              const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+              const randomId = 10000+Math.floor(Math.random()*90000);
+              
+              if(total <= walletAmount){
+                    console.log("wallet payment enabled");
+                    const order = new orderModel({
+                      "userId":userId,
+                      "products":productId2,
+                      "orderId":randomId,
+                      "currentAddress":currentAddressId,
+                      "totalAmount":total,
+                      "date": formattedDate,
+                      "paymentMethod":walletPayment,
+                      "currentStatus":status,
+                      
+              
+                  });
+                  const savedData = await order.save();
+                  const currentProduct = await productModel.find({"_id":productId});
+                  console.log("currentProduct:",currentProduct);
+                  const currentStock = currentProduct[0].stock[size].stock;
+                  console.log("currentStock:",currentStock);
+                  const newStock = parseInt(currentStock - quantity);
+                  console.log("newStock:",newStock);
+                  const updatedStock = await productModel.findByIdAndUpdate(
+                    {"_id":productId},
+                    {$set:{[`stock.${size}.stock`]:newStock}}).exec();
+                    if(coupen != undefined){
+                      const updatedUser = await UserModel.findByIdAndUpdate({"_id":user},{$push:{"usedCoupen":coupen}});
+                    }
+
+                  let newWalletAmount = walletAmount - total; 
+                  await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newWalletAmount}});
+                  console.log("order inserted successfully");
+                  res.status(200).json({ success: true,});
+                }else{
+                    console.log("wallete amount is not sufficient for this particular order");
+                    let pointer ;
+                    res.status(200).json({success:true,message:"wallet amount is not sufficient",pointer});
+                 }
+        }
 
    }catch(error){
     console.log("error occured during wallet payment!!",error);

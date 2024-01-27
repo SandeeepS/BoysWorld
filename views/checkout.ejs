@@ -705,6 +705,8 @@
 			const newtotalOrder = document.getElementById("newtotalOrder");
             currentTotalOrder.innerText = `Order Total :₹${amount}`;
 			newtotalOrder.innerText = "";
+			newtotalOrder.removeAttribute("coupencode");
+			newtotalOrder.removeAttribute("newamount");
 			inputField.style.pointerEvents = "auto";
 			removeBtn.style.display = "none";
 			applyBtn.style.display = "block";
@@ -1102,10 +1104,13 @@
 			const modal2 = document.getElementById("paymentSuccessModal");
 			const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
 			const walletModalClose = document.getElementById("walletModalClose");
-			const errorMessage2 = document.getElementById("errorMessage2");
+			const errorMessage2 = document.getElementById("error-message2");
 			const newtotalOrder = document.getElementById("newtotalOrder");
 			const newAmount = newtotalOrder.getAttribute("newamount");
-			const coupen = newtotalOrder.getAttribute("coupencode");
+			let  coupen = newtotalOrder.getAttribute("coupencode");
+            if(coupen == null){
+				coupen = undefined;
+			}
 			console.log("coupenCode:",coupen);
 			console.log("newAmount:",newAmount);
 			let totalPrice = 0;
@@ -1113,7 +1118,7 @@
 			const productId= <%-JSON.stringify(product[0]._id)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
 
-			if(newAmount != null){
+			if(newAmount != undefined){
                totalPrice = newAmount;
 			}else{
 				totalPrice = <%-JSON.stringify(totalPrice)%>;
@@ -1144,7 +1149,13 @@
 							coupen
 						},
 						success: function (response) {
-							if(response){
+							if(response.message){
+							    errorMessage2.innerHTML = response.message;
+								errorMessage2.style.display = "block";
+								setTimeout(function(){
+									errorMessage2.style.display ="none";
+								},3000);
+							}else{
 								// Display payment succe ssful modal
 								modal2.style.display = "block";
 								setTimeout(function() {
@@ -1175,7 +1186,14 @@
 						coupen
 					},
 					success:function(response){
-						if(response){
+						if(response.message){
+							errorMessage2.innerHTML = response.message;
+							errorMessage2.style.display = "block";
+							setTimeout(function(){
+								errorMessage2.style.display = "none";
+							},3000);
+				
+						}else{
 							console.log("in fronend");
 							rezorpayPayment(response.order,response.total2);
 						}
@@ -1256,20 +1274,26 @@
 						coupen
 					},
 					success:function(response){
-						console.log("inside the wallet successfull");
-						let modalText = document.getElementById("walletModalText");
-						modalText.innerText = response.message;
-						if(response.message == "Order placed successfully."){
+
+
+						if(response.message){
+                            errorMessage2.innerHTML = response.message;
+							errorMessage2.style.display = "block";
+							setTimeout(function(){
+								errorMessage2.style.display = "none";
+							},3000);
+
+						}else{
+							console.log("inside the wallet successfull");
+							let modalText = document.getElementById("walletModalText");
+							modalText.innerText = "Order placed successfully.";
 							dynamicModalForWallet.style.display = "block"
 							walletModalClose.style.pointerEvents = "none";
 							setTimeout(function(){
 								window.location.href = "/shop";
 							},3000)
 						}
-						dynamicModalForWallet.style.display = "block"
-						walletModalClose.onclick = function(){
-							dynamicModalForWallet.style.display = "none";
-						}
+						
 					},
 					error:function(error){
 						console.error("error while online payment",error);
