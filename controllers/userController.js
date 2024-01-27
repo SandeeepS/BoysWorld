@@ -1127,7 +1127,9 @@ exports.placeOrder = async (req, res) => {
 
 exports.placeOrder2 = async(req,res)=>{
   try{
-    const {productId,quantity,total,currentAddress,currentAddressId,size} = req.body;
+    const {productId,quantity,total,currentAddress,currentAddressId,size,coupen} = req.body;
+    console/log
+    ("coupen in serverside :",coupen);
     const userId2 = req.session.user;
     const user = await UserModel.findById(userId2).exec();
     const product = await productModel.findById(productId).exec();
@@ -1167,6 +1169,8 @@ exports.placeOrder2 = async(req,res)=>{
     const updatedStock = await productModel.findByIdAndUpdate(
       {"_id":productId},
       {$set:{[`stock.${size}.stock`]:newStock}}).exec();
+     
+    const updatedUser = await UserModel.findByIdAndUpdate({"_id":userId2},{$push:{"usedCoupen":coupen}});
     console.log("order inserted successfully");
     res.status(200).json({ success: true, message: 'Order placed successfully.'});
 

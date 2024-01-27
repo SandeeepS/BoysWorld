@@ -47,8 +47,8 @@ const shcema = {
         default:0
     },
     usedCoupen:{
-        type:Array,
-        default:0
+        type:[String],
+        default:[],
     }
     
      

@@ -674,6 +674,7 @@
 								currentTotalOrder.innerHTML = `<del>Order Total :₹<%=totalPrice%></del>` 
 								newTotalheading.innerHTML = `Order Total :₹${newTotalPrice}`;
 								newTotalheading.setAttribute("newAmount",newTotalPrice);
+								newTotalheading.setAttribute("coupenCode",coupen);
 								applyBtn.style.display="none";
                                 removeBtn.style.display = "block";
 								inputField.style.pointerEvents = "none";
@@ -1104,6 +1105,8 @@
 			const errorMessage2 = document.getElementById("errorMessage2");
 			const newtotalOrder = document.getElementById("newtotalOrder");
 			const newAmount = newtotalOrder.getAttribute("newamount");
+			const coupen = newtotalOrder.getAttribute("coupencode");
+			console.log("coupenCode:",coupen);
 			console.log("newAmount:",newAmount);
 			let totalPrice = 0;
 
@@ -1137,7 +1140,8 @@
 							total: totalPrice,
 							currentAddress:currentAddress,
 							currentAddressId,
-							size
+							size,
+							coupen
 						},
 						success: function (response) {
 							if(response){
@@ -1167,7 +1171,8 @@
 						total: totalPrice,
 						currentAddress:currentAddress,
 						currentAddressId,
-						size
+						size,
+						coupen
 					},
 					success:function(response){
 						if(response){
@@ -1223,7 +1228,8 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
-							size
+							size,
+							coupen
 						},
 						success:function(response){
 							if(response){
@@ -1246,7 +1252,8 @@
 						total: totalPrice,
 						currentAddress:currentAddress,
 						currentAddressId,
-						size
+						size,
+						coupen
 					},
 					success:function(response){
 						console.log("inside the wallet successfull");
