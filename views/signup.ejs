@@ -73,6 +73,54 @@
 		.signup-form button {
 			width: 100%; /* Make the button fill the width of the container */
 		}
+
+	
+
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+		}
+
+		/* Firefox */
+		input[type=number] {
+		-moz-appearance: textfield;
+		}
+
+		.accordion {
+            display: flex;
+            flex-direction: column;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+
+        #referal:checked ~ .accordion {
+            max-height: 1000px; /* Adjust this value according to the expected height of your content */
+        }
+
+        .accordion input {
+            margin-bottom: 10px;
+        }
+	
+		#referal {
+			display: none;
+		}
+		#referalClick{
+			cursor: pointer;
+		}
+
+		.signup-form {
+			text-align: center; /* Center the content within the form */
+		}
+		
+		#referalClick {
+			display: inline-block; /* Make the label an inline block */
+			width: 100%; /* Set the label width to 100% */
+			text-align: center; /* Center the text within the label */
+			cursor: pointer;
+		}
+	
 		
 		
     </style>
@@ -129,6 +177,18 @@
 								<input type="number" name="phonenumber" placeholder="Phone Number" id="number" />
 								<input type="password" name="password" placeholder="Password" id="pass" />
 								<input type="password" placeholder="Confirm Password" id="cpass" />
+
+									  <!-- Referral Code Accordion -->
+									  <input type="checkbox" id="referal">
+									  <label for="referal" id="referalClick">Click Here to Use referral</label>
+
+									  <div class="accordion">
+										  <input type="text" id="referralCode" name="referralCode" placeholder="Enter referral code">
+									  </div>
+									  <br>
+									  <br>
+
+
 								<button type="submit" class="btn btn-default">Signup</button>
 							
 							</form>
