@@ -457,7 +457,8 @@
 						<h5>Size : L</h5>
 					  <% } %>
 					  <h5>Qty:<%=quantity%></h5>
-					  <h5>Order Total :₹<%=totalPrice%></h5>
+					  <h5 id="currentTotalOrder" amount="<%=totalPrice%>" >Order Total :₹<%=totalPrice%></h5>
+					  <h5 id="newtotalOrder"></h5>
 				   </div>
 		   </div>
 		   <% } %>
@@ -597,6 +598,12 @@
 				const size = <%-JSON.stringify(size)%>;
 				console.log("currentAddressId:",currentAddressId);
 				console.log("productId:",productId);
+
+				const currentTotalOrder = document.getElementById("currentTotalOrder");
+				const amount = currentTotalOrder.getAttribute("amount");
+				console.log("amount is :",amount);
+				const newTotalheading = document.getElementById("newtotalOrder");
+
 	
 				function checkWhiteSpace(s){
 					return s.trim() === "";
@@ -656,6 +663,11 @@
 								setTimeout(function () {
 								  errorMessage2.style.display = "none";
 								}, 3000);
+							}else{
+								const newTotalPrice = response.newTotalPrice;
+								currentTotalOrder.innerHTML = `<del>Order Total :₹<%=totalPrice%></del>` 
+								newTotalheading.innerHTML = `Order Total :₹${newTotalPrice}`;
+
 							}
 						},
 						error:function(error){

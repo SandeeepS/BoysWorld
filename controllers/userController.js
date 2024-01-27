@@ -1854,19 +1854,23 @@ exports.applyCoupenCode = async(req,res)=>{
          console.log("coupen entered is :",coupen);
          const allCoupen = await coupenModel.find();
          console.log("all coupen :",allCoupen);
-         const findedElement = allCoupen.find((ele)=> ele == coupen);
+         const findedElement = allCoupen.find((ele)=> ele.code == coupen);
          console.log("findedElemnt",findedElement);
          if(findedElement == undefined){
-             console.log("inside the if");
+             
              res.status(200).json({success:true,message:"Entered Coupen is currently unavailable"});
+
          }else{
-             res.status(200).json({success:true,message:"The coupen is verrified"});
+             coupenOffer = findedElement.offer;
+             console.log("offfer of the specified coupen:",coupenOffer);
+             console.log("total price:",totalPrice);
+             const newTotalPrice = totalPrice -((coupenOffer/100)*totalPrice ) ;
+             console.log("new price with coupen offer is :",newTotalPrice);
+
+             res.status(200).json({success:true,newTotalPrice,address,currentAddress,currentAddressId,product,quantity,productId,size});
+
          }
         
-
-
-
-
     }catch(error){
       console.error("error occured while applying coupen code!!",error);
       res.status(500).json({success:false,message:"error ocucred"});
