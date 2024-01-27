@@ -673,6 +673,7 @@
 								const newTotalPrice = response.newTotalPrice;
 								currentTotalOrder.innerHTML = `<del>Order Total :₹<%=totalPrice%></del>` 
 								newTotalheading.innerHTML = `Order Total :₹${newTotalPrice}`;
+								newTotalheading.setAttribute("newAmount",newTotalPrice);
 								applyBtn.style.display="none";
                                 removeBtn.style.display = "block";
 								inputField.style.pointerEvents = "none";
@@ -1101,9 +1102,20 @@
 			const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
 			const walletModalClose = document.getElementById("walletModalClose");
 			const errorMessage2 = document.getElementById("errorMessage2");
+			const newtotalOrder = document.getElementById("newtotalOrder");
+			const newAmount = newtotalOrder.getAttribute("newamount");
+			console.log("newAmount:",newAmount);
+			let totalPrice = 0;
+
 			const productId= <%-JSON.stringify(product[0]._id)%>;
 			const quantity = <%-JSON.stringify(quantity)%>;
-			const totalPrice = <%-JSON.stringify(totalPrice)%>;
+
+			if(newAmount != null){
+               totalPrice = newAmount;
+			}else{
+				totalPrice = <%-JSON.stringify(totalPrice)%>;
+			}
+			console.log("totalAmount :",totalPrice);
 			const currentAddress =  <%-JSON.stringify(currentAddress)%>;
 			const currentAddressId =  <%-JSON.stringify(currentAddressId)%>;
 			const size = <%-JSON.stringify(size) %>;
