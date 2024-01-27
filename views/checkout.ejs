@@ -586,6 +586,17 @@
 				const coupen = document.getElementById("applyCoupen").value;
 				console.log("coupen is :",coupen);
 				errorMessage2.innerHTML = '';
+
+				const address = <%- JSON.stringify(address)%>;
+				const product = <%- JSON.stringify(product)%>;
+				const quantity = <%-JSON.stringify(quantity)%>;
+				const totalPrice = <%- JSON.stringify(totalPrice)%>;
+				const productId = <%- JSON.stringify(productId)%>;
+				const currentAddressId = <%- JSON.stringify(currentAddressId) %>;
+				const currentAddress = <%-JSON.stringify(currentAddress)%>;
+				const size = <%-JSON.stringify(size)%>;
+				console.log("currentAddressId:",currentAddressId);
+				console.log("productId:",productId);
 	
 				function checkWhiteSpace(s){
 					return s.trim() === "";
@@ -628,6 +639,29 @@
 					   }, 3000);
 					   return false;
 					}
+
+					$.ajax({
+						type:'POST',
+						url:'/applyCoupenCode',
+						data:{
+							coupen,address,currentAddress,currentAddressId,product,quantity,totalPrice,productId,size
+
+						},
+						success:function(response){
+							console.log("reched here");
+							if(response.message){
+								console.log("the message:",response.message)
+								errorMessage2.innerText=  response.message;
+								errorMessage2.style.display = "block";
+								setTimeout(function () {
+								  errorMessage2.style.display = "none";
+								}, 3000);
+							}
+						},
+						error:function(error){
+							console.error("error occured!!!",error);
+						}
+					})
 			})
 		}
 	

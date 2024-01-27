@@ -1,6 +1,7 @@
 
 const UserModel = require('../models/userModel');
 const orderModel = require('../models/ordersModel');
+const coupenModel = require('../models/coupenModel');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
@@ -1844,3 +1845,30 @@ exports.resetPasswordLogin = async(req,res)=>{
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 };
+
+
+//apply coupen code
+exports.applyCoupenCode = async(req,res)=>{
+    try{
+         const {coupen,address,currentAddress,currentAddressId,product,quantity,totalPrice,productId,size} = req.body;
+         console.log("coupen entered is :",coupen);
+         const allCoupen = await coupenModel.find();
+         console.log("all coupen :",allCoupen);
+         const findedElement = allCoupen.find((ele)=> ele == coupen);
+         console.log("findedElemnt",findedElement);
+         if(findedElement == undefined){
+             console.log("inside the if");
+             res.status(200).json({success:true,message:"Entered Coupen is currently unavailable"});
+         }else{
+             res.status(200).json({success:true,message:"The coupen is verrified"});
+         }
+        
+
+
+
+
+    }catch(error){
+      console.error("error occured while applying coupen code!!",error);
+      res.status(500).json({success:false,message:"error ocucred"});
+    }
+}
