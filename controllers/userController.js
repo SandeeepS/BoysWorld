@@ -7,7 +7,8 @@ const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
 const moment =  require('moment');
 const Razorpay = require('razorpay');
-const { v4: uuidv4 } = require('uuid');
+const uuid = require('uuid');
+
 const { format } = require('date-fns');
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -458,12 +459,16 @@ exports.verifyOtp = async (req, res) => {
     console.log(currentTimeStamp);
     console.log(exTime);
     if(userotp === otpStorage){
+      const referralCode = uuid.v4().substring(0, 5);
+      console.log("referral code is :",referralCode);
+
       const data = new UserModel({
         "name":userData.username,
         "userid":userData.userid,
         "email":userData.email,
         "number":userData.phonenumber,
         "pass":userData.password,
+        "referralCode":referralCode
         
     });
     if(currentTimeStamp.isBefore(exTimeMoment)){
@@ -1133,7 +1138,7 @@ exports.placeOrder2 = async(req,res)=>{
     const userId2 = req.session.user;
     const user = await UserModel.findById(userId2).exec();
     const iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
-    if(iscoupenExist != undefined){
+    if(coupen != undefined && iscoupenExist != undefined){
         res.status(200).json({success:true,message:"Coupen code Expired ! Please remove it"});
 
     }else{
@@ -1174,8 +1179,9 @@ exports.placeOrder2 = async(req,res)=>{
               const updatedStock = await productModel.findByIdAndUpdate(
                 {"_id":productId},
                 {$set:{[`stock.${size}.stock`]:newStock}}).exec();
-              
-              const updatedUser = await UserModel.findByIdAndUpdate({"_id":userId2},{$push:{"usedCoupen":coupen}});
+              if(coupen != undefined){
+                const updatedUser = await UserModel.findByIdAndUpdate({"_id":userId2},{$push:{"usedCoupen":coupen}});
+              }
               console.log("order inserted successfully");
               res.status(200).json({ success: true,});
     }
@@ -1196,7 +1202,7 @@ exports.generateRazorpay = async(req,res)=>{
         const userid = req.session.user;
         const user = await UserModel.findById(userid);
         const iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
-        if(iscoupenExist != undefined){
+        if(coupen != undefined && iscoupenExist != undefined){
             res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
     
         }else{
@@ -1233,7 +1239,9 @@ exports.generateRazorpay = async(req,res)=>{
               {"_id":productId},
               {$set:{[`stock.${size}.stock`]:newStock}}).exec();
             console.log("order inserted successfully");
-            const updatedUser = await UserModel.findByIdAndUpdate({"_id":userid},{$push:{"usedCoupen":coupen}});
+            if(coupen != undefined){
+              const updatedUser = await UserModel.findByIdAndUpdate({"_id":userid},{$push:{"usedCoupen":coupen}});
+            }
 
             //gettig orderId
             const totalOrders = await orderModel.find({});

@@ -49,7 +49,8 @@ const shcema = {
     usedCoupen:{
         type:[String],
         default:[],
-    }
+    },
+    referralCode:String,
     
      
 }
