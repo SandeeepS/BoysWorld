@@ -45,6 +45,10 @@ const shcema = {
     wallet:{
         type:Number,
         default:0
+    },
+    usedCoupen:{
+        type:Array,
+        default:0
     }
     
      

@@ -108,6 +108,14 @@
 			padding-left: 30px;
 			
 		}
+		.a-box2 {
+			display: block;
+			border-radius: 8px;
+			background-color: #fff;
+			border: 1px #D5D9D9 solid;
+			padding-left: 30px;
+			
+		}
 		.box-sub{
 			display: flex;
 			flex-wrap: wrap;
@@ -136,7 +144,7 @@
 			opacity: 0.3; /* Adjust the opacity value as needed */
 		  }
 
-		.content{
+		.content2{
 			display: flex;
 			margin: 10px 10px 10px 10px;
 		}
@@ -429,9 +437,10 @@
 		   </thead>
           </table>
 	</form>
-		<% if(product) {%>
-		<div class="a-box">
-		   <div class="content">
+		
+		<div class="a-box2">
+			<% if(product) {%>
+		   <div class="content2">
 			       <div class="photo">
 					 <img src="/views/productImages/<%=product[0].image[0]%> " alt="">
 				   </div>
@@ -447,30 +456,28 @@
 					 <% }else if(size == "sizeLarge"){ %>
 						<h5>Size : L</h5>
 					  <% } %>
-
 					  <h5>Qty:<%=quantity%></h5>
 					  <h5>Order Total :₹<%=totalPrice%></h5>
 				   </div>
 		   </div>
-		<% } %>
-     </div>
+		   <% } %>
+        </div>
+	 
 
 	<div class="a-box">
 		<div class="accordion-section">
 			<input type="checkbox" id="coupen">
-			<label for="section1">Get Discount using coupen code</label>
+			<label for="section1">Get More Discount using Coupen code</label>
+			<div class="error-message" id="error-message2"></div>
+
 			<div class="content">
-				<input type="text" >
+				<input type="text" id="applyCoupen" placeholder="Enter the coupen code" >
+				<button id="applyBtn" class="btn-primary" onclick="applyCode(event)">Apply</button>
 			</div>
+			<br>
+			
 		</div>
-		<div class="accordion-section">
-			<input type="checkbox" id="referal">
-			<label for="section2">Get Discount using coupen code </label>
-			<div class="content">
-				<input type="text">
-			</div>
-		</div>
-		<!-- Add more sections as needed -->
+
 	</div>
 
 	<div class="a-box text-center" >
@@ -478,6 +485,11 @@
 			<Button class="btn btn-default place-order" onclick="placeOrderBtn()">Place your order</Button>
 		</div>
 	</div>
+
+	<br>
+	<br>
+	<br>
+
 
     <div id="paymentSuccessModal" class="modal2">
 		<div id="paymentSuccessModalContent" class="modal-content2">
@@ -563,6 +575,63 @@
     <script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+	<script>
+		function applyCode(event){
+			event.preventDefault();
+			const applyBtn = document.getElementById("applyBtn");
+			const errorMessage2 = document.getElementById("error-message2");
+			
+			applyBtn.addEventListener("click",function(){
+				const coupen = document.getElementById("applyCoupen").value;
+				console.log("coupen is :",coupen);
+				errorMessage2.innerHTML = '';
+	
+				function checkWhiteSpace(s){
+					return s.trim() === "";
+				}
+	
+				if( coupen == ""){
+					errorMessage2.innerText = "Please enter the coupen code";
+					errorMessage2.style.display = "block";
+					// Hide the error message after 3 seconds
+					setTimeout(function () {
+						errorMessage2.style.display = "none";
+					}, 3000);
+					return false;
+				}
+	
+				if(checkWhiteSpace( coupen)){
+					errorMessage2.innerText ="please enter the valid coupen code";
+					errorMessage2.style.display = "block";
+					setTimeout(function () {
+					  errorMessage2.style.display = "none";
+					}, 3000);
+					return false;
+				  }
+
+				  if( coupen.length != 4 ){
+					errorMessage2.innerText ="Coupen code strength should be 4 !";
+					errorMessage2.style.display = "block";
+					setTimeout(function () {
+					  errorMessage2.style.display = "none";
+					}, 3000);
+					return false;
+					}
+
+					var regex = /^[a-z0-9]+$/i; // RegEx for alphanumeric characters
+					if(!regex.test(coupen)){
+					   errorMessage2.innerText ="Coupen code should only contain letters and numbers";
+					   errorMessage2.style.display = "block";
+					   setTimeout(function () {
+						 errorMessage2.style.display = "none";
+					   }, 3000);
+					   return false;
+					}
+			})
+		}
+	
+	</script>
 
 	
 	<script>
