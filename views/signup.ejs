@@ -171,7 +171,7 @@
 							<h2>New User Signup!</h2>
 							<div class="error-message" id="error-message">
 							</div>
-							<form action="/signupUser" method="post" onsubmit="return validateForm()">
+							<form action="#"  >
 								<input type="text" name="username" id="username" placeholder="Name" />
 								<input type="email" name="email" placeholder="Email Address" id="email" />
 								<input type="number" name="phonenumber" placeholder="Phone Number" id="number" />
@@ -180,7 +180,7 @@
 
 									  <!-- Referral Code Accordion -->
 									  <input type="checkbox" id="referal">
-									  <label for="referal" id="referalClick">Click Here to Use referral</label>
+									  <label for="referal" id="referalClick">Click Here to Use the referral Code</label>
 
 									  <div class="accordion">
 										  <input type="text" id="referralCode" name="referralCode" placeholder="Enter referral code">
@@ -189,7 +189,7 @@
 									  <br>
 
 
-								<button type="submit" class="btn btn-default">Signup</button>
+								<button type="submit" class="btn btn-default" onclick="validateForm(event)">Signup</button>
 							
 							</form>
 						</div>
@@ -217,15 +217,32 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
 	<script>
-		function validateForm(){
+
+		var referalCheckbox = document.getElementById('referal');
+		var referalLabel = document.getElementById('referalClick');
+		var referralCodeInput = document.getElementById('referralCode');
+
+		referalCheckbox.addEventListener('click', function() {
+			if (this.checked) {
+				referalLabel.innerText = "Click Here to Remove the Referral Code";
+			} else {
+				referalLabel.innerText = "Click Here to Use the referral Code";
+				referralCodeInput.value = "";
+			}
+		});
+
+		function validateForm(event){
+			event.preventDefault();
+
 			const username = document.getElementById('username').value;
 			const email = document.getElementById('email').value;
 			const number = document.getElementById('number').value;
 			const pass = document.getElementById('pass').value;
 			const cpass = document.getElementById('cpass').value;
+			let referralCode = document.getElementById("referralCode").value
 			const errorMessage = document.getElementById('error-message');
 			const phonePattern = /^(?=.*[1-9])\d{10}$/;
-           
+           console.log("referal code is :",referralCode);
 			errorMessage.innerHTML = '';
 			function checkWhiteSpace(s){
 				return s.trim() === "";
@@ -377,8 +394,57 @@
 
 				return false;
 			}
+
+			if(referralCode != "" && checkWhiteSpace(referralCode)){
+				errorMessage.innerText = "please enter a valid referal code";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
+ 
+			if(referralCode != "" && referralCode.length != 5){
+				errorMessage.innerText = "Referral code strength must be 5";
+                errorMessage.style.display = "block";
+				
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+
+				return false;
+			}
+
+		    $.ajax({
+				type:'POST',
+				url:'/signupUser',
+				data:{
+					username,
+					email,
+					number,
+					pass,
+					cpass,
+					referralCode,
+
+				},
+				success:function(response){
+					if(response.message){
+						errorMessage.innerHTML = response.message;
+						errorMessage.style.display="block";
+						setTimeout(function(){
+							errorMessage.style.display = "none";
+						},3000)
+					}else{
+						window.location = '/getOtpPage';
+					}
+				},
+				error:function(error){
+					console.error("error occured while signup");
+				}
+			})
 		
-			return true;
 
 			
 		}

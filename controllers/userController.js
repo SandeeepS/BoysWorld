@@ -309,49 +309,64 @@ exports.userEntry = async(req,res)=>{
 exports.signup = async(req,res)=>{
     try{
     // Generate a random OTP
-    const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
-    const extime = moment().add(30,'seconds').toISOString();
-    const saltRouds = 10;
-    const hashedpassword = await bcrypt.hash(req.body.password,saltRouds);
-    req.session.otpStorage = {
-        otp,
-        expirationTime: extime,
-      };
-   req.session.userData ={
-    "username":req.body.username,
-    "email":req.body.email,
-    "phonenumber":req.body.phonenumber,
-    "password":hashedpassword,
-   }
-   console.log(req.session.otpStorage);
-    // Create a Nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: 'iamsandeep6969400@gmail.com',
-        pass: 'ijpzysobzeshejlv',
-      },
-    });
+    const referralCode = req.body.referralCode;
+    console.log("referrla code in serverside:",referralCode);
+    const userDetails = await UserModel.find();
     
-    // Email configuration
-    const mailOptions = {
-      from: 'sandeeps@gmail.com',
-      to: '2002m9002@gmail.com',
-      subject: 'OTP Verification',
-      text: `Your OTP is: ${otp}`,
-    };
-    
-    // Send the email with OTP
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Error sending email:', error);
-        res.redirect('/');
-      } else {
-        console.log('Email sent:', info.response);
-        
-        res.redirect('/getOtpPage');
-      }
-    });
+    const isExistReferalCode = userDetails.find((ref)=> ref.referralCode == referralCode);
+
+    if (referralCode != "" && isExistReferalCode == undefined){
+
+           res.status(200).json({success:true,message:"The provided referral code is Expired!"});
+
+    }else{
+              
+          const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
+          const extime = moment().add(30,'seconds').toISOString();
+          const saltRouds = 10;
+          const hashedpassword = await bcrypt.hash(req.body.pass,saltRouds);
+          req.session.otpStorage = {
+              otp,
+              expirationTime: extime,
+            };
+        req.session.userData ={
+          "username":req.body.username,
+          "email":req.body.email,
+          "phonenumber":req.body.phonenumber,
+          "password":hashedpassword,
+          "referralCode":req.body.referralCode,
+        }
+        console.log(req.session.otpStorage);
+          // Create a Nodemailer transporter
+          const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+              user: 'iamsandeep6969400@gmail.com',
+              pass: 'ijpzysobzeshejlv',
+            },
+          });
+          
+          // Email configuration
+          const mailOptions = {
+            from: 'sandeeps@gmail.com',
+            to: '2002m9002@gmail.com',
+            subject: 'OTP Verification',
+            text: `Your OTP is: ${otp}`,
+          };
+          
+          // Send the email with OTP
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+              res.redirect('/');
+            } else {
+              console.log('Email sent:', info.response);
+              
+              res.status(200).json({success:true});
+            }
+          });
+    }
+
     
     }catch(error){
         console.error("Error during signup:",error);
