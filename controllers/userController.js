@@ -273,8 +273,14 @@ exports.sportsWear = async(req,res)=>{
 }
 
 exports.getOtpPage = async(req,res)=>{
+  let referredUserId = "";
+  if(req.query.referredUser){
+    console.log("referred user from query",req.query.referredUser);
+    referredUserId = req.query.referredUser ;
+    console.log("reffered user :",referredUserId);
+  }
     const message = "Enter OTP ";
-    res.render('otp',{message});
+    res.render('otp',{message,referredUserId});
 }
 
 exports.userEntry = async(req,res)=>{
@@ -320,7 +326,17 @@ exports.signup = async(req,res)=>{
            res.status(200).json({success:true,message:"The provided referral code is Expired!"});
 
     }else{
-              
+
+          let  updatedReferredUser = "";
+          if(referralCode != ""){
+            console.log("referal code after varification:",referralCode);
+            referredUser = userDetails.find((ref)=> ref.referralCode == referralCode);
+            referredUserId = referredUser._id;
+            console.log("referred user:",referredUser);
+            updatedReferredUser = referredUserId;
+            console.log("refered userid",updatedReferredUser);
+          }
+
           const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
           const extime = moment().add(30,'seconds').toISOString();
           const saltRouds = 10;
@@ -361,8 +377,11 @@ exports.signup = async(req,res)=>{
               res.redirect('/');
             } else {
               console.log('Email sent:', info.response);
-              
-              res.status(200).json({success:true});
+              if(updatedReferredUser != ""){
+                 res.status(200).json({success:true,updatedReferredUser});
+              }else{
+                res.status(200).json({success:true});
+              }
             }
           });
     }
@@ -465,7 +484,9 @@ exports.reSendotpResetPassword = async(req,res)=>{
 //varify otp for signup
 exports.verifyOtp = async (req, res) => {
     try {
-    const {userotp} = req.body;
+    const {userotp,referredUserId} = req.body;
+    console.log("referred User Id :",referredUserId);
+    
     const otpStorage = req.session.otpStorage.otp;
     const currentTimeStamp = moment();
     const exTime = req.session.otpStorage.expirationTime;
@@ -494,7 +515,19 @@ exports.verifyOtp = async (req, res) => {
             console.log(req.session.user);
             if(savedData){
                 console.log("Record inserted successfully");
-                res.redirect('/shop');
+                if(referredUserId != ""){
+                    console.log("referrredUserId varification in varify payment:",referredUserId);
+                    let updatedReferredUser2 = await UserModel.findByIdAndUpdate({"_id":referredUserId},{$inc:{"wallet":100}});
+
+                    let updatedNewUser = await UserModel.findByIdAndUpdate(
+                      { "_id": savedData._id },
+                      { $inc: { "wallet": 100 } }
+                     );
+                    res.redirect('/shop');
+                }else{
+                  res.redirect('/shop');
+                }
+              
             }else{
                 console.log("failed to insert record");
                 res.redirect("/");

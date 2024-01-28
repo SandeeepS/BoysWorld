@@ -436,7 +436,13 @@
 						setTimeout(function(){
 							errorMessage.style.display = "none";
 						},3000)
+					}else if(response.updatedReferredUser){
+						console.log("referal id is present");
+						console.log("updatedReffredUser is :",response.updatedReferredUser);
+						const referredUser = response.updatedReferredUser;
+						window.location = '/getOtpPage?referredUser='+referredUser;
 					}else{
+						console.log("no referal id ")
 						window.location = '/getOtpPage';
 					}
 				},

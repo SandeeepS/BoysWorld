@@ -22,6 +22,12 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+
+	<style>
+		#referredUser{
+			display: none;
+		}
+	</style>
 </head><!--/head-->
 
 <body>
@@ -73,6 +79,7 @@
 						<h2><%=message%></h2>
 						<form action="/verifyOtp" method="post">
 							<input type="text" id="userid" name="userotp" placeholder="enter the conformation code" />
+							<input type="text" id="referredUser" name="referredUserId" value="<%=referredUserId%>" >
 							<p id="otpExpiryTime"></p>
 							<button type="submit" >Submit</button>
 						</form>
@@ -168,6 +175,9 @@
     <script src="js/main.js"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
+            const referredUser = <%-JSON.stringify(referredUserId)%>
+			console.log("refferd user id is :", referredUser);
+
 			const resendButton = document.getElementById("resendOTP");
 			resendButton.disabled = true;
 		})
