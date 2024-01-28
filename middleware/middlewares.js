@@ -18,7 +18,9 @@ async function user(req,res,next){
         res.redirect('/login');
     }else{
         const userId = req.session.user;
+        console.log("userId:",userId);
         const userDetails = await userModel.findById(userId);
+        console.log("userdetails is :",userDetails);
         if(req.session.user && userDetails.status == true){
             return next();
         }else{

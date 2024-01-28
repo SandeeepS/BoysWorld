@@ -511,7 +511,7 @@ exports.verifyOtp = async (req, res) => {
             const {name} = data;
             console.log(name);
             const savedData = await data.save();
-            req.session.user = req.session.userData.email;
+            req.session.user = savedData._id;
             console.log(req.session.user);
             if(savedData){
                 console.log("Record inserted successfully");
