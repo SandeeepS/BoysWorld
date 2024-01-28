@@ -249,7 +249,7 @@
 					<div class="features_items" id="feature">
 						<!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
-						<% if(product.length != 0) {%>
+						<% if(product.length > 0) {%>
 
 								<% for(const pro of product){ %>
 
@@ -295,6 +295,7 @@
 
 
 												<p><%=pro.discription%></p>
+												<p><%=pro._id%></p>
 												<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>
 											</div>
 										</div>

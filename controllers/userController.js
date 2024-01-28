@@ -256,9 +256,11 @@ exports.selectedProduct = async(req,res)=>{
         const userDetail = await UserModel.findById(user);
         const cart = userDetail.cart;
         const prodId = req.params.id;
+        const productId = new mongoose.Types.ObjectId(prodId);
         const productData = await productModel.aggregate([
           {
             $match:{
+              "_id":productId,
               "isDeleted":false
             }
           },{
@@ -271,6 +273,7 @@ exports.selectedProduct = async(req,res)=>{
             }
           }
         ])
+        
         const stock = productData[0].stock;
         if(stock === 0){
           message = "Out Of Stock!!";
