@@ -649,7 +649,11 @@ exports.addcategoryPage = async(req,res)=>{
 exports.addingCategory = async(req,res)=>{
     try{
         const {name} = req.body;
-        console.log("catyer",name);
+        let catOffer = req.body.catOffer;
+       
+        if(catOffer == ""){
+            catOffer = 0 ;
+        }
         const lowercasename = typeof name === 'string' ? name.toLowerCase() : name;
         const existingCategory = await categoryModel.findOne({ "name": { $regex: new RegExp('^' + lowercasename + '$', 'i') }})
         console.log("existing category",existingCategory);
@@ -659,6 +663,7 @@ exports.addingCategory = async(req,res)=>{
        }else{
          const newCategory = new categoryModel({
            "name":name,
+           "offer":catOffer,
             "isDelete":false
          });
          await newCategory.save();
@@ -700,7 +705,11 @@ exports.updateCategory = async(req,res)=>{
     try{
         const catId = req.params.id;
         const {name} = req.body;
-        await categoryModel.findByIdAndUpdate(catId,{name}).exec();
+        let catOffer = req.body.catOffer;
+        if(catOffer == ""){
+            catOffer = 0;
+        }
+        await categoryModel.findByIdAndUpdate(catId,{$set:{"name":name,"offer":catOffer}}).exec();
         res.redirect('/admin/categories')
     }catch(err){
         console.error("error while updating the category",err);

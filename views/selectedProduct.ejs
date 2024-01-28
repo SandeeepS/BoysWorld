@@ -88,6 +88,20 @@
 				color: white;
 				
 			  }
+
+			  /*css for accordian */
+			 #offer {
+				display: none;
+			}
+			
+			.hidecontent {
+				display: none;
+			}
+			
+			#offer:checked ~ #content2 {
+				display: block;
+			}
+			 
 			  
 			 
 		</style>
@@ -167,17 +181,17 @@
 			<div class="row">
 				<div class="col-sm-9 padding-right">
 					<div class="features_items"><!--features_items-->
-						<h2 class="title text-center"><%= productData.name%></h2>
+						<h2 class="title text-center"><%= productData[0].name%></h2>
                     </div>
 				</div>
 			</div>					
 			<div class="pro-row">
 				<div class="col-sm-1">
 					<div class="xzoom-thumbs">
-						<% for(let i = 0 ; i < productData.image.length ; i++){ %>
+						<% for(let i = 0 ; i < productData[0].image.length ; i++){ %>
 							<div>
 								<a href="" data-index="<%= i %>">
-									<img class="xzoom-gallery" src="/views/productImages/<%= productData.image[i]%>" alt="">
+									<img class="xzoom-gallery" src="/views/productImages/<%= productData[0].image[i]%>" alt="">
 								</a>
 							</div>
 						<%}%>
@@ -189,7 +203,7 @@
 							<div class="single-products">
 									<div class="productinfo text-center">
 										<div  id="xzoom-default">
-											<img src="/views/productImages/<%= productData.image[0]%>" alt="" id="zoom-image">
+											<img src="/views/productImages/<%= productData[0].image[0]%>" alt="" id="zoom-image">
 										</div>
 									</div>
 							</div>
@@ -197,16 +211,37 @@
 					</div>
 				</div> 
 					<div class="col-sm-4" >
-						<p><%=productData.discription%></p>
+						<p><%=productData[0].discription%></p>
+
+						<% let categoryOffer = productData[0].categoryDetail[0].offer %>
+						<% let offerPrice = productData[0].offerPrice %>
+						<% let productPrice = productData[0].price %>
+
+						        <% if (categoryOffer != 0){ %>
+
+									<% let totalOffer = productData[0].offer + categoryOffer %>
+									<% let newPrice = productPrice - ((totalOffer/100)*productPrice) %>
+									<% if(newPrice < 0){ %>
+										<% newPrice = 0 %>
+									<% } %>
+
+									<input type="checkbox" id="offer" class="hidecontent"/>
+									<label for="offer" style="color: #FFA500;">(<%=productData[0].offer + categoryOffer%>% off)</label>
+									<div id="content2" class="hidecontent"><h6>	<%= productData[0].offer%> % product offer + <%= categoryOffer%>% category offer</h6></div>
+
+									<h5><del>₹<%= productData[0].price %></del></h5>
+									<h5><b>₹<%= newPrice %></b></h5>
+								<% } else{ %>
 						
-						<% if(productData.offer > 0){ %>
-							<h6 style="color: #FFA500;">(<%=productData.offer%>% off)</h6>
-							<h5><del>₹<%= productData.price %></del></h5>
-							<h5><b>₹<%= productData.offerPrice %></b></h5>
-						<% } else{ %>
-							<h6>(No Offer Available)</h6>
-							<h5>₹<%= productData.price %></h5>
-						<% } %>
+										<% if(productData[0].offer > 0){ %>
+											<h6 style="color: #FFA500;">(<%=productData[0].offer%>% off)</h6>
+											<h5><del>₹<%= productData[0].price %></del></h5>
+											<h5><b>₹<%= productData[0].offerPrice %></b></h5>
+										<% } else{ %>
+											<h6>(No Offer Available)</h6>
+											<h5>₹<%= productData[0].price %></h5>
+										<% } %>
+								<% } %>
 						<div class="size-selection">
 							<input type="radio" id="small" name="size" value="sizeSmall" hidden>
 							<label for="small">S</label>
@@ -226,8 +261,8 @@
 							</div>
 						</div>
 
-						<button id="addCartBtn" class="btn btn-default add-to-cart" class="fa fa-shopping-cart" onclick="addToCart('<%=productData._id%>')">Add to cart</button>
-						<button id="buyNow" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData._id%>')" >Buy Now</button>
+						<button id="addCartBtn" class="btn btn-default add-to-cart" class="fa fa-shopping-cart" onclick="addToCart('<%=productData[0]._id%>')">Add to cart</button>
+						<button id="buyNow" class="btn btn-default add-to-cart" onclick="buyNow('<%=productData[0]._id%>')" >Buy Now</button>
 					</div>
 				</div>
 			</div>
@@ -295,7 +330,7 @@
 				var productData = <%- JSON.stringify(productData)%>;
 			   
 				// Update the src attribute of the xzoom-default image
-				$('#xzoom-default img').attr('src', '/views/productImages/' + productData.image[index]);
+				$('#xzoom-default img').attr('src', '/views/productImages/' + productData[0].image[index]);
 				initializeZoom();
 			});
 	

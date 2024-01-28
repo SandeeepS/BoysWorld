@@ -245,6 +245,7 @@
                                     <table class="table table-condensed">
                                       <tr class="cart_menu">
                                           <th>Category</th>
+                                          <th>Offer</th>
                                           <!-- <th></th>
                                           <th>Price</th>
                                           <th>Stock</th> -->
@@ -257,6 +258,12 @@
                                       <tr>
                                           
                                           <td><%= cat.name %></td>
+                                          <% if(cat.offer != 0){ %>
+                                            <td><%=cat.offer%>%</td>
+                                          <% }else{ %>
+                                            <td>No Offer</td>
+                                         <% } %>
+                                         
                                           <td>
                                             <div class="d-flex justify-content-end">
                                                 <a href="/admin/updateCategory/<%= cat._id %>" class="btn btn-primary btn-sm">

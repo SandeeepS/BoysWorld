@@ -250,7 +250,13 @@
 						<!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
 						<% if(product.length != 0) {%>
+
 								<% for(const pro of product){ %>
+
+									<% let categoryOffer = pro.categoryDetails[0].offer %>
+									<% let offerPrice = pro.offerPrice %>
+									<% let productPrice = pro.price %>
+
 									<div class="productDiv col-sm-4" id="data">
 										<div class="product-image-wrapper">
 										<div class="single-products" id="single-porduct">
@@ -262,14 +268,31 @@
 													<h6 style="color: red;">Out Of Stock!!</h6>
 												<% } %>
 
-												<% if(pro.offer > 0){ %>
-													<h6>(<%=pro.offer%>% off)</h6>
+
+												<% if(categoryOffer  != 0){ %>
+                                                    <% let totalOffer = pro.offer + categoryOffer %>
+													<% let newPrice = productPrice - ((totalOffer/100)*productPrice) %>
+													<% if(newPrice < 0){ %>
+													<%	newPrice = 0;  %>
+													<% } %>
+													<h6>(<%=pro.offer +categoryOffer %>% off)</h6>
 													<h5><del>₹<%= pro.price %></del></h5>
-													<h5><b>₹<%= pro.offerPrice %></b></h5>
-												<% } else{ %>
-													<h6>(No Offer Available)</h6>
-													<h5>₹<%= pro.price %></h5>
-												<% } %>
+													<h5><b>₹<%= newPrice %></b></h5>
+
+
+												<% }else{ %>
+														
+														<% if(pro.offer > 0){ %>
+															<h6>(<%=pro.offer%>% off)</h6>
+															<h5><del>₹<%= pro.price %></del></h5>
+															<h5><b>₹<%= pro.offerPrice %></b></h5>
+														<% } else{ %>
+															<h6>(No Offer Available)</h6>
+															<h5>₹<%= pro.price %></h5>
+														<% } %>
+
+											  <%	} %>
+
 
 												<p><%=pro.discription%></p>
 												<a href="/selectedProduct/<%=pro._id%>" class="btn btn-default add-to-cart">Buy Now</a>

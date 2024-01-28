@@ -75,6 +75,14 @@ exports.shopPage = async(req,res)=>{
                 $match:{"isDeleted":false},
                },
                {
+                $lookup:{
+                  from:"categories",
+                  localField:"category",
+                  foreignField:"_id",
+                  as:"categoryDetails"
+                }
+               },
+               {
                   $skip:skip
                },
                {
@@ -248,8 +256,22 @@ exports.selectedProduct = async(req,res)=>{
         const userDetail = await UserModel.findById(user);
         const cart = userDetail.cart;
         const prodId = req.params.id;
-        const productData = await productModel.findById(prodId,{isDeleted:false}).exec();
-        const stock = productData.stock;
+        const productData = await productModel.aggregate([
+          {
+            $match:{
+              "isDeleted":false
+            }
+          },{
+            $lookup:{
+              from:"categories",
+              localField:"category",
+              foreignField:"_id",
+              as:"categoryDetail"
+
+            }
+          }
+        ])
+        const stock = productData[0].stock;
         if(stock === 0){
           message = "Out Of Stock!!";
         }else{

@@ -197,11 +197,16 @@
                                   <div class="table-responsive cart_info">
                                     <div >
                                        <h2>Update Category</h2>
-                                       <form action="/admin/UpdatedCategory/<%= cataToUpdate._id%>" method="post">
+                                       <form action="/admin/UpdatedCategory/<%= cataToUpdate._id%>" method="post" onsubmit="return validate()">
                                            <p>
                                             <label for="name">Category Name</label>      
                                             <input type="text" class="form-control" name="name" value="<%=cataToUpdate.name %>" >
                                            </p>
+                                           <p>
+                                            <label for="offer">Category Offer (optional)</label>
+                                            <input type="number" class="form-control" name="catOffer" id="catOffer" value="<%=cataToUpdate.offer%>">
+                                            </p>
+
                                            <input type="submit" name="" id="" value="Update" class="btn btn-primary btn-sm" style="color: aliceblue;">
                                        </form>
                                     </div>
@@ -254,6 +259,50 @@
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
+
+  <script>
+    function validate(){
+      const errorMessage = document.getElementById('error-message');
+      const cat = document.getElementById("cat").value;
+      const offer = document.getElementById("catOffer").value;
+
+      
+      function checkWhiteSpace(s){
+        return s.trim() === "";
+      }
+      if(cat === ""  ){
+        errorMessage.innerText ="please enter a Category";
+                errorMessage.style.display = "block";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 3000);
+        return false;
+      }
+   
+      if(checkWhiteSpace(cat)){
+        errorMessage.innerText ="please enter a valid Category";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+          errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+        }
+       
+        
+        if(offer < 0 || offer > 100){
+          errorMessage.innerText ="please enter a valid offer";
+          errorMessage.style.display = "block";
+          setTimeout(function () {
+            errorMessage.style.display = "none";
+          }, 3000);
+          return false;
+        }
+        
+
+       return true;
+
+    }
+  </script>
 </body>
 
 </html>
