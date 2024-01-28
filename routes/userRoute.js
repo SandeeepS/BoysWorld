@@ -75,6 +75,7 @@ route.post('/wallet2',userController.wallet2);
 
 //coupen
 route.post('/applyCoupenCode',userController.applyCoupenCode);
+route.post('/applyCoupenCodeFromCheckout2',userController.applyCoupenCodeFromCheckout2);
 
 
 module.exports = route

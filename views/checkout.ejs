@@ -480,7 +480,6 @@
 			<br>
 			
 		</div>
-
 	</div>
 
 	<div class="a-box text-center" >
@@ -597,10 +596,8 @@
 				const quantity = <%-JSON.stringify(quantity)%>;
 				const totalPrice = <%- JSON.stringify(totalPrice)%>;
 				const productId = <%- JSON.stringify(productId)%>;
-				const currentAddressId = <%- JSON.stringify(currentAddressId) %>;
 				const currentAddress = <%-JSON.stringify(currentAddress)%>;
 				const size = <%-JSON.stringify(size)%>;
-				console.log("currentAddressId:",currentAddressId);
 				console.log("productId:",productId);
 
 				const currentTotalOrder = document.getElementById("currentTotalOrder");
@@ -657,7 +654,7 @@
 						type:'POST',
 						url:'/applyCoupenCode',
 						data:{
-							coupen,address,currentAddress,currentAddressId,product,quantity,totalPrice,productId,size
+							coupen,address,currentAddress,product,quantity,totalPrice,productId,size
 
 						},
 						success:function(response){
@@ -764,8 +761,7 @@
 					const quantity = <%-JSON.stringify(quantity)%>;
 					const totalPrice = <%- JSON.stringify(totalPrice)%>;
 					const productId = <%- JSON.stringify(productId)%>;
-					const currentAddressId = <%- JSON.stringify(currentAddressId) %>;
-					console.log("currentAddressId:",currentAddressId);
+
 					console.log("productId:",productId);
 
 
@@ -1125,7 +1121,6 @@
 			}
 			console.log("totalAmount :",totalPrice);
 			const currentAddress =  <%-JSON.stringify(currentAddress)%>;
-			const currentAddressId =  <%-JSON.stringify(currentAddressId)%>;
 			const size = <%-JSON.stringify(size) %>;
 
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
@@ -1144,7 +1139,7 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
-							currentAddressId,
+							
 							size,
 							coupen
 						},
@@ -1181,7 +1176,7 @@
 						quantity: quantity,
 						total: totalPrice,
 						currentAddress:currentAddress,
-						currentAddressId,
+						
 						size,
 						coupen
 					},

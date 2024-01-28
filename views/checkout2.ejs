@@ -195,6 +195,26 @@
 			height: 100%;
 			padding-top: 20%;
 		}
+
+			/* Hide the radio buttons */
+			.accordion {
+				position: absolute;
+				left: -9999px;
+			}
+	
+			/* Hide the content divs */
+			.content2 {
+				display: flex;
+				max-height: 0;
+				overflow: hidden;
+				transition: max-height 0.2s ease-out;
+			}
+	
+			/* Show the content div when its preceding radio button is checked */
+			#coupen:checked ~ .content2,
+			#referal:checked ~ .content2 {
+				max-height: 500px; /* Adjust this value according to the expected height of your content */
+			}
 		
 	</style>
 
@@ -235,6 +255,52 @@
 			text-decoration: none;
 		}
 	</style>
+
+	<style>
+		.a-box.text-center {
+			margin-top: 20px;
+			padding: 20px;
+			background-color: #f8f8f8;
+			border-radius: 8px;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		}
+	
+		.a-box.text-center ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+	
+		.a-box.text-center ul li {
+			font-size: 18px;
+			margin-bottom: 10px;
+			color: #333;
+		}
+	
+		#cartTotalAmount {
+			font-weight: bold;
+			color: #e44d26; /* Your preferred color for the total amount */
+		}
+	
+		.btn.place-order {
+			padding: 10px 20px;
+			background-color: #007BFF;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease-in-out;
+		}
+	
+		.btn.place-order:hover {
+			background-color: #0056b3;
+		}
+
+		.newtotalOrder{
+			display: none;
+		}
+	</style>
+	
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head><!--/head-->
@@ -430,17 +496,38 @@
 				                <h5>Size : L </h5>               
 					  <%  }                                         %>
 
-					  <h5>Order Total :₹<%=cartDetails[i].cart.total%></h5>
+					  <h5 id="currentTotalOrder" amount="<%=cartDetails[i].cart.total%>" >Order Total :₹<%=cartDetails[i].cart.total%></h5>
+					 
+
 				   </div>
 		   </div>
 		</div>
 	    <% } %>
 		<% } %>
+
+		
+		<div class="a-box">
+			<div class="accordion-section">
+				<input type="checkbox" id="coupen">
+				<label for="section1">Get More Discount using Coupen code</label>
+				<div class="error-message" id="error-message2"></div>
+
+				<div class="content2">
+					<input type="text" id="applyCoupen" placeholder="Enter the coupen code" >
+					<button id="applyBtn" class="btn-primary" onclick="applyCode(event)">Apply</button>
+					<button id="removeBtn" class="btn-danger" style="display: none;" onclick="removeCode(event)">Remove</button>
+				</div>
+				<br>
+				
+			</div>
+		</div>
 	
 		<div class="a-box text-center" >
 			<div>
                 <ul>
-                    <li>Cart Sub Total <span id="cartTotalAmount" totalAmount="<%=totalAmount%>"> ₹<%=totalAmount%></span></li>
+                    <li id="cartTotalAmount"  totalAmount="<%=totalAmount%>">Cart Sub Total : ₹<%=totalAmount%></li>
+					<li id="newtotalOrder"></li>
+
                 </ul>
 				<Button class="btn btn-default place-order" onclick="placeOrder()">Place your order</Button>
 			</div>
@@ -554,6 +641,132 @@
 
 	
 	<script>
+		function applyCode(event){
+			event.preventDefault();
+			const applyBtn = document.getElementById("applyBtn");
+			const errorMessage2 = document.getElementById("error-message2");
+			const inputField = document.getElementById("applyCoupen");
+
+			
+			applyBtn.addEventListener("click",function(){
+				const coupen = document.getElementById("applyCoupen").value;
+				console.log("coupen is :",coupen);
+				errorMessage2.innerHTML = '';
+
+				const cartDetails= <%-JSON.stringify(cartDetails)%>;
+
+				const cartTotalAmount = document.getElementById("cartTotalAmount");
+				const totalAmount = <%-JSON.stringify(totalAmount) %>;
+				console.log("amount is :",totalAmount);
+				const newTotalheading = document.getElementById("newtotalOrder");
+				const removeBtn = document.getElementById("removeBtn");
+
+
+	
+				function checkWhiteSpace(s){
+					return s.trim() === "";
+				}
+	
+				if( coupen == ""){
+					errorMessage2.innerText = "Please enter the coupen code";
+					errorMessage2.style.display = "block";
+					// Hide the error message after 3 seconds
+					setTimeout(function () {
+						errorMessage2.style.display = "none";
+					}, 3000);
+					return false;
+				}
+	
+				if(checkWhiteSpace( coupen)){
+					errorMessage2.innerText ="please enter the valid coupen code";
+					errorMessage2.style.display = "block";
+					setTimeout(function () {
+					  errorMessage2.style.display = "none";
+					}, 3000);
+					return false;
+				  }
+
+				  if( coupen.length != 4 ){
+					errorMessage2.innerText ="Coupen code strength should be 4 !";
+					errorMessage2.style.display = "block";
+					setTimeout(function () {
+					  errorMessage2.style.display = "none";
+					}, 3000);
+					return false;
+					}
+
+					var regex = /^[a-z0-9]+$/i; // RegEx for alphanumeric characters
+					if(!regex.test(coupen)){
+					   errorMessage2.innerText ="Coupen code should only contain letters and numbers";
+					   errorMessage2.style.display = "block";
+					   setTimeout(function () {
+						 errorMessage2.style.display = "none";
+					   }, 3000);
+					   return false;
+					}
+
+					$.ajax({
+						type:'POST',
+						url:'/applyCoupenCodeFromCheckout2',
+						data:{
+							coupen,cartDetails,totalAmount
+
+						},
+						success:function(response){
+							console.log("reched here");
+							if(response.message){
+								console.log("the message:",response.message)
+								errorMessage2.innerText=  response.message;
+								errorMessage2.style.display = "block";
+								setTimeout(function () {
+								  errorMessage2.style.display = "none";
+								}, 3000);
+							}else{
+								const newTotalAmount = response.newTotalAmount;
+								cartTotalAmount.innerHTML = `<del>Cart Sub Total : ₹${ totalAmount}</del>` 
+								newTotalheading.innerHTML = `Cart Sub Total : ₹${newTotalAmount}`;
+								newTotalheading.setAttribute("newAmount",newTotalAmount);
+								newTotalheading.setAttribute("coupenCode",coupen);
+								newTotalheading.style.display = "block";
+								applyBtn.style.display="none";
+                                removeBtn.style.display = "block";
+								inputField.style.pointerEvents = "none";
+							}
+						},
+						error:function(error){
+							console.error("error occured!!!",error);
+						}
+					})
+			})
+		}
+	</script>
+
+	<script>
+		function removeCode(event){
+			event.preventDefault();
+            
+			const cartTotalAmount = document.getElementById("cartTotalAmount");
+			const applyBtn = document.getElementById("applyBtn");
+			const inputField = document.getElementById("applyCoupen");
+			const removeBtn = document.getElementById("removeBtn");
+            const totalAmount = <%-JSON.stringify(totalAmount)%>
+
+			console.log("old amount = ",totalAmount);
+			const newtotalOrder = document.getElementById("newtotalOrder");
+            cartTotalAmount.innerText = `Cart Sub Total : ₹${ totalAmount}`;
+			newtotalOrder.innerText = "";
+			newtotalOrder.removeAttribute("coupencode");
+			newtotalOrder.removeAttribute("newamount");
+			newtotalOrder.style.display = "none";
+			inputField.style.pointerEvents = "auto";
+			removeBtn.style.display = "none";
+			applyBtn.style.display = "block";
+
+		}
+	</script>
+
+	
+	<script>
          		
 		document.addEventListener("DOMContentLoaded",function(){
 			 const submitBtn = document.getElementById("addressSubmit");
@@ -578,7 +791,6 @@
 					 const address = <%- JSON.stringify(address)%>;
 					 const currentAddress = <%- JSON.stringify(currentAddress)%>;
 					 const cartDetails = <%-JSON.stringify(cartDetails)%>;
-					 const totalAmount = <%- JSON.stringify(totalAmount)%>;
  
  
  
@@ -933,8 +1145,21 @@
 			const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
 			const walletModalClose = document.getElementById("walletModalClose");
 			const cartDetails= <%-JSON.stringify(cartDetails)%>;
-			const currentAddressId = <%- JSON.stringify(currentAddressId)%>;
-            const totalAmount = cartTotal.getAttribute("totalAmount");
+            let totalAmount = 0
+			const newtotalOrder = document.getElementById("newtotalOrder");
+            const newTotalAmount = newtotalOrder.getAttribute("newamount");
+			let coupen = newtotalOrder.getAttribute("coupenCode");
+			if(coupen == null){
+				coupen = undefined
+			}
+			console.log("coupen is:",coupen);
+
+			if(newTotalAmount  != undefined){
+				totalAmount = newTotalAmount
+			}else{
+				totalAmount = <%-JSON.stringify(totalAmount) %>;
+			}
+
 			console.log("totalAmount:",totalAmount);
 			
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
@@ -951,7 +1176,8 @@
 						url: '/placeOrder', 
 						data: {
 							cartDetails:cartDetails,
-							totalAmount:totalAmount
+							totalAmount:totalAmount,
+							coupen
 						},
 						success: function (response) {
 							console.log("hello world");
@@ -973,7 +1199,7 @@
 					type:'POST',
 					url:'/generateRazorpayFromCheckout2',
 					data:{
-						cartDetails,totalAmount,currentAddressId
+						cartDetails,totalAmount,coupen
 					},
 					success:function(response){
 						if(response){
@@ -1042,7 +1268,8 @@
 						url:'/wallet2',
 						data:{
 							cartDetails:cartDetails,
-							totalAmount:totalAmount
+							totalAmount:totalAmount,
+							coupen
 						},
 						success:function(response){
 							console.log("inside the wallet successfull");
