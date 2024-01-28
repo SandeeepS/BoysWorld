@@ -441,6 +441,12 @@
 		
 		<div class="a-box2">
 			<% if(product) {%>
+				
+				<% let categoryOffer = product[0].categoryDetail[0].offer %>
+				<% let productOffer = product[0].offer %>
+				<% let totalOffer = categoryOffer + productOffer %>
+				<% let productPrice = product[0].price %>
+				<% let offerPrice = productPrice - ((totalOffer/100)*productPrice)%>
 		   <div class="content2">
 			       <div class="photo">
 					 <img src="/views/productImages/<%=product[0].image[0]%> " alt="">
@@ -448,7 +454,11 @@
 				   <div class="discription">
                       <h5><%=product[0].name%></h5>
 					  <h5><%=product[0].discription%></h5>
-					  <h5>₹<%=product[0].offerPrice%></h5>
+                      <h5 >(<%= totalOffer %>% off)</h5>
+					  <h5><del>₹<%=product[0].price%></del></h5>
+
+
+					  <h5>₹<%=offerPrice%></h5>
 
 					 <% if(size == "sizeSmall"){ %>
 						<h5>Size : S</h5>
@@ -458,7 +468,9 @@
 						<h5>Size : L</h5>
 					  <% } %>
 					  <h5>Qty:<%=quantity%></h5>
-					  <h5 id="currentTotalOrder" amount="<%=totalPrice%>" >Order Total :₹<%=totalPrice%></h5>
+
+					  <% let totalAmount =  quantity * offerPrice %>
+					  <h5 id="currentTotalOrder" amount="<%=totalAmount%>" >Order Total :₹<%=totalAmount%></h5>
 					  <h5 id="newtotalOrder"></h5>
 				   </div>
 		   </div>
@@ -1101,6 +1113,8 @@
 			const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
 			const walletModalClose = document.getElementById("walletModalClose");
 			const errorMessage2 = document.getElementById("error-message2");
+			const totalAmountID = document.getElementById("currentTotalOrder");
+            let totalAmount = totalAmountID.getAttribute("amount");
 			const newtotalOrder = document.getElementById("newtotalOrder");
 			const newAmount = newtotalOrder.getAttribute("newamount");
 			let  coupen = newtotalOrder.getAttribute("coupencode");
@@ -1117,7 +1131,7 @@
 			if(newAmount != undefined){
                totalPrice = newAmount;
 			}else{
-				totalPrice = <%-JSON.stringify(totalPrice)%>;
+				totalPrice =totalAmount;
 			}
 			console.log("totalAmount :",totalPrice);
 			const currentAddress =  <%-JSON.stringify(currentAddress)%>;

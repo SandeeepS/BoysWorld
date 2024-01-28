@@ -710,9 +710,16 @@ exports.getCheckoutPage = async(req,res)=>{
           $match:{
             '_id':productId2
           }
+        },{
+          $lookup:{
+            from:"categories",
+            localField:"category",
+            foreignField:"_id",
+            as:"categoryDetail",
+          }
         }
       ])
-      console.log("productdetails:", product);
+      console.log("productdetails:", product[0]);
       res.render('checkout',{address,currentAddress,currentAddressId, product,quantity,totalPrice,productId,size});
   }catch(err){
     console.error("error while getting checkout",err);
