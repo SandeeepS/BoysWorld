@@ -140,6 +140,14 @@ exports.getShopWithPriceRange = async(req,res)=>{
                 $limit:itemsPerPage
               },
               {
+                $lookup:{
+                 from:"categories",
+                 localField:"category",
+                 foreignField:"_id",
+                 as:"categoryDetails"
+                }
+              },
+              {
                 $addFields:{
                   lastAmount:{
                     $multiply:[
@@ -202,6 +210,14 @@ exports.getShopBySearch = async(req,res) =>{
               $limit:itemsPerPage
              },
              {
+               $lookup:{
+                from:"categories",
+                localField:"category",
+                foreignField:"_id",
+                as:"categoryDetails"
+               }
+             },
+             {
               $addFields:{
                 lastAmount:{
                   $multiply:[
@@ -216,6 +232,7 @@ exports.getShopBySearch = async(req,res) =>{
           const categoryData = await categoryModel.find({isDelete:false}).exec();
           const Currentuser = await UserModel.find({"_id":userId})
           console.log("currentUser:",Currentuser);
+          console.log("productData :",productData);
           res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
     }
 
@@ -2045,7 +2062,7 @@ exports.applyCoupenCode = async(req,res)=>{
              coupenOffer = findedElement.offer;
              console.log("offfer of the specified coupen:",coupenOffer);
              console.log("total price:",totalPrice);
-             const newTotalPrice = totalPrice -((coupenOffer/100)*totalPrice ) ;
+             const newTotalPrice = Math.round(totalPrice -((coupenOffer/100)*totalPrice ) );
              console.log("new price with coupen offer is :",newTotalPrice);
 
              res.status(200).json({success:true,newTotalPrice,address,currentAddress,currentAddressId,product,quantity,productId,size,totalPrice});
@@ -2065,20 +2082,30 @@ exports.applyCoupenCodeFromCheckout2 = async(req,res)=>{
     const {coupen,cartDetails,totalAmount} = req.body;
     console.log("coupen entered is :",coupen);
     const allCoupen = await coupenModel.find();
+    const userid = req.session.user;
+    const userid2 = new mongoose.Types.ObjectId(userid);
+    const userdetails = await UserModel.find({"_id":userid2});
+    console.log("userDetails:",userdetails);
+    const usedcoupens = userdetails[0].usedCoupen;
+    console.log("usedCoupens are:",usedcoupens);
+    //checking the user entered coupen is used or not before
+    let  coupenUsed = usedcoupens.find((cp)=> cp === coupen);
+    console.log("usedcoupen:",coupenUsed);
+  
     console.log("all coupen :",allCoupen);
+
     const findedElement = allCoupen.find((ele)=> ele.code == coupen);
     console.log("findedElemnt",findedElement);
-    if(findedElement !== undefined){
-        
-        res.status(200).json({success:true,message:"Entered Coupen is currently unavailable"});
-
+    if(findedElement == undefined){
+        res.status(200).json({success:true,message:"Entered Coupen is currently unavailable1"});
+    }else if(coupenUsed !== undefined ){
+      res.status(200).json({success:true,message:"Entered Coupen is currently unavailable2"});
     }else{
         coupenOffer = findedElement.offer;
         console.log("offfer of the specified coupen:",coupenOffer);
         console.log("total price:",totalAmount);
-        const newTotalAmount = totalAmount -((coupenOffer/100)*totalAmount ) ;
+        const newTotalAmount = Math.round(totalAmount -((coupenOffer/100)*totalAmount )) ;
         console.log("new price with coupen offer is :", newTotalAmount);
-
         res.status(200).json({success:true,newTotalAmount,cartDetails});
 
     }

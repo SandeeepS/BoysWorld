@@ -236,7 +236,7 @@
                                                 <tr>
                                                   <td><%= orders[i].orderId %></td>
                                                   <td><%= orders[i].userDetails[0].name %></td>
-                                                  <td><%= orders[i].productDetails[0].productName %></td>
+                                                  <td><%= orders[i].productDetails[0].name %></td>
                                                   <td><%= orders[i].productDetails[0].price %></td>
                                                   <td><%= orders[i].products.quantity %></td>
                                                   <!-- Render other order details here -->
@@ -355,27 +355,28 @@
             const ordersForDownload = <%- JSON.stringify(orders) %>;
             const simplifiedOrders = <%-JSON.stringify(simplifiedOrders)%>;
             $.ajax({
-                type: 'POST',
-                url:'/admin/downloadSalesReport',
-                data:{
-                    orders:simplifiedOrders
-                    
-                },
-                success:function(response){
-                  if (response && response.file) {
-                    console.log("respone:",response.file);
-                    let fileData = atob(response.file);
-                    let csvFile = new Blob([fileData], {type: 'text/csv;charset=utf-8;'});
-                    let link = document.createElement('a');
-                    link.href = URL.createObjectURL(csvFile);
-                    link.download = 'salesReport.xlsx';
-                    link.click();
-                }
-                },
-                error:function(err){
-                    console.error("error getting data in the frntend ",err);
-                }
-            })
+              type: 'POST',
+              url:'/admin/downloadSalesReport',
+              data:{
+                  orders:simplifiedOrders
+              },
+              xhrFields: {
+                  responseType: 'text' // to handle binary data
+              },
+              success:function(data){
+                  console.log("in the front end");
+                  var blob = new Blob([data]);
+                  var url = window.URL.createObjectURL(blob);
+                  var a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'filename.xlsx';
+                  a.click();
+                  console.log("clicked");
+              },
+              error:function(err){
+                  console.error("error getting data in the frntend ",err);
+              }
+          })
         })
   </script>
 </body>

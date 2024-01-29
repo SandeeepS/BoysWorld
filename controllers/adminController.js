@@ -10,6 +10,7 @@ const moment = require('moment');
 const { format } = require('date-fns');
 const fs = require('fs');
 const util = require('util');
+const exceljs = require('exceljs');
 const readFileAsync = util.promisify(fs.readFile);
 const json2csv = require('json2csv').parse;
 
@@ -489,24 +490,42 @@ exports.getSalesReport = async(req,res) => {
 //download sales report
 exports.downloadSalesReport = async(req,res)=>{
     try{
+        console.log("inside the download sales");
         const {orders} = req.body;
-        console.log("orders from download:",orders);
-        // Define the headers
+        
+        const workbook = new exceljs.Workbook();
+        const worksheet = workbook.addWorksheet("My sales");
 
-        // Convert JSON to CSV
-        const csv = json2csv(orders);
+        worksheet.columns = [
 
-        // Write the CSV data to a file
-        fs.writeFileSync('salesReport.csv', csv);
+            { header:"userId",key:"userId"},
+            { header:"productId",key:"productId"},
+            { header:"date",key:"date"},
+            { header:"orderId",key:"orderId"},
+            { header:"price",key:"price"},
+            { header:"addressId",key:"addressId"},
 
-        // Read the file data
-        const fileData = fs.readFileSync('salesReport.csv');
+        ]
+        //
+        orders.forEach((order)=>{
+            worksheet.addRow(order);
+        })
+  
+        worksheet.getRow(1).eachCell((cell)=>{
+            cell.font = {bold:true};
+        });
+    
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
 
-        // Convert the file data to Base64
-        const base64String = fileData.toString('base64');
-        res.download('base64String');
-        // Send the file data as a response
-        res.status(200).json({success:true,message:"successful",file:base64String});
+        res.setHeader("Content-Disposition",'attachment;filename = users.xlsx');
+   
+        return workbook.xlsx.write(res).then(()=>{
+            res.status(200);
+        });
+
 
     } catch(error) {
         console.error("error while downloading the sales report",error);
