@@ -760,11 +760,19 @@ exports.getCheckoutPage2 = async(req,res)=>{
           $match:{
             "productDetail.stock":{$ne:0}
           }
+        },{
+          $lookup:{
+            from:"categories",
+            localField:"productDetail.category",
+            foreignField:"_id",
+            as:"categoryDetail"
+          }
         }
     ]).exec() || req.query.cartDetails
     console.log("total:",totalAmount);
     console.log("cartDetails:",cartDetails);
     console.log("productDetails:",cartDetails[0].productDetail)
+    console.log("categorydetails:",cartDetails[0].categoryDetail[0])
     console.log("total amount ",totalAmount);
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
   }catch(err){
@@ -793,6 +801,13 @@ exports.getCart = async(req,res)=>{
             foreignField:'_id',
             as:"product"
           }
+        },{
+          $lookup:{
+            from:"categories",
+            localField:"product.category",
+            foreignField:"_id",
+            as:"categoryDetails"
+          }
         }
        ]);
 
@@ -807,6 +822,7 @@ exports.getCart = async(req,res)=>{
        }
        console.log("cart:",cart);
       console.log("productDetails:",cart[0].product);
+      console.log("categoryDetails:",cart[0].categoryDetails[0])
    
   res.render('cart', {cart,cartTotal}); 
   }catch(err){

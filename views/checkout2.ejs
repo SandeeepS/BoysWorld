@@ -472,8 +472,17 @@
 	</form>
 
 	<% if(cartDetails){%>
-		<% for(let i=0;i<cartDetails.length;i++){ %>
-		                                        %>
+	<% var cartTotalAmount = 0 %>	
+	<% for(let i=0;i<cartDetails.length;i++){ %>
+		               
+		<% let categoryOffer = cartDetails[i].categoryDetail[0].offer %>
+		<% let productOffer = cartDetails[i].productDetail[0].offer %>
+		<% let totalOffer = categoryOffer + productOffer %>
+		<% let productPrice = cartDetails[i].productDetail[0].price %>
+		<% let offerPrice = productPrice - ((totalOffer/100)*productPrice)%>
+		<% let quantity = cartDetails[i].cart.quantity %>
+		<% let totalAmount = quantity * offerPrice %>
+		<% cartTotalAmount = cartTotalAmount + totalAmount %>
 
 		<div class="a-box">
 		   <div class="content">
@@ -483,7 +492,11 @@
 				   <div class="discription">
 					  <h5><%=cartDetails[i].productDetail[0].name%></h5>
 					  <h5><%=cartDetails[i].productDetail[0].discription%></h5>
-					  <h5>₹<%=cartDetails[i].productDetail[0].offerPrice%></h5>
+
+					  <h5 >(<%= totalOffer %>% off)</h5>
+					  <h5><del>₹<%=cartDetails[i].productDetail[0].price%></del></h5>
+					  <h5>₹<%=offerPrice%></h5>
+
 					  <h5>Qty:<%=cartDetails[i].cart.quantity%></h5>
 					  
 					  <% let currentSize = cartDetails[i].cart.size %>
@@ -495,8 +508,11 @@
 					  <%  } else if(currentSize == "sizeLarge"){    %>
 				                <h5>Size : L </h5>               
 					  <%  }                                         %>
+					
+                      
+						<h5 id="currentTotalOrder" amount="<%=totalAmount%>" >Order Total :₹<%=totalAmount%></h5>
 
-					  <h5 id="currentTotalOrder" amount="<%=cartDetails[i].cart.total%>" >Order Total :₹<%=cartDetails[i].cart.total%></h5>
+
 					 
 
 				   </div>
@@ -525,7 +541,8 @@
 		<div class="a-box text-center" >
 			<div>
                 <ul>
-                    <li id="cartTotalAmount"  totalAmount="<%=totalAmount%>">Cart Sub Total : ₹<%=totalAmount%></li>
+
+                    <li id="cartTotalAmount"  totalAmount="<%=cartTotalAmount%>">Cart Sub Total : ₹<%=cartTotalAmount%></li>
 					<li id="newtotalOrder"></li>
 
                 </ul>

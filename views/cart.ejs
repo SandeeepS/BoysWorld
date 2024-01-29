@@ -64,6 +64,13 @@
 		margin: 0;
 
 	}
+	#offer {
+		display: none;
+	}
+	input[type="checkbox"] {
+		opacity: 0;
+	}
+
 </style>
 </head><!--/head-->
 <body>
@@ -150,8 +157,47 @@
 							</td>
 							<td class="productDetails" >
 								<h4><a href=""><%=cart[i].product[0].name%></a></h4>
-								<p>₹ <%=cart[i].product[0].price%></p>
-								<p>(with <%=cart[i].product[0].offer%>% off)</p>
+
+								<% let categoryOffer = cart[i].categoryDetails[0].offer %>
+								<% let offerPrice = cart[i].product[0].offerPrice %>
+								<% let productPrice = cart[i].product[0].price %>
+								<% let totalOffer =  cart[i].product[0].offer  + categoryOffer %>
+								<% let newPrice = productPrice - ((totalOffer/100)*productPrice) %>
+
+
+
+						        <% if (categoryOffer != 0){ %>
+
+
+									<% if(newPrice < 0){ %>
+										<% newPrice = 0 %>
+									<% } %>
+
+									<input type="checkbox" id="offer<%= cart[i].product[0]._id %>" class="hidecontent"/>
+									<label for="offer<%= cart[i].product[0]._id %>" style="color: #FFA500;">(<%= cart[i].product[0].offer + categoryOffer%>% off)</label>
+									<div id="content2<%= cart[i].product[0]._id %>" class="hidecontent"><h6>	<%= cart[i].product[0].offer %> % product offer </h6></div>
+									<div id="content3<%= cart[i].product[0]._id %>" class="hidecontent"><h6>	<%= categoryOffer%>% category offer</h6></div>
+
+
+									<h5><del>₹<%= cart[i].product[0].price %></del></h5>
+									<h5><b>₹<%= newPrice %></b></h5>
+								<% } else{ %>
+						
+										<% if(cart[i].product[0].offer > 0){ %>
+											<h6 style="color: #FFA500;">(<%=cart[i].product[0].offer%>% off)</h6>
+											<h5><del>₹<%= cart[i].product[0].price %></del></h5>
+											<h5><b>₹<%= cart[i].product[0].offerPrice %></b></h5>
+										<% } else{ %>
+											<h6>(No Offer Available)</h6>
+											<h5>₹<%cart[i].product[0].price%></h5>
+										<% } %>
+								<% } %>
+                         
+								
+								
+
+
+
 								<% if (cart[i].cart.size == "sizeSmall"){ %>
 									<p>Size : S</p>
 									
@@ -166,7 +212,11 @@
 
 							</td>
 							<td class="cart_price">
-								<p  class="single-unit-price"  singleUnitPrice="<%=cart[i].product[0].offerPrice %>">₹<%=cart[i].product[0].offerPrice%></p>
+								<% if(newPrice != 0){ %>
+									<p  class="single-unit-price"  singleUnitPrice="<%=newPrice %>">₹<%=newPrice%></p>
+								 <%}else{ %>
+									<p  class="single-unit-price"  singleUnitPrice="<%=cart[i].product[0].offerPrice %>">₹<%=cart[i].product[0].offerPrice%></p>
+								<%} %>
 							</td>
 							<td class="cart_quantity">
 								<% let currentStock = "" %>
@@ -193,7 +243,11 @@
 								</div>
 							</td>
 							<td class="cart_total">
-							     <p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].offerPrice%> = ₹<%= cart[i].cart.total%> </p>
+								<% if(newPrice != 0){ %>
+									<p class="cart_total_price" total-Price="<%=newPrice%>"><%= cart[i].cart.quantity %> X <%=newPrice%> = ₹<%= newPrice%> </p>
+								 <%}else{ %>
+									<p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].offerPrice%> = ₹<%= cart[i].cart.total%> </p>
+								<%} %>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>
@@ -266,6 +320,7 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			const incrementButtons = document.querySelectorAll(".cart-quantity-button1");

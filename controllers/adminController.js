@@ -720,7 +720,11 @@ exports.updateCategory = async(req,res)=>{
 //adding product
 exports.addingProduct = async(req,res)=>{
     try{
-        const{productName,price,small,medium,large,category,dis,offer} = req.body;
+        const{productName,price,small,medium,large,category,dis} = req.body;
+        let offer = req.body.offer;
+        if(offer == ""){
+            offer = 0 ;
+        }
         productImages =req.files.map((file)=>file.filename);
 
         let stockSmall,stockLarge,stockMedium;
