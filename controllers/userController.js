@@ -723,6 +723,7 @@ exports.getCheckoutPage = async(req,res)=>{
       console.log("size:",size);
       const product2 = await productModel.findById(productId).exec();
       console.log("product2",product2);
+      console.log("prod:",product2.offerPrice);
       const totalPrice = product2.offerPrice * quantity ;
       const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
       const product = await productModel.aggregate([

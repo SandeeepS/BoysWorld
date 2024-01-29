@@ -265,7 +265,77 @@
 			max-height: 500px; /* Adjust this value according to the expected height of your content */
 		}
 
+
+		/*style for the place order btn */
+		#placeOrderBtnStyle {
+			--color: #fff;
+			--background: #3459eb;
+			--hover-background: #16bf78;
+			padding: 12px 0;
+			width: 172px;
+			cursor: pointer;
+			text-align: center;
+			position: relative;
+			border: none;
+			outline: none;
+			color: var(--color);
+			background: var(--background);
+			border-radius: 5px;
+			-webkit-appearance: none;
+			-webkit-tap-highlight-color: transparent;
+			transition: background-color 0.5s;
+		   }
+		   
+		   #placeOrderBtn:hover {
+			background-color: var(--hover-background);
+		   }
+		   
 	
+	</style>
+	<style>
+		.custom-modal {
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			overflow: auto; /* Enable scroll if needed */
+			background-color: rgb(0,0,0); /* Fallback color */
+			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+		
+		.custom-modal .modal-content {
+			background-color: #fefefe;
+			margin: 15% auto; /* 15% from the top and centered */
+			padding: 20px;
+			border: 1px solid #888;
+			width: 80%; /* Could be more or less, depending on screen size */
+			max-width: 500px;
+			border-radius: 5px;
+		}
+		
+		.custom-modal .close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+		
+		.custom-modal .close:hover,
+		.custom-modal .close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+		
+		.custom-modal p {
+			font-size: 24px;
+			font-weight: bold;
+			text-align: center;
+		}
+		
 	</style>
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -496,7 +566,7 @@
 
 	<div class="a-box text-center" >
 		<div>
-			<Button class="btn btn-default place-order" onclick="placeOrderBtn()">Place your order</Button>
+			<Button class="btn btn-default place-order" onclick="placeOrderBtn()" id="placeOrderBtnStyle">Place your order</Button>
 		</div>
 	</div>
 
@@ -505,7 +575,7 @@
 	<br>
 
 
-    <div id="paymentSuccessModal" class="modal2">
+    <div id="paymentSuccessModal" class="custom-modal modal2">
 		<div id="paymentSuccessModalContent" class="modal-content2">
 			<div class="modal-style">
 				<div class="modal-text">
@@ -517,7 +587,7 @@
 	</div>
 
 	<!-- modal last for select payment warning -->
-	<div id="selectPaymentWarnning" class="modal">
+	<div id="selectPaymentWarnning" class="modal custom-modal">
 		<div id="selectModalContent" class="modal-content">
 			<span id="selectPaymentModalClose" class="close">&times;</span>
 			<div class="modal-style">
@@ -1153,7 +1223,6 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
-							
 							size,
 							coupen
 						},
