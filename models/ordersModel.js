@@ -29,6 +29,7 @@ const orderSchema ={
     date:String,
     paymentMethod:String,
     currentStatus:String,
+    usedCoupen:String
 }
 const orderModel = mongoose.model("orders",orderSchema);
 module.exports = orderModel;

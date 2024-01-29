@@ -1250,6 +1250,7 @@ exports.placeOrder = async (req, res) => {
           "date": formattedDate,
           "paymentMethod":cashOnDelivery,
           "currentStatus":status,
+         
       })
       const savedData = await order.save();
       if(coupen != undefined){
