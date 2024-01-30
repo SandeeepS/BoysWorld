@@ -51,6 +51,37 @@ exports.signupPage = async(req,res)=>{
 
 exports.shopPage = async(req,res)=>{
     try{
+        if(req.query.product){
+                                                          
+                      const user = req.session.user;
+                      console.log("user:",user);
+                      const userId = new mongoose.Types.ObjectId(user);
+                      console.log("userId:",userId);
+                      const page = req.query.page || 1;
+                      let currentPage = parseInt(page);
+                      if(currentPage <= 0  ){
+                        currentPage = 1;
+                      }
+                      console.log("current page:",currentPage);
+                      const itemsPerPage = 3;
+                      let skip = (page - 1) * itemsPerPage;
+                      if(skip <= 0 ){
+                        skip = 0 ;
+                      }
+                      const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
+                      console.log("totalcount:",totalCount);
+                      const totalPages = Math.floor(totalCount/itemsPerPage);
+                      console.log("totalpages:",totalPages);
+                      const productData = decodeURIComponent(req.query.product);
+                      const product = JSON.parse(productData);                            
+                      const categoryData = await categoryModel.find({isDelete:false}).exec();
+                      const Currentuser = await UserModel.find({"_id":userId})
+                      console.log("currentUser:",Currentuser);
+                      console.log("productDetails:",productData);
+                      const searchProduct = "";
+                      res.render('shop',{product:product,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
+        }
+       
         const user = req.session.user;
         console.log("user:",user);
         const userId = new mongoose.Types.ObjectId(user);
@@ -256,10 +287,19 @@ exports.categoryBasedProduct = async(req,res)=>{
                 {category:newCategoryId}
               ]
             },
+           },
+           {
+            $lookup:{
+              from:"categories",
+              localField:"category",
+              foreignField:"_id",
+              as:"categoryDetails"
+            }
            }
+           
     ]).exec();
 
-    console.log("products:",productData);
+    console.log("products from the category based bsed product:",productData);
     res.status(200).json({success:true,product:productData,category:categoryData});
   }catch(err){
     console.error("error getting the product in the category",err);
@@ -1222,6 +1262,8 @@ exports.placeOrder = async (req, res) => {
       const randomId = 10000+Math.floor(Math.random()*90000);
       const currentAddress = cartDetails[0].currentAddress;
       const total = cartDetails[0].cart.total;//need to fix it again
+      const usedCoupen = coupen;
+      console.log("usedCoupen is :0",usedCoupen);
       const productId = [];
           for(let i = 0; i < cartDetails.length; i ++){
   
@@ -1250,6 +1292,7 @@ exports.placeOrder = async (req, res) => {
           "date": formattedDate,
           "paymentMethod":cashOnDelivery,
           "currentStatus":status,
+          "usedCoupen":usedCoupen
          
       })
       const savedData = await order.save();
@@ -1292,7 +1335,7 @@ exports.placeOrder2 = async(req,res)=>{
               const date = new Date();
                 const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
                 const randomId = 10000+Math.floor(Math.random()*90000);
-                
+                const usedCoupen = coupen;
                 const order = new orderModel({
                   "userId":userId,
                   "products":productId2,
@@ -1302,6 +1345,7 @@ exports.placeOrder2 = async(req,res)=>{
                   "date": formattedDate,
                   "paymentMethod":cashOnDelivery,
                   "currentStatus":status,
+                  "usedCoupen":usedCoupen
                   
           
               });
@@ -1354,7 +1398,7 @@ exports.generateRazorpay = async(req,res)=>{
               const date = new Date();
           const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
           const randomId = 10000+Math.floor(Math.random()*90000);
-            
+          const usedCoupen = coupen;  
               const orders = new orderModel({
                 "userId":userId,
                 "products":productId2,
@@ -1364,7 +1408,7 @@ exports.generateRazorpay = async(req,res)=>{
                 "date":formattedDate,
                 "paymentMethod":onlinePayment,
                 "currentStatus":status,
-          
+                "usedCoupen":usedCoupen
             })
             const savedData = await orders.save();
             //updating the quantity
@@ -1443,6 +1487,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
               const randomId = 10000+Math.floor(Math.random()*90000);
               const currentAddress = cartDetails[0].currentAddress;
               const total = totalAmount;
+              const usedCoupen = coupen;
               console.log("total amount from checkout2 ",total);
               const productId = [];
                   for(let i = 0; i < cartDetails.length; i ++){
@@ -1470,6 +1515,7 @@ exports.generateRazorpayFromCheckout2 = async(req,res)=>{
                   "date": formattedDate,
                   "paymentMethod":cashOnDelivery,
                   "currentStatus":status,
+                  "usedCoupen":usedCoupen
               })
               const savedData = await neworder.save();
               if(coupen != undefined){
@@ -1778,7 +1824,7 @@ exports.wallet1 = async(req,res)=>{
               const date = new Date();
               const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
               const randomId = 10000+Math.floor(Math.random()*90000);
-              
+              const usedCoupen = coupen;
               if(total <= walletAmount){
                     console.log("wallet payment enabled");
                     const order = new orderModel({
@@ -1790,6 +1836,7 @@ exports.wallet1 = async(req,res)=>{
                       "date": formattedDate,
                       "paymentMethod":walletPayment,
                       "currentStatus":status,
+                      "usedCoupen":usedCoupen
                       
               
                   });
@@ -1808,7 +1855,9 @@ exports.wallet1 = async(req,res)=>{
                     }
 
                   let newWalletAmount = walletAmount - total; 
-                  await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newWalletAmount}});
+                  console.log("newWallet amount",newWalletAmount);
+
+                   const updatedWallet = await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newWalletAmount}});
                   console.log("order inserted successfully");
                   res.status(200).json({ success: true,});
                 }else{
@@ -1827,54 +1876,78 @@ exports.wallet1 = async(req,res)=>{
 //wallet2
 exports.wallet2 = async(req,res)=>{
    try{
-        const { cartDetails,totalAmount} = req.body;
+        const { cartDetails,totalAmount,coupen} = req.body;
+
         console.log(cartDetails);
-        const walletPayment = "Wallet Payment";
-        const status = "Conformed";
-        const userId = cartDetails[0]._id;
-        const userDetails = await UserModel.findById(userId);
-        console.log("userDetails:",userDetails);
-        const walletAmount = userDetails.wallet;
-        if(totalAmount <= walletAmount){
-              const date = new Date();
-              const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-              const randomId = 10000+Math.floor(Math.random()*90000);
-              const currentAddress = cartDetails[0].currentAddress;
-              const total = cartDetails[0].cart.total;//need to fix it again
-              const productId = [];
-                  for(let i = 0; i < cartDetails.length; i ++){
-      
-                      const pro = cartDetails[i].cart;
-                      console.log("pro:",pro);
-                      const proId2 = pro.productId;
-                      const proId = new mongoose.Types.ObjectId(proId2);
-                      const size = pro.size;
-                      productId.push(pro);
-                      const quantity = pro.quantity;
-                      const currentProduct = await productModel.find({"_id":proId});
-                      console.log("currentProduct:",currentProduct);
-                      const currentStock = currentProduct[0].stock[size].stock;
-                      console.log("currentStock:",currentStock);
-                      const newStock = parseInt(currentStock - quantity);
-                      console.log("newStock:",newStock);
-                      const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
-                  }
-                const order = new orderModel({
-                  "userId":userId,
-                  "products":productId,
-                  "orderId":randomId,
-                  "totalAmount":totalAmount,
-                  "currentAddress":currentAddress,
-                  "date": formattedDate,
-                  "paymentMethod":walletPayment,
-                  "currentStatus":status,
-              })
-              const savedData = await order.save();
-              // Respond with a success message
-              res.status(200).json({ success: true, message: 'Order placed successfully.' });
-        }else{
-             res.status(200).json({success:true,message:"Your Wallet amount is insufficient for this Order\n Please try another Payment Method"})
-        }
+        console.log("coupen wallet2 :",coupen);
+
+        const user = req.session.user;
+       const userId = new mongoose.Types.ObjectId(user);
+       const userDetails = await UserModel.findById(userId);
+       const iscoupenExist = userDetails.usedCoupen.find((ele)=> ele == coupen);
+
+       if( coupen !== undefined && iscoupenExist != undefined){
+           res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
+   
+       }else{
+              const walletPayment = "Wallet Payment";
+              const status = "Conformed";
+              const userId = cartDetails[0]._id;
+              const userDetails = await UserModel.findById(userId);
+              console.log("userDetails:",userDetails);
+              const walletAmount = userDetails.wallet;
+              if(totalAmount <= walletAmount){
+                    const date = new Date();
+                    const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
+                    const randomId = 10000+Math.floor(Math.random()*90000);
+                    const currentAddress = cartDetails[0].currentAddress;
+                    const total = cartDetails[0].cart.total;//need to fix it again
+                    const usedCoupen = coupen;
+                    const productId = [];
+                        for(let i = 0; i < cartDetails.length; i ++){
+            
+                            const pro = cartDetails[i].cart;
+                            console.log("pro:",pro);
+                            const proId2 = pro.productId;
+                            const proId = new mongoose.Types.ObjectId(proId2);
+                            const size = pro.size;
+                            productId.push(pro);
+                            const quantity = pro.quantity;
+                            const currentProduct = await productModel.find({"_id":proId});
+                            console.log("currentProduct:",currentProduct);
+                            const currentStock = currentProduct[0].stock[size].stock;
+                            console.log("currentStock:",currentStock);
+                            const newStock = parseInt(currentStock - quantity);
+                            console.log("newStock:",newStock);
+                            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
+                        }
+                      const order = new orderModel({
+                        "userId":userId,
+                        "products":productId,
+                        "orderId":randomId,
+                        "totalAmount":totalAmount,
+                        "currentAddress":currentAddress,
+                        "date": formattedDate,
+                        "paymentMethod":walletPayment,
+                        "currentStatus":status,
+                        "usedCoupen":usedCoupen
+                    })
+                    const savedData = await order.save();
+        
+                    if(coupen != undefined){
+                      const updatedUser = await UserModel.findByIdAndUpdate({"_id":user},{$push:{"usedCoupen":coupen}});
+                    }
+  
+                    let newWalletAmount = walletAmount - total; 
+                    console.log("newWallet amount",newWalletAmount);
+  
+                     const updatedWallet = await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newWalletAmount}});
+                    // Respond with a success message
+                    res.status(200).json({ success: true, message: 'Order placed successfully.' });
+              }else{
+                  res.status(200).json({success:true,message:"Your Wallet amount is insufficient for this Order\n Please try another Payment Method"})
+              }
+      }
    }catch(error){
      console.log("error occured in the wallet payment in wallet 2!!",error);
      res.status(500).json({success:false,message:"error occured"})

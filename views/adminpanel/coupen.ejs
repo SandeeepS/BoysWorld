@@ -43,6 +43,10 @@
 
     /* Modal Content */
     .modal-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
         background-color: #fefefe;
         margin: 15% auto; /* 15% from the top and centered */
         padding: 20px;
@@ -51,6 +55,7 @@
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); /* Shadow effect */
         animation-name: animatetop;
         animation-duration: 0.4s;
+       
     }
 
     /* Close Button */
@@ -278,10 +283,9 @@
 
                                         <div id="conformModal-<%= coupenDetails[i]._id %>" class="modal">
                                           <div class="modal-content">
-                                            <span id="conformModalClose" class="close">&times;</span>
                                             <div class="modal-style">
                                               <div class="modal-text" >
-                                                <p>Are you sure you want to change your Current Status?</p>
+                                                <h5>Do you want to change the  Status?</h5>
                                               </div>
                                               <div style="display: flex;">
                                                  <a href="#" class="conformlistUnlist btn btn-primary" style="color: white;" coupenId="<%= coupenDetails[i]._id %>"><h3>Yes</h3></a>
@@ -300,10 +304,9 @@
                                         
                                         <div id="deleteModal-<%= coupenDetails[i]._id %>" class="modal">
                                           <div class="modal-content">
-                                            <span id="deleteModalClose" class="close">&times;</span>
                                             <div class="modal-style">
                                               <div class="modal-text" >
-                                                <p>Are you sure you want to delete this coupen?</p>
+                                                <h5>Do you want to delete the coupen</h5>
                                               </div>
                                               <div style="display: flex;">
                                                  <a href="#" class="conformDeleteCoupenBtn btn btn-primary" style="color: white;" coupenId="<%= coupenDetails[i]._id %>"><h3>Yes</h3></a>
@@ -318,9 +321,7 @@
                                     </tr>
                                   <% } %>
                                   
-                                    <tr>
-                                        <td colspan="4">No coupen found</td>
-                                    </tr>
+                                
                                   
                                 </table>
                               </div>

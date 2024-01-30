@@ -877,6 +877,9 @@
 					 const address = <%- JSON.stringify(address)%>;
 					 const currentAddress = <%- JSON.stringify(currentAddress)%>;
 					 const cartDetails = <%-JSON.stringify(cartDetails)%>;
+					 const totalAmountData  = document.getElementById("cartTotalAmount");
+					 const totalAmount = totalAmountData.getAttribute("totalAmount") ;
+					 console.log("totalAmount is :",totalAmount);
  
  
  
@@ -1120,7 +1123,7 @@
 							  type: 'POST',
 							  url:'/addAddressFromCheckout2',
 							  data:{
-								 name,number,email,houseName,houseNumber,state,city,street,landmark,pin,address,cartDetails,currentAddress,totalAmount, 
+								 name,number,email,houseName,houseNumber,state,city,street,landmark,pin,address,cartDetails,currentAddress ,totalAmount
 							  },
 							  success: function(response){
 								 if(response){

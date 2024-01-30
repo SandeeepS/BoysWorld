@@ -70,6 +70,17 @@
 	input[type="checkbox"] {
 		opacity: 0;
 	}
+	.d-flex {
+		display: flex;
+	   }
+	   
+	   .flex-column {
+		flex-direction: column;
+	   }
+	   
+	   .align-items-center {
+		align-items: center;
+	   }
 
 </style>
 </head><!--/head-->
@@ -264,19 +275,18 @@
 	</section> <!--/#cart_items-->
 	<section id="do_action">
 		<div class="container">
-			<div class="row">
-				<div class="col-sm-6"  style="width: 100%;">
-					<div class="total_area">
-						<ul>
-							<h4 id="totalCartAmount">Total Amount: ₹ <%= cartTotal %></h4>
-
-						</ul>
-							<button id="checkoutBtn" class="btn btn-default check_out" href="#" onclick="checkout()">Check Out</a></button> 
-					</div>
-				</div>
-			</div>
+		   <div class="row">
+			 <div class="col-sm-6" style="width: 100%;">
+			   <div class="total_area d-flex flex-column align-items-center">
+				 <ul>
+				   <h4 id="totalCartAmount">Total Amount: ₹ <%= cartTotal %></h4>
+				 </ul>
+				 <button id="checkoutBtn" class="btn btn-default check_out" href="#" onclick="checkout()">Check Out</button>
+			   </div>
+			 </div>
+		   </div>
 		</div>
-	</section><!--/#do_action-->
+	   </section>
 
 	<footer id="footer"><!--Footer-->
 		<div class="footer-top">

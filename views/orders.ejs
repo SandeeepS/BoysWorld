@@ -209,12 +209,19 @@
 										
 										</div>
 										<div>
-											<h6><%= orderDetails[i].productDetail[j].productName %></h6>
-										<p>Price: ₹<%= orderDetails[i].productDetail[j].price %></p>
-										<p><h6>Quantity: <%=  %></h6></p>
+											
+
+											<h4><%= orderDetails[i].productDetail[j].name %></h4>
+										<p>Price: ₹<%= orderDetails[i].totalAmount%></p>
+										<p><h6>Quantity: <%= orderDetails[i].products.quantity %></h6></p>
 										<p><h5><%= orderDetails[i].productDetail[j].discription %></h5></p>
 										<p><h5> <%= orderDetails[i].paymentMethod %></h5></p>
 										<p><h5><%= orderDetails[i].date %></h5></p>
+										 <% if(orderDetails[i].usedCoupen){ %>
+											<p><h5>Used coupen =<%= orderDetails[i].usedCoupen %></h5></p>
+										 <% } else{ %>
+                                            <p><h5>(No coupon used)</h5></p>
+										 <% } %>
 										</div>
 										</div>
 											<div class="address">

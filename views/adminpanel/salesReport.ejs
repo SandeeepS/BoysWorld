@@ -52,6 +52,10 @@
         box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
        }
         
+
+       .donBtn{
+        margin-left: 200px;
+       }
       
        
        
@@ -182,29 +186,27 @@
                             <div class="card card-rounded">
                               <div class="card-body">
                                   <div>
-                                    <h1 class="card-title ">Sales Report</h1>
+                                    <h3  style="text-align:center;" >Sales Report</h3>
                                   </div>
                                   <div class="card-container">
-                                    <div class="card">
-                                        <h3> Date</h3>
-                                        <label for="">Select Date</label>
-                                        <input type="text" id="datepicker">
+                                    <div class="card" style="align-items: center;">
+                                        <h3>Select from Date</h3>
+                                      
+                                        <input type="text" id="datepicker" placeholder="Select a Date">
                                         <br>
                                         <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByDate">Get Report</button>
                                     </div>
-                                    <div class="card">
+                                    <div class="card" style="align-items: center;">
                                             <h3>Select from a range</h3>
-                                            <label for="">Select Starting Date</label>
-                                            <input type="text" id="datepicker2">
+                                            <input type="text" id="datepicker2" placeholder="Select Starting Date">
                                             <br>
-                                            <label for="">Select Ending Date</label>
-                                            <input type="text" id="datepicker3">
+                                            <input type="text" id="datepicker3" placeholder="Select Ending Date">
                                             <br>
                                             <br>
                                             <button class="btn btn-primary btn-sm" style="color: #ddd;width:30%" id="SalesReportByRange">Get Report</button>
                                     </div>
                                    </div>
-                                   <div class="card">
+                                   <div class="card" style="align-items: center;">
                                          <h3>Yearly</h3>
                                          <label for="">Select Year</label>
                                          <select name="year3" id="year3">
@@ -216,10 +218,12 @@
                                    <br>
                                    <br>
                                   <div class="chartjs-bar-wrapper mt-3">
-                                    <table class="sales-report table table-condensed">
+                                    <table class="sales-report table table-condensed" style="align-items: center;">
                                     <% if(orders){ %>
-                                        <button class="btn  btn-success btn-sm" id="donBtn">DOWNLOAD</button>
-                                  
+                                      <div style="margin-left: 580px;">
+                                        <button class="btn  btn-success btn-sm" id="donBtn" >DOWNLOAD</button>
+                                      </div>
+                                      <div>
                                         <thead>
                                           <tr>
                                             <th>Item ID</th>
@@ -242,7 +246,9 @@
                                                   <!-- Render other order details here -->
                                                 </tr>
                                               <% } %>
-                                         </tbody>
+                                        </tbody>
+                                      </div>
+                                    
                                        </table>
                                     <% }  else {%>
                                         <h4>No sales selected</h4>
@@ -365,7 +371,7 @@
                   if (response && response.file) {
                     console.log("respone:",response.file);
                     let fileData = atob(response.file);
-                    let csvFile = new Blob([fileData], {type: 'text/csv;charset=utf-8;'});
+                    let csvFile = new Blob([fileData], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
                     let link = document.createElement('a');
                     link.href = URL.createObjectURL(csvFile);
                     link.download = 'salesReport.xlsx';

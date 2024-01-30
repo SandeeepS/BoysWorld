@@ -408,8 +408,8 @@
 	<script src="js/price-range.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 
@@ -430,6 +430,7 @@
 				selectedCategory.addEventListener("click",function(event){
 						event.preventDefault();
 						const categoryId = this.getAttribute("data-categoryId");
+						console.log("category id is :",categoryId);
 						updateCategoryProduct(categoryId);
 				})
 			})
@@ -442,28 +443,10 @@
 					},
 					success:function(response){
 					    if (response && response.product && response.category) {
-							const productContainer = document.getElementById('feature');
-							const feature = document.getElementById('feature');
-							productContainer.innerHTML = '';
-							let productHTML = '';
-							response.product.forEach((pro) => {
-								productHTML += `
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="/views/productImages/${pro.image[0]}" alt="" height="400px" width="100px" style="object-fit: cover;">
-													<h5 style="color: #e69927;">${pro.name}</h5>
-													<h5>₹${ pro.price }</h5>
-													<p>${pro.discription}</p>
-													<a href="/selectedProduct/${pro._id}" class="btn btn-default add-to-cart">Buy Now</a>
-													<a href="/addToCart/${pro._id}" class="btn btn-default add-to-cart buy-now-btn" data-product-id="${pro._id}"  data-image="/views/productImages/${pro.image[1]}">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>`;
-								productContainer.innerHTML = productHTML;
-							});
+							console.log("reached front end with category data ");
+							console.log("productData is ",response.product);
+							const product = response.product;
+							window.location = '/shop?product='+encodeURIComponent(JSON.stringify(product));
 						} else {
 							console.error('Invalid response format');
 						}
