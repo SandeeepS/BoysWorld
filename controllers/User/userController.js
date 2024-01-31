@@ -438,9 +438,9 @@ exports.signup = async(req,res,next)=>{
           const transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
-              user: 'iamsandeep6969400@gmail.com',
-              pass: 'ijpzysobzeshejlv',
-            },
+              user: process.env.EMAIL,
+              pass: process.env.PASSWORD,
+             },
           });
           // Email configuration
           const mailOptions = {
@@ -483,9 +483,9 @@ exports.resendOTP = async(req,res)=>{
         const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-          user: 'iamsandeep6969400@gmail.com',
-          pass: 'ijpzysobzeshejlv',
-           },
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
+         },
          });
   
       // Email configuration
@@ -527,9 +527,9 @@ exports.reSendotpResetPassword = async(req,res,next)=>{
       const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: 'iamsandeep6969400@gmail.com',
-        pass: 'ijpzysobzeshejlv',
-         },
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
+       },
        });
 
     // Email configuration

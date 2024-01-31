@@ -28,7 +28,7 @@ var instance = new razorpay({
   key_secret: 'RAZORPAY_SECRET_KEY',
 });
 
-const secretKey = process.env.SECRET_KEY || generateRandomKey(32);
+const secretKey = process.env.SECRET_KEY 
 //session
 const oneDay = 1000 * 60 * 60 * 24;
 

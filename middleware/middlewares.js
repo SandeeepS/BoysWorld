@@ -52,10 +52,10 @@ function errorHandling(error,req,res,next){
     console.log("error",error);
     if(req.path.startsWith('/admin')){
         console.log("from admin controller");
-        res.status(500).render('adminpanel/errorHandlingAdmin');
+        res.status(500).render('adminpanel/errorHandlingAdmin',{errorMessage:error.message});;
     }else{
         console.log("from userController")
-        res.status(500).render('errorHandling');
+        res.status(500).render('errorHandling',{errorMessage:error.message});
     }
 }
 
