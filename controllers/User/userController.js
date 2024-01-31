@@ -24,10 +24,6 @@ const {ObjectId} = mongoose.Types;
 const crypto = require('crypto');
 const { error } = require('console');
 
-
-
-
-
 exports.home = async(req,res)=>{
     res.render("index");
 }
@@ -55,7 +51,6 @@ exports.signupPage = async(req,res,next)=>{
 exports.shopPage = async(req,res,next)=>{
     try{
         if(req.query.product){
-                                                          
                       const user = req.session.user;
                       console.log("user:",user);
                       const userId = new mongoose.Types.ObjectId(user);
@@ -124,7 +119,6 @@ exports.shopPage = async(req,res,next)=>{
                }
 
         ])
-               
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         const Currentuser = await UserModel.find({"_id":userId})
         console.log("currentUser:",Currentuser);
@@ -268,7 +262,6 @@ exports.getShopBySearch = async(req,res,next) =>{
               console.log("productData :",productData);
               res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
           }
-
        }catch(error){
           console.error("error while getting shop according to search",error);
           next(error);
@@ -301,7 +294,6 @@ exports.categoryBasedProduct = async(req,res,next)=>{
            }
            
     ]).exec();
-
     console.log("products from the category based bsed product:",productData);
     res.status(200).json({success:true,product:productData,category:categoryData});
   }catch(err){
@@ -334,7 +326,6 @@ exports.selectedProduct = async(req,res,next)=>{
             }
           }
         ])
-        
         const stock = productData[0].stock;
         if(stock === 0){
           message = "Out Of Stock!!";
@@ -352,13 +343,11 @@ exports.selectedProduct = async(req,res,next)=>{
 exports.contactPage = async(req,res,next)=>{
   try{
       res.render('contact');
-
   }catch(error){
       console.log("error while getting the contact page ",error);
       next(error);
   }
 }
-
 
 //get otp page
 exports.getOtpPage = async(req,res,next)=>{
@@ -376,7 +365,6 @@ exports.getOtpPage = async(req,res,next)=>{
       next(error);
   }
 }
-
 
 exports.userEntry = async(req,res,next)=>{
     try{
@@ -1438,7 +1426,6 @@ exports.sendResetOtpmail = async(req,res,next)=>{
       const count = 1;
      res.status(200).json({ success: true, message: 'Email not registered. Please sign up.',count });
     }else{
-
             // Create a Nodemailer transporter
             const transporter = nodemailer.createTransport({
               service: 'Gmail',
@@ -1463,7 +1450,6 @@ exports.sendResetOtpmail = async(req,res,next)=>{
                 res.redirect('/');
               } else {
                 console.log('Email sent:', info.response);
-                
                 res.redirect('/getOtpPage');
               }
             });

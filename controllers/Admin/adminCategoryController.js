@@ -1,5 +1,6 @@
 const productModel  = require('../../models/productModel');
 const categoryModel = require('../../models/categoryModel');
+const { error } = require('jquery');
 
 
 //get gategory page
@@ -32,12 +33,17 @@ exports.getCategories = async (req, res,next) => {
 }
 
 //adding category page
-exports.addcategoryPage = async(req,res)=>{
-    res.render('adminpanel/addCategory');
+exports.addcategoryPage = async(req,res,next)=>{
+    try{
+        res.render('adminpanel/addCategory');
+    }catch(error){
+        console.log("error while getting addcategory page",error);
+        next(error);
+    }
 }
 
 //adding category
-exports.addingCategory = async(req,res)=>{
+exports.addingCategory = async(req,res,next)=>{
     try{
         const {name} = req.body;
         let catOffer = req.body.catOffer;
@@ -60,41 +66,41 @@ exports.addingCategory = async(req,res)=>{
          console.log("category added successfully");
        }
         res.redirect('/admin/categories');
-    }catch(err){
-        console.error("error while creating categories",err);
-        res.redirect('/admin/categories');
+    }catch(error){
+        console.error("error while creating categories",error);
+        next(error);
     }
 }
 
 
 //deleting categories
-exports.deleteCategory = async(req,res)=>{
+exports.deleteCategory = async(req,res,next)=>{
     try{
         const catId = req.params.id;
         await categoryModel.findByIdAndUpdate(catId,{isDelete:true}).exec();
         res.redirect('/admin/categories');
-    }catch(err){
-        console.error("error while deleting the category",err);
-        res.redirect('/admin/categories');
+    }catch(error){
+        console.error("error while deleting the category",error);
+        next(error);
     }
 }
 
 
 //updateCategoryPage
-exports.getUpdateCategoryPage = async(req,res)=>{
+exports.getUpdateCategoryPage = async(req,res,next)=>{
     try{
         const catId = req.params.id;
         const cataToUpdate = await categoryModel.findById(catId).exec();
         res.render('adminpanel/updatecategory',{cataToUpdate});
-    }catch(err){
-        console.error("error while updating catogery",err)
-        res.redirect('/admin/catogeries');
+    }catch(error){
+        console.error("error while updating catogery",error)
+        next(error);
     }
 }
 
 
 //updating category
-exports.updateCategory = async(req,res)=>{
+exports.updateCategory = async(req,res,next)=>{
     try{
         const catId = req.params.id;
         const {name} = req.body;
@@ -104,9 +110,9 @@ exports.updateCategory = async(req,res)=>{
         }
         await categoryModel.findByIdAndUpdate(catId,{$set:{"name":name,"offer":catOffer}}).exec();
         res.redirect('/admin/categories')
-    }catch(err){
-        console.error("error while updating the category",err);
-        res.redirect('/admin/categories');
+    }catch(error){
+        console.error("error while updating the category",error);
+        next(error);
     }
 }
 

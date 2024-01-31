@@ -50,7 +50,13 @@ function isAdmin(req,res,next){
 
 function errorHandling(error,req,res,next){
     console.log("error",error);
-    res.status(500).render('errorHandling');
+    if(req.path.startsWith('/admin')){
+        console.log("from admin controller");
+        res.status(500).render('adminpanel/errorHandlingAdmin');
+    }else{
+        console.log("from userController")
+        res.status(500).render('errorHandling');
+    }
 }
 
 

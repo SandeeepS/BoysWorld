@@ -1,9 +1,10 @@
 const productModel  = require('../../models/productModel');
 const categoryModel = require('../../models/categoryModel');
 const {default : mongoose} = require('mongoose');
+const { error } = require('jquery');
 
 //for getting the products 
-exports.getProduct = async(req,res)=>{
+exports.getProduct = async(req,res,next)=>{
     try{
         const page = req.query.page || 1;
         const currentPage = parseInt(page);
@@ -27,22 +28,24 @@ exports.getProduct = async(req,res)=>{
         res.render('adminpanel/product',{product:productData,categories:categoriesDict,totalPages,currentPage,totalCount});
     }catch(error){
         console.error("error while fetching products",error);
+        next(error);
     }
 } 
 
 
 // to gettting add product  page
-exports.addProduct = async(req,res)=>{
+exports.addProduct = async(req,res,next)=>{
     try{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         res.render('adminpanel/addProduct',{category:categoryData});
-    }catch(err){
-        console.error("error loading catogories",err);
+    }catch(error){
+        console.error("error loading catogories",error);
+        next(error);
     }
 }
 
 //adding product
-exports.addingProduct = async(req,res)=>{
+exports.addingProduct = async(req,res,next)=>{
     try{
         const{productName,price,small,medium,large,category,dis} = req.body;
         let offer = req.body.offer;
@@ -50,7 +53,6 @@ exports.addingProduct = async(req,res)=>{
             offer = 0 ;
         }
         productImages =req.files.map((file)=>file.filename);
-
         let stockSmall,stockLarge,stockMedium;
         let croppedImage = req.files['croppedImage'];
         console.log("croppedImages :",croppedImage);        
@@ -74,7 +76,6 @@ exports.addingProduct = async(req,res)=>{
         }else{
             stockMedium = medium;
         }
-
         const  offerP = (offer/100)*price;
         const offerPrice = price - offerP;
         console.log("offerPrice:",offerPrice);
@@ -105,14 +106,14 @@ exports.addingProduct = async(req,res)=>{
         await product.save();
         console.log(`${productName} is inserted Successfully`);
         res.redirect('/admin/products');
-    }catch(err){
-        console.error("error adding products :",err);
-        res.redirect('/admin/addingProduct');
+    }catch(error){
+        console.error("error adding products :",error);
+        next(error);
     }
 }
 
 //updateproduct page
-exports.getUpdateProductPage = async(req,res)=>{
+exports.getUpdateProductPage = async(req,res,next)=>{
     try{
          const productId = req.params.id;
          const productId2 = new mongoose.Types.ObjectId(productId);
@@ -143,15 +144,14 @@ exports.getUpdateProductPage = async(req,res)=>{
          console.log("currentCategorys:",category);
          console.log("poroduct:",productToUpdate);
           res.render('adminpanel/updateProduct',{productToUpdate,category});
-    }catch(err){
-        console.error("error in updation",err);
-        res.redirect('/admin/products');
+    }catch(error){
+        console.error("error in updation",error);
+        next(error);
     }
 }
 
-
 //updatedproduct
-exports.productUpdated = async(req,res)=>{
+exports.productUpdated = async(req,res,next)=>{
     try{
         const productId = req.params.id;
         const productId2 = new mongoose.Types.ObjectId(productId);
@@ -196,26 +196,26 @@ exports.productUpdated = async(req,res)=>{
                 offer
             }).exec();
         res.redirect('/admin/products');
-    }catch(err){
-        console.error("error updating product",err);
+    }catch(error){
+        console.error("error updating product",error);
+        next(error);
     }
 }
 
-
 //deleteproduct
-exports.deleteProduct = async(req,res)=>{
+exports.deleteProduct = async(req,res,next)=>{
     try{
         const productId = req.params.id;
         await productModel.findByIdAndUpdate(productId,{isDeleted:true}).exec();
         res.redirect('/admin/products');
-    }catch(err){
-        console.error("error deletting product",err);
-        res.redirect('/admin/products');
+    }catch(error){
+        console.error("error deletting product",error);
+        next(error);
     }
 }
 
 //deleting product images
-exports.deleteProductImage = async (req, res) => {
+exports.deleteProductImage = async (req, res,next) => {
     try {
         const productId = req.query.productId;
         console.log(productId);
@@ -233,8 +233,8 @@ exports.deleteProductImage = async (req, res) => {
         product.image.splice(imageIndex, 1);
          await product.save();
         res.redirect('/admin/products')
-    } catch (err) {
-        console.error('Error while deleting the image', err);
-        res.status(500).json({ message: 'Internal server error' });
+    }catch(error) {
+        console.error('Error while deleting the image', error);
+        next(error);
     }
 };

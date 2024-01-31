@@ -7,19 +7,26 @@ const { default: mongoose } = require('mongoose');
 const moment = require('moment');
 const { format } = require('date-fns');
 const fs = require('fs');
+const { error } = require('console');
 const json2csv = require('json2csv').parse;
 
 
-exports.adminlogin = async(req,res)=>{
-    if(req.session.admin){
-        res.redirect('/admin/dashboard');
-    }else{
-        const message = "Admin Login";
-        res.render('adminpanel/login',{message});
+exports.adminlogin = async(req,res,next)=>{
+    try{
+        if(req.session.admin){
+            res.redirect('/admin/dashboard');
+        }else{
+            const message = "Admin Login";
+            res.render('adminpanel/login',{message});
+        }
+    }catch(error){
+        console.log("error while getting admin login",error);
+        next(error);
     }
+ 
 }
 
-exports.getHomePage = async(req,res)=>{
+exports.getHomePage = async(req,res,next)=>{
     try{
         const currentDate = new Date();
         const formattedDate = format(currentDate, 'dd/MM/yyyy'); 
@@ -83,11 +90,12 @@ exports.getHomePage = async(req,res)=>{
         res.render('adminpanel/index',{shirtOrderCount,pantsOrdersCount,tShirtOrdersCount,uniqueProducts,products,category,users,currentOrderCount});
     }catch(error){
         console.error("error while getting the admin dashboard !!",error);
+        next(error);
     }
    
 }
 
-exports.getDashboard = async(req,res)=>{
+exports.getDashboard = async(req,res,next)=>{
     const {email,adPassword} = req.body;
     console.log(email);
     console.log(adPassword);
@@ -105,11 +113,11 @@ exports.getDashboard = async(req,res)=>{
         }
     }catch(error){
         console.error("error during login:",error);
-        res.redirect('/');
-    }
+        next(error);
+}
 }
 
-exports.getCustomer = async(req,res)=>{
+exports.getCustomer = async(req,res,next)=>{
     try{
         const page = req.query.page || 1;
         const currentPage = parseInt(page);
@@ -128,12 +136,12 @@ exports.getCustomer = async(req,res)=>{
         res.render('adminpanel/customers',{users:usersData,totalPages,currentPage,totalCount});
     }catch(error){
         console.error("error while fetching users",error);
+        next(error);
     }
 }
 
-
-
-exports.getOrders = async(req,res)=>{
+//getting orders
+exports.getOrders = async(req,res,next)=>{
     try{
         const  orderStatus = ["Shipped","Out for Delivery","Deliverd"];
         const page = req.query.page || 1;
@@ -185,16 +193,23 @@ exports.getOrders = async(req,res)=>{
         res.render('adminpanel/orders',{oders,products,orderStatus,totalPages,currentPage,totalCount});
     }catch(err){
         console.error("error while getting the orders list  page",err);
+        next(error);
+    }
+}
+
+//get banner
+exports.getBanner = async(req,res)=>{
+    try{
+        res.render('adminpanel/banner');
+    }catch(error){
+        console.log("error  while getting banner");
+        next(error);
     }
 }
 
 
-exports.getBanner = async(req,res)=>{
-    res.render('adminpanel/banner');
-}
-
 //getting sales report
-exports.getSalesReport = async(req,res) => {
+exports.getSalesReport = async(req,res,next) => {
 
     try{
         if(req.query.date){
@@ -249,7 +264,6 @@ exports.getSalesReport = async(req,res) => {
                 orderId: order._id,
                 price: order.products.price,
                 addressId: order.currentAddress,
-                
             }));
             console.log("orders from get sales report:",orders);
             console.log("simplifed orders:",simplifiedOrders);
@@ -326,9 +340,7 @@ exports.getSalesReport = async(req,res) => {
                 orderId: order._id,
                 price: order.products.price,
                 addressId: order.currentAddress,
-               
             }));
-
             console.log("orders from get sales report according to dates:",orders);
             res.render('adminpanel/salesReport',{orders,simplifiedOrders});
         }else if(req.query.year){
@@ -375,42 +387,32 @@ exports.getSalesReport = async(req,res) => {
                 addressId: order.currentAddress,
              
             }));
-
             console.log("orders from get sales report according to year:",orders);
             res.render('adminpanel/salesReport',{orders,simplifiedOrders});
-              
         }
         else{
             const simplifiedOrders = "";
             const orders = "";
             res.render('adminpanel/salesReport',{orders,simplifiedOrders});
         }
-     
-
     }catch(error){
          console.error("error while getting sales report!",error);
+         next(error);
     }
 }
 
 //download sales report
-exports.downloadSalesReport = async(req,res)=>{
+exports.downloadSalesReport = async(req,res,next)=>{
     try{
-        
-        
-        
         const {orders} = req.body;
         console.log("orders from download:",orders);
         // Define the headers
-
         // Convert JSON to CSV
         const csv = json2csv(orders);
-
         // Write the CSV data to a file
         fs.writeFileSync('salesReport.csv', csv);
-
         // Read the file data
         const fileData = fs.readFileSync('salesReport.csv');
-
         // Convert the file data to Base64
         const base64String = fileData.toString('base64');
         res.download('base64String');
@@ -419,36 +421,33 @@ exports.downloadSalesReport = async(req,res)=>{
 
     } catch(error) {
         console.error("error while downloading the sales report",error);
+        next(error);
     }
 }
 
 //add product
-exports.addProduct = async(req,res)=>{
+exports.addProduct = async(req,res,next)=>{
     try{
         const categoryData = await categoryModel.find({isDelete:false}).exec();
         res.render('adminpanel/addProduct',{category:categoryData});
     }catch(err){
         console.error("error loading catogories",err);
+        next(error);
     }
-    
 }
 
 //add coupen page
-exports.addCoupenPage = async(req,res)=>{
+exports.addCoupenPage = async(req,res,next)=>{
     try{
-
         res.render('adminpanel/addCoupen');
-
     }catch(error){
         console.error("error while getting addcoupen page!!",error);
-
+        next(error);
     }
 }
 
-
-
 //updateStatus
-exports.updateStatus = async (req, res) => {
+exports.updateStatus = async (req, res,next) => {
     try {
         const { userId } = req.body;
         const user = await userModel.findById(userId).exec();
@@ -468,14 +467,14 @@ exports.updateStatus = async (req, res) => {
         await user.save(); 
          res.json({ success: true, message: "User status updated and session destroyed" });
 
-    } catch (err) {
-        console.error("Error updating status:", err);
-        res.redirect('/admin/customers');
+    } catch (error) {
+        console.error("Error updating status:", error);
+        next(error);
     }
 }
 
 //update order status
-exports.updateOrderStatus = async (req, res) => {
+exports.updateOrderStatus = async (req, res,next) => {
     try {
         const { newStatus, orderId } = req.body;
         const userId = req.session.user;
@@ -483,12 +482,12 @@ exports.updateOrderStatus = async (req, res) => {
         res.status(200).json({success:true,message:"status updated succesfully",newStatus,orderId});
     } catch (err) {
         console.error("Error while updating the status on the server side ", err);
-        res.status(500).json({ message: "Internal Server Error" });
+        next(error);
     }
 };
 
 //cancel order
-exports.cancelOrder = async(req,res)=>{
+exports.cancelOrder = async(req,res,next)=>{
     try{
         const orderId = req.body.orderId;
         const orderId2 = new mongoose.Types.ObjectId(orderId);
@@ -497,27 +496,24 @@ exports.cancelOrder = async(req,res)=>{
         res.status(200).json({success:true,message:"orderStatus updated successfully"})
     }catch(error){
         console.log("error occured while cancellig the order from the admin side",error);
+        next(error);
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 //logout
-exports.logout = async(req,res)=>{
-    req.session.destroy((err)=>{
-        if(err){
-            console.error("Error destroying session",err);
-        }else{
-            res.redirect('/admin');
-        }
-    });
+exports.logout = async(req,res,error)=>{
+    try{
+        req.session.destroy((err)=>{
+            if(err){
+                console.error("Error destroying session",err);
+            }else{
+                res.redirect('/admin');
+            }
+        });
+    }catch(error){
+        console.log("error while logouting",error);
+        next(error)
+    }
+ 
 }
+
