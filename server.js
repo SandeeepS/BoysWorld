@@ -7,6 +7,7 @@ const app = express();
 const session = require('express-session');
 const routes = require('./routes/userRoute');
 const adminRoute = require('./routes/adminRoute');
+const middleware = require('./middleware/middlewares');
 const nocache = require('nocache');
 const {connectMongoDb} = require('./connection');
 app.use(express.json()); // for parsing application/json
@@ -48,6 +49,7 @@ app.use(session({
 
 app.use('/',routes);
 app.use('/admin',adminRoute);
+app.use(middleware.errorHandling);
 
 const port  = process.env.PORT || 5001
 app.listen(port,()=>{

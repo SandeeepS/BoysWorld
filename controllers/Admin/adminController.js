@@ -1,17 +1,12 @@
-const userModel = require('../models/userModel');
-const adModel = require('../models/adminModel');
-const productModel = require('../models/productModel');
-const categoryModel = require('../models/categoryModel');
-const orderModel = require('../models/ordersModel');
-const coupenModel = require('../models/coupenModel');
+const userModel = require('../../models/userModel');
+const adModel = require('../../models/adminModel');
+const productModel = require('../../models/productModel');
+const categoryModel = require('../../models/categoryModel');
+const orderModel = require('../../models/ordersModel');
 const { default: mongoose } = require('mongoose');
-const XLSX = require('xlsx');
 const moment = require('moment');
 const { format } = require('date-fns');
 const fs = require('fs');
-const util = require('util');
-const exceljs = require('exceljs');
-const readFileAsync = util.promisify(fs.readFile);
 const json2csv = require('json2csv').parse;
 
 
@@ -136,84 +131,7 @@ exports.getCustomer = async(req,res)=>{
     }
 }
 
-exports.getProduct = async(req,res)=>{
-    try{
-        const page = req.query.page || 1;
-        const currentPage = parseInt(page);
-        console.log("current page:",currentPage);
-        const itemsPerPage = 4;
-        const skip = (page - 1) * itemsPerPage;
-        const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
-        console.log("totalcount:",totalCount);
-        const totalPages = Math.floor(totalCount/itemsPerPage);
-        console.log("totalpages:",totalPages);
-        const productData = await productModel
-                 .find({isDeleted:false})
-                 .skip(skip)
-                 .limit(itemsPerPage)
-                 .exec();
-        const categoryData = await categoryModel.find({isDelete:false}).exec();
-        const categoriesDict = {};
-        categoryData.forEach((category) => {
-        categoriesDict[category._id.toString()] = category.name;
-        });
-        res.render('adminpanel/product',{product:productData,categories:categoriesDict,totalPages,currentPage,totalCount});
-    }catch(error){
-        console.error("error while fetching products",error);
-    }
-} 
 
-//deleting product images
-exports.deleteProductImage = async (req, res) => {
-    try {
-        const productId = req.query.productId;
-        console.log(productId);
-        const imageName = req.query.imageName;
-        console.log("image:",imageName);
-        const product = await productModel.findById(productId);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        const imageIndex = product.image.findIndex(image => image ===imageName);
-        console.log("imageindex:",imageIndex);
-        if (imageIndex === -1) {
-            return res.status(404).json({ message: 'Image not found for this product' });
-        }
-        product.image.splice(imageIndex, 1);
-         await product.save();
-        res.redirect('/admin/products')
-    } catch (err) {
-        console.error('Error while deleting the image', err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};
-
-exports.getCategories = async (req, res) => {
-    try {
-        const page = req.query.page || 1;
-        const currentPage = parseInt(page);
-        console.log("current page:",currentPage);
-        const itemsPerPage = 5;
-        const skip = (page - 1) * itemsPerPage;
-        const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
-        console.log("totalcount:",totalCount);
-        const totalPages = Math.floor(totalCount/itemsPerPage);
-        console.log("totalpages:",totalPages);
-        const categoryData = await categoryModel
-                  .find({isDelete:false})
-                  .skip(skip)
-                  .limit(itemsPerPage)
-                  .exec();
-        console.log(categoryData);
-        if (!categoryData) {
-              console.log("No categories found in the database.");
-        } else {
-            res.render('adminpanel/categories', { category: categoryData,totalPages,currentPage,totalCount });
-        }
-    } catch (error) {
-        console.error("Error while fetching categories", error);
-    }
-}
 
 exports.getOrders = async(req,res)=>{
     try{
@@ -270,19 +188,6 @@ exports.getOrders = async(req,res)=>{
     }
 }
 
-exports.getCoupen = async(req,res)=>{
-    try{
-
-        console.log("hello isdie the coupen");
-        const coupenDetails = await coupenModel.find({"isDelete":false});
-        console.log("coupen details :",coupenDetails);
-        res.render('adminpanel/coupen',{coupenDetails});
-
-    }catch(error){
-        console.log("error while getting coupen page!!",error);
-        res.redirect('adminpanel/index');
-    }
-}
 
 exports.getBanner = async(req,res)=>{
     res.render('adminpanel/banner');
@@ -541,256 +446,6 @@ exports.addCoupenPage = async(req,res)=>{
 }
 
 
-//updateproduct page
-exports.getUpdateProductPage = async(req,res)=>{
-    try{
-         const productId = req.params.id;
-         const productId2 = new mongoose.Types.ObjectId(productId);
-         console.log("productId:",productId);
-         const categoryData = await categoryModel.find({isDelete:false}).exec();
-         const  productToUpdate = await productModel.aggregate([
-               {
-                   $match:{"_id":productId2}
-               },
-               {
-                   $lookup:{
-                        from:'categories',
-                        localField:'category',
-                        foreignField:'_id',
-                        as:"catDetail"
-                   }
-               }
-         ]).exec(); 
-         console.log("productToUpdate:",productToUpdate);
-
-         const currentCategory = productToUpdate[0].catDetail[0]._id;
-         const category = await categoryModel.aggregate([
-            {
-                $match:{
-                    "_id":{ $ne:currentCategory}
-                }
-            }
-         ])
-
-         console.log("currentCategorys:",category);
-         console.log("poroduct:",productToUpdate);
-          res.render('adminpanel/updateProduct',{productToUpdate,category});
-    }catch(err){
-        console.error("error in updation",err);
-        res.redirect('/admin/products');
-    }
-}
-
-//updatedproduct
-exports.productUpdated = async(req,res)=>{
-    try{
-        const productId = req.params.id;
-        const productId2 = new mongoose.Types.ObjectId(productId);
-        let {productName,price,small,medium,large,discription,category,offer} = req.body;
-        if(small == ""){
-            small = 0;
-        }
-        if(medium == ""){
-            medium = 0;
-        }
-        if(large == ""){
-            large = 0;
-        }
-        console.log("category:",category);
-        const existingProduct = await productModel.findById({"_id":productId2}).exec();
-        console.log("existing product:",existingProduct);
-        const productImages = req.files ? req.files.map((file) => file.filename) : [];
-        const updatedImages = existingProduct.image.concat(productImages);
-        console.log(productImages);
-        console.log(updatedImages);
-        await productModel.findByIdAndUpdate(
-            {"_id":productId2},
-            { 
-                name: productName,
-                price,
-                stock:{
-                    sizeSmall:{
-                        stock:small
-                    },
-                    
-                    sizeMedium:{
-                        stock:medium
-                    },
-
-                    sizeLarge:{
-                        stock:large
-                    }
-                },
-                image:updatedImages,
-                discription,
-                category,
-                offer
-            }).exec();
-        res.redirect('/admin/products');
-    }catch(err){
-        console.error("error updating product",err);
-    }
-}
-
-//deleteproduct
-exports.deleteProduct = async(req,res)=>{
-    try{
-        const productId = req.params.id;
-        await productModel.findByIdAndUpdate(productId,{isDeleted:true}).exec();
-        res.redirect('/admin/products');
-    }catch(err){
-        console.error("error deletting product",err);
-        res.redirect('/admin/products');
-    }
-}
-
-//adding category page
-exports.addcategoryPage = async(req,res)=>{
-    res.render('adminpanel/addCategory');
-}
-
-//adding category
-exports.addingCategory = async(req,res)=>{
-    try{
-        const {name} = req.body;
-        let catOffer = req.body.catOffer;
-       
-        if(catOffer == ""){
-            catOffer = 0 ;
-        }
-        const lowercasename = typeof name === 'string' ? name.toLowerCase() : name;
-        const existingCategory = await categoryModel.findOne({ "name": { $regex: new RegExp('^' + lowercasename + '$', 'i') }})
-        console.log("existing category",existingCategory);
-       if(existingCategory){
-           await categoryModel.updateOne({"name":{ $regex: new RegExp('^' + lowercasename + '$', 'i') }},{$set:{"isDelete":false}});
-           console.log("category already exists .updated existing category");
-       }else{
-         const newCategory = new categoryModel({
-           "name":name,
-           "offer":catOffer,
-            "isDelete":false
-         });
-         await newCategory.save();
-         console.log("category added successfully");
-       }
-        res.redirect('/admin/categories');
-    }catch(err){
-        console.error("error while creating categories",err);
-        res.redirect('/admin/categories');
-    }
-}
-
-//deleting categories
-exports.deleteCategory = async(req,res)=>{
-    try{
-        const catId = req.params.id;
-        await categoryModel.findByIdAndUpdate(catId,{isDelete:true}).exec();
-        res.redirect('/admin/categories');
-    }catch(err){
-        console.error("error while deleting the category",err);
-        res.redirect('/admin/categories');
-    }
-}
-
-//updateCategoryPage
-exports.getUpdateCategoryPage = async(req,res)=>{
-    try{
-        const catId = req.params.id;
-        const cataToUpdate = await categoryModel.findById(catId).exec();
-        res.render('adminpanel/updatecategory',{cataToUpdate});
-    }catch(err){
-        console.error("error while updating catogery",err)
-        res.redirect('/admin/catogeries');
-    }
-}
-
-//updating category
-exports.updateCategory = async(req,res)=>{
-    try{
-        const catId = req.params.id;
-        const {name} = req.body;
-        let catOffer = req.body.catOffer;
-        if(catOffer == ""){
-            catOffer = 0;
-        }
-        await categoryModel.findByIdAndUpdate(catId,{$set:{"name":name,"offer":catOffer}}).exec();
-        res.redirect('/admin/categories')
-    }catch(err){
-        console.error("error while updating the category",err);
-        res.redirect('/admin/categories');
-    }
-}
-
-//adding product
-exports.addingProduct = async(req,res)=>{
-    try{
-        const{productName,price,small,medium,large,category,dis} = req.body;
-        let offer = req.body.offer;
-        if(offer == ""){
-            offer = 0 ;
-        }
-        productImages =req.files.map((file)=>file.filename);
-
-        let stockSmall,stockLarge,stockMedium;
-        let croppedImage = req.files['croppedImage'];
-        console.log("croppedImages :",croppedImage);        
-        //setting the stock for small size
-        if(small == ""){
-            stockSmall = 0;
-        }else{
-            stockSmall = small;
-        }
-
-        //setting the stock for large size
-        if(large == ""){
-           stockLarge = 0;
-        }else{
-           stockLarge = large;
-        }
-
-        //setting the stock for medium size
-        if(medium== ""){
-            stockMedium = 0;
-        }else{
-            stockMedium = medium;
-        }
-
-        const  offerP = (offer/100)*price;
-        const offerPrice = price - offerP;
-        console.log("offerPrice:",offerPrice);
-
-        const product = new productModel ({
-              name:productName,
-              price,
-              stock:{
-                sizeSmall:{
-                    stock:stockSmall
-                },
-                
-                sizeMedium:{
-                    stock:stockMedium
-                },
-
-                sizeLarge:{
-                    stock:stockLarge,
-                },
-
-              },
-              image:productImages,
-              discription: dis,
-              isDeleted:false,
-              category,
-              offer,
-              offerPrice
-        })
-        await product.save();
-        console.log(`${productName} is inserted Successfully`);
-        res.redirect('/admin/products');
-    }catch(err){
-        console.error("error adding products :",err);
-        res.redirect('/admin/addingProduct');
-    }
-}
 
 //updateStatus
 exports.updateStatus = async (req, res) => {
@@ -846,112 +501,15 @@ exports.cancelOrder = async(req,res)=>{
 }
 
 
-//adding coupen
-exports.addingCoupen = async(req,res)=>{
-    try{
 
-      const coupen2 = req.body;
-      const offer = req.body;
-      const  offer2 = offer.offer;
-      console.log("offer:",offer2);
 
-      const coupen = coupen2.coupen2;
-      console.log("coupen from form ",coupen);
-      const coupenData = await coupenModel.find();
-      console.log("coupen details :",coupenData);
-      const newCoupen =  new coupenModel({
-            code:coupen,
-            offer:offer2
-      })
-      await newCoupen.save();
-      console.log("new coupen :",newCoupen);
-      res.redirect('/admin/coupen');
 
-    }catch(error){
-        console.error("error while adding coupen code!",error);
-        res.redirect('/admin/coupen');
-    }
-}
 
-//edit coupen
-exports.editCoupen = async(req,res)=>{
-    try{
-        const coupenId = req.query.id;
-        const id = new mongoose.Types.ObjectId(coupenId);
-        const selectedCoupen = await coupenModel.findById(id);
-        console.log("selected coupen:",selectedCoupen);        
-        res.render('adminpanel/editCoupen',{selectedCoupen});
 
-    }catch(error){
-        console.error("error while editing the coupen!",error);
-        res.redirect('/admin/coupen')
-    }
-}
 
-//listUnlistCoupen
-exports.listUnlistCoupen = async(req,res) =>{
-    try{
-         console.log("inside the changing the listinf ");
-         res.redirect('/admin/coupen');
-    }catch(error){
-        console.error("error while change listed coupen !!",error);
-        res.redirect('/admin/coupen');
-    }
-}
 
-//updateEditedCoupen
-exports.updateEditedCoupen = async(req,res) =>{
-    try{
-        console.log("req.body",req.body);
-        const {coupen, coupenOffer,selectedCoupen} = req.body;
-        const id = selectedCoupen._id;
-        const updatingCoupen =  await coupenModel.findByIdAndUpdate({"_id":id},{$set:{"code":coupen,"offer":coupenOffer}});
-        res.status(200).json({success:true,message:"updatedSuccessfull"});
-        
-    }catch(error){
-        console.log("error occured while updating the edited coupen:",error);
-        res.redirect('/admin/coupen');
-    }
-}
 
-//listUnlist
-exports.listUnlist = async(req,res)=>{
-    try{
-        const {coupenId} = req.body;
-        console.log("coupenId:",coupenId);
-        const coupenId2 = new mongoose.Types.ObjectId(coupenId);
-        const coupenData = await coupenModel.findById(coupenId);
-        const currentListedStatus = coupenData.listed;
-        console.log("currentListedStatus:",currentListedStatus);
 
-        if(currentListedStatus == true){
-            const updatedCoupen = await coupenModel.findByIdAndUpdate({"_id":coupenId2},{$set:{"listed":false}});
-        }else{
-            const updatedCoupen = await coupenModel.findByIdAndUpdate({"_id":coupenId2},{$set:{"listed":true}});
-        }
-        res.status(200).json({success:true});
-
-    }catch(error){
-        console.error("error while listing the coupen!!",error);
-        res.redirect('/admin/coupen');
-    }
-}
-
-//coupen delete
-exports.coupenDelete = async(req,res)=>{
-    try{
-
-        const coupenId = req.body.coupenId;
-        const coupenId2 = new mongoose.Types.ObjectId(coupenId);
-        console.log("coupenId2:",coupenId2);
-        const updatedCoupen = await coupenModel.findByIdAndUpdate({"_id":coupenId2},{$set:{"isDelete":true}})
-        res.status(200).json({success:true});
-
-    }catch(error){
-        console.error("error while deleting the coupen!!",error);
-        res.redirect('/admin/coupen');
-    }
-}
 
 //logout
 exports.logout = async(req,res)=>{

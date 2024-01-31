@@ -48,7 +48,12 @@ function isAdmin(req,res,next){
 }
 
 
+function errorHandling(error,req,res,next){
+    console.log("error",error);
+    res.status(500).render('errorHandling');
+}
+
 
 module.exports = {
-    isUser,user,admin,isAdmin,
+    isUser,user,admin,isAdmin,errorHandling
 }

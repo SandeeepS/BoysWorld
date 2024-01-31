@@ -1,12 +1,11 @@
 
-const UserModel = require('../models/userModel');
-const orderModel = require('../models/ordersModel');
-const coupenModel = require('../models/coupenModel');
+const UserModel = require('../../models/userModel');
+const orderModel = require('../../models/ordersModel');
+const coupenModel = require('../../models/coupenModel');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
 const moment =  require('moment');
-const Razorpay = require('razorpay');
 const uuid = require('uuid');
 
 const { format } = require('date-fns');
@@ -18,38 +17,42 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const {user} = require('../models/userModel');
-const categoryModel = require('../models/categoryModel');
+const categoryModel = require('../../models/categoryModel');
 const { default: mongoose } = require('mongoose');
-const productModel = require('../models/productModel');
-const { render } = require('../routes/userRoute');
+const productModel = require('../../models/productModel');
 const {ObjectId} = mongoose.Types;
-const { log } = require('console');
 const crypto = require('crypto');
-const { name } = require('ejs');
-const { parse } = require('path');
-const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
+const { error } = require('console');
 
-var instance = new Razorpay({
-  key_id: RAZORPAY_ID_KEY,
-  key_secret: RAZORPAY_SECRET_KEY,
-});
+
+
+
 
 exports.home = async(req,res)=>{
     res.render("index");
-
 }
 
-exports.loginPage = async(req,res)=>{
-    const message = "Lets Go";
-    res.render("login",{message});
+exports.loginPage = async(req,res,next)=>{
+  try{
+      const message = "Lets Go";
+      res.render("login",{message});
+  }catch(error){
+      console.log("error while getting login page");
+      next(error);
+  }
 }
 
-exports.signupPage = async(req,res)=>{
-    res.render('signup');
+//get signup page
+exports.signupPage = async(req,res,next)=>{
+  try{
+      res.render('signup');
+  }catch(error){
+      console.log("error while getting signup page ");
+      next(error);
+  }
 }
 
-exports.shopPage = async(req,res)=>{
+exports.shopPage = async(req,res,next)=>{
     try{
         if(req.query.product){
                                                           
@@ -130,12 +133,12 @@ exports.shopPage = async(req,res)=>{
         res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
     }catch(error){
         console.error("error while fetching products",error);
-        res.redirect('/');
+        next(error);
     }
 }
 
 //get shop with price range 
-exports.getShopWithPriceRange = async(req,res)=>{
+exports.getShopWithPriceRange = async(req,res,next)=>{
   try{
     if(req.query.price1 && req.query.price2){
           const {price1,price2} = req.query;
@@ -199,81 +202,81 @@ exports.getShopWithPriceRange = async(req,res)=>{
 
   }catch(error){
     console.error("error while getting shop according to the price ",error);
+    next(error);
   }
 }
 
 //get shop with search
-exports.getShopBySearch = async(req,res) =>{
+exports.getShopBySearch = async(req,res,next) =>{
        try{
-
-        if(req.query){
-          const searchProduct = req.query.searchProduct;
-          console.log("searched product:",searchProduct);
-          const user = req.session.user;
-          const userId = new mongoose.Types.ObjectId(user);
-          console.log("userId:",userId);
-          const page = req.query.page || 1;
-          let currentPage = parseInt(page);
-          if(currentPage <= 0  ){
-            currentPage = 1;
-          }
-          console.log("current page:",currentPage);
-          const itemsPerPage = 3;
-          let skip = (page - 1) * itemsPerPage;
-          if(skip <= 0 ){
-            skip = 0 ;
-          }
-          const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
-          console.log("totalcount:",totalCount);
-          const totalPages = Math.floor(totalCount/itemsPerPage);
-          console.log("totalpages:",totalPages);
-          const productData = await productModel.aggregate([
-             {
-              $match:{
-                "isDeleted":false,
-                 "name": {$regex: searchProduct, $options: 'i'}
+            if(req.query){
+              const searchProduct = req.query.searchProduct;
+              console.log("searched product:",searchProduct);
+              const user = req.session.user;
+              const userId = new mongoose.Types.ObjectId(user);
+              console.log("userId:",userId);
+              const page = req.query.page || 1;
+              let currentPage = parseInt(page);
+              if(currentPage <= 0  ){
+                currentPage = 1;
               }
-             },
-             {
-              $skip:skip,
-             },
-             {
-              $limit:itemsPerPage
-             },
-             {
-               $lookup:{
-                from:"categories",
-                localField:"category",
-                foreignField:"_id",
-                as:"categoryDetails"
-               }
-             },
-             {
-              $addFields:{
-                lastAmount:{
-                  $multiply:[
-                    "$price",
-                    {$divide:["$offer",100]}
-                  ]
+              console.log("current page:",currentPage);
+              const itemsPerPage = 3;
+              let skip = (page - 1) * itemsPerPage;
+              if(skip <= 0 ){
+                skip = 0 ;
+              }
+              const totalCount = await productModel.countDocuments({isDeleted:false}).exec();
+              console.log("totalcount:",totalCount);
+              const totalPages = Math.floor(totalCount/itemsPerPage);
+              console.log("totalpages:",totalPages);
+              const productData = await productModel.aggregate([
+                {
+                  $match:{
+                    "isDeleted":false,
+                    "name": {$regex: searchProduct, $options: 'i'}
+                  }
+                },
+                {
+                  $skip:skip,
+                },
+                {
+                  $limit:itemsPerPage
+                },
+                {
+                  $lookup:{
+                    from:"categories",
+                    localField:"category",
+                    foreignField:"_id",
+                    as:"categoryDetails"
+                  }
+                },
+                {
+                  $addFields:{
+                    lastAmount:{
+                      $multiply:[
+                        "$price",
+                        {$divide:["$offer",100]}
+                      ]
+                    }
+                  }
                 }
-              }
-             }
-          ])
-                  
-          const categoryData = await categoryModel.find({isDelete:false}).exec();
-          const Currentuser = await UserModel.find({"_id":userId})
-          console.log("currentUser:",Currentuser);
-          console.log("productData :",productData);
-          res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
-    }
+              ])
+              const categoryData = await categoryModel.find({isDelete:false}).exec();
+              const Currentuser = await UserModel.find({"_id":userId})
+              console.log("currentUser:",Currentuser);
+              console.log("productData :",productData);
+              res.render('shop',{product:productData,category:categoryData,Currentuser,totalPages,currentPage,totalCount,searchProduct});
+          }
 
        }catch(error){
           console.error("error while getting shop according to search",error);
+          next(error);
        }
 }
 
 //get product by category
-exports.categoryBasedProduct = async(req,res)=>{
+exports.categoryBasedProduct = async(req,res,next)=>{
   try{
     const {categoryId } = req.body;
     const  newCategoryId = new mongoose.Types.ObjectId(categoryId);
@@ -303,11 +306,12 @@ exports.categoryBasedProduct = async(req,res)=>{
     res.status(200).json({success:true,product:productData,category:categoryData});
   }catch(err){
     console.error("error getting the product in the category",err);
+    next(error);
   }
 }
 
 //selected product
-exports.selectedProduct = async(req,res)=>{
+exports.selectedProduct = async(req,res,next)=>{
     try{
         const user = req.session.user;
         const userDetail = await UserModel.findById(user);
@@ -341,35 +345,44 @@ exports.selectedProduct = async(req,res)=>{
         res.render('selectedProduct',{productData,message,stock,userDetail,cart});
     }catch(error){
         console.error("error while fetching products",error);
-        res.redirect('/shop');
+        next(error);
     }
 }
 
-exports.contactPage = async(req,res)=>{
-    res.render('contact');
-}
+exports.contactPage = async(req,res,next)=>{
+  try{
+      res.render('contact');
 
-//sportsWear
-exports.sportsWear = async(req,res)=>{
-    res.render('sportswear');
-}
-
-exports.getOtpPage = async(req,res)=>{
-  let referredUserId = "";
-  if(req.query.referredUser){
-    console.log("referred user from query",req.query.referredUser);
-    referredUserId = req.query.referredUser ;
-    console.log("reffered user :",referredUserId);
+  }catch(error){
+      console.log("error while getting the contact page ",error);
+      next(error);
   }
-    const message = "Enter OTP ";
-    res.render('otp',{message,referredUserId});
 }
 
-exports.userEntry = async(req,res)=>{
-    const {Email,Password} = req.body;
-    console.log(Email);
-    console.log(Password);
+
+//get otp page
+exports.getOtpPage = async(req,res,next)=>{
+  try{
+      let referredUserId = "";
+      if(req.query.referredUser){
+        console.log("referred user from query",req.query.referredUser);
+        referredUserId = req.query.referredUser ;
+        console.log("reffered user :",referredUserId);
+      }
+        const message = "Enter OTP ";
+        res.render('otp',{message,referredUserId});
+  }catch(error){
+      console.log("error while getting otp page !!",error);
+      next(error);
+  }
+}
+
+
+exports.userEntry = async(req,res,next)=>{
     try{
+        const {Email,Password} = req.body;
+        console.log(Email);
+        console.log(Password);
         const user = await UserModel.findOne({email:Email}).exec();
         if(user && user.status === true){
             const passwordMatch = await bcrypt.compare(Password,user.pass);
@@ -390,11 +403,11 @@ exports.userEntry = async(req,res)=>{
         }
     }catch(error){
         console.error("error during login",error);
-        res.redirect('/');
+        next(error);
     }
 };
 
-exports.signup = async(req,res)=>{
+exports.signup = async(req,res,next)=>{
     try{
     // Generate a random OTP
     const referralCode = req.body.referralCode;
@@ -408,7 +421,6 @@ exports.signup = async(req,res)=>{
            res.status(200).json({success:true,message:"The provided referral code is Expired!"});
 
     }else{
-
           let  updatedReferredUser = "";
           if(referralCode != ""){
             console.log("referal code after varification:",referralCode);
@@ -418,7 +430,6 @@ exports.signup = async(req,res)=>{
             updatedReferredUser = referredUserId;
             console.log("refered userid",updatedReferredUser);
           }
-
           const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
           const extime = moment().add(30,'seconds').toISOString();
           const saltRouds = 10;
@@ -443,7 +454,6 @@ exports.signup = async(req,res)=>{
               pass: 'ijpzysobzeshejlv',
             },
           });
-          
           // Email configuration
           const mailOptions = {
             from: 'sandeeps@gmail.com',
@@ -451,7 +461,6 @@ exports.signup = async(req,res)=>{
             subject: 'OTP Verification',
             text: `Your OTP is: ${otp}`,
           };
-          
           // Send the email with OTP
           transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
@@ -467,11 +476,9 @@ exports.signup = async(req,res)=>{
             }
           });
     }
-
-    
     }catch(error){
         console.error("Error during signup:",error);
-        res.redirect("/");
+        next(error);
     }
 };
 
@@ -519,7 +526,7 @@ exports.resendOTP = async(req,res)=>{
 }
 
 //resent otp for resetPassword in login
-exports.reSendotpResetPassword = async(req,res)=>{
+exports.reSendotpResetPassword = async(req,res,next)=>{
   try{ 
     console.log("hello");
     const extime = moment().add(30,'seconds').toISOString();
@@ -560,11 +567,12 @@ exports.reSendotpResetPassword = async(req,res)=>{
 
   }catch(err){
     console.error("error in resending the otp while login",err);
+    next(error);
   }
 }
 
 //varify otp for signup
-exports.verifyOtp = async (req, res) => {
+exports.verifyOtp = async (req, res , next) => {
     try {
     const {userotp,referredUserId} = req.body;
     console.log("referred User Id :",referredUserId);
@@ -626,12 +634,12 @@ exports.verifyOtp = async (req, res) => {
   }
     }catch (error) {
       console.error('Error during OTP verification:', error);
-      res.redirect('/Otp'); 
+      next(error);
     }
   }
 
   //adding  cart
-  exports.addToCart = async(req,res)=>{
+  exports.addToCart = async(req,res,next)=>{
     try{
       const {productId,size} = req.body;
       console.log("size:",size);
@@ -680,12 +688,12 @@ exports.verifyOtp = async (req, res) => {
       res.status(200).json({success:true,message:"item added to the cart ",products});
     }catch(err){
         console.log("error while geting cart",err);
-        res.status(500).send("internal server error");
+        next(error);
     }
   }
 
 //cartItemDelete
-exports.cartItemDelete = async(req,res)=>{
+exports.cartItemDelete = async(req,res,next)=>{
   try{
     console.log("deleting");
     const productId  = req.params.id;
@@ -712,23 +720,29 @@ exports.cartItemDelete = async(req,res)=>{
       res.redirect('/getCart');
     }
   }catch(err){
-   console.error("error while deleting the cart");
-   res.redirect('/getCart');
+    console.error("error while deleting the cart");
+    next(error);
   }
 }
 
-exports.logout = (req,res)=>{
-    req.session.destroy((err)=>{
+exports.logout = (req,res,next)=>{
+  try{
+      req.session.destroy((err)=>{
         if(err){
             console.error("Error distroying session",err);
         }else{
             res.redirect('/');
         }
-    });
+      });
+  }catch(error){
+      console.log("error while logouting the user!",error);
+      next(error);
+  }
+    
 }
 
 /****** get from navbar***********/
-exports.getAccount = async(req,res)=>{
+exports.getAccount = async(req,res,next)=>{
   try{
        const userId = req.session.user;
        const userid2 = new mongoose.Types.ObjectId(userId);
@@ -740,7 +754,8 @@ exports.getAccount = async(req,res)=>{
        console.log(orders);
        res.render('account',{orders,userData,wallet});
   }catch(err){
-    console.error("error while ")
+      console.error("error while get account ");
+      next(error);
   }
 }
 
@@ -748,7 +763,7 @@ exports.getWishlist = async(req,res)=>{
     res.render('wishlist');
 }
 
-exports.getCheckoutPage = async(req,res)=>{
+exports.getCheckoutPage = async(req,res,next)=>{
   try{
       const userId = req.session.user;
       const userData = await UserModel.findById(userId).exec();
@@ -784,12 +799,12 @@ exports.getCheckoutPage = async(req,res)=>{
       res.render('checkout',{address,currentAddress,currentAddressId, product,quantity,totalPrice,productId,size});
   }catch(err){
     console.error("error while getting checkout",err);
-    res.redirect('/shop');
+    next(error);
   }
   
 }
 //from cart
-exports.getCheckoutPage2 = async(req,res)=>{
+exports.getCheckoutPage2 = async(req,res,next)=>{
   try{
     console.log("kjgjgfgjd");
     const {cart,totalAmount} = req.query;
@@ -799,7 +814,6 @@ exports.getCheckoutPage2 = async(req,res)=>{
     const address = userData.address || req.query.address;
     const currentAddressId = userData.currentAddress;
     const currentAddress = address.filter(add => add._id.equals(currentAddressId));
-
     const cartDetails = await UserModel.aggregate([
         {
           $match:{_id:userIdObj}
@@ -835,11 +849,11 @@ exports.getCheckoutPage2 = async(req,res)=>{
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
   }catch(err){
       console.log("error in getcheckout2 ",err);
+      next(error);
   }
 }
 
-
-exports.getCart = async(req,res)=>{
+exports.getCart = async(req,res,next)=>{
   try{
        const userId = req.session.user;
        const userId2 = new mongoose.Types.ObjectId(userId);
@@ -869,8 +883,6 @@ exports.getCart = async(req,res)=>{
         }
        ]);
 
-
-
        for(let i = 0; i < cart.length; i++){
            let currentSize = cart[i].cart.size;
            
@@ -881,16 +893,15 @@ exports.getCart = async(req,res)=>{
        console.log("cart:",cart);
       console.log("productDetails:",cart[0].product);
       console.log("categoryDetails:",cart[0].categoryDetails[0])
-   
   res.render('cart', {cart,cartTotal}); 
   }catch(err){
     console.error("error while getting produts ",err);
-    res.redirect('/shop');
+    next(error);
   }
 }
 
 //updateQuantity
-exports.updateQuantity = async (req, res) => {
+exports.updateQuantity = async (req, res,next) => {
   try {
     const { productId, newQuantity ,currentQuantity,singleUnitPrice,size} = req.body;
     console.log("size:",size);
@@ -908,26 +919,25 @@ exports.updateQuantity = async (req, res) => {
     for(let i = 0; i < cartItem.cart.length; i++){
           cartTotal = cartTotal+cartItem.cart[i].total;
     }
-    
     res.status(200).json({ newQuantity ,newTotal,cartTotal});
-   
   } catch (err) {
     console.error("Error while updating the quantity:", err);
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
 
 //add address
-exports.addAddressPage = async(req,res)=>{
+exports.addAddressPage = async(req,res,next)=>{
   try{
     res.render('addAddress');
   }catch(err){
     console.error("error while loading add Address page",err);
+    next(error);
   }
 }
 
 //adresss
-exports.address = async(req,res)=>{
+exports.address = async(req,res,next)=>{
   try{
       const user = req.session.user;
       console.log("userId:",user);
@@ -960,7 +970,6 @@ exports.address = async(req,res)=>{
           }
         }
        },{new:true});
-
        if(userData){
         console.log("Address inserted susscessfully");
         res.redirect('/getAccount');
@@ -970,11 +979,12 @@ exports.address = async(req,res)=>{
        }
   }catch(err){
     console.error("error while adding address",err);
+    next(error);
   }
 }
 
 //save userAddress
-exports.saveAddress = async(req,res)=>{
+exports.saveAddress = async(req,res,next)=>{
   try{
     const user = req.session.user;
     const address = {
@@ -1012,14 +1022,14 @@ exports.saveAddress = async(req,res)=>{
       console.log("record not inserted");
       res.redirect('/getAccount');
      }
-
   }catch(err){
     console.log("error in saving address",err);
+    next(error);
   }
 }
 
 //save or add address form the checkout 
-exports.addAddressFromCheckout = async(req,res)=>{
+exports.addAddressFromCheckout = async(req,res,next)=>{
     try{
       const {address,product,quantity,totalPrice,productId} = req.body;
       const user = req.session.user;
@@ -1059,15 +1069,14 @@ exports.addAddressFromCheckout = async(req,res)=>{
        const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
        console.log("productId from server:",productId);
        res.status(200).json({success:true,message:"address inserted successfully",address,product,quantity,totalPrice,currentAddress,productId});
-
     }catch(err){
       console.log("error while adding the address from checkout",err);
-      res.status(500).json({success:false,message:"error occured in adding address"});
+      next(error);
     }
 }
 
 //add addressfrom checkout 2 
-exports.addAddressFromCheckout2 = async(req,res) =>{
+exports.addAddressFromCheckout2 = async(req,res,next) =>{
   try{
     const {address,cartDetails,totalAmount} = req.body;
     const user = req.session.user;
@@ -1111,15 +1120,14 @@ exports.addAddressFromCheckout2 = async(req,res) =>{
      const updatedData = await UserModel.findByIdAndUpdate(user,{$set:{"currentAddress":currentAddressId}})
      console.log("cartDetails:",cartDetails);
      res.status(200).json({success:true,message:"address ading all successfull",currentAddress,address,cartDetails,totalAmount});
-
   }catch(error){
     console.error("error while updating the address from the serverside",error);
-    res.status(500).json({success:false,message:"adding address is failed"});
+    next(error);
   }
 }
 
 //show address page
-exports.showAddress = async(req,res)=>{
+exports.showAddress = async(req,res,next)=>{
   try{
     const userId = req.session.user;
     const userId2 = new mongoose.Types.ObjectId(userId);
@@ -1133,11 +1141,12 @@ exports.showAddress = async(req,res)=>{
     res.render('showAddress',{address,currentAddress});
   }catch(err){
     console.error("error while getting show address page",err);
+    next(error);
   }
 }
 
 //address delete
-exports.addressDelete = async(req,res)=>{
+exports.addressDelete = async(req,res,next)=>{
   try{
     const userId = req.session.user;
     const addressId = req.params.id;
@@ -1156,10 +1165,11 @@ exports.addressDelete = async(req,res)=>{
     }
   }catch(err){
     console.error("error while deleting the address",err);
+    next(error);
   }
 }
 
-exports.setDefaultAddress = async (req, res) => {
+exports.setDefaultAddress = async (req, res,next) => {
   try {
     const userId = req.session.user;
     const userId2 = new mongoose.Types.ObjectId(userId);
@@ -1169,15 +1179,14 @@ exports.setDefaultAddress = async (req, res) => {
     const user = await UserModel.findOneAndUpdate(userId2,{$set:{"currentAddress":addId}});
     console.log("useris:",user);
     res.redirect('/showAddress');
- 
   } catch (err) {
     console.error("Error while updating the default address", err);
-    res.redirect('/showAddress');
+    next(error);
   }
 }
 
 //setaddressFrom checkout
-exports.setDefaultAddressFromCheckouts = async (req, res) => {
+exports.setDefaultAddressFromCheckouts = async (req, res,next) => {
   try {
     const userId = req.session.user;
     const address = (decodeURIComponent(req.query.address));
@@ -1197,17 +1206,15 @@ exports.setDefaultAddressFromCheckouts = async (req, res) => {
     const currentAddress = user.address.filter(add => add._id.equals(addId));
     const currentAddressId = currentAddress._id;
     console.log("useris:",user);
-   
-  
     res.render('checkout',{address,currentAddress,product,currentAddressId,totalPrice,quantity,productId,size});
   } catch (err) {
     console.error("Error while updating the default address", err);
-    res.redirect('/getCheckout');
+    next(error);
   }
 }
 
 //setaddressFrom checkout 2
-exports.setDefaultAddressFromCheckouts2 = async (req, res) => {
+exports.setDefaultAddressFromCheckouts2 = async (req, res,next) => {
   try {
     const userId = req.session.user;
     const address = JSON.parse(decodeURIComponent(req.query.address))
@@ -1227,542 +1234,112 @@ exports.setDefaultAddressFromCheckouts2 = async (req, res) => {
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
   } catch (err) {
     console.error("Error while updating the default address", err);
-    console.log("testing te bugs2222222222222222222222222222222222222222222222222222")
-    res.redirect('/getCheckout');
-  }
-}
-
-//place order 
-//place order 
-exports.placeOrder = async (req, res) => {
-  try {
-    const { cartDetails,totalAmount,coupen} = req.body;
-    console.log("coupen in server side from place order :",coupen);
-    const user = req.session.user;
-    const userid = new mongoose.Types.ObjectId(user);
-
-    const currentUserDetail = await UserModel.find({"_id":userid});
-    console.log("currentuserDetails:",currentUserDetail);
-    //if the currentUserDetails not containing any coupens 
-    let iscoupenExist = undefined;
-     if (currentUserDetail.usedCoupen ){
-        iscoupenExist = currentUserDetail.usedCoupen.find((ele)=> ele == coupen);
-     } 
-    console.log("iscoupen exist:",iscoupenExist);
-    if(coupen != undefined && iscoupenExist != undefined){
-       res.status(200).json({success:true,message:"Coupen code Expired ! Please remove it"});
-    } else{
-
-      console.log(cartDetails);
-      const cashOnDelivery = "cashOnDelivery";
-      const status = "Conformed";
-      const userId = cartDetails[0]._id;
-      const date = new Date();
-      const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-      const randomId = 10000+Math.floor(Math.random()*90000);
-      const currentAddress = cartDetails[0].currentAddress;
-      const total = cartDetails[0].cart.total;//need to fix it again
-      const usedCoupen = coupen;
-      console.log("usedCoupen is :0",usedCoupen);
-      const productId = [];
-          for(let i = 0; i < cartDetails.length; i ++){
-  
-              const pro = cartDetails[i].cart;
-              console.log("pro:",pro);
-              const proId2 = pro.productId;
-              const proId = new mongoose.Types.ObjectId(proId2);
-              const size = pro.size;
-              productId.push(pro);
-              const quantity = pro.quantity;
-              const currentProduct = await productModel.find({"_id":proId});
-              console.log("currentProduct:",currentProduct);
-              const currentStock = currentProduct[0].stock[size].stock;
-              console.log("currentStock:",currentStock);
-              const newStock = parseInt(currentStock - quantity);
-              console.log("newStock:",newStock);
-              const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
-
-          }
-        const order = new orderModel({
-          "userId":userId,
-          "products":productId,
-          "orderId":randomId,
-          "totalAmount":totalAmount,
-          "currentAddress":currentAddress,
-          "date": formattedDate,
-          "paymentMethod":cashOnDelivery,
-          "currentStatus":status,
-          "usedCoupen":usedCoupen
-         
-      })
-      const savedData = await order.save();
-      if(coupen != undefined){
-        const updatedUser = await UserModel.findByIdAndUpdate({"_id":user},{$push:{"usedCoupen":coupen}});
-      }
-      // Respond with a success message
-      res.status(200).json({ success: true, message: 'Order placed successfully.' });
-    }
-
-  } catch (error) {
-    console.error('Error placing order:', error);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
-  }
-};
-
-
-exports.placeOrder2 = async(req,res)=>{
-  try{
-    const {productId,quantity,total,currentAddress,currentAddressId,size,coupen} = req.body;
-    console.log("coupen in serverside :",coupen);
-    const userId2 = req.session.user;
-    const user = await UserModel.findById(userId2).exec();
-    const iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
-    if(coupen != undefined && iscoupenExist != undefined){
-        res.status(200).json({success:true,message:"Coupen code Expired ! Please remove it"});
-
-    }else{
-              const product = await productModel.findById(productId).exec();
-              const cashOnDelivery = "cashOnDelivery";
-              const status = "Conformed";
-              const userId = user._id;
-              
-              const productId2 = {
-                "productId":product._id,
-                "quantity":quantity,
-                "price":total
-              }
-            
-              const date = new Date();
-                const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-                const randomId = 10000+Math.floor(Math.random()*90000);
-                const usedCoupen = coupen;
-                const order = new orderModel({
-                  "userId":userId,
-                  "products":productId2,
-                  "orderId":randomId,
-                  "currentAddress":currentAddressId,
-                  "totalAmount":total,
-                  "date": formattedDate,
-                  "paymentMethod":cashOnDelivery,
-                  "currentStatus":status,
-                  "usedCoupen":usedCoupen
-                  
-          
-              });
-              const savedData = await order.save();
-              const currentProduct = await productModel.find({"_id":productId});
-              console.log("currentProduct:",currentProduct);
-              const currentStock = currentProduct[0].stock[size].stock;
-              console.log("currentStock:",currentStock);
-              const newStock = parseInt(currentStock - quantity);
-              console.log("newStock:",newStock);
-              const updatedStock = await productModel.findByIdAndUpdate(
-                {"_id":productId},
-                {$set:{[`stock.${size}.stock`]:newStock}}).exec();
-              if(coupen != undefined){
-                const updatedUser = await UserModel.findByIdAndUpdate({"_id":userId2},{$push:{"usedCoupen":coupen}});
-              }
-              console.log("order inserted successfully");
-              res.status(200).json({ success: true,});
-    }
-
-  }catch(err){
-    console.error("error in place order 2 ",err);
-    res.status(500).json({success:false,message:"order placing has some issues"});
-  }
-}
-
-//online payment through razorpay
-exports.generateRazorpay = async(req,res)=>{
-     try{
-        const {productId, quantity, total,currentAddress,currentAddressId,size,coupen} = req.body;
-        console.log("coupen from online payment:",coupen);
-        const onlinePayment = "Online Payment";
-        const status = "pending";
-        const userid = req.session.user;
-        const user = await UserModel.findById(userid);
-        const iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
-        if(coupen != undefined && iscoupenExist != undefined){
-            res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
-    
-        }else{
-              const userId = user._id;
-              console.log("user....id:",userId);
-              console.log("total:",total);
-              const product = await productModel.findById(productId).exec();
-              const productId2 = {
-                "productId":product._id,
-                "quantity":quantity,
-                "price":total
-              }
-              const date = new Date();
-          const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-          const randomId = 10000+Math.floor(Math.random()*90000);
-          const usedCoupen = coupen;  
-              const orders = new orderModel({
-                "userId":userId,
-                "products":productId2,
-                "orderId":randomId,
-                "totalAmount":total,
-                "currentAddress":currentAddressId,
-                "date":formattedDate,
-                "paymentMethod":onlinePayment,
-                "currentStatus":status,
-                "usedCoupen":usedCoupen
-            })
-            const savedData = await orders.save();
-            //updating the quantity
-            const currentProduct = await productModel.find({"_id":productId});
-            const currentStock = currentProduct[0].stock[size].stock;
-            const newStock = parseInt(currentStock - quantity);
-            const updatedStock = await productModel.findByIdAndUpdate(
-              {"_id":productId},
-              {$set:{[`stock.${size}.stock`]:newStock}}).exec();
-            console.log("order inserted successfully");
-            if(coupen != undefined){
-              const updatedUser = await UserModel.findByIdAndUpdate({"_id":userid},{$push:{"usedCoupen":coupen}});
-            }
-
-            //gettig orderId
-            const totalOrders = await orderModel.find({});
-            const totalOrderLength = totalOrders.length;
-            const order = totalOrders[totalOrderLength-1];
-            console.log("heloo world");
-            console.log("order:",order);
-            const orderId = order._id;
-              console.log("orderId:",orderId);
-              const total2 = parseInt(total) * 100;
-
-              var options = {
-                amount: total2,  
-                currency: "INR",
-                receipt: orderId
-              };
-
-            console.log("hello worldddddddddddddd");
-            const razorpayOrder = await new Promise((resolve,reject)=>{
-                instance.orders.create(options,(err,order)=>{
-                  if(err){
-                    console.error("error creating razorpay order:",err);
-                    reject(err);
-                  }else{
-                    resolve(order);
-                  }
-                });
-              });
-              console.log("Razorpay order:",razorpayOrder);
-              res.status(200).json({success:true,order:razorpayOrder,total2});
-        }
-
-     }catch(err){
-      console.error("error while online payment from serverside :",err);
-      res.status(500).json({success:false,error:err.message});
-     }
-}
-
-//razorpay payment from checkout2 page
-exports.generateRazorpayFromCheckout2 = async(req,res)=>{
-  try{
-      
-    const { cartDetails,totalAmount,currentAddressId,size,coupen} = req.body;
-    console.log(cartDetails);
-    console.log("coupen from generate reazorpay 2",coupen);
-    const userid = req.session.user;
-    const user = await UserModel.findById(userid);
-    //if the user have no coupen
-    let iscoupenExist = undefined;
-    if(user.usedCoupen){
-      iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
-    }
-    if(coupen != undefined && iscoupenExist != undefined){
-        res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
-
-    }else{
-
-              const cashOnDelivery = "Online Payment";
-              const status = "Pending";
-              const userId = cartDetails[0]._id;
-              const date = new Date();
-              const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-              const randomId = 10000+Math.floor(Math.random()*90000);
-              const currentAddress = cartDetails[0].currentAddress;
-              const total = totalAmount;
-              const usedCoupen = coupen;
-              console.log("total amount from checkout2 ",total);
-              const productId = [];
-                  for(let i = 0; i < cartDetails.length; i ++){
-
-                      const pro= cartDetails[i].cart;
-                      const proId = pro.productId
-                      console.log("productId:",proId);
-                      productId.push(pro);
-                      const quantity = pro.quantity;
-                      const size = pro.size;
-                      const currentProduct = await productModel.find({"_id":proId});
-                      console.log("currentProduct:",currentProduct);
-                      const currentStock = currentProduct[0].stock[size].stock;
-                      console.log("currentStock:",currentStock);
-                      const newStock = parseInt(currentStock - quantity);
-                      console.log("newStock:",newStock);
-                      const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
-                  }
-                const neworder = new orderModel({
-                  "userId":userId,
-                  "products":productId,
-                  "orderId":randomId,
-                  "totalAmount":totalAmount,
-                  "currentAddress":currentAddress,
-                  "date": formattedDate,
-                  "paymentMethod":cashOnDelivery,
-                  "currentStatus":status,
-                  "usedCoupen":usedCoupen
-              })
-              const savedData = await neworder.save();
-              if(coupen != undefined){
-                const updatedUser = await UserModel.findByIdAndUpdate({"_id":userid},{$push:{"usedCoupen":coupen}});
-              }
-                    //gettig orderId
-                    const totalOrders = await orderModel.find({});
-                    const totalOrderLength = totalOrders.length;
-                    const order = totalOrders[totalOrderLength-1];
-                    console.log("heloo world");
-                    console.log("order:",order);
-                    const orderId = order._id;
-                    console.log("orderId:",orderId);
-                    const total2 = parseInt(total) * 100;
-            
-                    var options = {
-                      amount:  total2,  // amount in the smallest currency unit
-                      currency: "INR",
-                      receipt: orderId
-                    };
-            
-                    console.log("hello worldddddddddddddd");
-                    const razorpayOrder = await new Promise((resolve,reject)=>{
-                      instance.orders.create(options,(err,order)=>{
-                        if(err){
-                          console.error("error creating razorpay order:",err);
-                          reject(err);
-                        }else{
-                          resolve(order);
-                        }
-                      });
-                    });
-                    console.log("Razorpay order:",razorpayOrder);
-                    res.status(200).json({success:true,order:razorpayOrder, total2});
-          }
-  }catch(error){
-    console.error("error in the razorpay implimentaion route from checkout2",error);
-    res.status(500).json({success:false,message:"internal server error"});
-  }
-}
-
-
-//verify payment
-exports.verifyPayment = async(req,res)=>{
-  try{ 
-    console.log("hellow");
-    const {payment,productId} = req.body;
-    const userId = req.session.user;
-    const totalOrders = await orderModel.find({});
-    const totalOrderLength = totalOrders.length;
-    const current_Order  = totalOrders[totalOrderLength-1];
-    console.log("current order:",current_Order);
-    console.log(payment);
-    const current_orderId = current_Order._id;
-    let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
-    hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
-    hmac = hmac.digest('hex');
-    if(hmac == payment.razorpay_signature){
-      try{
-        const status = "Conformed";
-        const filter = {_id:current_orderId._id};
-        const updateDocument = {
-          $set:{
-            "currentStatus":status
-          }
-        };
-        const result = await orderModel.updateOne(filter,updateDocument);
-        console.log("kdjhkdfjgkjdfgdfgdfghhg");
-        console.log(result);
-        res.status(200).json({success:true,message:"order placed successfully"});
-      }
-      catch(err){
-        console.log("error while updating the order ",err);
-        res.status(400).json({success:false,message:"order placing has some issues "});
-      }
-    }else{
-       const status = "Failed";
-       const filter = {_id:current_orderId._id};
-       const updateDocument = {
-        $set:{
-          "status":status
-        }
-      };
-      const result = await orderModel.updateOne(filter,updateDocument);
-      res.status(400).json({success:false,message:"failed to payment"});
-    }
-  }catch(err){
-    console.error("error while varifying the payment form server!",err)
-    res.status(500).json({success:false, message:"internal server error"});
-  }
-}
-
-
-//varify payment 2 
-exports.verifyPayment2 = async(req,res)=>{
-  try{
-    const { payment} = req.body;
-    const userId = req.session.user;
-    const totalOrders = await orderModel.find({});
-    const totalOrderLength = totalOrders.length;
-    const current_Order  = totalOrders[totalOrderLength-1];
-    console.log("current order:",current_Order);
-    console.log(payment);
-    const current_orderId = current_Order._id;
-
-    let hmac = crypto.createHmac('sha256',RAZORPAY_SECRET_KEY);
-    hmac.update(payment. razorpay_order_id+'|'+payment. razorpay_payment_id); 
-    hmac = hmac.digest('hex');
-    if(hmac == payment.razorpay_signature){
-      try{
-        const status = "Conformed";
-        const filter = {_id:current_orderId._id};
-        const updateDocument = {
-          $set:{
-            "currentStatus":status
-          }
-        };
-        const result = await orderModel.updateOne(filter,updateDocument);
-        console.log("kdjhkdfjgkjdfgdfgdfghhg");
-        console.log(result);
-        res.status(200).json({success:true,message:"order placed successfully"});
-      }
-      catch(err){
-        console.log("error while updating the order ",err);
-        res.status(400).json({success:false,message:"order placing has some issues "});
-      }
-    }else{
-       const status = "Failed";
-       const filter = {_id:current_orderId};
-       const updateDocument = {
-        $set:{
-          "status":status
-        }
-      };
-      const result = await orderModel.updateOne(filter,updateDocument);
-      res.status(400).json({success:false,message:"failed to payment"});
-    }
-  }catch(error){
-    console.error("error while varifying payment 2 ",error);
+    next(error);
   }
 }
 
 //oders
-exports.oders = async(req,res)=>{
+exports.oders = async(req,res,next)=>{
   try{
-    const userId = req.session.user;
-    const userData = await UserModel.findById(userId).exec();
-    const page = req.query.page || 1;
-    let currentPage = parseInt(page);
-    if(currentPage <= 0  ){
-      currentPage = 1;
-    }
-    console.log("currnet page:",currentPage);
-    const itemsPerPage = 3;
-    let skip = (page-1)*itemsPerPage;
-    if(skip <= 0 ){
-      skip = 0 ;
-    }
-    const totalOrders = await orderModel.aggregate([
-      {
-        $unwind:"$products"
-      }
-    ])
-    const totalCount = totalOrders.length;
-    console.log("total count:",totalCount);
-    const totalPages = Math.ceil(totalCount/itemsPerPage);
-    console.log("total pages:",totalPages);
-    const userIdObj =  userData._id;
-    console.log("userid",userIdObj);
-    const orderDetails = await orderModel.aggregate([
-      {
-        $match:{userId:userIdObj}
-      },
-      {
-         $unwind : "$products"
-      },
-      {
-        $lookup:{
-          from:'products',
-          localField:'products.productId',
-          foreignField:'_id',
-          as:"productDetail"
-        }
-      },
-      {
-        $lookup:{
-          from:'users',
-          let: { userId: '$userId' },
-          pipeline: [
+          const userId = req.session.user;
+          const userData = await UserModel.findById(userId).exec();
+          const page = req.query.page || 1;
+          let currentPage = parseInt(page);
+          if(currentPage <= 0  ){
+            currentPage = 1;
+          }
+          console.log("currnet page:",currentPage);
+          const itemsPerPage = 3;
+          let skip = (page-1)*itemsPerPage;
+          if(skip <= 0 ){
+            skip = 0 ;
+          }
+          const totalOrders = await orderModel.aggregate([
             {
-              "$match": {
-                $expr: {
-                  $eq: ['$$userId', '$_id']
-                }
-              }
-            },
-            {
-              "$unwind": "$address"
-            },
-            {
-              "$addFields": {
-                "currentAddressMatched": {
-                  "$eq": ["$currentAddress", "$address._id"]
-                }
-              }
-            },
-            {
-              "$match": {
-                "currentAddressMatched": true
-              }
-            },
-            {
-              "$project": {
-                "currentAddress": "$address"
-              }
+              $unwind:"$products"
             }
-          ],
-          as:"currentAddress"
-        }
-      },
-      {
-        $sort:{
-              date:-1
+          ])
+          const totalCount = totalOrders.length;
+          console.log("total count:",totalCount);
+          const totalPages = Math.ceil(totalCount/itemsPerPage);
+          console.log("total pages:",totalPages);
+          const userIdObj =  userData._id;
+          console.log("userid",userIdObj);
+          const orderDetails = await orderModel.aggregate([
+            {
+              $match:{userId:userIdObj}
+            },
+            {
+              $unwind : "$products"
+            },
+            {
+              $lookup:{
+                from:'products',
+                localField:'products.productId',
+                foreignField:'_id',
+                as:"productDetail"
               }
-      },
-      
-      {
-        $skip:skip
-      },
-      {
-        $limit:itemsPerPage
-      },
-     
-     
-  ]).exec();
-  console.log("corderDetails :",orderDetails )
-  console.log("pro:",orderDetails [0].currentAddress[0].currentAddress.name);
-  res.render('orders',{orderDetails,totalPages,currentPage});
-
+            },
+            {
+              $lookup:{
+                from:'users',
+                let: { userId: '$userId' },
+                pipeline: [
+                  {
+                    "$match": {
+                      $expr: {
+                        $eq: ['$$userId', '$_id']
+                      }
+                    }
+                  },
+                  {
+                    "$unwind": "$address"
+                  },
+                  {
+                    "$addFields": {
+                      "currentAddressMatched": {
+                        "$eq": ["$currentAddress", "$address._id"]
+                      }
+                    }
+                  },
+                  {
+                    "$match": {
+                      "currentAddressMatched": true
+                    }
+                  },
+                  {
+                    "$project": {
+                      "currentAddress": "$address"
+                    }
+                  }
+                ],
+                as:"currentAddress"
+              }
+            },
+            {
+              $sort:{
+                    date:-1
+                    }
+            },
+            {
+              $skip:skip
+            },
+            {
+              $limit:itemsPerPage
+            },
+          
+        ]).exec();
+        console.log("corderDetails :",orderDetails )
+        console.log("pro:",orderDetails [0].currentAddress[0].currentAddress.name);
+        res.render('orders',{orderDetails,totalPages,currentPage});
   }catch(err){
     console.error("error while getting oders",err);
-    res.redirect('/getAccount');
+    next(error);
   }
 }
 
 //cancel orders by user
-exports.cancelOrder = async(req,res)=>{
+exports.cancelOrder = async(req,res,next)=>{
   try{
         const user = req.session.user;
         const userId = new mongoose.Types.ObjectId(user);
@@ -1784,178 +1361,15 @@ exports.cancelOrder = async(req,res)=>{
              newAmount = walletAmount +  price;
              await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newAmount}});
          }
-       
-
         res.status(200).send({message:"order cancelled successfully"});
   }catch(err){
     console.error("error while canceling the order in server",err);
-    res.status(500).send({error:"internal server error"});
+    next(error);
   }
 }
 
-//wallet1 
-exports.wallet1 = async(req,res)=>{
-   try{
-       const {productId,quantity,total,currentAddress,currentAddressId,size,coupen} = req.body;
-       console.log("coupen get from wallet payment in server:",coupen);
-       const user = req.session.user;
-       const userId = new mongoose.Types.ObjectId(user);
-       const userDetails = await UserModel.findById(userId);
-       const iscoupenExist = userDetails.usedCoupen.find((ele)=> ele == coupen);
-
-       if( coupen !== undefined && iscoupenExist != undefined){
-           res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
-   
-       }else{
-              const product = await productModel.findById(productId);
-              const walletPayment = "Wallet Payment";
-              const status = "Conformed";
-              console.log("userDetails:",userDetails);
-              let walletAmount = userDetails.wallet;
-              console.log("walletAmount:",walletAmount);
-              console.log("totalPrice:",total);
-
-              const productId2 = {
-                "productId":product._id,
-                "quantity":quantity,
-                "price":total
-              }
-
-              const date = new Date();
-              const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-              const randomId = 10000+Math.floor(Math.random()*90000);
-              const usedCoupen = coupen;
-              if(total <= walletAmount){
-                    console.log("wallet payment enabled");
-                    const order = new orderModel({
-                      "userId":userId,
-                      "products":productId2,
-                      "orderId":randomId,
-                      "currentAddress":currentAddressId,
-                      "totalAmount":total,
-                      "date": formattedDate,
-                      "paymentMethod":walletPayment,
-                      "currentStatus":status,
-                      "usedCoupen":usedCoupen
-                      
-              
-                  });
-                  const savedData = await order.save();
-                  const currentProduct = await productModel.find({"_id":productId});
-                  console.log("currentProduct:",currentProduct);
-                  const currentStock = currentProduct[0].stock[size].stock;
-                  console.log("currentStock:",currentStock);
-                  const newStock = parseInt(currentStock - quantity);
-                  console.log("newStock:",newStock);
-                  const updatedStock = await productModel.findByIdAndUpdate(
-                    {"_id":productId},
-                    {$set:{[`stock.${size}.stock`]:newStock}}).exec();
-                    if(coupen != undefined){
-                      const updatedUser = await UserModel.findByIdAndUpdate({"_id":user},{$push:{"usedCoupen":coupen}});
-                    }
-
-                  let newWalletAmount = walletAmount - total; 
-                  console.log("newWallet amount",newWalletAmount);
-
-                   const updatedWallet = await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newWalletAmount}});
-                  console.log("order inserted successfully");
-                  res.status(200).json({ success: true,});
-                }else{
-                    console.log("wallete amount is not sufficient for this particular order");
-                    let pointer ;
-                    res.status(200).json({success:true,message:"wallet amount is not sufficient",pointer});
-                 }
-        }
-
-   }catch(error){
-    console.log("error occured during wallet payment!!",error);
-    res.status(500).json({success:false,message:"error occured"});
-   }
-}
-
-//wallet2
-exports.wallet2 = async(req,res)=>{
-   try{
-        const { cartDetails,totalAmount,coupen} = req.body;
-
-        console.log(cartDetails);
-        console.log("coupen wallet2 :",coupen);
-
-        const user = req.session.user;
-       const userId = new mongoose.Types.ObjectId(user);
-       const userDetails = await UserModel.findById(userId);
-       const iscoupenExist = userDetails.usedCoupen.find((ele)=> ele == coupen);
-
-       if( coupen !== undefined && iscoupenExist != undefined){
-           res.status(200).json({success:true,message:"Coupen code Expired! ! Please remove it"});
-   
-       }else{
-              const walletPayment = "Wallet Payment";
-              const status = "Conformed";
-              const userId = cartDetails[0]._id;
-              const userDetails = await UserModel.findById(userId);
-              console.log("userDetails:",userDetails);
-              const walletAmount = userDetails.wallet;
-              if(totalAmount <= walletAmount){
-                    const date = new Date();
-                    const formattedDate = format(date, 'dd/MM/yyyy HH:mm:ss');     
-                    const randomId = 10000+Math.floor(Math.random()*90000);
-                    const currentAddress = cartDetails[0].currentAddress;
-                    const total = cartDetails[0].cart.total;//need to fix it again
-                    const usedCoupen = coupen;
-                    const productId = [];
-                        for(let i = 0; i < cartDetails.length; i ++){
-            
-                            const pro = cartDetails[i].cart;
-                            console.log("pro:",pro);
-                            const proId2 = pro.productId;
-                            const proId = new mongoose.Types.ObjectId(proId2);
-                            const size = pro.size;
-                            productId.push(pro);
-                            const quantity = pro.quantity;
-                            const currentProduct = await productModel.find({"_id":proId});
-                            console.log("currentProduct:",currentProduct);
-                            const currentStock = currentProduct[0].stock[size].stock;
-                            console.log("currentStock:",currentStock);
-                            const newStock = parseInt(currentStock - quantity);
-                            console.log("newStock:",newStock);
-                            const updatedStock = await productModel.findByIdAndUpdate({"_id":proId},{$set:{[`stock.${size}.stock`]:newStock}}).exec();
-                        }
-                      const order = new orderModel({
-                        "userId":userId,
-                        "products":productId,
-                        "orderId":randomId,
-                        "totalAmount":totalAmount,
-                        "currentAddress":currentAddress,
-                        "date": formattedDate,
-                        "paymentMethod":walletPayment,
-                        "currentStatus":status,
-                        "usedCoupen":usedCoupen
-                    })
-                    const savedData = await order.save();
-        
-                    if(coupen != undefined){
-                      const updatedUser = await UserModel.findByIdAndUpdate({"_id":user},{$push:{"usedCoupen":coupen}});
-                    }
-  
-                    let newWalletAmount = walletAmount - total; 
-                    console.log("newWallet amount",newWalletAmount);
-  
-                     const updatedWallet = await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newWalletAmount}});
-                    // Respond with a success message
-                    res.status(200).json({ success: true, message: 'Order placed successfully.' });
-              }else{
-                  res.status(200).json({success:true,message:"Your Wallet amount is insufficient for this Order\n Please try another Payment Method"})
-              }
-      }
-   }catch(error){
-     console.log("error occured in the wallet payment in wallet 2!!",error);
-     res.status(500).json({success:false,message:"error occured"})
-   }
-}
-
 //update userprofile
-exports.updateProfileDetails = async(req,res)=>{
+exports.updateProfileDetails = async(req,res,next)=>{
   try{
       const userId = req.session.user;
       const name = req.body.name;
@@ -1964,17 +1378,16 @@ exports.updateProfileDetails = async(req,res)=>{
       if (!name || !email || !number) {   
       return res.status(400).json({ success: false, message: 'Name, email, and number are required.' });
     }
-
     await UserModel.findByIdAndUpdate(userId, {name,email,number}).exec();
     res.status(200).json({ success: true, message: 'Updated successfully.' });
   }catch(err){
     console.error("error while updating the user",err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    next(error);
   }
 }
 
 //change password 
-exports.changePassword = async(req,res)=>{
+exports.changePassword = async(req,res,next)=>{
   try{
        const userId = req.session.user;
        const saltRouds = 10;
@@ -2002,12 +1415,12 @@ exports.changePassword = async(req,res)=>{
     }
   catch(err){
     console.error("error while changing password",err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    next(error);
   }
 }
 
 //sendResetOtpmail loginform reset password
-exports.sendResetOtpmail = async(req,res)=>{
+exports.sendResetOtpmail = async(req,res,next)=>{
   try{
      const email = req.body.email;
      const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
@@ -2059,12 +1472,12 @@ exports.sendResetOtpmail = async(req,res)=>{
   }
   }catch(err){
     console.error("error while sending otp",err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    next(error);
   }
 }
 
 //conform otp while restting the password
-exports.conformOTPResetPassword = async(req,res)=>{
+exports.conformOTPResetPassword = async(req,res,next)=>{
   try{
      const otp = req.body.otp;
      const realOtp = req.session.otpStorage.otp;
@@ -2082,12 +1495,12 @@ exports.conformOTPResetPassword = async(req,res)=>{
     }
   }catch(err){
     console.error("error while conforming the otp ",err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    next(error);
   }
 }
 
 ///resetPasswordLogin
-exports.resetPasswordLogin = async(req,res)=>{
+exports.resetPasswordLogin = async(req,res,next)=>{
   try{
       const newPass = req.body.newPass;
       const email =  req.session.tempEmail;
@@ -2104,13 +1517,12 @@ exports.resetPasswordLogin = async(req,res)=>{
       }
   }catch(err){
     console.error("error while updating the password ",err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    next(error);
   }
 };
 
-
 //apply coupen code
-exports.applyCoupenCode = async(req,res)=>{
+exports.applyCoupenCode = async(req,res,next)=>{
     try{
          const {coupen,address,currentAddress,currentAddressId,product,quantity,totalPrice,productId,size} = req.body;
          const userid = req.session.user;
@@ -2127,33 +1539,26 @@ exports.applyCoupenCode = async(req,res)=>{
          const findedElement = allCoupen.find((ele)=> ele.code == coupen);
          console.log("findedElemnt",findedElement);
          if(findedElement  == undefined){
-             
              res.status(200).json({success:true,message:"Entered Coupen is currently unavailable"});
-
          }else if( ifusedCoupen == coupen){
             res.status(200).json({success:true,message:"Entered Coupen is currently unavailable"});
-
          }else{
              coupenOffer = findedElement.offer;
              console.log("offfer of the specified coupen:",coupenOffer);
              console.log("total price:",totalPrice);
              const newTotalPrice = Math.round(totalPrice -((coupenOffer/100)*totalPrice ) );
              console.log("new price with coupen offer is :",newTotalPrice);
-
              res.status(200).json({success:true,newTotalPrice,address,currentAddress,currentAddressId,product,quantity,productId,size,totalPrice});
-
          }
-        
     }catch(error){
       console.error("error occured while applying coupen code!!",error);
-      res.status(500).json({success:false,message:"error ocucred"});
+      next(error);
     }
 }
 
 //applyCoupenCodeFromCheckout2
-exports.applyCoupenCodeFromCheckout2 = async(req,res)=>{
+exports.applyCoupenCodeFromCheckout2 = async(req,res,next)=>{
   try{
-
     const {coupen,cartDetails,totalAmount} = req.body;
     console.log("coupen entered is :",coupen);
     const allCoupen = await coupenModel.find();
@@ -2166,9 +1571,7 @@ exports.applyCoupenCodeFromCheckout2 = async(req,res)=>{
     //checking the user entered coupen is used or not before
     let  coupenUsed = usedcoupens.find((cp)=> cp === coupen);
     console.log("usedcoupen:",coupenUsed);
-  
     console.log("all coupen :",allCoupen);
-
     const findedElement = allCoupen.find((ele)=> ele.code == coupen);
     console.log("findedElemnt",findedElement);
     if(findedElement == undefined){
@@ -2182,11 +1585,9 @@ exports.applyCoupenCodeFromCheckout2 = async(req,res)=>{
         const newTotalAmount = Math.round(totalAmount -((coupenOffer/100)*totalAmount )) ;
         console.log("new price with coupen offer is :", newTotalAmount);
         res.status(200).json({success:true,newTotalAmount,cartDetails});
-
     }
-
   }catch(error){
     console.error("error occured while adding coupen from serverside",error);
-    res.status(500).json({success:false});
+    next(error);
   }
 }
