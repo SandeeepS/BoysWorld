@@ -73,5 +73,8 @@ route.post('/cancelOrder',userController.cancelOrder);
 route.post('/applyCoupenCode',userController.applyCoupenCode);
 route.post('/applyCoupenCodeFromCheckout2',userController.applyCoupenCodeFromCheckout2);
 
+//orders
+route.post('/selectedOrders',auth.isUser,userController.selectedOrders);
+
 
 module.exports = route

@@ -245,7 +245,7 @@
 									</div>
 									
 									<div class="show">
-										<button class="showMore btn btn-info" orderId="<%= orderDetails[i]._id %>" >Show More</button> 
+										 <a href="#" class="showMore btn btn-info">Show More</a>
 									</div>
 								</div>
 								<% } else { %>
@@ -382,31 +382,6 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
     <!-- for cancelling the order -->
-	<script>
-		const showMoreBtns = document.querySelectorAll(".showMore");
-		showMoreBtns.forEach((showMoreBtn)=>{
-			showMoreBtn.addEventListener("click",function(event){
-				event.preventDefault();
-				const orderId = this.getAttribute("orderId");
-				console.log("clicked orderId",orderId);
-
-				$.ajax({
-					method:'POST',
-					url:'/selectedOrders',
-					data:{
-						orderId
-					},
-					success:function(response){
-						console.log("reched fron end");
-					},
-					error:function(error){
-						console.log("error occured",error);
-					}
-
-				})
-			})
-		})
-	</script>
 	<script>
 		var openModalLinks = document.querySelectorAll(".cancelOrder");
 		var closeModal = document.getElementById("conformModalClose");

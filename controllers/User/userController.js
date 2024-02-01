@@ -1577,3 +1577,15 @@ exports.applyCoupenCodeFromCheckout2 = async(req,res,next)=>{
     next(error);
   }
 }
+
+//get selectedOrder 
+exports.selectedOrders = async(req,res,next)=>{
+  try{
+    const id = req.body.id;
+    console.log("orderId for selected product is ",id);
+    console.log(hello);
+  }catch(error){
+    console.log("eror occured while getting orders!",error);
+    next(error);
+  }
+}
