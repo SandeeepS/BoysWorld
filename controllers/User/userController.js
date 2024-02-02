@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const bcrypt  = require('bcrypt');
 const moment =  require('moment');
 const uuid = require('uuid');
+const easyinvoice = require('easyinvoice');
 
 const { format } = require('date-fns');
 const transporter = nodemailer.createTransport({
@@ -734,19 +735,90 @@ exports.getAccount = async(req,res,next)=>{
   try{
        const userId = req.session.user;
        const userid2 = new mongoose.Types.ObjectId(userId);
-       
        const userData = await UserModel.findById(userId).exec();
+       const avacoupens  = await coupenModel.find();
+       console.log("available coupens :",avacoupens);
        const wallet = userData.wallet;
        console.log("walletAmount:",wallet);
        const orders = await orderModel.find({userId:userId}).exec();
        console.log(orders);
-       res.render('account',{orders,userData,wallet});
+       res.render('account',{orders,userData,wallet,avacoupens});
   }catch(err){
       console.error("error while get account ");
       next(error);
   }
 }
 
+//show user wallet
+exports.showUserWallet = async(req,res,next)=>{
+  try{ 
+    const userId  = req.session.user;
+    const id = new mongoose.Types.ObjectId(userId);
+    const userDetails = await UserModel.find(id);
+    console.log("inside the wallet page function");
+    const walletHis = await orderModel.aggregate([
+      {
+        $match:{
+          "paymentMethod":"Wallet Payment"
+        }
+      },
+      {
+        $unwind:"$products"
+      },
+      {
+        $lookup:{
+          from:"products",
+          localField:"products.productId",
+          foreignField:"_id",
+          as:"productDetails"
+        }
+      },
+      {
+        $lookup:{
+          from:'users',
+          let: { userId: '$userId' },
+          pipeline: [
+            {
+              "$match": {
+                $expr: {
+                  $eq: ['$$userId', '$_id']
+                }
+              }
+            },
+            {
+              "$unwind": "$address"
+            },
+            {
+              "$addFields": {
+                "currentAddressMatched": {
+                  "$eq": ["$currentAddress", "$address._id"]
+                }
+              }
+            },
+            {
+              "$match": {
+                "currentAddressMatched": true
+              }
+            },
+            {
+              "$project": {
+                "currentAddress": "$address"
+              }
+            }
+          ],
+          as:"currentAddress"
+        }
+      },
+    ])
+    console.log("wallet history is :",walletHis);
+    console.log("userDetails",userDetails);
+    res.render('showWallet',{walletHis,userDetails});
+
+  }catch(error){
+    console.log("error while getting the wallet page",error);
+    next(error);
+  }
+}
 exports.getWishlist = async(req,res)=>{
     res.render('wishlist');
 }
@@ -780,6 +852,11 @@ exports.getCheckoutPage = async(req,res,next)=>{
             localField:"category",
             foreignField:"_id",
             as:"categoryDetail",
+          }
+        },
+        {
+          $look:{
+            
           }
         }
       ])
@@ -1642,6 +1719,39 @@ exports.selectedOrders = async(req,res,next)=>{
 
   }catch(error){
     console.log("eror occured while getting orders!",error);
+    next(error);
+  }
+}
+
+//invoice download
+exports.invoiceDownload = async(req,res,next)=>{
+  try{
+    const {selectedOrder} = req.body;
+    console.log("selected order",selectedOrder);
+    
+           // Create your invoice! Easy!
+            var data = {
+              apiKey: "free", // Please register to receive a production apiKey: https://app.budgetinvoice.com/register
+              mode: "development", // Production or development, defaults to production
+              products: [
+                  {
+                      name:selectedOrder[0].productDetails.name,
+                      quantity: selectedOrder[0].products.quantity,
+                      description: selectedOrder[0].productDetails[0].description,
+                      price: selectedOrder[0].productDetails[0].offerPrice
+                  }
+              ]
+            };
+
+            easyinvoice.createInvoice(data, function (result) {
+              // The response will contain a base64 encoded PDF file
+              console.log('PDF base64 string: ', result.pdf);
+              res.status(200).json({success:true,message:"successfull",file:result.pdf});
+            
+            });
+
+  }catch(error){
+    console.log("error occured while downloading the invoice from the serverside ",error);
     next(error);
   }
 }

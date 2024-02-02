@@ -30,6 +30,7 @@ route.get('/orders',userController.oders);
 route.get('/getAccount',auth.user,userController.getAccount);
 route.get('/getWishlist',auth.user,userController.getWishlist);
 route.get('/getCart',auth.user,userController.getCart);
+route.get('/showWallet',auth.user,userController.showUserWallet);
 
 
 //payment routes
@@ -76,6 +77,7 @@ route.post('/applyCoupenCodeFromCheckout2',userController.applyCoupenCodeFromChe
 //orders
 route.post('/dummySelect',userController.dmyselect);
 route.get('/selectedOrders',auth.user,userController.selectedOrders);
+route.post('/invoiceDownload',userController.invoiceDownload);
 
 
 module.exports = route

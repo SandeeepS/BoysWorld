@@ -1205,6 +1205,7 @@
 			}
 			console.log("totalAmount :",totalPrice);
 			const currentAddress =  <%-JSON.stringify(currentAddress)%>;
+			const currentAddressId = <%-JSON.stringify(currentAddressId) %>;
 			const size = <%-JSON.stringify(size) %>;
 
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
@@ -1223,6 +1224,7 @@
 							quantity: quantity,
 							total: totalPrice,
 							currentAddress:currentAddress,
+							currentAddressId,
 							size,
 							coupen
 						},

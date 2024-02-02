@@ -220,7 +220,13 @@
 												</h4>
 											</div>
 										</div>
-									
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<h4 class ="panel-title">
+													<a href="/showWallet">Wallet</a>
+												</h4>
+											</div>
+										</div>
 									
 									</div>
 								</div>
@@ -239,9 +245,30 @@
 									<li class="font-weight-normal"><b>Email:</b> <span><%= userData.email %></span></li>
 									<li class="font-weight-normal"><b>Mobile Number:</b> <span><%= userData.number %></span></li>
 									
-										<li><h5>Your wallet Amount : ₹ <%= wallet %></h5></li>
+									<li><h5>Your wallet Amount : ₹ <%= wallet %></h5></li>
                                     
-									
+									<div class="panel-group" id="accordion">
+										<div class="panel panel-default">
+										   <div class="panel-heading">
+											 <h4 class="panel-title">
+											   <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" >
+												 Show Available Coupon
+											   </a>
+											 </h4>
+										   </div>
+										   <div id="collapseOne" class="panel-collapse collapse">
+											 <div class="panel-body">
+											  <% if(avacoupens){ %>
+                                                    <% for(let cou of avacoupens){ %>
+														<p><%=cou.code%></p>
+													<% } %>
+											  <% } %>
+											   
+											  
+											 </div>
+										   </div>
+										</div>
+									   </div>
 									
 								</ul>
 							</div>

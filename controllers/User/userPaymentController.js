@@ -94,6 +94,7 @@ exports.placeOrder = async (req, res,next) => {
 exports.placeOrder2 = async(req,res,next)=>{
     try{
       const {productId,quantity,total,currentAddress,currentAddressId,size,coupen} = req.body;
+      console.log("current adddresssssssssssssssssssssssssss iddddddddddddddddddddddd",currentAddressId);
       console.log("coupen in serverside :",coupen);
       const userId2 = req.session.user;
       const user = await UserModel.findById(userId2).exec();
