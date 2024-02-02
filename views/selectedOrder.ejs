@@ -185,25 +185,22 @@
 
 	<section id="cart_items">
 		<div class="container">
-			<% for (let i = 0; i < orderDetails.length; i++) { %>
-			   <% for(let j=0;j< orderDetails[i].productDetail.length;j++){ %>
-			  
-								<% if (orderDetails[i].productDetail[j]) { %>
+	
 								<div class="a-box" >
 									<div class="content">
 										<div class="product-details">
 										<div>
-										<img src="/views/productImages/<%= orderDetails[i].productDetail[j].image[0]%>" alt="<%= orderDetails[i].productDetail[j].productName %>">
+										<img src="/views/productImages/<%= selectedOrder[0].productDetails[0].image[0]%>" alt="<%= selectedOrder[0].productDetails[0].name%>">
 										</div>
-										<div>
-										<h4><%= orderDetails[i].productDetail[j].name %></h4>
-										<p>Price: ₹<%= orderDetails[i].totalAmount%></p>
-										<p><h6>Quantity: <%= orderDetails[i].products.quantity %></h6></p>
-										<p><h5><%= orderDetails[i].productDetail[j].discription %></h5></p>
-										<p><h5> <%= orderDetails[i].paymentMethod %></h5></p>
-										<p><h5><%= orderDetails[i].date %></h5></p>
-										 <% if(orderDetails[i].usedCoupen){ %>
-											<p><h5>Used coupen =<%= orderDetails[i].usedCoupen %></h5></p>
+										<div style="margin-left: 50px;">
+										<h4><%= selectedOrder[0].productDetails[0].name%></h4>
+										<p>Price: ₹<%= selectedOrder[0].productDetails[0].offerPrice%></p>
+										<p><h6>Quantity: <%= selectedOrder[0].products.quantity%></h6></p>
+										<p><h5><%= selectedOrder[0].productDetails[0].discription%></h5></p>
+										<p><h5><%= selectedOrder[0].paymentMethod%></h5></p>
+										<p><h5><%= selectedOrder[0].date%></h5></p>
+										 <% if(selectedOrder[0].usedCoupen){ %>
+											<p><h5>Used coupen =<%= selectedOrder[0].usedCoupen %></h5></p>
 										 <% } else{ %>
                                             <p><h5>(No coupon used)</h5></p>
 										 <% } %>
@@ -212,48 +209,37 @@
 											<div class="address">
 												<h5>Delivery Address</h5>
 												<div>
-													<% if (orderDetails[i].currentAddress[0]){ %>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.name%>,</h5>
-													<h5> <%= orderDetails[i].currentAddress[0].currentAddress.number %>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.email %>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.houseName%></h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.houseNumber%></h5>
-													<h5> <%= orderDetails[i].currentAddress[0].currentAddress.state%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.city%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.street%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.landMark%></h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.pin%>,</h5>
-													<% } else { %>
-														<h5><%= orderDetails[i].currentAddress.name%>,</h5>
-														<h5> <%= orderDetails[i].currentAddress.number %>,</h5>
-														<h5><%= orderDetails[i].currentAddress.houseName%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.houseNumber%></h5>
-														<h5> <%= orderDetails[i].currentAddress.state%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.city%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.street%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.landMark%></h5>
-														<h5><%= orderDetails[i].currentAddress.pin%>,</h5>
+													<% if (selectedOrder[0].currentAddressDetail[0].address){ %>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.name%>,</h5>
+														<h5> <%= selectedOrder[0].currentAddressDetail[0].address.number %>,</h5>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.email %>,</h5>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.houseName%></h5>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.houseNumber%></h5>
+														<h5> <%= selectedOrder[0].currentAddressDetail[0].address.state%>,</h5>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.city%>,</h5>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.street%>,</h5>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.landMark%></h5>
+														<h5><%= selectedOrder[0].currentAddressDetail[0].address.pin%>,</h5>
+													<% }else{ %>
+														<h5>N address found</h5>
 													<% } %>
 												</div>
 											</div>
 											<div class="order-Status" style="padding-left: 70px;padding-top:90px">
-												<h6>(<%=orderDetails[i].currentStatus%>)</h6>
+											<h6 style="margin-left: 65px;">(<%=selectedOrder[0].currentStatus%>)</h6>
 											</div>
-										<div class="cancel-order">
-											<a href="#" class="cancelOrder btn btn-danger" data-orderId="<%= orderDetails[i]._id %>">Cancel</a>
-										</div>
+										
 									</div>
 									
 									<div class="show">
-										 <a href="#" class="showMore btn btn-info">Show More</a>
+										 <a href="/orders" class="showMore btn btn-info">Go Back</a>
 									</div>
+									<div class="show">
+										<a href="" class="showMore btn btn-success">Download Invoice</a>
+								   </div>
 								</div>
-								<% } else { %>
-									<p> product data is not getting</p>
-								<% } %>
-							<%}%>
 						<!-- first modal for conformation -->
-					<div id="conformModal-<%= orderDetails[i]._id %>" class="modal">
+					<div id="conformModal-<%= selectedOrder[0]._id %>" class="modal">
 						<div class="modal-content">
 							<span id="conformModalClose" class="close">&times;</span>
 							<div class="modal-style">
@@ -261,72 +247,16 @@
 									<p>Are you sure for cancelling the order?</p>
 								</div>
 								<div style="display: flex;">
-									<a href="#" class="conformCancelOrder" orderId="<%= orderDetails[i]._id %>"><h3>Yes</h3></a>
+									<a href="#" class="conformCancelOrder" orderId="<%= selectedOrder[0]._id %>"><h3>Yes</h3></a>
 									 <a href="/orders" style="padding-left: 25px;"><h3>No</h3></a>
 								</div>
 							</div>
 						</div>
 				    </div>
-			<% } %>
+		
 		  </div>
 
-		  <div class="pagination">
-			<!-- previous  -->
-			<% if(currentPage > 1){ %>
-				<a href="?page=<%= currentPage - 1 %>" class="prev" id="prevPage" page="-1">Previous</a>
-			<% } else { %>
-				<a class="prev" id="prevPage" page="-1" disabled>Previous</a>
-			<% } %>
-			
-			<!--  -->
-			 
-			<!-- page 1  -->
-			<% if(currentPage <= totalPages+1){ %>
-			<% if (currentPage == 1) { %>
-				<a href="?page=1" class="page highlighted" page="1" id="page-1">1</a>
-			<% } else { %>
-				<a href="?page=1" class="page" page="1" id="page-1">1</a>
-			<% } %>
-			<% } %>
-			<!--  -->
 
-			<!-- page 2  -->
-			<% if(currentPage <= totalPages+1){ %>
-			<% if (currentPage == 2 ) { %>
-				<a href="?page=2" class="page highlighted" page="2" id="page-2">2</a>
-			<% } else { %>
-				<a href="?page=2" class="page" page="2" id="page-2">2</a>
-			<% } %>
-			<% } %>
-			<!--  -->
-
-			<!-- pages 3  -->
-			<% if (currentPage <= totalPages+1 ){ %>
-				<%  if (currentPage == 3) { %>
-					<a href="?page=3" class="page highlighted" page="3" id="page-3">3</a>
-				<% } else { %>
-					<a href="?page=3" class="page" page="3" id="page-3">3</a>
-				<% } %>
-			<% } %>
-		
-			<!--  -->
-
-			<!-- page 4 -->
-			<% if(currentPage <= totalPages+1){ %>
-			<% if (currentPage == 4) { %>
-				<a href="?page=4" class="page highlighted" page="4" id="page-4">4</a>
-			<% } else { %>
-				<a href="?page=4" class="page" page="4" id="page-4">4</a>
-			<% } %>
-			<% } %>
-			<!--  -->
-
-			<!-- Add more pages if needed -->
-
-			<% if(currentPage < 4){ %>
-				<a href="?page=<%= currentPage + 1 %>" class="next" id="nextPage" page="1">Next</a>
-			<% } %>
-		</div>
 
 		  <div id="Conform2Modal" class="modal">
 			<div class="modal-content">
@@ -382,138 +312,7 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
     <!-- for cancelling the order -->
-	<script>
-		var openModalLinks = document.querySelectorAll(".cancelOrder");
-		var closeModal = document.getElementById("conformModalClose");
-		var modals = document.querySelectorAll(".modal");
-	
-		// Attach event listeners to each "Cancel Order" link
-		openModalLinks.forEach(function (link) {
-			link.onclick = function () {
-				var orderId = link.getAttribute("data-orderId");
-				var modal = document.getElementById("conformModal-" + orderId);
-				modal.style.display = "block";
-			};
-		});
-	
-		// Attach event listeners to close the modal
-		closeModal.onclick = function () {
-			modals.forEach(function (modal) {
-				modal.style.display = "none";
-			});
-		};
-	
-		// Close the modal if the user clicks outside of it
-		window.onclick = function (event) {
-			modals.forEach(function (modal) {
-				if (event.target == modal) {
-					modal.style.display = "none";
-				}
-			});
-		};
-	</script>
-	<!-- to cancle order -->
-	<script>
-		document.addEventListener("DOMContentLoaded",function(){
-			const cancelOrder = document.querySelectorAll(".conformCancelOrder");
-			const cancelBtn = document.querySelectorAll(".cancelOrder");
-            const order = <%- JSON.stringify(orderDetails)%>;
-			
-            cancelBtn.forEach((btn,i)=>{
-				if(order[i].currentStatus === "Cancelled" || order[i].currentStatus === "Deliverd" ){
-					console.log("disbled way");
-					btn.disabled = true;
-				}
-			})
-			cancelOrder.forEach((cancelOrder,i)=>{
-				cancelOrder.addEventListener("click",function(event){
-					event.preventDefault();
-					const orderId = this.getAttribute("orderId");
-				    var modal2 = document.getElementById("Conform2Modal");
-					var closeModalBtn2 = document.getElementById("conform2ModalClose");
-					 //make ajax request
-					 $.ajax({
-						type:'POST',
-						url:'/cancelOrder',
-						data:{
-							orderId: orderId,
-						},
-						success:function(respond){
-							//display the cancel order modal
-                             modal2.style.display = "block";
-							 location.reload();
-						},
-						error:function(error){
-							console.error("error while canceling order in ejs",error);
 
-						}
-					 });
-						// Event listener to close the modal
-						closeModalBtn2.onclick = function () {
-							modal2.style.display = "none";
-						}
-					
-						// Close the modal if the user clicks outside of it
-						window.onclick = function (event) {
-							if (event.target == modal2) {
-								modal2.style.display = "none";
-							}
-						}
-				});
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded",function(){
 
-			const page1 = document.getElementById("page-1");
-			const page2 = document.getElementById("page-2");
-			const page3 = document.getElementById("page-3");
-			const page4 = document.getElementById("page-4");
-
-			const totalPages = <%- JSON.stringify(totalPages) %>;
-			console.log("totalpages:",totalPages);
-			if( totalPages <= 2 ){
-			
-				page3.style.display = "none";
-				page4.style.display = "none";
-			}
-			if(totalPages <= 3){
-			
-				page4.style.display = "none";
-			}
-
-			const prevew = document.querySelectorAll(".page");
-			const prevPage = document.getElementById("prevPage");
-			const nextPage = document.getElementById("nextPage");
-
-           Array.from(prevew).forEach((selectedPage,i)=>{
-				selectedPage.addEventListener("click",function(event){
-					event.preventDefault();
-					const pageNumber = this.getAttribute("page");
-					console.log(pageNumber);
-					const newUrl = `/orders?page=${pageNumber}`;
-					window.location.href = newUrl
-				})
-			})
-
-			nextPage.addEventListener("click",function(event){
-				event.preventDefault();
-				const pageNumber2 = this.getAttribute("page");
-				const pageNumber = parseInt(pageNumber2)+1;
-				console.log("pageNumber:",pageNumber);
-				const newUrl = `/orders?page=${pageNumber}`;
-				window.location.href = newUrl
-			})
-
-			prevPage.addEventListener("click",function(event){
-				event.preventDefault();
-				const pageNumber = this.getAttribute("page");
-				console.log(pageNumber);
-				const newUrl = `/orders?page=${pageNumber}`;
-				window.location.href = newUrl
-			})
-		})
-	</script>
 </body>
 </html>

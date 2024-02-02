@@ -192,21 +192,12 @@
 								<div class="a-box" >
 									<div class="content">
 										<div class="product-details">
-										<div>
-										<img src="/views/productImages/<%= orderDetails[i].productDetail[j].image[0]%>" alt="<%= orderDetails[i].productDetail[j].productName %>">
-										</div>
+									
 										<div>
 										<h4><%= orderDetails[i].productDetail[j].name %></h4>
 										<p>Price: ₹<%= orderDetails[i].totalAmount%></p>
 										<p><h6>Quantity: <%= orderDetails[i].products.quantity %></h6></p>
-										<p><h5><%= orderDetails[i].productDetail[j].discription %></h5></p>
-										<p><h5> <%= orderDetails[i].paymentMethod %></h5></p>
-										<p><h5><%= orderDetails[i].date %></h5></p>
-										 <% if(orderDetails[i].usedCoupen){ %>
-											<p><h5>Used coupen =<%= orderDetails[i].usedCoupen %></h5></p>
-										 <% } else{ %>
-                                            <p><h5>(No coupon used)</h5></p>
-										 <% } %>
+										
 										</div>
 										</div>
 											<div class="address">
@@ -216,23 +207,6 @@
 													<h5><%= orderDetails[i].currentAddress[0].currentAddress.name%>,</h5>
 													<h5> <%= orderDetails[i].currentAddress[0].currentAddress.number %>,</h5>
 													<h5><%= orderDetails[i].currentAddress[0].currentAddress.email %>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.houseName%></h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.houseNumber%></h5>
-													<h5> <%= orderDetails[i].currentAddress[0].currentAddress.state%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.city%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.street%>,</h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.landMark%></h5>
-													<h5><%= orderDetails[i].currentAddress[0].currentAddress.pin%>,</h5>
-													<% } else { %>
-														<h5><%= orderDetails[i].currentAddress.name%>,</h5>
-														<h5> <%= orderDetails[i].currentAddress.number %>,</h5>
-														<h5><%= orderDetails[i].currentAddress.houseName%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.houseNumber%></h5>
-														<h5> <%= orderDetails[i].currentAddress.state%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.city%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.street%>,</h5>
-														<h5><%= orderDetails[i].currentAddress.landMark%></h5>
-														<h5><%= orderDetails[i].currentAddress.pin%>,</h5>
 													<% } %>
 												</div>
 											</div>
@@ -245,7 +219,7 @@
 									</div>
 									
 									<div class="show">
-										<button class="showMore btn btn-info" orderId="<%= orderDetails[i]._id %>" >Show More</button> 
+										<button class="showMore btn btn-info" orderId="<%= orderDetails[i]._id %>" productId="<%= orderDetails[i].productDetail[j]._id %>" >Show More</button> 
 									</div>
 								</div>
 								<% } else { %>
@@ -388,16 +362,26 @@
 			showMoreBtn.addEventListener("click",function(event){
 				event.preventDefault();
 				const orderId = this.getAttribute("orderId");
+				const prodcutId = this.getAttribute("productId");
+				console.log("productId",prodcutId);
 				console.log("clicked orderId",orderId);
 
 				$.ajax({
 					method:'POST',
-					url:'/selectedOrders',
+					url:'/dummySelect',
 					data:{
-						orderId
+						orderId,prodcutId
 					},
 					success:function(response){
-						console.log("reched fron end");
+						if(response){
+							const orderId = response.orderId;
+							const productId = response.prodcutId;
+							
+							window.location = '/selectedOrders?orderId='+orderId+'&productId='+prodcutId;
+						}
+						
+					   
+
 					},
 					error:function(error){
 						console.log("error occured",error);

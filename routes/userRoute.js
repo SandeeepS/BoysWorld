@@ -74,7 +74,8 @@ route.post('/applyCoupenCode',userController.applyCoupenCode);
 route.post('/applyCoupenCodeFromCheckout2',userController.applyCoupenCodeFromCheckout2);
 
 //orders
-route.post('/selectedOrders',auth.isUser,userController.selectedOrders);
+route.post('/dummySelect',userController.dmyselect);
+route.get('/selectedOrders',auth.user,userController.selectedOrders);
 
 
 module.exports = route

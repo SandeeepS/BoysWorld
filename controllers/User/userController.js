@@ -1578,12 +1578,68 @@ exports.applyCoupenCodeFromCheckout2 = async(req,res,next)=>{
   }
 }
 
+//dummy select
+exports.dmyselect = async(req,res,next)=>{
+  try{
+     console.log("welcome to dmmy slect");
+     const orderId = req.body.orderId;
+     const productId = req.body.prodId;
+     res.status(200).json({success:true,message:"successfull",orderId,productId});
+  }catch(error){
+    console.log("error while getting dym select ".error);
+    next(error)
+  }
+}
+
 //get selectedOrder 
 exports.selectedOrders = async(req,res,next)=>{
   try{
-    const id = req.body.id;
-    console.log("orderId for selected product is ",id);
-    console.log(hello);
+    const oredrId = req.query.orderId;
+    const productId = req.query.productId;
+    const newPid = new mongoose.Types.ObjectId(productId);
+    const newId = new mongoose.Types.ObjectId(oredrId );
+    console.log("orderId for selected product is ",newId);
+    const selectedOrder = await orderModel.aggregate([
+      {
+        $match:{
+          "_id":newId
+        }
+      },
+      {
+         $unwind:"$products"
+      },
+      {
+        $lookup:{
+          from:"products",
+          localField:"products.productId",
+          foreignField:"_id",
+          as:"productDetails"
+        }
+      },{
+        $lookup: {
+          from: "users",
+          let: { 'currentAddress': '$currentAddress' },
+          pipeline: [
+            {
+              $unwind: '$address'
+            },
+            {
+              $match: { $expr: { $eq: [ '$address._id', '$$currentAddress' ] } }
+            }
+          ],
+          as: "currentAddressDetail"
+       }
+      },{
+        $match:{
+            "productDetails._id":newPid
+        }
+      }
+    ])
+    console.log("selected order is :",selectedOrder);
+
+    res.render('selectedOrder',{selectedOrder});
+  
+
   }catch(error){
     console.log("eror occured while getting orders!",error);
     next(error);
