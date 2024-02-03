@@ -1,5 +1,7 @@
 const coupenModel   = require('../../models/coupenModel');
 const {default : mongoose} = require('mongoose');
+const { format } = require('date-fns');
+
 
 exports.getCoupen = async(req,res,next)=>{
     try{
@@ -22,12 +24,19 @@ exports.addingCoupen = async(req,res,next)=>{
       const  offer2 = offer.offer;
       console.log("offer:",offer2);
       const coupen = coupen2.coupen2;
+      const {minCartAmount,redeemAmount,expDate,couponType} = req.body;
+      console.log("expiry date:",expDate);
+      console.log("heeee",redeemAmount,couponType,expDate)
       console.log("coupen from form ",coupen);
       const coupenData = await coupenModel.find();
       console.log("coupen details :",coupenData);
       const newCoupen =  new coupenModel({
+            offerType :couponType,
             code:coupen,
-            offer:offer2
+            offer:offer2,
+            minCartAmount,
+            maxReedeemableAmount: redeemAmount,
+            expiryDate:expDate
       })
       await newCoupen.save();
       console.log("new coupen :",newCoupen);
@@ -71,9 +80,11 @@ exports.listUnlistCoupen = async(req,res,next) =>{
 exports.updateEditedCoupen = async(req,res,next) =>{
     try{
         console.log("req.body",req.body);
-        const {coupen, coupenOffer,selectedCoupen} = req.body;
+        const {coupen, coupenOffer,selectedCoupen,couponType,minCartAmount,redeemAmount,expDate} = req.body;
         const id = selectedCoupen._id;
-        const updatingCoupen =  await coupenModel.findByIdAndUpdate({"_id":id},{$set:{"code":coupen,"offer":coupenOffer}});
+        const updatingCoupen =  await coupenModel.findByIdAndUpdate(
+            {"_id":id},
+            {$set:{"offerType":couponType,"code":coupen,"offer":coupenOffer,"minCartAmount":minCartAmount,"maxReedeemableAmount":redeemAmount,"expiryDate":expDate}});
         res.status(200).json({success:true,message:"updatedSuccessfull"});
     }catch(error){
         console.log("error occured while updating the edited coupen:",error);
@@ -118,3 +129,6 @@ exports.coupenDelete = async(req,res,next)=>{
         next(error);
     }
 }
+
+
+

@@ -219,15 +219,39 @@
                                        <div class="error-message" id="error-message"></div>
                                        <br>
                                        <form action="/admin/addingCoupen" method="post" >
+                                          <p>
+                                            <label for="">Select your coupen type</label>
+                                            <select class="form-control" name="couponType" id="couponType">
+                                              <option value="percentage">Percentage </option>
+                                              <option value="price">Price </option>
+                                            </select>
+                                          </p>
 
                                            <p>
-                                            <input type="text" class="form-control" name="coupen2" id="coupen" placeholder="Enter the coupen code">
+                                            <label for="">Enter your coupen code</label>
+                                            <input type="text" class="form-control" name="coupen2" id="coupen" placeholder=" coupen code">
                                            </p>
 
                                            <p>
-                                            <input type="number" class="form-control" name="offer" id="coupenOffer" placeholder="Enter the offer amount (%)">
+                                            <label for="" id="offerLabel" >Enter the offer amount </label>
+                                            <input type="number" class="form-control" name="offer" id="coupenOffer" placeholder=" offer amount">
                                            </p>
-     
+
+                                           <p>
+                                            <label for="">Enter the minimum cart amount</label>
+                                            <input type="text" class="form-control" name="minCartAmount" id="minCartAmount" placeholder=" min cart amount">
+                                           </p>
+
+                                           <p>
+                                            <label for="">Enter the maximum redeemable amount</label>
+                                            <input type="text" class="form-control" name="redeemAmount" id="redeemAmount" placeholder=" maximum Redeemable amount">
+                                           </p>
+
+                                           <p>
+                                            <label for=""> Select your Expiray Day</label>
+                                            <input type="text" class="form-control" name="expDate" id="datepicker" placeholder=" Expiry date">
+                                           </p>
+
                                            <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;" onclick="return validate()">
                                        </form>
                                     </div>
@@ -260,12 +284,14 @@
   </div>
   <!-- container-scroller -->
   <!-- plugins:js -->
-  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <script src="../adminpanel/vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
-  <script src="vendors/chart.js/Chart.min.js"></script>
-  <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-  <script src="vendors/progressbar.js/progressbar.min.js"></script>
+  <script src="../adminpanel/vendors/chart.js/Chart.min.js"></script>
+  <script src="../adminpanel/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="../adminpanel/vendors/progressbar.js/progressbar.min.js"></script>
+  <script src="../adminpanel/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+
   <!-- End plugin js for this page -->
   <!-- inject:js -->
   <script src="js/off-canvas.js"></script>
@@ -277,18 +303,46 @@
   <!-- Custom js for this page-->
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
+
   <!-- End custom js for this page-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const couponType = document.getElementById("couponType");
+      const offerLabel = document.getElementById("offerLabel");
+       
+      couponType.addEventListener("change", function() {
+         if (this.value === "percentage") {
+           offerLabel.innerHTML = "Enter the offer amount (in percentage)";
+         } else if (this.value === "price") {
+           offerLabel.innerHTML = "Enter the amount (in price)";
+         }
+      });
+     });
+  </script>
   <script>
     function validate(){
     
       const errorMessage = document.getElementById('error-message');
       const coupen = document.getElementById("coupen").value;
       const coupenOffer = document.getElementById("coupenOffer").value;
+      const  datepicker  = document.getElementById("datepicker").value;
+      const redeemAmount = document.getElementById("redeemAmount").value;
+      const minCartAmount = document.getElementById("minCartAmount").value;
+      const couponType = document.getElementById("couponType").value;
+
       console.log("coupenOffer:",coupenOffer);
       function checkWhiteSpace(s){
         return s.trim() === "";
       }
 
+      if(couponType === ""){
+        errorMessage.innerText ="Please select the coupen type";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+          errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+      }
       if(coupen === ""  ){
         errorMessage.innerText ="please enter a Coupen Code !";
                 errorMessage.style.display = "block";
@@ -298,6 +352,15 @@
         return false;
       }
 
+      if(couponType == "percentage" && coupenOffer > 100){
+        errorMessage.innerText ="please enter the  valid Offer!";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+            errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+      }
+      
       if(coupenOffer === ""){
         errorMessage.innerText ="please enter the Offer!";
         errorMessage.style.display = "block";
@@ -307,7 +370,7 @@
         return false;
       }
    
-      if(coupenOffer < 0 || coupenOffer > 100){
+      if(coupenOffer < 0 ){
         errorMessage.innerText ="please enter a valid offer!";
         errorMessage.style.display = "block";
         setTimeout(function () {
@@ -347,9 +410,46 @@
            return false;
         }
 
+      
+
+        if(minCartAmount == "" || minCartAmount <= 0){
+          errorMessage.innerText ="Enter a  valid minimum cart amount";
+          errorMessage.style.display = "block";
+          setTimeout(function () {
+            errorMessage.style.display = "none";
+          }, 3000);
+          return false;
+        }
+
+
+
+        if(redeemAmount == "" || redeemAmount <= 0 ){
+          errorMessage.innerText ="Enter valid max redeemable amount";
+          errorMessage.style.display = "block";
+          setTimeout(function () {
+            errorMessage.style.display = "none";
+          }, 3000);
+          return false;
+        }
+
+        if(datepicker == ""){
+          errorMessage.innerText ="Enter the expiray date";
+          errorMessage.style.display = "block";
+          setTimeout(function () {
+            errorMessage.style.display = "none";
+          }, 3000);
+          return false;
+        }
+
        return true;
     }
 
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded",function(){
+      $( "#datepicker" ).datepicker();
+
+    })
   </script>
 </body>
 </html>

@@ -257,18 +257,30 @@
                                 <div class="d-sm-flex justify-content-between align-items-start">
                                   <table class="table table-condensed">
                                     <tr class="cart_menu">
-                                      
+                                         <th>OfferType</th>
                                         <th>Coupen Code</th>
                                         <th>Offer</th>
-                                        <th></th>
-                                        <th></th>
+                                        <th>minCartAmount</th>
+                                        <th>maxReedeemableAmount </th>
+                                        <th>expiryDate</th>
                                     
                                     </tr>
                                    <%for(let i = 0 ; i < coupenDetails.length; i ++){ %>
                                     <tr>
+                                      <td> <%=coupenDetails[i].offerType %></td>
                                       <td><%= coupenDetails[i].code %></td>
+                                      <% if(coupenDetails[i].offerType == "percentage"){ %>
+                                        <td> <%=coupenDetails[i].offer %>%</td>
+                                     <% }else{ %>
+                                        <td>₹ <%=coupenDetails[i].offer %></td>
 
-                                      <td> <%=coupenDetails[i].offer %>%</td>
+                                     <% } %>
+                                      <td> <%=coupenDetails[i].minCartAmount %></td>
+                                      <td>₹ <%=coupenDetails[i].maxReedeemableAmount %></td>
+                                      <td> <%=coupenDetails[i].expiryDate %></td>
+
+
+
 
                                       <td>
                                         <a href="/admin/editCoupen?id=<%=coupenDetails[i]._id%>" class="btn btn-primary btn-sm right" style="color: white;" class="editCoupen">
