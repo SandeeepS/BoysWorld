@@ -676,7 +676,6 @@
 				const address = <%- JSON.stringify(address)%>;
 				const product = <%- JSON.stringify(product)%>;
 				const quantity = <%-JSON.stringify(quantity)%>;
-				const totalPrice = <%- JSON.stringify(totalPrice)%>;
 				const productId = <%- JSON.stringify(productId)%>;
 				const currentAddress = <%-JSON.stringify(currentAddress)%>;
 				const size = <%-JSON.stringify(size)%>;
@@ -736,7 +735,7 @@
 						type:'POST',
 						url:'/applyCoupenCode',
 						data:{
-							coupen,address,currentAddress,product,quantity,totalPrice,productId,size
+							coupen,address,currentAddress,product,quantity,totalPrice:amount,productId,size
 
 						},
 						success:function(response){
@@ -750,7 +749,8 @@
 								}, 3000);
 							}else{
 								const newTotalPrice = response.newTotalPrice;
-								currentTotalOrder.innerHTML = `<del>Order Total :₹<%=totalPrice%></del>` 
+								const totalPrice = response.totalPrice;
+								currentTotalOrder.innerHTML = `<del>Order Total :₹${totalPrice}</del>` 
 								newTotalheading.innerHTML = `Order Total :₹${newTotalPrice}`;
 								newTotalheading.setAttribute("newAmount",newTotalPrice);
 								newTotalheading.setAttribute("coupenCode",coupen);

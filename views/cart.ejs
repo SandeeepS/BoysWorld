@@ -255,9 +255,9 @@
 							</td>
 							<td class="cart_total">
 								<% if(newPrice != 0){ %>
-									<p class="cart_total_price" total-Price="<%=newPrice%>"><%= cart[i].cart.quantity %> X <%=newPrice%> = ₹<%= newPrice%> </p>
+									<p class="cart_total_price" total-Price="<%=newPrice%>"><%= cart[i].cart.quantity %> X <%=newPrice%> = ₹<%= cart[i].cart.quantity * newPrice%> </p>
 								 <%}else{ %>
-									<p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].offerPrice%> = ₹<%= cart[i].cart.total%> </p>
+									<p class="cart_total_price" total-Price="<%=cart[i].product[0].price %>"><%= cart[i].cart.quantity %> X <%=cart[i].product[0].offerPrice%> = ₹<%= cart[i].cart.quantity * cart[i].product[0].offerPrice %> </p>
 								<%} %>
 							</td>
 							<td class="cart_delete">

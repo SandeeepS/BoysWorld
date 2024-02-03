@@ -735,8 +735,8 @@ exports.getAccount = async(req,res,next)=>{
   try{
        const userId = req.session.user;
        const userid2 = new mongoose.Types.ObjectId(userId);
-       const userData = await UserModel.findById(userId).exec();
-       const avacoupens  = await coupenModel.find();
+       const userData = await UserModel.findById({"_id":userId}).exec();
+       const avacoupens  = await coupenModel.find({"listed":true});
        console.log("available coupens :",avacoupens);
        const wallet = userData.wallet;
        console.log("walletAmount:",wallet);
@@ -854,11 +854,7 @@ exports.getCheckoutPage = async(req,res,next)=>{
             as:"categoryDetail",
           }
         },
-        {
-          $look:{
-            
-          }
-        }
+       
       ])
       console.log("productdetails:", product[0]);
       res.render('checkout',{address,currentAddress,currentAddressId, product,quantity,totalPrice,productId,size});
@@ -955,6 +951,7 @@ exports.getCart = async(req,res,next)=>{
             cartTotal = cartTotal + cart[i].cart.total;
            }
        }
+       console.log("cartTotal:",cartTotal);
        console.log("cart:",cart);
       console.log("productDetails:",cart[0].product);
       console.log("categoryDetails:",cart[0].categoryDetails[0])
@@ -1588,6 +1585,11 @@ exports.resetPasswordLogin = async(req,res,next)=>{
 exports.applyCoupenCode = async(req,res,next)=>{
     try{
          const {coupen,address,currentAddress,currentAddressId,product,quantity,totalPrice,productId,size} = req.body;
+         const date = new Date;
+         let formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + "/" +
+                    date.getDate().toString().padStart(2, '0') + "/" +
+                    date.getFullYear().toString();
+         console.log("Formatted date: ", formattedDate);
          const userid = req.session.user;
          const userid2 = new mongoose.Types.ObjectId(userid);
          const userDetails = await UserModel.find({"_id":userid2});
@@ -1605,11 +1607,35 @@ exports.applyCoupenCode = async(req,res,next)=>{
              res.status(200).json({success:true,message:"Entered Coupen is currently unavailable"});
          }else if( ifusedCoupen == coupen){
             res.status(200).json({success:true,message:"Entered Coupen is currently unavailable"});
+         }else if(totalPrice < findedElement.minCartAmount ){
+            res.status(200).json({success:true,message:`coupen can appply aboue rs ${findedElement.minCartAmount}`});
+         }else if(formattedDate > findedElement.expiryDate){
+           res.status(200).json({success:true,message:"The coupen was Expired"});
          }else{
              coupenOffer = findedElement.offer;
              console.log("offfer of the specified coupen:",coupenOffer);
              console.log("total price:",totalPrice);
-             const newTotalPrice = Math.round(totalPrice -((coupenOffer/100)*totalPrice ) );
+             const redeemAmount = findedElement.maxReedeemableAmount;
+             console.log("redemamount :",redeemAmount);
+             let newTotalPrice = 0;
+             if(findedElement.offerType === "percentage"){
+                  if(totalPrice > redeemAmount){
+                    console.log("price before:",totalPrice);
+                     newTotalPrice = Math.round(totalPrice -((coupenOffer/100)*redeemAmount) );
+                     console.log("price after:",newTotalPrice);
+    
+                  }else{
+                     newTotalPrice = Math.round(totalPrice -((coupenOffer/100)*totalPrice));
+                  }
+             }else{
+                  if(totalPrice > redeemAmount){
+                    newTotalPrice = totalPrice - findedElement.offer;
+
+                  }else{
+                      newTotalPrice = totalPrice - findedElement.offer;
+                  }
+             }
+           
              console.log("new price with coupen offer is :",newTotalPrice);
              res.status(200).json({success:true,newTotalPrice,address,currentAddress,currentAddressId,product,quantity,productId,size,totalPrice});
          }
@@ -1623,6 +1649,12 @@ exports.applyCoupenCode = async(req,res,next)=>{
 exports.applyCoupenCodeFromCheckout2 = async(req,res,next)=>{
   try{
     const {coupen,cartDetails,totalAmount} = req.body;
+    console.log("total amount is :",totalAmount);
+    const date = new Date;
+    let formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + "/" +
+               date.getDate().toString().padStart(2, '0') + "/" +
+               date.getFullYear().toString();
+    console.log("Formatted date: ", formattedDate);
     console.log("coupen entered is :",coupen);
     const allCoupen = await coupenModel.find();
     const userid = req.session.user;
@@ -1640,14 +1672,38 @@ exports.applyCoupenCodeFromCheckout2 = async(req,res,next)=>{
     if(findedElement == undefined){
         res.status(200).json({success:true,message:"Entered Coupen is currently unavailable1"});
     }else if(coupenUsed !== undefined ){
-      res.status(200).json({success:true,message:"Entered Coupen is currently unavailable2"});
+        res.status(200).json({success:true,message:"Entered Coupen is currently unavailable2"});
+    }else if(totalAmount < findedElement.minCartAmount){
+        res.status(200).json({success:true,message:`coupen can only apply above ${findedElement.minCartAmount} Rs`});
+    }else if(findedElement.expiryDate < formattedDate){
+      res.status(200).json({success:true,message:"Coupen was Expired"});
+
     }else{
         coupenOffer = findedElement.offer;
         console.log("offfer of the specified coupen:",coupenOffer);
         console.log("total price:",totalAmount);
-        const newTotalAmount = Math.round(totalAmount -((coupenOffer/100)*totalAmount )) ;
-        console.log("new price with coupen offer is :", newTotalAmount);
-        res.status(200).json({success:true,newTotalAmount,cartDetails});
+        const redeemAmount = findedElement.maxReedeemableAmount;
+        console.log("redemamount :",redeemAmount);
+        let newTotalPrice = 0;
+        if(findedElement.offerType === "percentage"){
+             if(totalAmount > redeemAmount){
+               console.log("price before:",totalAmount);
+                newTotalPrice = Math.round(totalAmount -((coupenOffer/100)*redeemAmount) );
+                console.log("price after:",newTotalPrice);
+
+             }else{
+                newTotalPrice = Math.round(totalAmount -((coupenOffer/100)*totalAmount));
+             }
+        }else{
+             if(totalAmount > redeemAmount){
+               newTotalPrice = totalAmount - findedElement.offer;
+
+             }else{
+                 newTotalPrice = totalAmount- findedElement.offer;
+             }
+        }
+        console.log("new price with coupen offer is :", newTotalPrice);
+        res.status(200).json({success:true,newTotalAmount:newTotalPrice,cartDetails});
     }
   }catch(error){
     console.error("error occured while adding coupen from serverside",error);

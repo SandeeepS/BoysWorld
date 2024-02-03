@@ -258,13 +258,13 @@
 										   </div>
 										   <div id="collapseOne" class="panel-collapse collapse">
 											 <div class="panel-body">
-											  <% if(avacoupens){ %>
+											  <% if(avacoupens.length != 0){ %>
                                                     <% for(let cou of avacoupens){ %>
 														<p><%=cou.code%></p>
 													<% } %>
+											  <% }else{ %>
+											        <h6>No coupen listed</h6>
 											  <% } %>
-											   
-											  
 											 </div>
 										   </div>
 										</div>
