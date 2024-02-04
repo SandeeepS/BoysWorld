@@ -36,7 +36,7 @@ adminRoute.get('/addCategoryPage',auth.isAdmin,adminCategoryController.addcatego
 adminRoute.post('/addingCategory',adminCategoryController.addingCategory);
 adminRoute.get('/deleteCategory/:id',adminCategoryController.deleteCategory);
 adminRoute.get('/updateCategory/:id',auth.isAdmin,adminCategoryController.getUpdateCategoryPage);
-adminRoute.post('/UpdatedCategory/:id',adminCategoryController.updateCategory);
+adminRoute.put('/UpdatedCategory',adminCategoryController.updateCategory);
 
 //controll coupen
 adminRoute.get('/coupen',auth.isAdmin,adminCoupenController.getCoupen);

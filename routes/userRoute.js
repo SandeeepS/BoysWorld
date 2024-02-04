@@ -55,7 +55,7 @@ route.post('/resetPasswordLogin',userController.resetPasswordLogin);
 
 route.put('/updateProfileDetails',auth.user,userController.updateProfileDetails);
 route.post('/changePassword',auth.user,userController.changePassword);
-route.post('/update-quantity',userController.updateQuantity);
+route.put('/update-quantity',userController.updateQuantity);
 route.post('/addToCart',userController.addToCart);
 route.delete('/cartItemDelete/:id',userController.cartItemDelete);
 route.get('/addAddress',auth.user,userController.addAddressPage);

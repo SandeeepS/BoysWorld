@@ -197,17 +197,17 @@
                                   <div class="table-responsive cart_info">
                                     <div >
                                        <h2>Update Category</h2>
-                                       <form action="/admin/UpdatedCategory/<%= cataToUpdate._id%>" method="post" onsubmit="return validate()">
+                                       <form action="">
                                            <p>
                                             <label for="name">Category Name</label>      
-                                            <input type="text" class="form-control" name="name" value="<%=cataToUpdate.name %>" >
+                                            <input type="text" class="form-control" name="name" id="name" value="<%=cataToUpdate.name %>" >
                                            </p>
                                            <p>
                                             <label for="offer">Category Offer (optional)</label>
-                                            <input type="number" class="form-control" name="catOffer" id="catOffer" value="<%=cataToUpdate.offer%>">
+                                            <input type="number" class="form-control" name="catOffer" id="cat" value="<%=cataToUpdate.offer%>">
                                             </p>
 
-                                           <input type="submit" name="" id="" value="Update" class="btn btn-primary btn-sm" style="color: aliceblue;">
+                                           <button name="" id="" value="Update" class="btn btn-primary btn-sm" style="color: aliceblue;"  onclick=" validate(event,'<%= cataToUpdate._id%>')" >Update</button>
                                        </form>
                                     </div>
                                   </div>
@@ -258,14 +258,19 @@
   <!-- Custom js for this page-->
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
   <!-- End custom js for this page-->
 
   <script>
-    function validate(){
+    function validate(event,categoryId){
+      event.preventDefault();
       const errorMessage = document.getElementById('error-message');
-      const cat = document.getElementById("cat").value;
-      const offer = document.getElementById("catOffer").value;
-
+      const cat = document.getElementById("name").value;
+      const offer = document.getElementById("cat").value;
+  
+      console.log(cat);
+      console.log(offer);
       
       function checkWhiteSpace(s){
         return s.trim() === "";
@@ -299,7 +304,22 @@
         }
         
 
-       return true;
+        $.ajax({
+          type:'PUT',
+          url:'/admin/UpdatedCategory',
+          data:{
+            catId :categoryId,
+           name: cat,
+           catOffer: offer
+          },
+          success:function(respose){
+            if(respose){
+               window.location = '/admin/categories'
+            }
+          },error:function(error){
+            console.log("error:",error);
+          }
+        })
 
     }
   </script>

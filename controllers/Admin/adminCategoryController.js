@@ -102,14 +102,13 @@ exports.getUpdateCategoryPage = async(req,res,next)=>{
 //updating category
 exports.updateCategory = async(req,res,next)=>{
     try{
-        const catId = req.params.id;
-        const {name} = req.body;
+        const {name,catId } = req.body;
         let catOffer = req.body.catOffer;
         if(catOffer == ""){
             catOffer = 0;
         }
         await categoryModel.findByIdAndUpdate(catId,{$set:{"name":name,"offer":catOffer}}).exec();
-        res.redirect('/admin/categories')
+        res.status(200).json({sucess:true,message:"updated successfull"});
     }catch(error){
         console.error("error while updating the category",error);
         next(error);
