@@ -318,7 +318,7 @@
 	<script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
 
     <!-- for cancelling the order -->
-<!-- <script>
+<script>
 	const invDownload = document.getElementById("invDownload");
 	invDownload.addEventListener("click",function(event){
 		event.preventDefault();
@@ -334,10 +334,18 @@
 			success:function(response){
 				console.log("enterd in hte front end ");
 				console.log("pdf file is ",response.file);
-				let fileData = atob(response.file);
-				let pdfFile = new Blob([fileData], {type: 'application/pdf'});
+				 // Convert the binary data to a Blob
+				let binaryString = window.atob(response.file);
+				let len = binaryString.length;
+				let bytes = new Uint8Array(len);
+				for (let i = 0; i < len; i++) {
+					bytes[i] = binaryString.charCodeAt(i);
+				}
+				let blob = new Blob([bytes], {type: 'application/pdf'});
+
+				// Create a downloadable link
 				let link = document.createElement('a');
-				link.href = URL.createObjectURL(pdfFile);
+				link.href = URL.createObjectURL(blob);
 				link.download = 'invoice.pdf';
 				link.click();
 
@@ -348,38 +356,9 @@
 		})
 
 	})
-</script> -->
-
-<script>
-  function downloadInvoice(event){
-	event.preventDefault();
-	 const selectedOrder = <%- JSON.stringify(selectedOrder) %>;
-     console.log("selected prodcut:",selectedOrder);
-
-	 let data = {
-        apiKey: "free", // Please register to receive a production apiKey: https://app.budgetinvoice.com/register
-        mode: "development", // Production or development, defaults to production
-        products: [
-            {
-              
-                quantity: selectedOrder[0].products.quantity,
-                description: selectedOrder[0].productDetails[0].name,
-				taxRate: 6,
-                price: selectedOrder[0].productDetails[0].offerPrice
-            }
-        ]
-    };
-
-    easyinvoice.createInvoice(data, function (result) {
-        // The response will contain a base64 encoded PDF file
-        console.log('PDF base64 string: ', result.pdf);
-
-        // Now this result can be used to save, download or render your invoice
-        // Please review the documentation below on how to do this
-		 easyinvoice.download("invoice.pdf");
-    });
-  }
 </script>
+
+
 
 </body>
 </html>

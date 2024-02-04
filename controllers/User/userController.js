@@ -1784,27 +1784,39 @@ exports.invoiceDownload = async(req,res,next)=>{
   try{
     const {selectedOrder} = req.body;
     console.log("selected order",selectedOrder);
+    const data = {
+      documentTitle: "Invoice",
+      currency: "INR",
+      marginTop: 25,
+      marginRight: 25,
+      marginLeft: 25,
+      marginBottom: 25,
+      sender: {
+        company: "Men's Fashion",
+        address: "123 Main Street, Banglore, India",
+        zip: "651323",
+        city: "Banglore",
+        country: "INDIA",
+        phone: "9876543210",
+        email: "mensfashion@gmail.com",
+        website: "www.mensfashion.shop",
+      },
+      invoiceNumber: "INV-"+selectedOrder[0]._id,
+      invoiceDate: new Date().toJSON(),
+      products: selectedOrder.map((item) => ({
+        quantity:item.products.quantity,
+        description: item.productDetails[0].name,
+        price: item.totalAmount,
+      })),
+      tax:0,
+      total: `$ ${selectedOrder[0].totalAmount}`,
+      bottomNotice: "Thank you for shopping at Mens fashion!",
+    };
     
-           // Create your invoice! Easy!
-            var data = {
-              apiKey: "free", // Please register to receive a production apiKey: https://app.budgetinvoice.com/register
-              mode: "development", // Production or development, defaults to production
-              products: [
-                  {
-                      name:selectedOrder[0].productDetails.name,
-                      quantity: selectedOrder[0].products.quantity,
-                      description: selectedOrder[0].productDetails[0].description,
-                      price: selectedOrder[0].productDetails[0].offerPrice
-                  }
-              ]
-            };
-
-            easyinvoice.createInvoice(data, function (result) {
-              // The response will contain a base64 encoded PDF file
-              console.log('PDF base64 string: ', result.pdf);
-              res.status(200).json({success:true,message:"successfull",file:result.pdf});
-            
-            });
+  console.log("before:",data);
+  const result = await easyinvoice.createInvoice(data);
+  
+  res.status(200).json({success:true,file:result.pdf});
 
   }catch(error){
     console.log("error occured while downloading the invoice from the serverside ",error);
