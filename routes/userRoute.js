@@ -57,14 +57,14 @@ route.post('/updateProfileDetails',auth.user,userController.updateProfileDetails
 route.post('/changePassword',auth.user,userController.changePassword);
 route.post('/update-quantity',userController.updateQuantity);
 route.post('/addToCart',userController.addToCart);
-route.get('/cartItemDelete/:id',userController.cartItemDelete);
+route.delete('/cartItemDelete/:id',userController.cartItemDelete);
 route.get('/addAddress',auth.user,userController.addAddressPage);
 route.post('/saveAddress',userController.saveAddress);
 route.post('/addAddressFromCheckout',userController.addAddressFromCheckout)
 route.post('/addAddressFromCheckout2',userController.addAddressFromCheckout2)
 route.post('/address',userController.address);
 route.get('/showAddress',userController.showAddress);
-route.get('/addressDelete/:id',userController.addressDelete);
+route.delete('/addressDelete/:id',userController.addressDelete);
 route.get('/setDefaultAddress/:id',userController.setDefaultAddress);
 route.get('/setDefaultAddressFromCheckout',userController.setDefaultAddressFromCheckouts);
 route.get('/setDefaultAddressFromCheckout2',userController.setDefaultAddressFromCheckouts2);

@@ -261,7 +261,7 @@
 								<%} %>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href="/cartItemDelete/<%= cart[i].product[0]._id %>"><i class="fa fa-times"></i></a>
+								<button class="cart_quantity_delete" onclick="deleteCartItem('<%= cart[i].product[0]._id %>')"><i class="fa fa-times"></i></button>
 							</td>
 						</tr>
 					     <% } %>
@@ -330,6 +330,28 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+	<script>
+		/*deleting the cart item */
+		
+			function deleteCartItem(productId) {
+				fetch(`/cartItemDelete/${productId}`, {
+					method: 'DELETE',
+				})
+				.then(response => {
+					if (response) {
+						// Item deleted successfully, you can update the UI as needed
+						console.log('Item deleted successfully');
+						// You might want to reload the page or update the cart UI
+						window.location = '/getCart'
+					} else {
+						console.error('Failed to delete item');
+					}
+				})
+				.catch(error => console.error('Error:', error));
+			}
+		
+	</script>
 
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {

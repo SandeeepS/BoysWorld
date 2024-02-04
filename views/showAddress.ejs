@@ -223,8 +223,10 @@
 									<td class="cart_total">
 										<p class="cart_total_price"></p>
 									</td>
+									
+
 									<td class="cart_delete">
-										<a class="cart_quantity_delete" href="/addressDelete/<%= address[i]._id %>"><i class="fa fa-times"></i></a>
+										<button class="cart_quantity_delete" onclick="deleteAddress('<%= address[i]._id %>')"><i class="fa fa-times"></i></button>
 									</td>
 								</tr>
 							<% } %>
@@ -318,6 +320,26 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+	<script>
+		
+		function deleteAddress(addressId) {
+			fetch(`/addressDelete/${addressId}`, {
+				method: 'DELETE',
+			})
+			.then(response => {
+				if (response) {
+					// Item deleted successfully, you can update the UI as needed
+					console.log('Item deleted successfully');
+					// You might want to reload the page or update the cart UI
+			        window.location = '/showAddress'
+				} else {
+					console.error('Failed to delete item');
+				}
+			})
+			.catch(error => console.error('Error:', error));
+		}
+	</script>
 
 	<script>
 		function validate(){

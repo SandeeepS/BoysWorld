@@ -472,7 +472,7 @@ exports.signup = async(req,res,next)=>{
 };
 
 //resendOTP when signUp
-exports.resendOTP = async(req,res)=>{
+exports.resendOTP = async(req,res,next)=>{
     try{
       const extime = moment().add(30,'seconds').toISOString();
       const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
@@ -510,7 +510,7 @@ exports.resendOTP = async(req,res)=>{
       });
     } catch (error) {
       console.error("Error resending OTP:", error);
-      res.status(500).json({ message: 'error!!!!' });
+      next(error)
     }
 }
 
@@ -554,8 +554,8 @@ exports.reSendotpResetPassword = async(req,res,next)=>{
       }
     });
 
-  }catch(err){
-    console.error("error in resending the otp while login",err);
+  }catch(error){
+    console.error("error in resending the otp while login",error);
     next(error);
   }
 }
@@ -675,8 +675,8 @@ exports.verifyOtp = async (req, res , next) => {
       const products = await productModel.find({_id:{$in:productIds}}).exec();
       console.log("products:",products);
       res.status(200).json({success:true,message:"item added to the cart ",products});
-    }catch(err){
-        console.log("error while geting cart",err);
+    }catch(error){
+        console.log("error while geting cart",error);
         next(error);
     }
   }
@@ -700,16 +700,16 @@ exports.cartItemDelete = async(req,res,next)=>{
         // Save the updated user object
         await currentUser.save();
         // Render the cart with the updated products
-        res.redirect('/getCart');
+        res.status(200).json({success:true,message:"deleted successfully"});
       }else{
         console.log("product not found in the cart");
       }
     }else{
       console.log("item not deleted");
-      res.redirect('/getCart');
+      res.status(200).json({success:true,message:"item not delted"});
     }
-  }catch(err){
-    console.error("error while deleting the cart");
+  }catch(error){
+    console.error("error while deleting the cart",error);
     next(error);
   }
 }
@@ -953,8 +953,7 @@ exports.getCart = async(req,res,next)=>{
        }
        console.log("cartTotal:",cartTotal);
        console.log("cart:",cart);
-      console.log("productDetails:",cart[0].product);
-      console.log("categoryDetails:",cart[0].categoryDetails[0])
+   
   res.render('cart', {cart,cartTotal}); 
   }catch(err){
     console.error("error while getting produts ",err);
@@ -1220,7 +1219,7 @@ exports.addressDelete = async(req,res,next)=>{
       if(addressIndex !== -1){
         user.address.splice(addressIndex,1);
         await user.save();
-        res.redirect('/showAddress');
+        res.status(200).json({success:true,message:"deleted successfully"});
       }else{
         console.log("address not found in the database");
       }
@@ -1783,6 +1782,7 @@ exports.selectedOrders = async(req,res,next)=>{
 exports.invoiceDownload = async(req,res,next)=>{
   try{
     const {selectedOrder} = req.body;
+    const id = selectedOrder[0]._id;
     console.log("selected order",selectedOrder);
     const data = {
       documentTitle: "Invoice",
@@ -1792,16 +1792,16 @@ exports.invoiceDownload = async(req,res,next)=>{
       marginLeft: 25,
       marginBottom: 25,
       sender: {
-        company: "Men's Fashion",
-        address: "123 Main Street, Banglore, India",
+        company: "BoysWorld",
+        address: "123 Main Road, Pathanamthitta, Kerala,India",
         zip: "651323",
-        city: "Banglore",
-        country: "INDIA",
+        city: "Pathanamthitta,Kerala,India",
+        country: "INV_ID:"+id,
         phone: "9876543210",
         email: "mensfashion@gmail.com",
         website: "www.mensfashion.shop",
       },
-      invoiceNumber: "INV-"+selectedOrder[0]._id,
+      invoiceNumber: `INV-${selectedOrder[0]._id}`,
       invoiceDate: new Date().toJSON(),
       products: selectedOrder.map((item) => ({
         quantity:item.products.quantity,
