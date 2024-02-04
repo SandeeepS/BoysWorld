@@ -309,7 +309,6 @@
 		<!-- updated modal -->
 		<div id="updatedModal" class="modal">
              <div class="modal-content">
-				  <span class="close" id="closeModalBtn2">&times;</span>
                   <div class="modal-style">
 						<div class="container">
 								<P><H5>Updated  Successful</H5></P>
@@ -516,7 +515,7 @@
 			
 			//ajax req
 			$.ajax({
-				type: 'POST',
+				type: 'PUT',
 				url:'/updateProfileDetails',
 				data:{
 					name : name,
@@ -527,6 +526,12 @@
 					const modal2 = document.getElementById('updatedModal');
 					modal.style.display = "none";
 					modal2.style.display = "block";
+					setTimeout(function(){
+						modal2.style.display = "none";
+						window.location = '/getAccount'
+					},3000);
+					
+
 				},
 				error: function(error){
 					console.error("error while updating user data ",error);

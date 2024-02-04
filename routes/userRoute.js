@@ -53,7 +53,7 @@ route.post('/conformOTPResetPassword',userController.conformOTPResetPassword);
 route.post('/resetPasswordLogin',userController.resetPasswordLogin);
 
 
-route.post('/updateProfileDetails',auth.user,userController.updateProfileDetails);
+route.put('/updateProfileDetails',auth.user,userController.updateProfileDetails);
 route.post('/changePassword',auth.user,userController.changePassword);
 route.post('/update-quantity',userController.updateQuantity);
 route.post('/addToCart',userController.addToCart);
@@ -62,7 +62,7 @@ route.get('/addAddress',auth.user,userController.addAddressPage);
 route.post('/saveAddress',userController.saveAddress);
 route.post('/addAddressFromCheckout',userController.addAddressFromCheckout)
 route.post('/addAddressFromCheckout2',userController.addAddressFromCheckout2)
-route.post('/address',userController.address);
+route.post('/address',userController.address);  
 route.get('/showAddress',userController.showAddress);
 route.delete('/addressDelete/:id',userController.addressDelete);
 route.get('/setDefaultAddress/:id',userController.setDefaultAddress);
