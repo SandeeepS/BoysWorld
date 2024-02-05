@@ -221,28 +221,6 @@
                                             <label for="offer">Category Offer (optional)</label>
                                             <input type="number" class="form-control" name="catOffer" id="catOffer">
                                             </p>
-<!-- 
-                                           <p>
-                                             <label for="price">Price</label>
-                                             <input type="number" class="form-control" name="price">
-                                           </p>
-                                           
-                                                  
-                                             
-                                            <p>
-                                            <label for="stock">stock</label>
-                                            <input type="text" class="form-control" name="stock">
-                                            </p>  
-                                              
-
-                                            <p>
-                                                <label for="image">Image Url</label>
-                                                <input type="text" class="form-control" name="image">
-                                            </p>
-
-                                            <label for="discription">discription</label>
-                                            <input type="text" class="form-control" name="discription">
-                                           </p> -->
 
                                            <input type="submit" name="" id="" value="Add" class="btn btn-primary btn-sm" style="color: aliceblue;">
                                        </form>
@@ -305,6 +283,7 @@
     function validate(){
       const errorMessage = document.getElementById('error-message');
       const cat = document.getElementById("cat").value;
+      const catOffer = document.getElementById("catOffer").value;
       
       function checkWhiteSpace(s){
         return s.trim() === "";
@@ -327,11 +306,19 @@
         return false;
         }
 
-        
+       
 
-       return true;
+        if(catOffer < 0){
+        errorMessage.innerText ="please enter a valid Category offer";
+        errorMessage.style.display = "block";
+        setTimeout(function () {
+          errorMessage.style.display = "none";
+        }, 3000);
+        return false;
+        }
 
-    }
+      return true;
+      }
   </script>
 </body>
 

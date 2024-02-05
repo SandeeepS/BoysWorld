@@ -402,6 +402,7 @@ exports.signup = async(req,res,next)=>{
     const referralCode = req.body.referralCode;
     console.log("referrla code in serverside:",referralCode);
     const userDetails = await UserModel.find();
+    console.log("phone number:",req.body.number);
     
     const isExistReferalCode = userDetails.find((ref)=> ref.referralCode == referralCode);
 
@@ -430,7 +431,7 @@ exports.signup = async(req,res,next)=>{
         req.session.userData ={
           "username":req.body.username,
           "email":req.body.email,
-          "phonenumber":req.body.phonenumber,
+          "phonenumber":req.body.number,
           "password":hashedpassword,
           "referralCode":req.body.referralCode,
         }
@@ -488,6 +489,7 @@ exports.resendOTP = async(req,res,next)=>{
           pass: process.env.PASSWORD,
          },
          });
+    
   
       // Email configuration
       const mailOptions = {
@@ -496,16 +498,17 @@ exports.resendOTP = async(req,res,next)=>{
         subject: 'Resend OTP Verification',
         text: `Your new OTP is: ${otp}`,
       };
-  
+     
+      console.log("mail details:",mailOptions);
       // Send the email with the new OTP
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error('Error sending email:', error);
-          res.status(500).json({ message: 'Failed to resend OTP' });
+          next(error);
         } else {
           console.log('Email sent:', info.response);
           const message = "otp resended ";
-          res.render('otp',{message});
+          res.status(200).json({success:true,message});
         }
       });
     } catch (error) {
@@ -586,6 +589,7 @@ exports.verifyOtp = async (req, res , next) => {
         "referralCode":referralCode
         
     });
+    console.log("phone number:",userData.phonenumber);
     if(currentTimeStamp.isBefore(exTimeMoment)){
             const {name} = data;
             console.log(name);
@@ -1391,7 +1395,6 @@ exports.oders = async(req,res,next)=>{
           
         ]).exec();
         console.log("corderDetails :",orderDetails )
-        console.log("pro:",orderDetails [0].currentAddress[0].currentAddress.name);
         res.render('orders',{orderDetails,totalPages,currentPage});
   }catch(err){
     console.error("error while getting oders",err);

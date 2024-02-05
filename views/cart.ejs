@@ -330,6 +330,18 @@
 	<script src="js/jquery.scrollUp.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const cart = <%-JSON.stringify(cart) %>;
+			const cartLength = cart.length;
+			const checkout = document.getElementById("checkoutBtn")
+			if(cart.length == 0){
+				checkoutBtn.style.display = "none";
+			}else{
+				checkout.style.display = "block";
+			}
+		})
+	</script>
 
 	<script>
 		/*deleting the cart item */
