@@ -76,9 +76,9 @@ exports.addingCategory = async(req,res,next)=>{
 //deleting categories
 exports.deleteCategory = async(req,res,next)=>{
     try{
-        const catId = req.params.id;
+        const catId = req.body.catId;
         await categoryModel.findByIdAndUpdate(catId,{isDelete:true}).exec();
-        res.redirect('/admin/categories');
+        res.status(200).json({sucess:true,message:"dleted successfully"});
     }catch(error){
         console.error("error while deleting the category",error);
         next(error);
