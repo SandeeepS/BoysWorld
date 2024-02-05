@@ -22,6 +22,8 @@
   <link rel="stylesheet" href="/views/adminpanel/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="/views/adminpanel/images/favicon.png" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <style>
     .image-container {
       width: 200px; 
@@ -353,7 +355,7 @@
                                                     <img src="/views/productImages/<%= productToUpdate[0].image[i] %>">
                                                   </div>
                                                   <div>
-                                                    <a class="deleteBtn btn btn-primary"  href="/admin/deleteProductImage?productId=<%= productToUpdate[0]._id %>&imageName=<%= productToUpdate[0].image[i] %>">Delete</a>
+                                                    <a class="imgDeleteBtn btn btn-primary" productId="<%= productToUpdate[0]._id %>" imageName="<%= productToUpdate[0].image[i] %>" >Delete</a>
                                                   </div>
                                             </div>
                                             <% } %>
@@ -563,6 +565,36 @@
                  return true;
       }
    
+  </script>
+  <script>
+    const  imgDeleteBtns =  document.getElementsByClassName("imgDeleteBtn");
+    Array.from(imgDeleteBtns).forEach(function(deleteBtn){
+      deleteBtn.addEventListener("click",function(event){
+        event.preventDefault();
+        console.log("entered in the scritp")
+        const productId = this.getAttribute("productId");
+        const imageName = this.getAttribute("imageName");
+        console.log("productId:",productId);
+        console.log("imageName:",imageName);
+
+        $.ajax({
+          type:'DELETE',
+          url:'/admin/deleteProductImage',
+          data:{
+            productId,
+            imageName
+          },
+          success:function(response){
+            if(response){
+              location.reload();
+            }
+          },
+          error:function(error){
+            console.error("error occured",error);
+          }
+        })
+      })
+    })
   </script>
 </body>
 

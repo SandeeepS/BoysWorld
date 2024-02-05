@@ -217,9 +217,9 @@ exports.deleteProduct = async(req,res,next)=>{
 //deleting product images
 exports.deleteProductImage = async (req, res,next) => {
     try {
-        const productId = req.query.productId;
+        const productId = req.body.productId;
         console.log(productId);
-        const imageName = req.query.imageName;
+        const imageName = req.body.imageName;
         console.log("image:",imageName);
         const product = await productModel.findById(productId);
         if (!product) {
@@ -232,7 +232,7 @@ exports.deleteProductImage = async (req, res,next) => {
         }
         product.image.splice(imageIndex, 1);
          await product.save();
-        res.redirect('/admin/products')
+         res.status(200).json({success:true,message:"image deleted successfuly"});
     }catch(error) {
         console.error('Error while deleting the image', error);
         next(error);

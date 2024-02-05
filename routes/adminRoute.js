@@ -25,7 +25,7 @@ adminRoute.post('/addingProduct',upload.array('productImages',5),adminProductCon
 adminRoute.get('/updateProduct/:id',auth.isAdmin,adminProductController.getUpdateProductPage);
 adminRoute.post('/productUpdated/:id',upload.array('image',3),adminProductController.productUpdated);
 adminRoute.delete('/deleteProduct',adminProductController.deleteProduct);
-adminRoute.get('/deleteProductImage',adminProductController.deleteProductImage);
+adminRoute.delete('/deleteProductImage',adminProductController.deleteProductImage);
 
 //controll category
 adminRoute.get('/categories',auth.isAdmin,adminCategoryController.getCategories);
