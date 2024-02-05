@@ -21,33 +21,34 @@ adminRoute.post('/downloadSalesReport',auth.isAdmin,adminController.downloadSale
 //controlproduct
 adminRoute.get('/products',auth.isAdmin,adminProductController.getProduct);
 adminRoute.get('/addProductPage',auth.isAdmin,adminProductController.addProduct);
-adminRoute.post('/addingProduct',upload.array('productImages',5),adminProductController.addingProduct);
 adminRoute.get('/updateProduct/:id',auth.isAdmin,adminProductController.getUpdateProductPage);
+adminRoute.post('/addingProduct',upload.array('productImages',5),adminProductController.addingProduct);
 adminRoute.post('/productUpdated/:id',upload.array('image',3),adminProductController.productUpdated);
-adminRoute.delete('/deleteProduct',adminProductController.deleteProduct);
-adminRoute.delete('/deleteProductImage',adminProductController.deleteProductImage);
+adminRoute.delete('/deleteProduct',adminProductController.deleteProduct);                              //deleting the product
+adminRoute.delete('/deleteProductImage',adminProductController.deleteProductImage);                    //deleting the productimage
 
 //controll category
 adminRoute.get('/categories',auth.isAdmin,adminCategoryController.getCategories);
 adminRoute.get('/addCategoryPage',auth.isAdmin,adminCategoryController.addcategoryPage)
-adminRoute.post('/addingCategory',adminCategoryController.addingCategory);
-adminRoute.delete('/deleteCategory',adminCategoryController.deleteCategory);
 adminRoute.get('/updateCategory/:id',auth.isAdmin,adminCategoryController.getUpdateCategoryPage);
+adminRoute.post('/addingCategory',adminCategoryController.addingCategory);
 adminRoute.put('/UpdatedCategory',adminCategoryController.updateCategory);
+adminRoute.delete('/deleteCategory',adminCategoryController.deleteCategory);
+
 
 //controll coupen
-adminRoute.get('/coupen',auth.isAdmin,adminCoupenController.getCoupen);
-adminRoute.post('/addingCoupen',auth.isAdmin,adminCoupenController.addingCoupen);
 adminRoute.get('/editCoupen',auth.isAdmin,adminCoupenController.editCoupen);
 adminRoute.get('/listUnlist',auth.isAdmin,adminCoupenController.listUnlistCoupen);
-adminRoute.put('/updateEditedCoupen',auth.isAdmin,adminCoupenController.updateEditedCoupen);
+adminRoute.get('/coupen',auth.isAdmin,adminCoupenController.getCoupen);
+adminRoute.post('/addingCoupen',auth.isAdmin,adminCoupenController.addingCoupen);
 adminRoute.post('/listUnlist',auth.isAdmin,adminCoupenController.listUnlist);
+adminRoute.put('/updateEditedCoupen',auth.isAdmin,adminCoupenController.updateEditedCoupen);
 adminRoute.delete('/coupenDelete',adminCoupenController.coupenDelete);
 
 //user(block/unblock)
 adminRoute.post('/checkStatus',adminController.updateStatus)
 //update order status
-adminRoute.post('/updateStatus',adminController.updateOrderStatus)
+adminRoute.put('/updateStatus',adminController.updateOrderStatus)
 //cancel order
 adminRoute.post('/cancelOrder',adminController.cancelOrder)
 //logout

@@ -607,7 +607,7 @@ function setCroppedImage(){
 </script>
 <script>
 function validate(event){
-   
+    event.preventDefault();
     console.log("inside the validation")
     const productName = document.getElementById('productName').value;
     const price = document.getElementById('price').value;
@@ -622,6 +622,7 @@ function validate(event){
     const large = document.getElementById("L").value;
     const medium = document.getElementById("M").value;
  
+    console.log("price:",price);
               
               function checkWhiteSpace(s){
                 return s.trim() === "";
@@ -636,14 +637,7 @@ function validate(event){
                 return false;
               } 
 
-              if(small === "" &&   large === "" &&   medium === "" &&  extraLarge === "" &&   doubleExtraLarge === ""){
-                errorMessage.innerText ="Please provide the Quantity of the stock (Atleast one size)!!";
-                errorMessage.style.display = "block";
-                setTimeout(function(){
-                      errorMessage.style.display ="none";
-                },3000);
-                return false;
-              }
+          
 
               if(productName === ""  ){
                 errorMessage.innerText ="please enter your productName";
@@ -663,7 +657,7 @@ function validate(event){
                 return false;
               }
 
-              if(price === ""  ){
+              if(price === "" ){
                 errorMessage.innerText ="please enter the price";
                 errorMessage.style.display = "block";
                 setTimeout(function () {
@@ -687,6 +681,15 @@ function validate(event){
                 setTimeout(function () {
                     errorMessage.style.display = "none";
                 }, 3000);
+                return false;
+              }
+
+              if(small === "" &&   large === "" &&   medium === "" ){
+                errorMessage.innerText ="Please provide the Quantity of the stock (Atleast one size)!!";
+                errorMessage.style.display = "block";
+                setTimeout(function(){
+                      errorMessage.style.display ="none";
+                },3000);
                 return false;
               }
 
