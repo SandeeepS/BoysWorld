@@ -24,6 +24,8 @@
   <link rel="shortcut icon" href="../adminpanel/images/favicon.png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <style>
         .pagination {
             display: flex;
@@ -314,7 +316,7 @@
                                         </td>
                                         
                                         <td>
-                                          <a href="/admin/deleteProduct/<%= pro._id %>" class="btn btn-danger btn-sm">
+                                          <a href="#" productId="<%= pro._id %>" class="proDelete btn btn-danger btn-sm">
                                               Delete
                                           </a>                                          
                                         </td>
@@ -421,12 +423,12 @@
   <!-- container-scroller -->
 
   <!-- plugins:js -->
-  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <script src="../adminpanelvendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
-  <script src="vendors/chart.js/Chart.min.js"></script>
-  <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-  <script src="vendors/progressbar.js/progressbar.min.js"></script>
+  <script src="../adminpanelvendors/chart.js/Chart.min.js"></script>
+  <script src="../adminpanelvendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="../adminpanelvendors/progressbar.js/progressbar.min.js"></script>
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
@@ -440,6 +442,32 @@
   <script src="js/dashboard.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
+  <script>
+       const delteBtns = document.getElementsByClassName("proDelete");
+       Array.from(delteBtns).forEach(function(deleteBtn){
+          deleteBtn.addEventListener("click",function(event){
+            event.preventDefault();
+            const proId = this.getAttribute("productId");
+            console.log("productId:",proId);
+
+            $.ajax({
+              type:'DELETE',
+              url:'/admin/deleteProduct',
+              data:{
+                proId
+              },
+              success:function(response){
+                if(response){
+                  location.reload();
+                }
+              },
+              error:function(error){
+                console.log("error occured",error);
+              }
+            })
+          })
+       })
+  </script>
   <script>
     const page1 = document.getElementById("page-1");
     const page2 = document.getElementById("page-2");

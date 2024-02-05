@@ -205,9 +205,9 @@ exports.productUpdated = async(req,res,next)=>{
 //deleteproduct
 exports.deleteProduct = async(req,res,next)=>{
     try{
-        const productId = req.params.id;
+        const productId = req.body.proId;
         await productModel.findByIdAndUpdate(productId,{isDeleted:true}).exec();
-        res.redirect('/admin/products');
+        res.status(200).json({success:true,message:"product deleted successfully"});
     }catch(error){
         console.error("error deletting product",error);
         next(error);
