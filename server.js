@@ -41,11 +41,12 @@ app.use(session({
 }));
   
 //mongoDb connection
- mongoose.connect(process.env.DB_CONNECT,{
+ mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser:true,
     useUnifiedTopology:true,
     }).then(()=>console.log("connected to mongodb"))
       .catch((err)=>console.log("MongoDB connection failed",err));
+
 
 app.use('/',routes);
 app.use('/admin',adminRoute);
@@ -57,6 +58,3 @@ app.listen(port,()=>{
     console.log(`Server running on port ${port}`);
 });
 
-// app.listen(5000,()=>{
-//     console.log('server is running at :',5000);
-// });

@@ -123,6 +123,7 @@
 		}
 		#invDownload {
 			margin-left: 470px;
+			width: 150px;
 		}
 	
     </style>
@@ -230,7 +231,7 @@
 												</div>
 											</div>
 											<div class="order-Status" style="padding-left: 70px;padding-top:90px">
-											<h6 style="margin-left: 65px;">(<%=selectedOrder[0].currentStatus%>)</h6>
+											<h5 style="margin-left: 55px;">Status:<%=selectedOrder[0].currentStatus%></h6>
 											</div>
 										
 									</div>
@@ -317,19 +318,41 @@
     <script src="js/main.js"></script>
 	<script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
 
+	<script>
+		document.addEventListener("DOMContentLoaded",function(){
+			const invBtn = document.getElementById("invDownload");
+			const selectedOrder = <%-JSON.stringify(selectedOrder)%>;
+			const currentStatus = selectedOrder[0].currentStatus;
+			console.log("currentStatus:",currentStatus);
+
+			if((selectedOrder[0].paymentMethod == "Online Payment" && selectedOrder[0].currentStatus == "Pending")  ){
+				console.log("1")
+				invBtn.style.display = "none";
+			}else if(selectedOrder[0].currentStatus == "Out for Delivery" || selectedOrder[0].currentStatus == "Conformed" || selectedOrder[0].currentStatus == "Shipped") {
+				console.log("2")
+				invBtn.style.display = "none";
+			}else{
+				console.log("3")
+				invBtn.style.display = "block";
+			}
+			
+		})
+	</script>
     <!-- for cancelling the order -->
 <script>
 	const invDownload = document.getElementById("invDownload");
 	invDownload.addEventListener("click",function(event){
 		event.preventDefault();
 		const selectedOrder = <%-JSON.stringify(selectedOrder) %>;
+		const price = selectedOrder[0].productDetails[0].offerPrice
+		console.log("last price:",price);
 		console.log("selected order form script is ",selectedOrder);
 
 		$.ajax({
 			type:'POST',
 			url:'/invoiceDownload',
 			data:{
-				selectedOrder
+				selectedOrder,price
 			},
 			success:function(response){
 				console.log("enterd in hte front end ");

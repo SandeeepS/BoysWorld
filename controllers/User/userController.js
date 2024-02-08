@@ -1271,7 +1271,7 @@ exports.setDefaultAddressFromCheckouts = async (req, res,next) => {
     const currentAddress = user.address.filter(add => add._id.equals(addId));
     const currentAddressId = currentAddress._id;
     console.log("useris:",user);
-    res.render('checkout',{address,currentAddress,product,currentAddressId,totalPrice,quantity,productId,size});
+    res.render('checkout',{address,currentAddress,product,currentAddressId,totalPrice,quantity,productId,size,addressId});
   } catch (err) {
     console.error("Error while updating the default address", err);
     next(error);
@@ -1784,7 +1784,7 @@ exports.selectedOrders = async(req,res,next)=>{
 //invoice download
 exports.invoiceDownload = async(req,res,next)=>{
   try{
-    const {selectedOrder} = req.body;
+    const {selectedOrder,price} = req.body;
     const id = selectedOrder[0]._id;
     console.log("selected order",selectedOrder);
     const data = {
@@ -1809,11 +1809,11 @@ exports.invoiceDownload = async(req,res,next)=>{
       products: selectedOrder.map((item) => ({
         quantity:item.products.quantity,
         description: item.productDetails[0].name,
-        price: item.totalAmount,
+        price: price,
       })),
       tax:0,
       total: `$ ${selectedOrder[0].totalAmount}`,
-      bottomNotice: "Thank you for shopping at Mens fashion!",
+      bottomNotice: "Thank you for shopping at Boys World!",
     };
     
   console.log("before:",data);

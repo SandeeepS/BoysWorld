@@ -1246,7 +1246,7 @@
 			if(newTotalAmount  != undefined){
 				totalAmount = newTotalAmount
 			}else{
-				totalAmount = <%-JSON.stringify(totalAmount) %>;
+				totalAmount = cartTotal.getAttribute("totalamount");
 			}
 
 			console.log("totalAmount:",totalAmount);
