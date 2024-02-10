@@ -97,6 +97,8 @@ exports.placeOrder2 = async(req,res,next)=>{
       const {productId,quantity,total,currentAddress,currentAddressId,size,coupen} = req.body;
       console.log("current adddresssssssssssssssssssssssssss iddddddddddddddddddddddd",currentAddressId);
       console.log("coupen in serverside :",coupen);
+      console.log("currentaddressid",currentAddressId);
+      console.log("currentAddress",currentAddress);
       const userId2 = req.session.user;
       const user = await UserModel.findById(userId2).exec();
       const iscoupenExist = user.usedCoupen.find((ele)=> ele == coupen);
@@ -161,8 +163,10 @@ exports.placeOrder2 = async(req,res,next)=>{
 exports.generateRazorpay = async(req,res,next)=>{
     try{
        const {productId, quantity, total,currentAddress,currentAddressId,size,coupen} = req.body;
+       console.log("djbgjdgjdgjdgbdgbdgifdbgkjlsgjkdgdjfgkjdgkjdgbdfghgbkdfjgbkdfbgkdbjlfdbglkbglkgbdlgblkdgbdfkgdfgkfdgbfg");
        console.log("coupen from online payment:",coupen);
        const onlinePayment = "Online Payment";
+       console.log("currentAddressId",currentAddressId);
        const status = "pending";
        const userid = req.session.user;
        const user = await UserModel.findById(userid);
