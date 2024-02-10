@@ -9,7 +9,6 @@ const routes = require('./routes/userRoute');
 const adminRoute = require('./routes/adminRoute');
 const middleware = require('./middleware/middlewares');
 const nocache = require('nocache');
-const {connectMongoDb} = require('./connection');
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine','ejs');
