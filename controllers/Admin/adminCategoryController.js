@@ -91,7 +91,7 @@ exports.getUpdateCategoryPage = async(req,res,next)=>{
     try{
         const catId = req.params.id;
         const cataToUpdate = await categoryModel.findById(catId).exec();
-        res.render('adminpanel/updatecategory',{cataToUpdate});
+        res.render('adminpanel/updateCategory',{cataToUpdate});
     }catch(error){
         console.error("error while updating catogery",error)
         next(error);
