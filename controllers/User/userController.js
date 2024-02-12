@@ -834,6 +834,7 @@ exports.getCheckoutPage = async(req,res,next)=>{
       const address = userData.address;
       const currentAddressId = userData.currentAddress;
       console.log("currentAddressId",currentAddressId);
+      console.log("currentAddress is :",address);
       const productId = req.query.productId   ;
       console.log("productId:",productId);
       const productId2 = new mongoose.Types.ObjectId(productId);
@@ -862,8 +863,8 @@ exports.getCheckoutPage = async(req,res,next)=>{
       ])
       console.log("productdetails:", product[0]);
       res.render('checkout',{address,currentAddress,currentAddressId, product,quantity,totalPrice,productId,size});
-  }catch(err){
-    console.error("error while getting checkout",err);
+  }catch(error){
+    console.error("error while getting checkout",error);
     next(error);
   }
   
@@ -912,8 +913,8 @@ exports.getCheckoutPage2 = async(req,res,next)=>{
     console.log("categorydetails:",cartDetails[0].categoryDetail[0])
     console.log("total amount ",totalAmount);
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
-  }catch(err){
-      console.log("error in getcheckout2 ",err);
+  }catch(error){
+      console.log("error in getcheckout2 ",error);
       next(error);
   }
 }
@@ -959,8 +960,8 @@ exports.getCart = async(req,res,next)=>{
        console.log("cart:",cart);
    
   res.render('cart', {cart,cartTotal}); 
-  }catch(err){
-    console.error("error while getting produts ",err);
+  }catch(error){
+    console.error("error while getting produts ",error);
     next(error);
   }
 }
@@ -985,7 +986,7 @@ exports.updateQuantity = async (req, res,next) => {
           cartTotal = cartTotal+cartItem.cart[i].total;
     }
     res.status(200).json({ newQuantity ,newTotal,cartTotal});
-  } catch (err) {
+  } catch (error) {
     console.error("Error while updating the quantity:", err);
     next(error);
   }
@@ -996,7 +997,7 @@ exports.addAddressPage = async(req,res,next)=>{
   try{
     res.render('addAddress');
   }catch(err){
-    console.error("error while loading add Address page",err);
+    console.error("error while loading add Address page",error);
     next(error);
   }
 }
@@ -1042,8 +1043,8 @@ exports.address = async(req,res,next)=>{
         console.log("record not inserted");
         res.redirect('/getAccount');
        }
-  }catch(err){
-    console.error("error while adding address",err);
+  }catch(error){
+    console.error("error while adding address",error);
     next(error);
   }
 }
@@ -1087,8 +1088,8 @@ exports.saveAddress = async(req,res,next)=>{
       console.log("record not inserted");
       res.redirect('/getAccount');
      }
-  }catch(err){
-    console.log("error in saving address",err);
+  }catch(error){
+    console.log("error in saving address",error);
     next(error);
   }
 }
@@ -1134,8 +1135,8 @@ exports.addAddressFromCheckout = async(req,res,next)=>{
        const currentAddress = userData.address.filter(add => add._id.equals(currentAddressId));
        console.log("productId from server:",productId);
        res.status(200).json({success:true,message:"address inserted successfully",address,product,quantity,totalPrice,currentAddress,productId});
-    }catch(err){
-      console.log("error while adding the address from checkout",err);
+    }catch(error){
+      console.log("error while adding the address from checkout",error);
       next(error);
     }
 }
@@ -1204,8 +1205,8 @@ exports.showAddress = async(req,res,next)=>{
     console.log(address);
     console.log("currentAddress:",currentAddress);
     res.render('showAddress',{address,currentAddress});
-  }catch(err){
-    console.error("error while getting show address page",err);
+  }catch(error){
+    console.error("error while getting show address page",error);
     next(error);
   }
 }
@@ -1228,8 +1229,8 @@ exports.addressDelete = async(req,res,next)=>{
         console.log("address not found in the database");
       }
     }
-  }catch(err){
-    console.error("error while deleting the address",err);
+  }catch(error){
+    console.error("error while deleting the address",error);
     next(error);
   }
 }
@@ -1244,8 +1245,8 @@ exports.setDefaultAddress = async (req, res,next) => {
     const user = await UserModel.findOneAndUpdate(userId2,{$set:{"currentAddress":addId}});
     console.log("useris:",user);
     res.redirect('/showAddress');
-  } catch (err) {
-    console.error("Error while updating the default address", err);
+  } catch (error) {
+    console.error("Error while updating the default address", error);
     next(error);
   }
 }
@@ -1272,8 +1273,8 @@ exports.setDefaultAddressFromCheckouts = async (req, res,next) => {
     const currentAddressId = currentAddress._id;
     console.log("useris:",user);
     res.render('checkout',{address,currentAddress,product,currentAddressId,totalPrice,quantity,productId,size,addressId});
-  } catch (err) {
-    console.error("Error while updating the default address", err);
+  } catch (error) {
+    console.error("Error while updating the default address", error);
     next(error);
   }
 }
@@ -1297,8 +1298,8 @@ exports.setDefaultAddressFromCheckouts2 = async (req, res,next) => {
     console.log("useris:",user);
     console.log("currentAddress",currentAddress);
     res.render('checkout2',{address,currentAddress,cartDetails,totalAmount,currentAddressId});
-  } catch (err) {
-    console.error("Error while updating the default address", err);
+  } catch (error) {
+    console.error("Error while updating the default address", error);
     next(error);
   }
 }
@@ -1396,8 +1397,8 @@ exports.oders = async(req,res,next)=>{
         ]).exec();
         console.log("corderDetails :",orderDetails )
         res.render('orders',{orderDetails,totalPages,currentPage});
-  }catch(err){
-    console.error("error while getting oders",err);
+  }catch(error){
+    console.error("error while getting oders",error);
     next(error);
   }
 }
@@ -1426,8 +1427,8 @@ exports.cancelOrder = async(req,res,next)=>{
              await UserModel.findByIdAndUpdate({"_id":userId},{$set:{"wallet":newAmount}});
          }
         res.status(200).send({message:"order cancelled successfully"});
-  }catch(err){
-    console.error("error while canceling the order in server",err);
+  }catch(error){
+    console.error("error while canceling the order in server",error);
     next(error);
   }
 }
@@ -1444,8 +1445,8 @@ exports.updateProfileDetails = async(req,res,next)=>{
     }
     await UserModel.findByIdAndUpdate(userId, {name,email,number}).exec();
     res.status(200).json({ success: true, message: 'Updated successfully.' });
-  }catch(err){
-    console.error("error while updating the user",err);
+  }catch(error){
+    console.error("error while updating the user",error);
     next(error);
   }
 }
@@ -1477,8 +1478,8 @@ exports.changePassword = async(req,res,next)=>{
              res.status(200).json({success:true, message: 'Something went Wrong!!', count});
        }
     }
-  catch(err){
-    console.error("error while changing password",err);
+  catch(error){
+    console.error("error while changing password",error);
     next(error);
   }
 }
@@ -1532,8 +1533,8 @@ exports.sendResetOtpmail = async(req,res,next)=>{
             const count = 0;
             res.status(200).json({success: true,message:"otp send successfully",})
   }
-  }catch(err){
-    console.error("error while sending otp",err);
+  }catch(error){
+    console.error("error while sending otp",error);
     next(error);
   }
 }
@@ -1555,8 +1556,8 @@ exports.conformOTPResetPassword = async(req,res,next)=>{
       console.log("incorrect otp");
       res.status(200).json({success:false,message:"incorrect otp"});
     }
-  }catch(err){
-    console.error("error while conforming the otp ",err);
+  }catch(error){
+    console.error("error while conforming the otp ",error);
     next(error);
   }
 }
@@ -1577,8 +1578,8 @@ exports.resetPasswordLogin = async(req,res,next)=>{
       }else{
         res.status(200).json({success:true,message:"something went wrong !! password updation failed "});
       }
-  }catch(err){
-    console.error("error while updating the password ",err);
+  }catch(error){
+    console.error("error while updating the password ",error);
     next(error);
   }
 };

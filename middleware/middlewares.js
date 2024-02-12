@@ -55,6 +55,7 @@ function errorHandling(error,req,res,next){
         res.status(500).render('adminpanel/errorHandlingAdmin',{errorMessage:error.message});;
     }else{
         console.log("from userController")
+        console.log("error is kfnnf :",error.message);
         res.status(500).render('errorHandling',{errorMessage:error.message});
     }
 }
