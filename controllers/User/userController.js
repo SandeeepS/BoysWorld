@@ -354,13 +354,15 @@ exports.contactPage = async(req,res,next)=>{
 exports.getOtpPage = async(req,res,next)=>{
   try{
       let referredUserId = "";
-      if(req.query.referredUser){
+      const email = req.query.email;
+      if(req.query.referredUser && req.query.email){
         console.log("referred user from query",req.query.referredUser);
         referredUserId = req.query.referredUser ;
+       
         console.log("reffered user :",referredUserId);
       }
         const message = "Enter OTP ";
-        res.render('otp',{message,referredUserId});
+        res.render('otp',{message,referredUserId,email});
   }catch(error){
       console.log("error while getting otp page !!",error);
       next(error);
@@ -400,6 +402,9 @@ exports.signup = async(req,res,next)=>{
     try{
     // Generate a random OTP
     const referralCode = req.body.referralCode;
+    const email = req.body.email;
+    console.log("email is:",email);
+
     console.log("referrla code in serverside:",referralCode);
     const userDetails = await UserModel.find();
     console.log("phone number:",req.body.number);
@@ -447,7 +452,7 @@ exports.signup = async(req,res,next)=>{
           // Email configuration
           const mailOptions = {
             from: 'sandeeps@gmail.com',
-            to: '2002m9002@gmail.com',
+            to: email,
             subject: 'OTP Verification',
             text: `Your OTP is: ${otp}`,
           };
@@ -459,9 +464,9 @@ exports.signup = async(req,res,next)=>{
             } else {
               console.log('Email sent:', info.response);
               if(updatedReferredUser != ""){
-                 res.status(200).json({success:true,updatedReferredUser});
+                 res.status(200).json({success:true,updatedReferredUser,email});
               }else{
-                res.status(200).json({success:true});
+                res.status(200).json({success:true,email});
               }
             }
           });
@@ -475,6 +480,7 @@ exports.signup = async(req,res,next)=>{
 //resendOTP when signUp
 exports.resendOTP = async(req,res,next)=>{
     try{
+      const email = req.body.email;
       const extime = moment().add(30,'seconds').toISOString();
       const otp = otpGenerator.generate(4, { upperCase: false, specialChars: false });
       req.session.otpStorage = {
@@ -494,7 +500,7 @@ exports.resendOTP = async(req,res,next)=>{
       // Email configuration
       const mailOptions = {
         from: 'sandeeps@gmail.com',
-        to: '2002m9002@gmail.com',
+        to: email,
         subject: 'Resend OTP Verification',
         text: `Your new OTP is: ${otp}`,
       };
@@ -598,7 +604,7 @@ exports.verifyOtp = async (req, res , next) => {
             console.log(req.session.user);
             if(savedData){
                 console.log("Record inserted successfully");
-                if(referredUserId != ""){
+                if(referredUserId != undefined){
                     console.log("referrredUserId varification in varify payment:",referredUserId);
                     let updatedReferredUser2 = await UserModel.findByIdAndUpdate({"_id":referredUserId},{$inc:{"wallet":100}});
 

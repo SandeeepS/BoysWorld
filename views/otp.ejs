@@ -79,13 +79,14 @@
 						<h2><%=message%></h2>
 						<form action="/verifyOtp" method="post">
 							<input type="text" id="userid" name="userotp" placeholder="enter the conformation code" />
-							<input type="text" id="referredUser" name="referredUserId" value="<%=referredUserId%>" >
+							<% if(referredUserId) { %>
+								<input type="text" id="referredUser" name="referredUserId" value="<%=referredUserId%>" >
+							<% } %>
 							<p id="otpExpiryTime"></p>
 							<button type="submit" >Submit</button>
 						</form>
 					     <form action="#">
 							<button  class="btn btn-default" id="resendOTP" onclick="resentOtp(event)">Resend OTP</button>
-
 						 </form>
 				
 					</div>
@@ -212,9 +213,14 @@
 	<script>
 		function resentOtp(event){
 			event.preventDefault();
+			const email = <%- JSON.stringify(email)%>
+			console.log("email is:",email);
 			$.ajax({
 				type:'POST',
 				url:'/resendOTP',
+				data:{
+                   email
+				},
 				success:function(response){
 					if(response){
 						window.location = "";

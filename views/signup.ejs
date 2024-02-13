@@ -440,10 +440,10 @@
 						console.log("referal id is present");
 						console.log("updatedReffredUser is :",response.updatedReferredUser);
 						const referredUser = response.updatedReferredUser;
-						window.location = '/getOtpPage?referredUser='+referredUser;
+						window.location = '/getOtpPage?referredUser='+referredUser+'&email='+email;
 					}else{
 						console.log("no referal id ")
-						window.location = '/getOtpPage';
+						window.location = '/getOtpPage?email='+email;
 					}
 				},
 				error:function(error){
