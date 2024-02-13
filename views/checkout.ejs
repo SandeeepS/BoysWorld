@@ -599,6 +599,19 @@
 		</div>
 	</div>
 
+	<!-- modal for warning select address-->
+	<div id="selectAddressWarnning" class="modal custom-modal">
+		<div id="selectModalContent" class="modal-content">
+			<span id="selectAddressModalClose" class="close">&times;</span>
+			<div class="modal-style">
+				<div class="modal-text">
+					<p>Please add a Current Address</p>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+
 		<!-- modal last for after wallet payment -->
 	<div id="dynamicModalForWallet" class="modal">
 		<div id="ModalContent" class="modal-content">
@@ -1179,6 +1192,8 @@
 			const closeBtn = document.getElementById("paymentSuccessModalClose");
 			const selectPaymentModal = document.getElementById('selectPaymentWarnning');
 			const selectPaymentModalClose = document.getElementById('selectPaymentModalClose');
+			const selectAddressWarnningModal = document.getElementById("selectAddressWarnning");
+			const selectAddressModalClose = document.getElementById("selectAddressModalClose");
 			const modal2 = document.getElementById("paymentSuccessModal");
 			const dynamicModalForWallet = document.getElementById("dynamicModalForWallet");
 			const walletModalClose = document.getElementById("walletModalClose");
@@ -1207,6 +1222,7 @@
 			const currentAddress =  <%-JSON.stringify(currentAddress)%>;
 			const currentAddressId = <%-JSON.stringify(currentAddressId) %>;
 			const size = <%-JSON.stringify(size) %>;
+
 
 			const cashOnDeliveryRadioButton = document.querySelector('input[name="checkout"][value="cash-on-delivery"]');
 			const onlinePaymentRadioButton = document.querySelector('input[name="checkout"][value="online-payment"]');
