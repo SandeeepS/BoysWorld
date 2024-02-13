@@ -1513,15 +1513,15 @@ exports.sendResetOtpmail = async(req,res,next)=>{
             const transporter = nodemailer.createTransport({
               service: 'Gmail',
               auth: {
-                user: email,
-                pass: 'ijpzysobzeshejlv',
+                user: process.env.EMAIL,
+              pass: process.env.PASSWORD,
               },
             });
             
             // Email configuration
             const mailOptions = {
               from: 'sandeeps@gmail.com',
-              to: '2002m9002@gmail.com',
+              to: email,
               subject: 'OTP Verification',
               text: `Your OTP is: ${otp}`,
             };
