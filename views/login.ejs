@@ -104,6 +104,11 @@
 				justify-content: center;
 				align-items: center; 
 			}
+			.hh{
+				margin-left: 600px;
+			}
+			
+		
     </style>
 </head><!--/head-->
 
@@ -128,7 +133,7 @@
 		<div class="header-bottom"><!--header-bottom-->
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-9">
+					<div class="hh col-sm-9">
 						<div class="navbar-header">
 							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 								<span class="sr-only">Toggle navigation</span>
@@ -157,21 +162,25 @@
 					<!--login form-->
 					<div class="parent-div">
 						<div class="login-form">
-							<h2>Login to your account</h2>
+							<h2 style="margin-left: 170px;" >Login to your account</h2>
 							<div class="error-message" id="error-messsage"></div>
 							<br>
 							<br>
 							<% if(message) { %>
 							   <p style="color: black;"><%= message %></p>
 							<% } %>
-							<form action="/loginUser" method="post" onsubmit="return validateform()">
+							<form action="/loginUser" method="post" onsubmit="return validateform()" >
 								<input type="email" id="emailid" name="Email" placeholder="Email Id" />
 								<input type="password" id="password" name="Password" placeholder="Password" />
 								<br>
-								<h5 id="forgotPassword">Forgot your password?<a href="#">Reset password</a></h5>
+								<div style="margin-left: 150px;">
+									<h5  id="forgotPassword">Forgot your password?<a href="#"  >Reset password</a></h5>
+								</div>
+								<div style="margin-left: 200px;">
+									<h5>New User?<a href="/signup">SignUp</a></h5>
+								</div>
 								
-								<h5>New User?<a href="/signup">SignUp</a></h5>
-								<button type="submit" class="btn btn-default">Login</button>
+								<button type="submit" class="btn btn-default" style="margin-left: 220px;" >Login</button>
 							</form>
 						</div>
 					</div>
